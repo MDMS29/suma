@@ -15,11 +15,10 @@ export const _PruebaConexcion = async () => {
     }
 }
 
-export const _QueryAutenticarUsuario = async ({ correo, contrasena }: UsuarioLogin): Promise<UsuarioLogeado | undefined> => {
+export const _QueryAutenticarUsuario = async ({ correo, contrasena }: UsuarioLogin) => {
     try {
         await client.connect();
         const result = await client.query(_LoginUsuario, [correo, contrasena]);
-        // await client.end();
         return result.rows[0]
     } catch (error) {
         console.log(error)
@@ -27,7 +26,7 @@ export const _QueryAutenticarUsuario = async ({ correo, contrasena }: UsuarioLog
     }
 }
 
-export const _QueryBuscarUsuario = async (id: number) => {
+export const _QueryBuscarUsuario = async (id: number) : Promise<UsuarioLogeado | undefined> => {
     try {
         await client.connect();
         const result = await client.query(_BuscarUsuario, [id]);

@@ -1,9 +1,9 @@
-export interface UsuarioLogin {
+export type UsuarioLogin = {
     correo: string
     contrasena: string
 }
 
 export interface UsuarioLogeado extends UsuarioLogin {
-    id_usuario: number
+    readonly id_usuario: number
     token: string
 }

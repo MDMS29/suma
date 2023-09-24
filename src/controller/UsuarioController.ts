@@ -6,7 +6,7 @@ import { UsuarioLogin } from '../validations/Types';
 export class _UsuarioController {
 
 
-    public async AutenticarUsuario(req: Request, res: Response): Promise<object> {
+    public async AutenticarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
 
         const { correo, contrasena } = req.body
@@ -28,9 +28,12 @@ export class _UsuarioController {
         }
     }
 
-    public ObtenerUsuarios(req: Request, res: Response): any {
+    public ObtenerUsuarios(req: Request, res: Response) {
         const { usuario } = req
-        res.json([{perfil: usuario}, { recursos: [{ nombre: "Usuarios", url: "/usuarios" }] }])
+        if (!usuario) {
+            res.status(400).json({ message: "No se ha encontrado el usuario" })
+        }
+        res.status(200).json([{ perfil: usuario }, { recursos: [{ nombre: "Usuarios", url: "/usuarios" }] }])
     }
 
     public CrearUsuario(req: Request, res: Response): void {

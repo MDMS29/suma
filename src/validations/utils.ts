@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 export const _ParseCorreo = (correo: any): string => {
-    if (!_IsString(correo)) {
+    if (!EsString(correo)) {
         throw new Error("¡Correo Invalido!")
     }
     return correo;
 }
 
-const _IsString = (string: string): boolean => {
+const EsString = (string: string): boolean => {
     return typeof string === 'string';
 }
 
