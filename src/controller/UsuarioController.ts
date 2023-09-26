@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { _UsuarioService } from '../services/Service.Usuario';
-import { _ParseCorreo } from '../validations/utils';
+import { _ParseClave, _ParseCorreo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
 
 export class _UsuarioController {
@@ -9,11 +9,11 @@ export class _UsuarioController {
     public async AutenticarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
 
-        const { correo, contrasena } = req.body
+        const { usuario, clave } = req.body
         try {
             const UsuarioLogin: UsuarioLogin = {
-                correo: _ParseCorreo(correo),
-                contrasena
+                usuario: _ParseCorreo(usuario),
+                clave: _ParseClave(clave)
             }
 
             const val = await ServiceUsuario.AutenticarUsuario(UsuarioLogin)

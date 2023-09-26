@@ -5,6 +5,12 @@ export const _ParseCorreo = (correo: any): string => {
     }
     return correo;
 }
+export const _ParseClave = (correo: any): string => {
+    if (!EsString(correo)) {
+        throw new Error("¡Clave Invalida!")
+    }
+    return correo;
+}
 
 const EsString = (string: string): boolean => {
     return typeof string === 'string';

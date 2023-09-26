@@ -1,6 +1,6 @@
 import { client } from "../../config/db";
-import { _BuscarUsuario, _LoginUsuario, _SeleccionarTodosLosUsuarios } from "../dao/DaoUsuarios";
-import { UsuarioLogeado, UsuarioLogin } from "../validations/Types";
+import { _BuscarUsuario, _LoginUsuario, _SeleccionarTodosLosUsuarios, _ModulosUsuario, _MenusModulos } from "../dao/DaoUsuarios";
+import { UsuarioLogeado, UsuarioLogin, ModulosUsuario, MenusModulos } from "../validations/Types";
 
 export const _PruebaConexcion = async () => {
     try {
@@ -15,10 +15,10 @@ export const _PruebaConexcion = async () => {
     }
 }
 
-export const _QueryAutenticarUsuario = async ({ correo, contrasena }: UsuarioLogin) => {
+export const _QueryAutenticarUsuario = async ({ usuario, clave }: UsuarioLogin) => {
     try {
         await client.connect();
-        const result = await client.query(_LoginUsuario, [correo, contrasena]);
+        const result = await client.query(_LoginUsuario, [usuario, clave]);
         return result.rows[0]
     } catch (error) {
         console.log(error)
@@ -26,7 +26,29 @@ export const _QueryAutenticarUsuario = async ({ correo, contrasena }: UsuarioLog
     }
 }
 
-export const _QueryBuscarUsuario = async (id: number) : Promise<UsuarioLogeado | undefined> => {
+export const _QueryModulosUsuario = async (id_usuario: number): Promise<undefined | ModulosUsuario[]> => {
+    try {
+        await client.connect();
+        const result = await client.query(_ModulosUsuario, [id_usuario]);
+        return result.rows
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
+
+export const _QueryMenuModulos = async (id_modulo: number): Promise<undefined | MenusModulos[]> => {
+    try {
+        await client.connect();
+        const result = await client.query(_MenusModulos, [id_modulo]);
+        return result.rows
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
+
+export const _QueryBuscarUsuario = async (id: number): Promise<UsuarioLogeado | undefined> => {
     try {
         await client.connect();
         const result = await client.query(_BuscarUsuario, [id]);
