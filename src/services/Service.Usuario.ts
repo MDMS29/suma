@@ -1,7 +1,8 @@
-import { _QueryAutenticarUsuario, _QueryModulosUsuario, _QueryBuscarUsuario, _QueryMenuModulos } from "../querys/QuerysUsuarios";
+import { _InsertarUsuario } from "../dao/DaoUsuarios";
+import { _QueryAutenticarUsuario, _QueryModulosUsuario, _QueryBuscarUsuario, _QueryMenuModulos, _QueryInsertarUsuario } from "../querys/QuerysUsuarios";
 import { UsuarioLogeado, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
-
+let bcrypt = require('bcrypt')
 export class _UsuarioService {
 
     public async AutenticarUsuario(object: UsuarioLogin): Promise<UsuarioLogeado | undefined> {
@@ -29,17 +30,17 @@ export class _UsuarioService {
         }
         return
     }
+    public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: number) {
+        const { clave } = RequestUsuario
 
-    public ObtenerUsuarios(): void {
-
-    }
-
-    public CrearUsuario(): void {
-    }
-
-    public ModificarUsuario(): void {
-    }
-
-    public EliminarUsuario(): void {
+        if (clave) {
+            const saltRounds = 10
+            const hash = await bcrypt.hash(clave, saltRounds)
+            RequestUsuario.clave = hash
+            const respuesta = await _QueryInsertarUsuario(RequestUsuario, UsuarioCreador)
+            return respuesta
+        } else {
+            throw new Error('Error al hashear clave')
+        }
     }
 }

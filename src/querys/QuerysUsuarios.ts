@@ -1,5 +1,5 @@
 import { client } from "../../config/db";
-import { _BuscarUsuario, _LoginUsuario, _SeleccionarTodosLosUsuarios, _ModulosUsuario, _MenusModulos } from "../dao/DaoUsuarios";
+import { _BuscarUsuario, _LoginUsuario, _SeleccionarTodosLosUsuarios, _ModulosUsuario, _MenusModulos, _InsertarUsuario } from "../dao/DaoUsuarios";
 import { UsuarioLogeado, UsuarioLogin, ModulosUsuario, MenusModulos } from "../validations/Types";
 
 export const _PruebaConexcion = async () => {
@@ -52,8 +52,24 @@ export const _QueryBuscarUsuario = async (id: number): Promise<UsuarioLogeado | 
     try {
         await client.connect();
         const result = await client.query(_BuscarUsuario, [id]);
-        // await client.end();
         return result.rows[0]
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
+
+export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador: number) => {
+    const { nombre_completo, usuario, clave, correo } = RequestUsuario
+
+    try {
+        await client.connect();
+        const result = await client.query(_InsertarUsuario, [nombre_completo, usuario, clave, UsuarioCreador, correo]);
+        if (result.rows[0].id_usuario) {
+            const respuesta = await _QueryBuscarUsuario(result.rows[0].id_usuario)
+            return respuesta
+        }
+        return
     } catch (error) {
         console.log(error)
         return
