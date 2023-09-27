@@ -1,6 +1,7 @@
 export type UsuarioLogin = {
+    perfil?: string
     usuario: string
-    clave: string
+    clave?: string
 }
 
 export type MenusModulos = {
@@ -16,6 +17,7 @@ export type ModulosUsuario = {
 }
 export interface UsuarioLogeado extends UsuarioLogin {
     id_usuario: number;
+    id_perfil : number
     nombre_completo: string;
     usuario: string;
     // id_estado?: string;
@@ -27,5 +29,5 @@ export interface UsuarioLogeado extends UsuarioLogin {
     estado: string;
     token?: string;
     modulos?: ModulosUsuario[]
-    // menus?: MenusModulos[]
+    permisos?: any
 }

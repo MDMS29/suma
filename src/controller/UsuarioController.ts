@@ -8,9 +8,10 @@ export class _UsuarioController {
 
     public async AutenticarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
-        const { usuario, clave } = req.body
+        const { perfil, usuario, clave } = req.body
         try {
             const UsuarioLogin: UsuarioLogin = {
+                perfil,
                 usuario: _ParseCorreo(usuario),
                 clave: _ParseClave(clave)
             }
@@ -45,8 +46,8 @@ export class _UsuarioController {
         if (!req.usuario?.id_usuario) {
             return res.status(400).json({ message: "Debe inicar sesión para realizar esta acción" })
         }
-        
-        const respuesta = await ServiceUsuario.InsertarUsuario(result.data, req.usuario?.id_usuario)
+
+        const respuesta = await ServiceUsuario.InsertarUsuario(result.data, req.usuario?.usuario)
         if (respuesta) {
             return res.status(201).json(respuesta)
         }

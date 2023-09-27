@@ -7,6 +7,8 @@ export const UsusarioSchema = z.object({
     usuario: z.string().max(10),
     clave: z.string().max(12),
     correo: z.string().email({
-        message : 'Tipo de correo invalido'
-    })
+        message: 'Tipo de correo invalido'
+    }),
+    roles: z.object({ rol: z.number() }).array(),
+    perfiles: z.object({ perfil: z.number() }).array(),
 })
