@@ -23,14 +23,15 @@ export class _UsuarioService {
                     const response = await _QueryMenuModulos(modulo.id_modulo)
                     modulo.menus = response
                 }
-                //CARGAR ACCIONES SEGUN EL USUARIO Y PERFIL
+                // CARGAR ACCIONES SEGUN EL USUARIO Y PERFIL
                 const acciones = await _QueryAccionesModulo(respuesta.id_usuario, respuesta.id_perfil)
                 respuesta.permisos = acciones
             }
             respuesta.token = generarJWT(respuesta.id_usuario)
+
             return respuesta
         }
-        throw new Error('Error al cargar usuario')
+        return
     }
 
 
@@ -42,9 +43,13 @@ export class _UsuarioService {
         return undefined
     }
 
-    public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string) {
-        const { clave } = RequestUsuario
+    public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string) : Promise<any> {
+        const { usuario, correo, clave } = RequestUsuario
 
+        const respuesta = await _QueryBuscarUsuario(0, usuario, correo)
+        if (respuesta) {
+            return {error : true, message : 'Este usuario ya existe'}
+        }
         if (clave) {
             const saltRounds = 10
             const hash = await bcrypt.hash(clave, saltRounds)

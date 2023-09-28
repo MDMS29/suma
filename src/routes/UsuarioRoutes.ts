@@ -6,7 +6,6 @@ export const _UsuarioRouter = Router();
 
 const UsuarioController = new _UsuarioController();
 
-
 _UsuarioRouter.post('/autenticar_usuario', UsuarioController.AutenticarUsuario);
 
 _UsuarioRouter.route('/')

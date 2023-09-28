@@ -4,8 +4,11 @@ export type UsuarioLogin = {
     clave?: string
 }
 
-export type PermisosUsuario = {
-    
+export type PermisosModulos = {
+    id_modulo: string | number;
+    nombre_modulo: string;
+    id_rol: string | number;
+    nombre: string;
 }
 
 export type MenusModulos = {
@@ -21,7 +24,7 @@ export type ModulosUsuario = {
 }
 export interface UsuarioLogeado extends UsuarioLogin {
     id_usuario: number;
-    id_perfil : number
+    id_perfil: number
     nombre_completo: string;
     usuario: string;
     fecha_creacion: Date;
@@ -29,7 +32,7 @@ export interface UsuarioLogeado extends UsuarioLogin {
     estado: string;
     token?: string;
     modulos?: ModulosUsuario[]
-    permisos?: any
+    permisos?: PermisosModulos[]
     // id_estado?: string;
     // fecha_modificacion: null;
     // usuario_creacion: string;

@@ -11,6 +11,6 @@ export const UsusarioSchema = z.object({
     correo: z.string().email({
         message: 'Tipo de correo invalido'
     }),
-    roles: z.object({ rol: z.number() }).array(),
-    perfiles: z.object({ perfil: z.number() }).array(),
+    roles: z.object({ id_rol: z.number() }).array(),
+    perfiles: z.object({ id_perfil: z.number() }).array(),
 })

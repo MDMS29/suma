@@ -14,10 +14,13 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(cors());
 
+app.get('/', (_, res: Response) => {
+    res.send('Hello World!');
+});
 app.use('/suma/api/usuarios', _UsuarioRouter);
 
 app.use((_, res: Response) => {
-    res.status(404).send({message : "Pagína no encontrada"});
+    res.status(404).send({ message: "Pagína no encontrada" });
 })
 
 app.listen(PORT, () => {

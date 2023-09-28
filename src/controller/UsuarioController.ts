@@ -17,7 +17,7 @@ export class _UsuarioController {
             }
 
             const val = await ServiceUsuario.AutenticarUsuario(UsuarioLogin)
-            if (val === undefined) {
+            if (!val) {
                 return res.status(400).json({ message: '¡Correo o Contraseña invalidos!' })
             }
 
@@ -41,15 +41,19 @@ export class _UsuarioController {
         if (!req.usuario?.id_usuario) {
             return res.status(400).json({ message: "Debe inicar sesión para realizar esta acción" })
         }
+
         const result = UsusarioSchema.safeParse(req.body) //Validación de datos con librería zod
         if (!result.success) {
             const error = result.error.issues
             return res.status(400).json(error)
         }
         const respuesta = await ServiceUsuario.InsertarUsuario(result.data, req.usuario?.usuario)
-        if (respuesta) {
+        if (!respuesta.error) {
             return res.status(201).json(respuesta)
+        } else {
+            return res.status(400).json(respuesta?.error)
         }
+
         return res.status(400).json({ message: "No se ha podido crear el usuario" })
     }
 
