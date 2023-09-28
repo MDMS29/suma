@@ -3,7 +3,9 @@ import z from 'zod'
 // const {nombre_completo, usuario, clave, correo} = req.body
 
 export const UsusarioSchema = z.object({
-    nombre_completo: z.string(),
+    nombre_completo: z.string({
+        invalid_type_error: 'Debe ingresar un nombre valido'
+    }),
     usuario: z.string().max(10),
     clave: z.string().max(12),
     correo: z.string().email({

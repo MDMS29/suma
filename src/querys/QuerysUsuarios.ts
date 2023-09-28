@@ -2,7 +2,8 @@ import { client } from "../../config/db";
 import { _BuscarUsuario, _LoginUsuario, _SeleccionarTodosLosUsuarios, _ModulosUsuario, _MenusModulos, _InsertarUsuario, _AccionModulos, _InsertarRolModuloUser, _InsertarPerfilUsuario } from "../dao/DaoUsuarios";
 import { UsuarioLogeado, UsuarioLogin, ModulosUsuario, MenusModulos } from "../validations/Types";
 
-// let bcrypt = require('bcrypt')
+let bcrypt = require('bcrypt')
+
 export const _PruebaConexcion = async () => {
     try {
         await client.connect();
@@ -15,15 +16,13 @@ export const _PruebaConexcion = async () => {
     }
 }
 
-export const _QueryAutenticarUsuario = async ({ perfil, usuario }: UsuarioLogin) => {
+export const _QueryAutenticarUsuario = async ({ perfil, usuario, clave }: UsuarioLogin) => {
     try {
         await client.connect();
         const result = await client.query(_LoginUsuario, [perfil, usuario]);
-        // console.log(result)
         if (result) {
-            const valor = true
-            // const matches = await bcrypt.compare(clave, result.rows[0].clave)
-            if (valor) {
+            const matches = await bcrypt.compare(clave, result.rows[0].clave)
+            if (matches) {
                 return result.rows[0]
             }
             return
@@ -43,15 +42,6 @@ export const _QueryModulosUsuario = async (id_perfil: number): Promise<undefined
     } catch (error) {
         console.log(error)
         return
-    }
-}
-
-export const _QueryPerfilUsuario = async () => {
-    try {
-        await client.connect();
-        //...
-    } catch (error) {
-        console.log(error)
     }
 }
 
@@ -106,26 +96,27 @@ export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador:
     }
 }
 export const _QueryInsertarRolModulo = async (id_usuario: number, roles: any[]) => {
-    // const { nombre_completo, usuario, clave, correo } = RequestUsuario
-    for (const rol of roles) {
-        try {
+    try {
+        for (const rol of roles) {
             await client.connect();
-            await client.query(_InsertarRolModuloUser, [id_usuario, rol.rol]);
-        } catch (error) {
-            console.log(error)
+            await client.query(_InsertarRolModuloUser, [id_usuario, rol.id_rol]);
         }
+    } catch (error) {
+        console.log(error)
+    } finally {
+        return true
     }
-    return true
 }
+
 export const _QueryInsertarPerfilUsuario = async (id_usuario: number, perfiles: any[]) => {
-    // const { nombre_completo, usuario, clave, correo } = RequestUsuario
-    for (const perfil of perfiles) {
-        try {
+    try {
+        for (const perfil of perfiles) {
             await client.connect();
-            await client.query(_InsertarPerfilUsuario, [id_usuario, perfil.perfil]);
-        } catch (error) {
-            console.log(error)
+            await client.query(_InsertarPerfilUsuario, [id_usuario, perfil.id_perfil]);
         }
+    } catch (error) {
+        console.log(error)
+    } finally {
+        return true
     }
-    return true
 }

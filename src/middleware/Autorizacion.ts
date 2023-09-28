@@ -5,14 +5,13 @@ import { _UsuarioService } from '../services/Service.Usuario';
 export const _Autorizacion = async (req: Request, res: Response, next: NextFunction) => {
     const ServiceUsuario = new _UsuarioService()
     try {
+        if (!process.env.JWT_SECRET) {
+            throw new Error('La variable de entorno JWT_SECRET no está configurada');
+        }
         const token = req.headers.authorization?.split(' ')[1];
 
         if (!token) {
             return res.status(401).json({ message: 'Inicie sesión para continuar' });
-        }
-
-        if (!process.env.JWT_SECRET) {
-            throw new Error('La variable de entorno JWT_SECRET no está configurada');
         }
 
         try {

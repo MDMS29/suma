@@ -17,7 +17,7 @@ app.use(cors());
 app.use('/suma/api/usuarios', _UsuarioRouter);
 
 app.use((_, res: Response) => {
-    res.status(404).send({message : "Error 404"});
+    res.status(404).send({message : "Pagína no encontrada"});
 })
 
 app.listen(PORT, () => {

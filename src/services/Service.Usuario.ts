@@ -1,10 +1,13 @@
 import {
     _QueryAutenticarUsuario, _QueryModulosUsuario, _QueryBuscarUsuario,
-    _QueryMenuModulos, _QueryInsertarUsuario, _QueryAccionesModulo, _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario
+    _QueryMenuModulos, _QueryInsertarUsuario, _QueryAccionesModulo,
+    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario
 } from "../querys/QuerysUsuarios";
 import { UsuarioLogeado, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
+
 let bcrypt = require('bcrypt')
+
 export class _UsuarioService {
 
     public async AutenticarUsuario(object: UsuarioLogin): Promise<UsuarioLogeado | undefined> {
@@ -13,9 +16,7 @@ export class _UsuarioService {
         if (respuesta) {
             //CARGAR MODULOS SEGUN EL PERFIL
             const modulos = await _QueryModulosUsuario(respuesta.id_perfil)
-
             if (modulos) {
-
                 respuesta.modulos = modulos
                 for (const modulo of modulos) {
                     //CARGAR LOS MENUS DE LOS MODULOS
@@ -27,8 +28,9 @@ export class _UsuarioService {
                 respuesta.permisos = acciones
             }
             respuesta.token = generarJWT(respuesta.id_usuario)
+            return respuesta
         }
-        return respuesta
+        throw new Error('Error al cargar usuario')
     }
 
 
@@ -39,6 +41,7 @@ export class _UsuarioService {
         }
         return undefined
     }
+
     public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string) {
         const { clave } = RequestUsuario
 
@@ -48,15 +51,16 @@ export class _UsuarioService {
             RequestUsuario.clave = hash
             const respuesta = await _QueryInsertarUsuario(RequestUsuario, UsuarioCreador)
             if (respuesta) {
-                await _QueryInsertarRolModulo(respuesta, RequestUsuario.roles)
-                await _QueryInsertarPerfilUsuario(respuesta, RequestUsuario.perfiles)
-                
-                const data = await _QueryBuscarUsuario(respuesta)
-                return data
+                if (await _QueryInsertarRolModulo(respuesta, RequestUsuario.roles)) { // GUARDAR ROLES DE USUARIO
+                    if (await _QueryInsertarPerfilUsuario(respuesta, RequestUsuario.perfiles)) { // GUARDAR PERFILES DE USUARIO
+                        const data = await _QueryBuscarUsuario(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO
+                        return data
+                    }
+                }
             }
-            return
+            throw new Error('Error al guardar el usuario')
         } else {
-            throw new Error('Error al hashear clave')
+            throw new Error('Error al hashear clave de usuario')
         }
     }
 }

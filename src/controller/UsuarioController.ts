@@ -38,15 +38,14 @@ export class _UsuarioController {
 
     public async CrearUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
+        if (!req.usuario?.id_usuario) {
+            return res.status(400).json({ message: "Debe inicar sesión para realizar esta acción" })
+        }
         const result = UsusarioSchema.safeParse(req.body) //Validación de datos con librería zod
         if (!result.success) {
             const error = result.error.issues
             return res.status(400).json(error)
         }
-        if (!req.usuario?.id_usuario) {
-            return res.status(400).json({ message: "Debe inicar sesión para realizar esta acción" })
-        }
-
         const respuesta = await ServiceUsuario.InsertarUsuario(result.data, req.usuario?.usuario)
         if (respuesta) {
             return res.status(201).json(respuesta)
