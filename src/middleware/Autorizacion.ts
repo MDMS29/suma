@@ -16,7 +16,7 @@ export const _Autorizacion = async (req: Request, res: Response, next: NextFunct
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
-            const usuario = await ServiceUsuario.BuscarUsuario(+decoded.id);
+            const usuario = await ServiceUsuario.BuscarUsuario(+decoded.id, '', '');
             if (usuario === undefined) {
                 return res.status(401).json({ message: 'Usuario no encontrado' });
             }

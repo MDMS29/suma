@@ -2,23 +2,22 @@ import { Request, Response } from 'express';
 import { _UsuarioService } from '../services/Service.Usuario';
 import { _ParseClave, _ParseCorreo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
-import { UsusarioSchema } from '../schemas/UsuarioSchemas';
+import { UsusarioSchema } from '../validations/UsuarioSchemas';
 
 export class _UsuarioController {
 
     public async AutenticarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
-        const { perfil, usuario, clave } = req.body
+        const {  usuario, clave } = req.body
         try {
             const UsuarioLogin: UsuarioLogin = {
-                perfil,
                 usuario: _ParseCorreo(usuario),
                 clave: _ParseClave(clave)
             }
 
             const val = await ServiceUsuario.AutenticarUsuario(UsuarioLogin)
             if (!val) {
-                return res.status(400).json({ message: '¡Correo o Contraseña invalidos!' })
+                return res.json({ message: 'Usuario o contraseña invalido' })
             }
 
             return res.status(200).json(val)
@@ -51,10 +50,10 @@ export class _UsuarioController {
         if (!respuesta.error) {
             return res.status(201).json(respuesta)
         } else {
-            return res.status(400).json(respuesta?.error)
+            return res.status(400).json(respuesta)
         }
 
-        return res.status(400).json({ message: "No se ha podido crear el usuario" })
+        // return res.status(400).json({ message: "No se ha podido crear el usuario" })
     }
 
     public ModificarUsuario(req: Request, res: Response): void {

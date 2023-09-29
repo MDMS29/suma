@@ -1,11 +1,10 @@
 export type UsuarioLogin = {
-    perfil?: string
     usuario: string
     clave?: string
 }
 
 export type PermisosModulos = {
-    id_modulo: string | number;
+    readonly id_modulo: string | number;
     nombre_modulo: string;
     id_rol: string | number;
     nombre: string;
@@ -17,11 +16,19 @@ export type MenusModulos = {
 }
 
 export type ModulosUsuario = {
-    id_modulo: number
+    readonly id_modulo: number
     cod_modulo: string
     nombre_modulo: string
     menus?: MenusModulos[]
 }
+
+export type PerfilUsuario = {
+    readonly id_perfil: number,
+    nombre_perfil: string,
+    modulos: ModulosUsuario[]
+    permisos: PermisosModulos[]
+}
+
 export interface UsuarioLogeado extends UsuarioLogin {
     id_usuario: number;
     id_perfil: number
@@ -31,8 +38,8 @@ export interface UsuarioLogeado extends UsuarioLogin {
     correo: null | string;
     estado: string;
     token?: string;
-    modulos?: ModulosUsuario[]
-    permisos?: PermisosModulos[]
+    perfilLogin?: PerfilUsuario[]
+    perfiles?: PerfilUsuario
     // id_estado?: string;
     // fecha_modificacion: null;
     // usuario_creacion: string;
