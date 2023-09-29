@@ -54,13 +54,49 @@ export class _UsuarioService {
     }
 
 
-    public async BuscarUsuario(id = 0, usuario = '', correo = ''): Promise<UsuarioLogeado | undefined> {
-        if (usuario === 'param' && id !== 0) {
-            const response = await _QueryBuscarUsuario(id, usuario, correo)
-            console.log(response)
+    public async BuscarUsuario(id = 0, p_user = '', correo = '') {
+        if (p_user === 'param' && id !== 0) {
+            const respuesta = await _QueryBuscarUsuario(id, p_user, correo)
+           
+        if (respuesta) {
+            respuesta.perfilLogin = [] //ARRAY PARA TODOS LOS PERFILES QUE TENGA ASIGNADO EL USUARIO
+            for (const res of respuesta) {
+                res.perfiles = { id_perfil: res.id_perfil, nombre_perfil: res.nombre_perfil }
+                //CARGAR MODULOS SEGUN EL PERFIL
+                const modulos = await _QueryModulosUsuario(res.perfiles.id_perfil)
+                if (modulos) {
+                    res.perfiles.modulos = modulos
+                    for (const modulo of modulos) {
+                        //CARGAR LOS MENUS DE LOS MODULOS
+                        const response = await _QueryMenuModulos(modulo.id_modulo)
+                        modulo.menus = response
+                    }
+                    // CARGAR ACCIONES SEGUN EL USUARIO Y PERFIL
+                    const acciones = await _QueryAccionesModulo(respuesta[0].id_usuario, res.perfiles.id_perfil)
+                    res.perfiles.permisos = acciones
+                }
+
+            }
+            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, estado } = respuesta[0]
+            respuesta.forEach((res: UsuarioLogeado) => respuesta.perfilLogin.push(res.perfiles));
+            respuesta.token = generarJWT(respuesta[0].id_usuario)
+            return {
+                user:
+                {
+                    id_usuario,
+                    nombre_completo,
+                    usuario,
+                    fecha_creacion,
+                    correo,
+                    estado,
+                    token: respuesta.token
+                },
+                perfiles: respuesta.perfilLogin
+            }
+        }
         }
         else if (id) {
-            const respuesta: UsuarioLogeado | undefined = await _QueryBuscarUsuario(id, usuario, correo)
+            const respuesta: UsuarioLogeado | undefined = await _QueryBuscarUsuario(id, p_user, correo)
             return respuesta
         }
         return undefined

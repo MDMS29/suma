@@ -2,7 +2,7 @@ import express, { Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { _UsuarioRouter } from './src/routes/UsuarioRoutes';
-import { UsuarioLogeado } from './src/validations/Types';
+// import { UsuarioLogeado } from './src/validations/Types';
 
 const app = express();
 
@@ -32,7 +32,7 @@ app.listen(PORT, () => {
 declare global {
     namespace Express {
         interface Request {
-            usuario?: UsuarioLogeado;
+            usuario?: any;
         }
     }
 }

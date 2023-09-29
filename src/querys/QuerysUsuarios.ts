@@ -6,9 +6,9 @@ import {
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario
 } from "../dao/DaoUsuarios";
-
+// UsuarioLogeado
 import {
-    UsuarioLogeado, UsuarioLogin, ModulosUsuario, MenusModulos
+     UsuarioLogin, ModulosUsuario, MenusModulos
 } from "../validations/Types";
 
 
@@ -74,7 +74,7 @@ export const _QueryAccionesModulo = async (id_usuario: number, id_perfil: number
     }
 }
 
-export const _QueryBuscarUsuario = async (id = 0, usuario = '', correo = ''): Promise<UsuarioLogeado | undefined> => {
+export const _QueryBuscarUsuario = async (id = 0, usuario = '', correo = '') => {
 
     let Result
     try {
@@ -84,7 +84,7 @@ export const _QueryBuscarUsuario = async (id = 0, usuario = '', correo = ''): Pr
         if (usuario !== '' && correo !== '') {
             Result = await _DB.func(_FABuscarUsuarioCorreo, [usuario, correo])
         }
-        return Result[0]
+        return Result
     } catch (error) {
         console.log(error)
         return

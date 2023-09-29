@@ -27,13 +27,13 @@ export class _UsuarioController {
         }
     }
 
-    public BuscarUsuario(req: Request, _: Response) {
+    public async BuscarUsuario(req: Request, _: Response) {
         const ServiceUsuario = new _UsuarioService()
         const { id_usuario } = req.params
 
         if(id_usuario) {
-            console.log(id_usuario)
-            ServiceUsuario.BuscarUsuario(+id_usuario, 'param', '')
+            const respuesta = await ServiceUsuario.BuscarUsuario(+id_usuario, 'param', '')
+            console.log(respuesta)
          }
 
     }
