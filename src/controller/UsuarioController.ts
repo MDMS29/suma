@@ -8,7 +8,7 @@ export class _UsuarioController {
 
     public async AutenticarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
-        const {  usuario, clave } = req.body
+        const { usuario, clave } = req.body
         try {
             const UsuarioLogin: UsuarioLogin = {
                 usuario: _ParseCorreo(usuario),
@@ -27,12 +27,15 @@ export class _UsuarioController {
         }
     }
 
-    public ObtenerUsuarios(req: Request, res: Response) {
-        const { usuario } = req
-        if (!usuario) {
-            res.status(400).json({ message: "No se ha encontrado el usuario" })
-        }
-        res.status(200).json([{ perfil: usuario }, { recursos: [{ nombre: "Usuarios", url: "/usuarios" }] }])
+    public BuscarUsuario(req: Request, _: Response) {
+        const ServiceUsuario = new _UsuarioService()
+        const { id_usuario } = req.params
+
+        if(id_usuario) {
+            console.log(id_usuario)
+            ServiceUsuario.BuscarUsuario(+id_usuario, 'param', '')
+         }
+
     }
 
     public async CrearUsuario(req: Request, res: Response) {
@@ -54,6 +57,13 @@ export class _UsuarioController {
         }
 
         // return res.status(400).json({ message: "No se ha podido crear el usuario" })
+    }
+    public ObtenerUsuarios(req: Request, res: Response) {
+        const { usuario } = req
+        if (!usuario) {
+            res.status(400).json({ message: "No se ha encontrado el usuario" })
+        }
+        res.status(200).json([{ perfil: usuario }, { recursos: [{ nombre: "Usuarios", url: "/usuarios" }] }])
     }
 
     public ModificarUsuario(req: Request, res: Response): void {

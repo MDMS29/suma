@@ -11,5 +11,8 @@ _UsuarioRouter.post('/autenticar_usuario', UsuarioController.AutenticarUsuario);
 _UsuarioRouter.route('/')
     .get(_Autorizacion, UsuarioController.ObtenerUsuarios)
     .post(_Autorizacion, UsuarioController.CrearUsuario);
+
+_UsuarioRouter.get('/:id_usuario', _Autorizacion, UsuarioController.BuscarUsuario)
+
 _UsuarioRouter.patch('/:id', _Autorizacion, UsuarioController.ModificarUsuario);
 _UsuarioRouter.delete('/:id', _Autorizacion, UsuarioController.EliminarUsuario);

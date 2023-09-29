@@ -17,6 +17,7 @@ app.use(cors());
 app.get('/', (_, res: Response) => {
     res.send('Hello World!');
 });
+
 app.use('/suma/api/usuarios', _UsuarioRouter);
 
 app.use((_, res: Response) => {

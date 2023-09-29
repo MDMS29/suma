@@ -55,7 +55,11 @@ export class _UsuarioService {
 
 
     public async BuscarUsuario(id = 0, usuario = '', correo = ''): Promise<UsuarioLogeado | undefined> {
-        if (id) {
+        if (usuario === 'param' && id !== 0) {
+            const response = await _QueryBuscarUsuario(id, usuario, correo)
+            console.log(response)
+        }
+        else if (id) {
             const respuesta: UsuarioLogeado | undefined = await _QueryBuscarUsuario(id, usuario, correo)
             return respuesta
         }
