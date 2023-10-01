@@ -19,14 +19,15 @@ export type ModulosUsuario = {
     readonly id_modulo: number
     cod_modulo: string
     nombre_modulo: string
-    menus?: MenusModulos[]
+    menus: MenusModulos[]
+    permisos: PermisosModulos[]
 }
 
 export type PerfilUsuario = {
     readonly id_perfil: number,
     nombre_perfil: string,
+    estado_perfil: number
     modulos: ModulosUsuario[]
-    permisos: PermisosModulos[]
 }
 
 export interface UsuarioLogeado extends UsuarioLogin {
@@ -36,7 +37,7 @@ export interface UsuarioLogeado extends UsuarioLogin {
     usuario: string;
     fecha_creacion: Date;
     correo: null | string;
-    estado: string;
+    id_estado: number;
     token?: string;
     perfilLogin?: PerfilUsuario[]
     perfiles?: PerfilUsuario

@@ -14,9 +14,13 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (_, res: Response) => {
-    res.send('Hello World!');
-});
+
+//TODO: CONSEGUIR IP DEL CLIENTE
+// app.use((req, _, next) => {
+//     console.log(`IP client: ${req.socket.remoteAddress}`);
+//     next()
+// });
+
 
 app.use('/suma/api/usuarios', _UsuarioRouter);
 

@@ -27,14 +27,20 @@ export class _UsuarioController {
         }
     }
 
-    public async BuscarUsuario(req: Request, _: Response) {
+    public async BuscarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
         const { id_usuario } = req.params
 
-        if(id_usuario) {
+        if (id_usuario) {
             const respuesta = await ServiceUsuario.BuscarUsuario(+id_usuario, 'param', '')
-            console.log(respuesta)
-         }
+            if (!respuesta) {
+                return res.json({ message: 'Usuario no encontrado' })
+            }
+             
+            res.statusCode = 200
+            return res.status(200).json(respuesta)
+        }
+        return res.status(404).json({ message: '' })
 
     }
 

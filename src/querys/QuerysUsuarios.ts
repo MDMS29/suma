@@ -8,7 +8,7 @@ import {
 } from "../dao/DaoUsuarios";
 // UsuarioLogeado
 import {
-     UsuarioLogin, ModulosUsuario, MenusModulos
+    UsuarioLogin, ModulosUsuario, MenusModulos, PermisosModulos
 } from "../validations/Types";
 
 
@@ -54,23 +54,23 @@ export const _QueryModulosUsuario = async (id_perfil: number): Promise<undefined
 }
 
 
-export const _QueryMenuModulos = async (id_modulo: number): Promise<undefined | MenusModulos[]> => {
+export const _QueryMenuModulos = async (id_modulo: number): Promise<[] | MenusModulos[]> => {
     try {
         const result = await _DB.func(_FAMenusModulos, [id_modulo])
         return result
     } catch (error) {
         console.log(error)
-        return
+        return []
     }
 }
 
-export const _QueryAccionesModulo = async (id_usuario: number, id_perfil: number) => {
+export const _QueryAccionesModulo = async (id_modulo: number, id_usuario: number, id_perfil: number): Promise<[] | PermisosModulos[]> => {
     try {
-        const result = await _DB.func(_FAAccionesModulos, [id_usuario, id_perfil])
+        const result = await _DB.func(_FAAccionesModulos, [id_modulo, id_usuario, id_perfil])
         return result
     } catch (error) {
         console.log(error)
-        return
+        return []
     }
 }
 
@@ -90,7 +90,7 @@ export const _QueryBuscarUsuario = async (id = 0, usuario = '', correo = '') => 
         return
     }
 }
-export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador: string) => {
+export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador: string): Promise<number | undefined> => {
     const { nombre_completo, usuario, clave, correo } = RequestUsuario
 
     try {

@@ -15,25 +15,25 @@ export class _UsuarioService {
         const respuesta = await _QueryAutenticarUsuario({ usuario, clave })
 
         if (respuesta) {
-            respuesta.perfilLogin = [] //ARRAY PARA TODOS LOS PERFILES QUE TENGA ASIGNADO EL USUARIO
+            respuesta.perfilLogin = [] //ARRAY DE LOS PERFILES ASIGNADOS AL EL USUARIO
             for (const res of respuesta) {
-                res.perfiles = { id_perfil: res.id_perfil, nombre_perfil: res.nombre_perfil }
-                //CARGAR MODULOS SEGUN EL PERFIL
+                res.perfiles = { id_perfil: res.id_perfil, nombre_perfil: res.nombre_perfil, estado_perfil: res.id_estado_perfil }
+                //CARGA DE MODULOS SEGUN EL PERFIL
                 const modulos = await _QueryModulosUsuario(res.perfiles.id_perfil)
                 if (modulos) {
                     res.perfiles.modulos = modulos
                     for (const modulo of modulos) {
-                        //CARGAR LOS MENUS DE LOS MODULOS
+                        //CARGA DE MENUS DE LOS MODULOS
                         const response = await _QueryMenuModulos(modulo.id_modulo)
                         modulo.menus = response
+                        // CARGA DE ACCIONES SEGUN EL USUARIO Y PERFIL
+                        const acciones = await _QueryAccionesModulo(modulo.id_modulo, respuesta[0].id_usuario, res.perfiles.id_perfil)
+                        modulo.permisos = acciones
                     }
-                    // CARGAR ACCIONES SEGUN EL USUARIO Y PERFIL
-                    const acciones = await _QueryAccionesModulo(respuesta[0].id_usuario, res.perfiles.id_perfil)
-                    res.perfiles.permisos = acciones
                 }
 
             }
-            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, estado } = respuesta[0]
+            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
             respuesta.forEach((res: UsuarioLogeado) => respuesta.perfilLogin.push(res.perfiles));
             respuesta.token = generarJWT(respuesta[0].id_usuario)
             return {
@@ -44,7 +44,7 @@ export class _UsuarioService {
                     usuario,
                     fecha_creacion,
                     correo,
-                    estado,
+                    id_estado,
                     token: respuesta.token
                 },
                 perfiles: respuesta.perfilLogin
@@ -57,43 +57,42 @@ export class _UsuarioService {
     public async BuscarUsuario(id = 0, p_user = '', correo = '') {
         if (p_user === 'param' && id !== 0) {
             const respuesta = await _QueryBuscarUsuario(id, p_user, correo)
-           
-        if (respuesta) {
-            respuesta.perfilLogin = [] //ARRAY PARA TODOS LOS PERFILES QUE TENGA ASIGNADO EL USUARIO
-            for (const res of respuesta) {
-                res.perfiles = { id_perfil: res.id_perfil, nombre_perfil: res.nombre_perfil }
-                //CARGAR MODULOS SEGUN EL PERFIL
-                const modulos = await _QueryModulosUsuario(res.perfiles.id_perfil)
-                if (modulos) {
-                    res.perfiles.modulos = modulos
-                    for (const modulo of modulos) {
-                        //CARGAR LOS MENUS DE LOS MODULOS
-                        const response = await _QueryMenuModulos(modulo.id_modulo)
-                        modulo.menus = response
+            if (respuesta) {
+                respuesta.perfilLogin = [] //ARRAY DE LOS PERFILES ASIGNADOS EL USUARIO
+                for (const res of respuesta) {
+                    res.perfiles = { id_perfil: res.id_perfil, nombre_perfil: res.nombre_perfil, estado_perfil: res.id_estado_perfil }
+                    //CARGA DE MODULOS SEGUN EL PERFIL
+                    const modulos = await _QueryModulosUsuario(res.perfiles.id_perfil)
+                    if (modulos) {
+                        res.perfiles.modulos = modulos
+                        for (const modulo of modulos) {
+                            //CARGA DE LOS MENUS DE LOS MODULOS
+                            const response = await _QueryMenuModulos(modulo.id_modulo)
+                            modulo.menus = response
+                            // CARGA DE ACCIONES SEGUN EL USUARIO Y PERFIL
+                            const acciones = await _QueryAccionesModulo(modulo.id_modulo, respuesta[0].id_usuario, res.perfiles.id_perfil)
+                            modulo.permisos = acciones
+                        }
                     }
-                    // CARGAR ACCIONES SEGUN EL USUARIO Y PERFIL
-                    const acciones = await _QueryAccionesModulo(respuesta[0].id_usuario, res.perfiles.id_perfil)
-                    res.perfiles.permisos = acciones
-                }
 
+                }
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
+                respuesta.forEach((res: UsuarioLogeado) => respuesta.perfilLogin.push(res.perfiles));
+                respuesta.token = generarJWT(respuesta[0].id_usuario)
+                return {
+                    user:
+                    {
+                        id_usuario,
+                        nombre_completo,
+                        usuario,
+                        fecha_creacion,
+                        correo,
+                        id_estado,
+                        token: respuesta.token
+                    },
+                    perfiles: respuesta.perfilLogin
+                }
             }
-            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, estado } = respuesta[0]
-            respuesta.forEach((res: UsuarioLogeado) => respuesta.perfilLogin.push(res.perfiles));
-            respuesta.token = generarJWT(respuesta[0].id_usuario)
-            return {
-                user:
-                {
-                    id_usuario,
-                    nombre_completo,
-                    usuario,
-                    fecha_creacion,
-                    correo,
-                    estado,
-                    token: respuesta.token
-                },
-                perfiles: respuesta.perfilLogin
-            }
-        }
         }
         else if (id) {
             const respuesta: UsuarioLogeado | undefined = await _QueryBuscarUsuario(id, p_user, correo)
