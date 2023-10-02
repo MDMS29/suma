@@ -1,7 +1,7 @@
 import {
     _QueryAutenticarUsuario, _QueryModulosUsuario, _QueryBuscarUsuario,
     _QueryMenuModulos, _QueryInsertarUsuario, _QueryAccionesModulo,
-    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario
+    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario2
 } from "../querys/QuerysUsuarios";
 import { UsuarioLogeado, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
@@ -53,6 +53,21 @@ export class _UsuarioService {
         return undefined
     }
 
+    public async ModulosUsuario(id_usuario: number) {
+        const modulos = await _QueryModulosUsuario2(id_usuario)
+        if (modulos) {
+            for (const modulo of modulos) {
+                //CARGA DE MENUS DE LOS MODULOS
+                const response = await _QueryMenuModulos(modulo.id_modulo)
+                modulo.menus = response
+                // CARGA DE ACCIONES SEGUN EL USUARIO Y PERFIL
+                const acciones = await _QueryAccionesModulo(modulo.id_modulo, respuesta[0].id_usuario, res.perfiles.id_perfil)
+                modulo.permisos = acciones
+            }
+        }
+        return modulos
+    }
+
 
     public async BuscarUsuario(id = 0, p_user = '', correo = '') {
         if (p_user === 'param' && id !== 0) {
@@ -74,7 +89,6 @@ export class _UsuarioService {
                             modulo.permisos = acciones
                         }
                     }
-
                 }
                 const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
                 respuesta.forEach((res: UsuarioLogeado) => respuesta.perfilLogin.push(res.perfiles));
@@ -95,7 +109,7 @@ export class _UsuarioService {
             }
         }
         else if (id) {
-            const respuesta: UsuarioLogeado | undefined = await _QueryBuscarUsuario(id, p_user, correo)
+            const respuesta = await _QueryBuscarUsuario(id, p_user, correo)
             return respuesta
         }
         return undefined

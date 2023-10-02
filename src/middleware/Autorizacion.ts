@@ -11,19 +11,19 @@ export const _Autorizacion = async (req: Request, res: Response, next: NextFunct
         const token = req.headers.authorization?.split(' ')[1];
 
         if (!token) {
-            return res.status(401).json({ message: 'Inicie sesión para continuar' });
+            return res.json({ error: true, message: 'Inicie sesión para continuar' });
         }
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
             const usuario = await ServiceUsuario.BuscarUsuario(+decoded.id, '', '');
             if (usuario === undefined) {
-                return res.status(401).json({ message: 'Usuario no encontrado' });
+                return res.json({ error: true, message: 'Usuario no encontrado' });
             }
             req.usuario = usuario;
             return next();
         } catch (error) {
-            console.error('Error al verificar token: ', error)
+            return res.json({ error: true, message: 'Inicie sesión para continuar' });
         }
     } catch (error) {
         console.error(error);

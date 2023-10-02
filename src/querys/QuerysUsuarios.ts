@@ -4,7 +4,7 @@ import {
     _SeleccionarTodosLosUsuarios,
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
-    _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario
+    _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario, _MenusUsuario
 } from "../dao/DaoUsuarios";
 // UsuarioLogeado
 import {
@@ -52,6 +52,15 @@ export const _QueryModulosUsuario = async (id_perfil: number): Promise<undefined
         return
     }
 }
+export const _QueryModulosUsuario2 = async (id_usuario: number) => {
+    try {
+        const result = await client.query('SELECT DISTINCT vpr.id_modulo, vpr.nombre_modulo FROM seguridad.view_permisos_roles vpr WHERE vpr.id_usuario = $1', [id_usuario])
+        return result.rows
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
 
 
 export const _QueryMenuModulos = async (id_modulo: number): Promise<[] | MenusModulos[]> => {
@@ -84,7 +93,7 @@ export const _QueryBuscarUsuario = async (id = 0, usuario = '', correo = '') => 
         if (usuario !== '' && correo !== '') {
             Result = await _DB.func(_FABuscarUsuarioCorreo, [usuario, correo])
         }
-        return Result
+        return Result[0]
     } catch (error) {
         console.log(error)
         return
@@ -125,5 +134,15 @@ export const _QueryInsertarPerfilUsuario = async (id_usuario: number, perfiles: 
         console.log(error)
     } finally {
         return true
+    }
+}
+
+export const _QueryMenusUsuario = async (id_usuario: number, id_perfil: number) => {
+    try {
+        const result = await client.query(_MenusUsuario, [id_usuario, id_perfil])
+        return result.rows
+    } catch (error) {
+        console.log(error)
+        return
     }
 }
