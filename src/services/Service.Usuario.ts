@@ -1,41 +1,47 @@
 import {
-    _QueryAutenticarUsuario, _QueryModulosUsuario, _QueryBuscarUsuario,
-    _QueryMenuModulos, _QueryInsertarUsuario, _QueryAccionesModulo,
-    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario2
+    _QueryAutenticarUsuario, _QueryBuscarUsuario,
+    _QueryMenuModulos, _QueryInsertarUsuario, _QueryPermisosModulo,
+    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario
 } from "../querys/QuerysUsuarios";
-import { UsuarioLogeado, UsuarioLogin } from "../validations/Types";
+import { PerfilUsuario,  UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
 
 let bcrypt = require('bcrypt')
 
 export class _UsuarioService {
-
     public async AutenticarUsuario(object: UsuarioLogin) {
         const { usuario, clave } = object;
+        //----OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO----
         const respuesta = await _QueryAutenticarUsuario({ usuario, clave })
-
         if (respuesta) {
-            respuesta.perfilLogin = [] //ARRAY DE LOS PERFILES ASIGNADOS AL EL USUARIO
             for (const res of respuesta) {
-                res.perfiles = { id_perfil: res.id_perfil, nombre_perfil: res.nombre_perfil, estado_perfil: res.id_estado_perfil }
-                //CARGA DE MODULOS SEGUN EL PERFIL
-                const modulos = await _QueryModulosUsuario(res.perfiles.id_perfil)
-                if (modulos) {
-                    res.perfiles.modulos = modulos
-                    for (const modulo of modulos) {
-                        //CARGA DE MENUS DE LOS MODULOS
-                        const response = await _QueryMenuModulos(modulo.id_modulo)
-                        modulo.menus = response
-                        // CARGA DE ACCIONES SEGUN EL USUARIO Y PERFIL
-                        const acciones = await _QueryAccionesModulo(modulo.id_modulo, respuesta[0].id_usuario, res.perfiles.id_perfil)
-                        modulo.permisos = acciones
-                    }
+                res.perfiles = {
+                    id_perfil: res.id_perfil,
+                    nombre_perfil: res.nombre_perfil,
+                    estado_perfil: res.id_estado_perfil
                 }
-
             }
+
+            //----CARGAR PERFILES DE USUARIO----
+            let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
+            respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
+            //----CARGAR MODULOS DEL USUARIO----
+            const modulos = await _QueryModulosUsuario(respuesta[0]?.id_usuario)
+            if (modulos) {
+                respuesta.modulos = modulos
+                for (const modulo of modulos) {
+                    //CARGA DE MENUS DE LOS MODULOS
+                    const response = await _QueryMenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
+                    modulo.menus = response
+                    //CARGAR PERMISOS DEL MODULO
+                    const permisos = await _QueryPermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
+                    modulo.permisos = permisos
+                }
+            }
+
+            //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
             const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
-            respuesta.forEach((res: UsuarioLogeado) => respuesta.perfilLogin.push(res.perfiles));
-            respuesta.token = generarJWT(respuesta[0].id_usuario)
+            respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
             return {
                 usuario:
                 {
@@ -45,56 +51,78 @@ export class _UsuarioService {
                     fecha_creacion,
                     correo,
                     id_estado,
-                    token: respuesta.token
+                    token: respuesta.token,
+                    perfiles: perfilLogin
                 },
-                perfiles: respuesta.perfilLogin
+                modulos: respuesta.modulos
             }
         }
         return undefined
     }
 
-    public async ModulosUsuario(id_usuario: number) {
-        const modulos = await _QueryModulosUsuario2(id_usuario)
-        if (modulos) {
-            for (const modulo of modulos) {
-                //CARGA DE MENUS DE LOS MODULOS
-                const response = await _QueryMenuModulos(modulo.id_modulo)
-                modulo.menus = response
-                // CARGA DE ACCIONES SEGUN EL USUARIO Y PERFIL
-                const acciones = await _QueryAccionesModulo(modulo.id_modulo, respuesta[0].id_usuario, res.perfiles.id_perfil)
-                modulo.permisos = acciones
-            }
-        }
-        return modulos
-    }
+    public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
+        const { usuario, correo, clave } = RequestUsuario
 
+        //BUSCAR EL USUARIO POR SU USUARIO Y CORREO
+        const respuesta = await _QueryBuscarUsuario(0, usuario, correo)
+        if (respuesta) {
+            //SI EL USUARIO YA ESTA REGISTRADO MOSTRAR ERROR
+            return { error: true, message: 'Este usuario ya existe' }
+        }
+        if (clave) {
+            //HASHEAR CLAVE DEL USUARIO
+            const saltRounds = 10
+            const hash = await bcrypt.hash(clave, saltRounds)
+            RequestUsuario.clave = hash
+            //FUNCIOÓN PARA REGISTRAR LA INFORMACIÓN PRINCIPAL DEL USUARIO 
+            const respuesta = await _QueryInsertarUsuario(RequestUsuario, UsuarioCreador)
+            if (respuesta) {
+                if (await _QueryInsertarRolModulo(respuesta, RequestUsuario.roles)) { // GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
+                    if (await _QueryInsertarPerfilUsuario(respuesta, RequestUsuario.perfiles)) { // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
+                        const data = await _QueryBuscarUsuario(respuesta, '', '') //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
+                        return data
+                    }
+                }
+            }
+            //ERRORES DE INSERCIÓN A LA BASE DE DATOS
+            throw new Error('Error al guardar el usuario')
+        } else {
+            //ERROR AL HASHEAR LA CLAVE DEL USUARIO
+            throw new Error('Error al hashear clave de usuario')
+        }
+    }
 
     public async BuscarUsuario(id = 0, p_user = '', correo = '') {
         if (p_user === 'param' && id !== 0) {
             const respuesta = await _QueryBuscarUsuario(id, p_user, correo)
             if (respuesta) {
-                respuesta.perfilLogin = [] //ARRAY DE LOS PERFILES ASIGNADOS EL USUARIO
                 for (const res of respuesta) {
-                    res.perfiles = { id_perfil: res.id_perfil, nombre_perfil: res.nombre_perfil, estado_perfil: res.id_estado_perfil }
-                    //CARGA DE MODULOS SEGUN EL PERFIL
-                    const modulos = await _QueryModulosUsuario(res.perfiles.id_perfil)
-                    if (modulos) {
-                        res.perfiles.modulos = modulos
-                        for (const modulo of modulos) {
-                            //CARGA DE LOS MENUS DE LOS MODULOS
-                            const response = await _QueryMenuModulos(modulo.id_modulo)
-                            modulo.menus = response
-                            // CARGA DE ACCIONES SEGUN EL USUARIO Y PERFIL
-                            const acciones = await _QueryAccionesModulo(modulo.id_modulo, respuesta[0].id_usuario, res.perfiles.id_perfil)
-                            modulo.permisos = acciones
-                        }
+                    res.perfiles = {
+                        id_perfil: res.id_perfil,
+                        nombre_perfil: res.nombre_perfil,
+                        estado_perfil: res.id_estado_perfil
                     }
                 }
+
+                //----CARGAR PERFILES DE USUARIO----
+                let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
+                respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
+                //----CARGAR MODULOS DEL USUARIO----
+                const modulos = await _QueryModulosUsuario(respuesta[0]?.id_usuario)
+                if (modulos) {
+                    respuesta.modulos = modulos
+                    for (const modulo of modulos) {
+                        //CARGA DE MENUS DE LOS MODULOS
+                        const response = await _QueryMenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
+                        modulo.menus = response
+                    }
+                }
+
+                //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
                 const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
-                respuesta.forEach((res: UsuarioLogeado) => respuesta.perfilLogin.push(res.perfiles));
-                respuesta.token = generarJWT(respuesta[0].id_usuario)
+                respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
-                    user:
+                    usuario:
                     {
                         id_usuario,
                         nombre_completo,
@@ -102,9 +130,10 @@ export class _UsuarioService {
                         fecha_creacion,
                         correo,
                         id_estado,
-                        token: respuesta.token
+                        token: respuesta.token,
+                        perfiles: perfilLogin
                     },
-                    perfiles: respuesta.perfilLogin
+                    modulos: respuesta.modulos
                 }
             }
         }
@@ -113,31 +142,5 @@ export class _UsuarioService {
             return respuesta
         }
         return undefined
-    }
-
-    public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
-        const { usuario, correo, clave } = RequestUsuario
-
-        const respuesta = await _QueryBuscarUsuario(0, usuario, correo)
-        if (respuesta) {
-            return { error: true, message: 'Este usuario ya existe' }
-        }
-        if (clave) {
-            const saltRounds = 10
-            const hash = await bcrypt.hash(clave, saltRounds)
-            RequestUsuario.clave = hash
-            const respuesta = await _QueryInsertarUsuario(RequestUsuario, UsuarioCreador)
-            if (respuesta) {
-                if (await _QueryInsertarRolModulo(respuesta, RequestUsuario.roles)) { // GUARDAR ROLES DE USUARIO
-                    if (await _QueryInsertarPerfilUsuario(respuesta, RequestUsuario.perfiles)) { // GUARDAR PERFILES DE USUARIO
-                        const data = await _QueryBuscarUsuario(respuesta, '', '') //BUSCAR EL USUARIO GUARDADO Y RETORNARLO
-                        return data
-                    }
-                }
-            }
-            throw new Error('Error al guardar el usuario')
-        } else {
-            throw new Error('Error al hashear clave de usuario')
-        }
     }
 }

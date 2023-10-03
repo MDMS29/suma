@@ -3,50 +3,41 @@ import { _UsuarioService } from '../services/Service.Usuario';
 import { _ParseClave, _ParseCorreo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
 import { UsusarioSchema } from '../validations/UsuarioSchemas';
-import { _QueryMenusUsuario } from '../querys/QuerysUsuarios';
 
 export class _UsuarioController {
 
+    //FUNCIÓN PARA AUTENTICAR EL USUARIO POR SU USUARIO Y CLAVE INGRESADA
     public async AutenticarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
+        //TOMAR LA INFORMACIÓN DEL USUARIO ENVIADO
         const { usuario, clave, captcha } = req.body
+        //VERIFICACIÓN DEL CAPTCHA
         if (captcha === '') {
             return res.send({ error: true, message: 'Debe realizar el CAPTCHA' })
         }
         try {
+            //ORGANIZAR INFORMACIÓN CLAVE PARA LA AUTENTICACIÓN
             const UsuarioLogin: UsuarioLogin = {
                 usuario: _ParseCorreo(usuario),
                 clave: _ParseClave(clave)
             }
 
+            //SERVICIO PARA LA AUTENTICACIÓN
             const val = await ServiceUsuario.AutenticarUsuario(UsuarioLogin)
+            //VERFICICARIÓN DE DATOS RETORNADOS
             if (!val) {
+                //RESPUESTA AL CLIENTE
                 return res.json({ error: true, message: 'Usuario o contraseña invalido' })
             }
 
+            //RESPUESTA AL CLIENTE
             return res.status(200).json(val)
 
         } catch (error) {
+            //RESPUESTA AL CLIENTE EN CASO DE ERROR AL REALIZAR LA CONSULTA
             return res.status(400).send(error)
         }
     }
-
-    public async ObtenerModulosUsuario(req: Request, res: Response) {
-        const { id_usuario } = req.params
-        if (!id_usuario) {
-            return res.json({ error: true, message: "Inicie sesion para continuar" })
-        }
-
-        const ServiceUsuario = new _UsuarioService()
-        try {
-            const respuesta = await ServiceUsuario.ModulosUsuario(+id_usuario)
-            return res.json(respuesta)
-        } catch (error) {
-            console.log(error)
-            return 
-        }
-    }
-
     public async BuscarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
         const { id_usuario } = req.params
@@ -83,26 +74,5 @@ export class _UsuarioController {
         }
 
         // return res.status(400).json({ message: "No se ha podido crear el usuario" })
-    }
-    public ObtenerUsuarios(req: Request, res: Response) {
-        const { usuario } = req
-        if (!usuario) {
-            res.status(400).json({ message: "No se ha encontrado el usuario" })
-        }
-        res.status(200).json([{ perfil: usuario }, { recursos: [{ nombre: "Usuarios", url: "/usuarios" }] }])
-    }
-
-    public ModificarUsuario(req: Request, res: Response): void {
-        res.json(req.body);
-    }
-
-    public EliminarUsuario(_: Request, res: Response): void {
-        res.send('Eliminar usuario');
-    }
-
-    public async ObtenerMenusUsuario(req: Request, res: Response) {
-        const { id_usuario, id_perfil } = req.params
-        const resultado = await _QueryMenusUsuario(+id_usuario, +id_perfil)
-        res.json(resultado);
     }
 }

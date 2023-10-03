@@ -31,16 +31,16 @@ export type PerfilUsuario = {
 }
 
 export interface UsuarioLogeado extends UsuarioLogin {
-    id_usuario: number;
+    id_usuario: number
     id_perfil: number
-    nombre_completo: string;
-    usuario: string;
-    fecha_creacion: Date;
-    correo: null | string;
-    id_estado: number;
-    token?: string;
-    perfilLogin?: PerfilUsuario[]
+    nombre_completo: string
+    usuario: string
+    fecha_creacion: Date
+    correo: null | string
+    id_estado: number
+    token?: string
     perfiles?: PerfilUsuario
+    modulos?: ModulosUsuario[]
     // id_estado?: string;
     // fecha_modificacion: null;
     // usuario_creacion: string;
