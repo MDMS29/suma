@@ -8,7 +8,6 @@ export class _UsuarioController {
 
     //FUNCIÓN PARA AUTENTICAR EL USUARIO POR SU USUARIO Y CLAVE INGRESADA
     public async AutenticarUsuario(req: Request, res: Response) {
-        const ServiceUsuario = new _UsuarioService()
         //TOMAR LA INFORMACIÓN DEL USUARIO ENVIADO
         const { usuario, clave, captcha } = req.body
         //VERIFICACIÓN DEL CAPTCHA
@@ -16,6 +15,8 @@ export class _UsuarioController {
             return res.send({ error: true, message: 'Debe realizar el CAPTCHA' })
         }
         try {
+            //INICIALIZAR SERVICIO
+            const ServiceUsuario = new _UsuarioService()
             //ORGANIZAR INFORMACIÓN CLAVE PARA LA AUTENTICACIÓN
             const UsuarioLogin: UsuarioLogin = {
                 usuario: _ParseCorreo(usuario),
@@ -36,6 +37,27 @@ export class _UsuarioController {
         } catch (error) {
             //RESPUESTA AL CLIENTE EN CASO DE ERROR AL REALIZAR LA CONSULTA
             return res.status(400).send(error)
+        }
+    }
+
+    public async ObtenerUsuarios(req: Request, res: Response) {
+        const { usuario } = req
+        const { estado } = req.query as { estado: string }
+        if (!usuario?.id_usuario) {
+            return res.json({ error: true, message: 'Inicie sesion para continuar' })
+        }
+
+        try {
+            //INICIALIZAR SERVICIO
+            const ServiceUsuario = new _UsuarioService()
+            //SERVICIO PARA OBTENER LOS USUARIOS
+            const respuesta = await ServiceUsuario.ObtenerUsuarios(estado)
+
+            //RETORNAR LAS RESPUESTAS DEL SERVICIO
+            return res.json(respuesta)
+
+        } catch (error) {
+            return res.json({ error: true, message: 'Error al obtener los usuarios' })
         }
     }
     public async BuscarUsuario(req: Request, res: Response) {

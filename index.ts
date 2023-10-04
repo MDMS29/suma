@@ -14,7 +14,6 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(cors());
 
-
 //OBTENER LA IP DEL CLIENTE AL REALIZAR ALGUNA ACCIÓN
 app.use(async (req, _, next) => {
     const data = await fetch('https://ipinfo.io/json')

@@ -3,7 +3,8 @@ import { _DB } from "../../config/db";
 import {
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
-    _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario
+    _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
+     _FAObtenerUsuario
 } from "../dao/DaoUsuarios";
 // UsuarioLogeado
 import {
@@ -58,6 +59,17 @@ export const _QueryPermisosModulo = async (id_modulo: number, id_usuario: number
     } catch (error) {
         console.log(error)
         return []
+    }
+}
+
+export const _QueryObtenerUsuarios = async (estado: string) => {
+    try {
+        //FUNCIÓN ALMACENADA PARA TOMAR LOS USUARIOS SEGUN UN ESTADO
+        const result = await _DB.func(_FAObtenerUsuario, [+estado])
+        return result
+    } catch (error) {
+        console.log(error)
+        return
     }
 }
 export const _QueryBuscarUsuario = async (id = 0, usuario = '', correo = '') => {

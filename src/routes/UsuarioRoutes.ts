@@ -14,6 +14,7 @@ const UsuarioController = new _UsuarioController();
 _UsuarioRouter.post('/autenticar_usuario', UsuarioController.AutenticarUsuario);
 
 _UsuarioRouter.route('/')
+    .get(_Autorizacion, UsuarioController.ObtenerUsuarios) //OBTENER USUARIOS DEL SISTEMA SEGUN SU ESTADO
     .post(_Autorizacion, UsuarioController.CrearUsuario);//CREACIÓN DEL USUARIO
 
 //BUSCAR USUARIO CON POR MEDIO DE SU ID

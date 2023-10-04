@@ -6,6 +6,8 @@ export const _FAMenusModulos = 'seguridad.menus_modulo'
 
 export const _FAAccionesModulos = 'seguridad.acciones_modulo'
 
+export const _FAObtenerUsuario = 'seguridad.obtener_usuarios_estado'
+
 export const _FAInsertarUsuario = 'seguridad.insertar_usuario'
 
 export const _FABuscarUsuarioID = 'seguridad.buscar_usuario_id'

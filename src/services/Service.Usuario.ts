@@ -1,9 +1,9 @@
 import {
     _QueryAutenticarUsuario, _QueryBuscarUsuario,
     _QueryMenuModulos, _QueryInsertarUsuario, _QueryPermisosModulo,
-    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario
+    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario, _QueryObtenerUsuarios
 } from "../querys/QuerysUsuarios";
-import { PerfilUsuario,  UsuarioLogin } from "../validations/Types";
+import { PerfilUsuario, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
 
 let bcrypt = require('bcrypt')
@@ -42,6 +42,7 @@ export class _UsuarioService {
             //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
             const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
             respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
+            //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS
             return {
                 usuario:
                 {
@@ -58,6 +59,26 @@ export class _UsuarioService {
             }
         }
         return undefined
+    }
+
+    public async ObtenerUsuarios(estado: string) {
+        //VERIFICACIÓN DEL TIPO DE LA VARIABLE
+        if (typeof estado === 'number') {
+            throw new Error('Error al obtener el estado del usuario')
+        }
+
+        try {
+            //RESPUESTA DE LA CONSULTA
+            const respuesta = await _QueryObtenerUsuarios(estado)
+            if (respuesta) {
+                return respuesta
+            }
+        } catch (error) {
+            console.log(error)
+            return
+        }
+        return
+
     }
 
     public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
