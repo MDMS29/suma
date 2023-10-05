@@ -32,12 +32,12 @@ export type PerfilUsuario = {
 
 export interface UsuarioLogeado extends UsuarioLogin {
     id_usuario: number
-    id_perfil: number
+    id_perfil?: number
     nombre_completo: string
     usuario: string
-    fecha_creacion: Date
+    fecha_creacion?: Date
     correo: null | string
-    id_estado: number
+    id_estado?: number
     token?: string
     perfiles?: PerfilUsuario
     modulos?: ModulosUsuario[]

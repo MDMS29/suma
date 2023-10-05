@@ -1,12 +1,12 @@
-import { _DB } from "../../config/db";
+import { _DB, client } from "../../config/db";
 
 import {
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
-     _FAObtenerUsuario
+    _FAObtenerUsuario, _EditarUsuario
 } from "../dao/DaoUsuarios";
-// UsuarioLogeado
+
 import {
     UsuarioLogin, ModulosUsuario, MenusModulos, PermisosModulos
 } from "../validations/Types";
@@ -16,6 +16,7 @@ let bcrypt = require('bcrypt')
 
 export const _QueryAutenticarUsuario = async ({ usuario, clave }: UsuarioLogin) => {
     try {
+
         //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
         const result = await _DB.func(_FALoginUsuario, [usuario])
         if (result.length !== 0) {
@@ -34,7 +35,7 @@ export const _QueryAutenticarUsuario = async ({ usuario, clave }: UsuarioLogin) 
 export const _QueryModulosUsuario = async (id_usuario: number): Promise<undefined | ModulosUsuario[]> => {
     try {
         //FUNCTIÓN ALMACENADA PARA BUSCAR LOS MODULOS DEL USUARIO POR EL ID DEL USUARIO
-        const result = await _DB.func(_FAModulosUsuario, [id_usuario])
+        const result = await _DB.func(_FAModulosUsuario, [id_usuario, 1])
         return result
     } catch (error) {
         console.log(error)
@@ -61,7 +62,6 @@ export const _QueryPermisosModulo = async (id_modulo: number, id_usuario: number
         return []
     }
 }
-
 export const _QueryObtenerUsuarios = async (estado: string) => {
     try {
         //FUNCIÓN ALMACENADA PARA TOMAR LOS USUARIOS SEGUN UN ESTADO
@@ -72,24 +72,41 @@ export const _QueryObtenerUsuarios = async (estado: string) => {
         return
     }
 }
-export const _QueryBuscarUsuario = async (id = 0, usuario = '', correo = '') => {
-
-    let Result
+export const _QueryBuscarUsuarioID = async (id: number) => {
     try {
-        if (id !== 0) {
-            //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU ID
-            Result = await _DB.func(_FABuscarUsuarioID, [id])
-        }
-        if (usuario !== '' && correo !== '') {
-            //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU USUARIO Y CORREO
-            Result = await _DB.func(_FABuscarUsuarioCorreo, [usuario, correo])
-        }
-        return Result[0]
+        //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU ID
+        let result = await _DB.func(_FABuscarUsuarioID, [id])
+        return result
+
     } catch (error) {
         console.log(error)
         return
     }
 }
+export const _QueryBuscarUsuarioCorreo = async (usuario = '', correo = '') => {
+    try {
+        if (usuario !== '' && correo !== '') {
+            //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU USUARIO Y CORREO
+            let result = await _DB.func(_FABuscarUsuarioCorreo, [usuario, correo])
+            return result
+        }
+        if (usuario !== '') {
+            let result = await client.query('SELECT tu.usuario FROM seguridad.tbl_usuario tu WHERE tu.usuario = $1', [usuario])
+            return result.rows
+        }
+        if (correo !== '') {
+            let result = await client.query('SELECT tu.correo FROM seguridad.tbl_usuario tu WHERE tu.correo = $1', [correo])
+            return result.rows
+        }
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
+
+
+
+
 export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador: string): Promise<number | undefined> => {
     const { nombre_completo, usuario, clave, correo } = RequestUsuario
 
@@ -127,5 +144,15 @@ export const _QueryInsertarPerfilUsuario = async (id_usuario: number, perfiles: 
         console.log(error)
     } finally {
         return true
+    }
+}
+
+export const _QueryEditarUsuario = async ({ id_usuario, usuarioEditado, nombreEditado, correoEditado, claveEditada }: any, UsuarioModificador: string) => {
+    try {
+        const result = await client.query(_EditarUsuario, [id_usuario, nombreEditado, usuarioEditado, claveEditada, UsuarioModificador, correoEditado])
+        return result
+    } catch (error) {
+        console.log(error)
+        return
     }
 }

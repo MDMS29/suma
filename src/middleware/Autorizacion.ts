@@ -15,12 +15,12 @@ export const _Autorizacion = async (req: Request, res: Response, next: NextFunct
         }
 
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string };
-            const usuario = await ServiceUsuario.BuscarUsuario(+decoded.id, '', '');
+            const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: number };
+            const usuario = await ServiceUsuario.BuscarUsuario(decoded.id, '');
             if (usuario === undefined) {
                 return res.json({ error: true, message: 'Usuario no encontrado' });
             }
-            req.usuario = usuario;
+            req.usuario = usuario[0];
             return next();
         } catch (error) {
             return res.json({ error: true, message: 'Inicie sesión para continuar' });

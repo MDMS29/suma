@@ -17,3 +17,14 @@ export const _FABuscarUsuarioCorreo = 'seguridad.buscar_usuario_correo'
 export const _PAInsertarRolModuloUsuario = 'seguridad.insertar_modulo_usuario'
 
 export const _PAInsertarPerfilUsuario = 'seguridad.insertar_perfil_usuario'
+
+export const _EditarUsuario = `
+    UPDATE 
+        seguridad.tbl_usuario
+    SET 
+        nombre_completo=$2, usuario=$3, 
+        clave=$4, fecha_modificacion=now(), 
+        usuario_modificacion=$5, correo=$6
+    WHERE 
+        id_usuario=$1;
+`

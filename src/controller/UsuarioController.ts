@@ -39,7 +39,6 @@ export class _UsuarioController {
             return res.status(400).send(error)
         }
     }
-
     public async ObtenerUsuarios(req: Request, res: Response) {
         const { usuario } = req
         const { estado } = req.query as { estado: string }
@@ -60,7 +59,6 @@ export class _UsuarioController {
             return res.json({ error: true, message: 'Error al obtener los usuarios' })
         }
     }
-
     public async PerfilUsuario(req: Request, res: Response) {
         const { usuario } = req
         res.json(usuario)
@@ -70,7 +68,7 @@ export class _UsuarioController {
         const { id_usuario } = req.params
 
         if (id_usuario) {
-            const respuesta = await ServiceUsuario.BuscarUsuario(+id_usuario, 'param', '')
+            const respuesta = await ServiceUsuario.BuscarUsuario(+id_usuario, 'param')
             if (!respuesta) {
                 return res.json({ error: true, message: 'Usuario no encontrado' })
             }
@@ -79,9 +77,7 @@ export class _UsuarioController {
             return res.status(200).json(respuesta)
         }
         return res.status(404).json({ message: '' })
-
     }
-
     public async CrearUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
         if (!req.usuario?.id_usuario) {
@@ -101,5 +97,27 @@ export class _UsuarioController {
         }
 
         // return res.status(400).json({ message: "No se ha podido crear el usuario" })
+    }
+    public async EditarUsuario(req: Request, res: Response) {
+        const { usuario } = req.body
+        if (!usuario.id_usuario) {
+            return res.json({ error: true, message: "Usuario no definido" })
+        }
+
+        //VALIDACION DE DATOS
+        const result = UsusarioSchema.partial().safeParse(usuario)
+        if (!result.success) {
+            const error = result.error.issues
+            return res.status(400).json(error)
+        }
+        //INICIALIZAR SERVICIO
+        const ServiceUsuario = new _UsuarioService()
+        //SERVICIO PARA EDITAR EL USUARIO
+        const respuesta: any = await ServiceUsuario.EditarUsuario(result.data, req.usuario?.usuario)
+        if (respuesta?.error) {
+            return res.json(respuesta)
+        }
+        
+        return res.json(result.data)
     }
 }
