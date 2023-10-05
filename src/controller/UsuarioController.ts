@@ -60,6 +60,11 @@ export class _UsuarioController {
             return res.json({ error: true, message: 'Error al obtener los usuarios' })
         }
     }
+
+    public async PerfilUsuario(req: Request, res: Response) {
+        const { usuario } = req
+        res.json(usuario)
+    }
     public async BuscarUsuario(req: Request, res: Response) {
         const ServiceUsuario = new _UsuarioService()
         const { id_usuario } = req.params
