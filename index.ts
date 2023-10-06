@@ -3,6 +3,7 @@ import cors from 'cors';
 import { _UsuarioRouter } from './src/routes/UsuarioRoutes';
 import { resolve } from "path";
 import { config } from "dotenv";
+import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
 
 const app = express();
 
@@ -28,6 +29,9 @@ app.use(async (__, _, next) => {
 
 //DEFINIR RUTA DEL USUARIO
 app.use('/suma/api/usuarios', _UsuarioRouter);
+
+//DEFINIR RUTA DE LOS PERFILES
+app.use('/suma/api/perfiles', _PerfilesRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {
