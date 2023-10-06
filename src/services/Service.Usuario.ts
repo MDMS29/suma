@@ -1,9 +1,5 @@
 import {
-    _QueryAutenticarUsuario, _QueryBuscarUsuarioCorreo, _QueryBuscarUsuarioID,
-    _QueryMenuModulos, _QueryInsertarUsuario, _QueryPermisosModulo,
-    _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario,
-    _QueryObtenerUsuarios, _QueryEditarUsuario, _QueryBuscarPerfilUsuario,
-    _QueryEditarPerfilUsuario, _QueryBuscarRolUsuario, _QueryEditarRolUsuario, _QueryCambiarEstadoUsuario
+    _QueryUsuario
 } from "../querys/QuerysUsuarios";
 import { PerfilUsuario, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
@@ -11,10 +7,14 @@ import { generarJWT } from "../validations/utils";
 let bcrypt = require('bcrypt')
 
 export class _UsuarioService {
+
+
     public async AutenticarUsuario(object: UsuarioLogin) {
-        const { usuario, clave } = object;
+        const { usuario, clave } = object
+
+        const QueryUsuario = new _QueryUsuario()
         //----OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO----
-        const respuesta = await _QueryAutenticarUsuario({ usuario, clave })
+        const respuesta = await QueryUsuario.AutenticarUsuario({ usuario, clave })
         if (respuesta) {
             for (const res of respuesta) {
                 res.perfiles = {
@@ -28,15 +28,15 @@ export class _UsuarioService {
             let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
             respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
             //----CARGAR MODULOS DEL USUARIO----
-            const modulos = await _QueryModulosUsuario(respuesta[0]?.id_usuario)
+            const modulos = await QueryUsuario.ModulosUsuario(respuesta[0]?.id_usuario)
             if (modulos) {
                 respuesta.modulos = modulos
                 for (const modulo of modulos) {
                     //CARGA DE MENUS DE LOS MODULOS
-                    const response = await _QueryMenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
+                    const response = await QueryUsuario.MenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
                     modulo.menus = response
                     //CARGAR PERMISOS DEL MODULO
-                    const permisos = await _QueryPermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
+                    const permisos = await QueryUsuario.PermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
                     modulo.permisos = permisos
                 }
             }
@@ -63,6 +63,7 @@ export class _UsuarioService {
         return undefined
     }
     public async ObtenerUsuarios(estado: string) {
+        const QueryUsuario = new _QueryUsuario()
         //VERIFICACIÓN DEL TIPO DE LA VARIABLE
         if (typeof estado === 'number') {
             throw new Error('Error al obtener el estado del usuario')
@@ -70,7 +71,7 @@ export class _UsuarioService {
 
         try {
             //RESPUESTA DE LA CONSULTA
-            const respuesta = await _QueryObtenerUsuarios(estado)
+            const respuesta = await QueryUsuario.ObtenerUsuarios(estado)
             if (respuesta) {
                 return respuesta
             }
@@ -78,14 +79,14 @@ export class _UsuarioService {
             console.log(error)
             return
         }
-        return
 
     }
     public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
+        const QueryUsuario = new _QueryUsuario()
         const { usuario, correo, clave } = RequestUsuario
 
         //BUSCAR EL USUARIO POR SU USUARIO Y CORREO
-        const respuesta = await _QueryBuscarUsuarioCorreo(usuario, correo)
+        const respuesta = await QueryUsuario.BuscarUsuarioCorreo(usuario, correo)
         if (respuesta) {
             //SI EL USUARIO YA ESTA REGISTRADO MOSTRAR ERROR
             return { error: true, message: 'Este usuario ya existe' }
@@ -96,21 +97,21 @@ export class _UsuarioService {
             const hash = await bcrypt.hash(clave, saltRounds)
             RequestUsuario.clave = hash
             //FUNCIOÓN PARA REGISTRAR LA INFORMACIÓN PRINCIPAL DEL USUARIO 
-            const respuesta = await _QueryInsertarUsuario(RequestUsuario, UsuarioCreador)
+            const respuesta = await QueryUsuario.InsertarUsuario(RequestUsuario, UsuarioCreador)
             if (respuesta) {
                 for (let perfil of RequestUsuario.perfiles) {
-                    const res = await _QueryInsertarPerfilUsuario(respuesta, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
+                    const res = await QueryUsuario.InsertarPerfilUsuario(respuesta, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         throw new Error('Error al insertar el perfil')
                     }
                 }
                 for (let rol of RequestUsuario.roles) {
-                    const res = await _QueryInsertarRolModulo(respuesta, rol)// GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
+                    const res = await QueryUsuario.InsertarRolModulo(respuesta, rol)// GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         throw new Error('Error al insertar el rol')
                     }
                 }
-                const data = await _QueryBuscarUsuarioID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
+                const data = await QueryUsuario.BuscarUsuarioID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
                 return data
             }
             //ERRORES DE INSERCIÓN A LA BASE DE DATOS
@@ -121,8 +122,9 @@ export class _UsuarioService {
         }
     }
     public async BuscarUsuario(id = 0, p_user = '') {
+        const QueryUsuario = new _QueryUsuario()
         if (p_user === 'param' && id !== 0) {
-            const respuesta = await _QueryBuscarUsuarioID(id)
+            const respuesta = await QueryUsuario.BuscarUsuarioID(id)
             if (respuesta.length <= 0) {
                 return { error: true, message: "No se ha encontado el usuario" }
             }
@@ -139,15 +141,15 @@ export class _UsuarioService {
                 let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
                 respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
                 //----CARGAR MODULOS DEL USUARIO----
-                const modulos = await _QueryModulosUsuario(respuesta[0]?.id_usuario)
+                const modulos = await QueryUsuario.ModulosUsuario(respuesta[0]?.id_usuario)
                 if (modulos) {
                     respuesta.modulos = modulos
                     for (const modulo of modulos) {
                         //CARGA DE MENUS DE LOS MODULOS
-                        const response = await _QueryMenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
+                        const response = await QueryUsuario.MenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
                         modulo.menus = response
                         //CARGAR PERMISOS DEL MODULO
-                        const permisos = await _QueryPermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
+                        const permisos = await QueryUsuario.PermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
                         modulo.permisos = permisos
                     }
                 }
@@ -171,7 +173,7 @@ export class _UsuarioService {
             }
         }
         if (id !== 0 && p_user == '') {
-            const respuesta = await _QueryBuscarUsuarioID(id)
+            const respuesta = await QueryUsuario.BuscarUsuarioID(id)
             if (respuesta) {
                 for (const res of respuesta) {
                     res.perfiles = {
@@ -192,8 +194,9 @@ export class _UsuarioService {
     }
     public async EditarUsuario(RequestUsuario: any, UsuarioModificador: string) {
         const { id_usuario } = RequestUsuario
+        const QueryUsuario = new _QueryUsuario()
         //BUSCAR LA INFORMACIÓN DEL USUARIO
-        const respuesta = await _QueryBuscarUsuarioID(id_usuario)
+        const respuesta = await QueryUsuario.BuscarUsuarioID(id_usuario)
 
         if (respuesta.length == 0) {
             return { error: true, message: "No se ha encontrado el usuario" }
@@ -208,7 +211,7 @@ export class _UsuarioService {
 
         // VERIFICACION PARA EL USUARIO INGRESADO NO ESTE DUPLICADO
         if (usuarioEditado != usuario) {
-            const usuarioDuplicado = await _QueryBuscarUsuarioCorreo(usuarioEditado, '')
+            const usuarioDuplicado = await QueryUsuario.BuscarUsuarioCorreo(usuarioEditado, '')
             console.log(usuarioDuplicado)
             if (usuarioDuplicado.legnth == 0) {
                 return { error: true, message: "Usuario ya registrado" }
@@ -216,7 +219,7 @@ export class _UsuarioService {
         }
         // VERIFICACION PARA EL CORREO INGRESADO NO ESTE DUPLICADO
         if (correoEditado != correo) {
-            const correoDuplicado = await _QueryBuscarUsuarioCorreo('', correoEditado)
+            const correoDuplicado = await QueryUsuario.BuscarUsuarioCorreo('', correoEditado)
             if (correoDuplicado.legnth == 0) {
                 return { error: true, message: "Correo ya registrado" }
             }
@@ -231,21 +234,22 @@ export class _UsuarioService {
             claveEditada = hash
         }
 
-        const result = await _QueryEditarUsuario({ id_usuario, usuarioEditado, nombreEditado, correoEditado, claveEditada }, UsuarioModificador)
+        const result = await QueryUsuario.EditarUsuario({ id_usuario, usuarioEditado, nombreEditado, correoEditado, claveEditada }, UsuarioModificador)
         return result
     }
     public async EditarPerfilesUsuario(perfiles: any, usuario: number) {
         try {
+            const QueryUsuario = new _QueryUsuario()
             for (let perfil of perfiles) {
-                const perfilExistente: any = await _QueryBuscarPerfilUsuario(perfil, usuario)
+                const perfilExistente: any = await QueryUsuario.BuscarPerfilUsuario(perfil, usuario)
                 if (perfilExistente.length == 0) {
                     // SI EL PERFIL NO EXISTE LO AGREGARA
-                    const res = await _QueryInsertarPerfilUsuario(usuario, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
+                    const res = await QueryUsuario.InsertarPerfilUsuario(usuario, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         return { error: true, message: 'No se pudo guardar el nuevo perfil' }
                     }
                 } else {
-                    const res = await _QueryEditarPerfilUsuario(perfil.id_perfil, perfil.id_estado, usuario)
+                    const res = await QueryUsuario.EditarPerfilUsuario(perfil.id_perfil, perfil.id_estado, usuario)
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el nuevo perfil' }
                     }
@@ -258,17 +262,18 @@ export class _UsuarioService {
     }
     public async EditarPermisosUsuario(permisos: any, usuario: number) {
         try {
+            const QueryUsuario = new _QueryUsuario()
             for (let permiso of permisos) {
-                const permisoExistente: any = await _QueryBuscarRolUsuario(permiso, usuario)
+                const permisoExistente: any = await QueryUsuario.BuscarRolUsuario(permiso, usuario)
                 if (permisoExistente.length == 0) {
                     // SI EL ESTADO NO EXISTE LO AGREGARA
-                    const res = await _QueryInsertarRolModulo(usuario, permiso) // GUARDAR PERMISOS DE USUARIO POR EL ID RETORNADO
+                    const res = await QueryUsuario.InsertarRolModulo(usuario, permiso) // GUARDAR PERMISOS DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         return { error: true, message: 'No se pudo guardar el nuevo permiso' }
                     }
                 } else {
                     //SI EL permiso EXISTE EDITARA SU ESTADO
-                    const res = await _QueryEditarRolUsuario(permiso.id_rol, permiso.id_estado, usuario)
+                    const res = await QueryUsuario.EditarRolUsuario(permiso.id_rol, permiso.id_estado, usuario)
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el permiso' }
                     }
@@ -279,14 +284,14 @@ export class _UsuarioService {
             return { error: true, message: 'Error al editar los permisos del usuario' }
         }
     }
-
     public async CambiarEstadoUsuario(usuario: number, estado: number) {
-        const busqueda = await _QueryBuscarUsuarioID(usuario)
+        const QueryUsuario = new _QueryUsuario()
+        const busqueda = await QueryUsuario.BuscarUsuarioID(usuario)
         if (busqueda.length <= 0) {
             return { error: true, message: 'No se ha encontrado el usuario' }
         }
 
-        const res = await _QueryCambiarEstadoUsuario(usuario, estado)
+        const res = await QueryUsuario.CambiarEstadoUsuario(usuario, estado)
         if (!res) {
             return { error: true, message: 'No se pudo cambiar el estado del usuario' }
         }
