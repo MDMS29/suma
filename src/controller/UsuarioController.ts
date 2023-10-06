@@ -70,11 +70,10 @@ export class _UsuarioController {
         if (id_usuario) {
             const respuesta = await ServiceUsuario.BuscarUsuario(+id_usuario, 'param')
             if (!respuesta) {
-                return res.json({ error: true, message: 'Usuario no encontrado' })
+                return res.json({ error: true, message: 'No se ha encontrado al usuario' })
             }
 
-            res.statusCode = 200
-            return res.status(200).json(respuesta)
+            return res.json(respuesta)
         }
         return res.status(404).json({ message: '' })
     }
@@ -99,15 +98,16 @@ export class _UsuarioController {
         // return res.status(400).json({ message: "No se ha podido crear el usuario" })
     }
     public async EditarUsuario(req: Request, res: Response) {
-        const { usuario, perfiles, permisos } = req.body
+        const { usuario, perfiles, roles } = req.body
+        const { id_usuario } = req.params
         //VALIDACION DE DATOS
-        if (!usuario.id_usuario) {
+        if (!id_usuario) {
             return res.json({ error: true, message: "Usuario no definido" })
         }
-        if (perfiles.length >= 0) {
+        if (perfiles?.length <= 0) {
             return res.json({ error: true, message: "Debe asignarle al menos un perfil al usuario" })
         }
-        if (permisos.length >= 0) {
+        if (roles?.length <= 0) {
             return res.json({ error: true, message: "Debe asignarle permisos al usuario" })
         }
         const result = UsusarioSchema.partial().safeParse(usuario)
@@ -115,7 +115,6 @@ export class _UsuarioController {
             const error = result.error.issues
             return res.status(400).json(error)
         }
-
         //INICIALIZAR SERVICIO
         const ServiceUsuario = new _UsuarioService()
         //SERVICIO PARA EDITAR EL USUARIO
@@ -123,11 +122,44 @@ export class _UsuarioController {
         if (respuesta?.error) {
             return res.json(respuesta)
         }
+        const perfilesEditados: any = await ServiceUsuario.EditarPerfilesUsuario(perfiles, usuario.id_usuario)
+        if (perfilesEditados?.error) {
+            return res.json(perfilesEditados)
+        }
+        const permisoEditado = await ServiceUsuario.EditarPermisosUsuario(roles, usuario.id_usuario)
+        if (permisoEditado?.error) {
+            return res.json(permisoEditado)
+        }
+        const usuarioEditado = await ServiceUsuario.BuscarUsuario(+id_usuario, 'param')
+        if (!usuarioEditado) {
+            return res.json({ error: true, message: 'Usuario no encontrado' })
+        }
 
-        const perfil = await ServiceUsuario.EditarPerfilesUsuario(perfiles, usuario.id_usuario)
-        console.log(perfil)
+        return res.json(usuarioEditado)
+    }
+    public async CambiarEstadoUsuario(req: Request, res: Response) {
+        const { id_usuario } = req.params
+        let { estado } = req.body
 
-
-        return res.json(result.data)
+        if (!id_usuario) {
+            return res.json({ error: true, message: "Usuario no definido" })
+        }
+        if (!estado) {
+            return res.json({ error: true, message: "Estado no definido" })
+        }
+        if (typeof estado === 'string') {
+            //CONVERSION DEL ESTADO STRING A NUMBER PARA ENVIARLO AL SERVICE
+            estado = +estado
+            if (!estado) {
+                return res.json({ error: true, message: "Estado no definido" })
+            }
+        }
+        //INICIALIZAR SERVICIO
+        const ServiceUsuario = new _UsuarioService()
+        const busqueda = await ServiceUsuario.CambiarEstadoUsuario(+id_usuario, estado)
+        if (busqueda?.error) {
+            return res.json(busqueda)
+        }
+        return res.json({ error: false, message: estado == 1 ? 'Se ha activado el usuario' : 'Se ha desactivado el usuario' })
     }
 }

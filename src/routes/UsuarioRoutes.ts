@@ -20,7 +20,8 @@ _UsuarioRouter.route('/')
 // OBTENER EL PERFIL DEL USUARIO 
 _UsuarioRouter.get('/perfil', _Autorizacion, UsuarioController.PerfilUsuario)
 
-//BUSCAR USUARIO CON POR MEDIO DE SU ID
+
 _UsuarioRouter.route('/:id_usuario')
-    .get(_Autorizacion, UsuarioController.BuscarUsuario)
-    .patch(_Autorizacion, UsuarioController.EditarUsuario)
+    .get(_Autorizacion, UsuarioController.BuscarUsuario)//BUSCAR USUARIO CON POR MEDIO DE SU ID
+    .patch(_Autorizacion, UsuarioController.EditarUsuario)//EDITAR EL USUARIO POR ID
+    .delete(_Autorizacion, UsuarioController.CambiarEstadoUsuario)//CAMBIAR EL ESTADO DEL USUARIO POR ID

@@ -1,6 +1,6 @@
 export const _FALoginUsuario = 'seguridad.login_usuario'
 
-export const _FAModulosUsuario = 'seguridad.modulos_usuario'
+export const  _FAModulosUsuario = 'seguridad.modulos_usuario'
 
 export const _FAMenusModulos = 'seguridad.menus_modulo'
 
@@ -28,13 +28,46 @@ export const _EditarUsuario = `
     WHERE 
         id_usuario=$1;
 `
-
 export const _BuscarPerfilUsuario = `
+    SELECT 
+    *
+    FROM
+    seguridad.tbl_perfil_usuario tpu
+    WHERE 
+    tpu.id_usuario = $1 AND tpu.id_perfil = $2;
+    
+`
+export const _EditarPerfilUsuario = `
+        UPDATE 
+            seguridad.tbl_perfil_usuario
+        SET 
+            id_estado=$3
+        WHERE 
+            id_usuario=$1 and id_perfil=$2;
+`
+
+export const _BuscarRolUsuario = `
     SELECT 
         *
     FROM
-        seguridad.tbl_perfil_usuario tpu
+        seguridad.tbl_usuario_roles tur
     WHERE 
-        tpu.id_usuario = $1 AND tpu.id_perfil = $2;
-        
+        tur.id_usuario = $1 AND tur.id_rol_modulo = $2;
+`
+export const _EditarRolUsuario = `
+    UPDATE 
+        seguridad.tbl_usuario_roles tur
+    SET 
+        id_estado=$3
+    WHERE 
+        id_usuario=$1 and  id_rol_modulo= $2;
+`
+
+export const _CambiarEstadoUsuario = `
+    UPDATE 
+        seguridad.tbl_usuario
+    SET 
+        id_estado=$2
+    WHERE 
+        id_usuario=$1
 `

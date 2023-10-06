@@ -4,13 +4,13 @@ import {
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
-    _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario
+    _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
+    _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario, _CambiarEstadoUsuario
 } from "../dao/DaoUsuarios";
 
 import {
     UsuarioLogin, ModulosUsuario, MenusModulos, PermisosModulos
 } from "../validations/Types";
-
 
 let bcrypt = require('bcrypt')
 
@@ -103,7 +103,6 @@ export const _QueryBuscarUsuarioCorreo = async (usuario = '', correo = '') => {
         return
     }
 }
-
 export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador: string): Promise<number | undefined> => {
     const { nombre_completo, usuario, clave, correo } = RequestUsuario
 
@@ -119,31 +118,26 @@ export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador:
         return
     }
 }
-export const _QueryInsertarRolModulo = async (id_usuario: number, roles: any[]) => {
+export const _QueryInsertarPerfilUsuario = async (id_usuario: number, perfil: any) => {
     try {
-        for (const rol of roles) {
-            //PROCESO ALMACENADO PARA INSERTAR LOS ROLES DEL USUARIO 
-            await _DB.proc(_PAInsertarRolModuloUsuario, [id_usuario, rol.id_rol]);
-        }
+        //PROCESO ALMACENADO PARA INSERTAR LOS PERFILES DEL USUARIO 
+        await _DB.proc(_PAInsertarPerfilUsuario, [id_usuario, perfil.id_perfil]);
+        return true
     } catch (error) {
         console.log(error)
-    } finally {
-        return true
+        return
     }
 }
-export const _QueryInsertarPerfilUsuario = async (id_usuario: number, perfiles: any[]) => {
+export const _QueryInsertarRolModulo = async (id_usuario: number, rol: any) => {
     try {
-        for (const perfil of perfiles) {
-            //PROCESO ALMACENADO PARA INSERTAR LOS PERFILES DEL USUARIO 
-            await _DB.proc(_PAInsertarPerfilUsuario, [id_usuario, perfil.id_perfil]);
-        }
+        //PROCESO ALMACENADO PARA INSERTAR LOS ROLES DEL USUARIO 
+        await _DB.proc(_PAInsertarRolModuloUsuario, [id_usuario, rol.id_rol]);
+        return true
     } catch (error) {
         console.log(error)
-    } finally {
-        return true
+        return
     }
 }
-
 export const _QueryEditarUsuario = async ({ id_usuario, usuarioEditado, nombreEditado, correoEditado, claveEditada }: any, UsuarioModificador: string) => {
     try {
         const result = await client.query(_EditarUsuario, [id_usuario, nombreEditado, usuarioEditado, claveEditada, UsuarioModificador, correoEditado])
@@ -153,12 +147,49 @@ export const _QueryEditarUsuario = async ({ id_usuario, usuarioEditado, nombreEd
         return
     }
 }
-
 export const _QueryBuscarPerfilUsuario = async ({ id_perfil }: { id_perfil: number }, usuario: number) => {
     try {
         const result = await client.query(_BuscarPerfilUsuario, [usuario, id_perfil]);
         return result.rows
     } catch (error) {
-        
+        console.log(error)
+        return
+    }
+}
+export const _QueryEditarPerfilUsuario = async (id_perfil: number, id_estado: number, usuario: number) => {
+    try {
+        const result = await client.query(_EditarPerfilUsuario, [usuario, id_perfil, id_estado]);
+        return result.rows
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
+export const _QueryBuscarRolUsuario = async ({ id_rol }: { id_rol: number }, usuario: number) => {
+    try {
+        const result = await client.query(_BuscarRolUsuario, [usuario, id_rol]);
+        return result.rows
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
+export const _QueryEditarRolUsuario = async (id_rol: number, id_estado: number, usuario: number) => {
+    try {
+        const result = await client.query(_EditarRolUsuario, [usuario, id_rol, id_estado]);
+        return result.rows
+    } catch (error) {
+        console.log(error)
+        return
+    }
+}
+
+export const _QueryCambiarEstadoUsuario = async (usuario: number, estado: number) => {
+    try {
+        const result = await client.query(_CambiarEstadoUsuario, [usuario, estado]);
+        return result
+    } catch (error) {
+        console.log(error)
+        return
     }
 }
