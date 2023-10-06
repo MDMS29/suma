@@ -1,7 +1,7 @@
 import z from 'zod'
 
-// const {nombre_completo, usuario, clave, correo} = req.body
 
+// const {nombre_completo, usuario, clave, correo} = req.body
 export const UsusarioSchema = z.object({
     id_usuario : z.number().int().optional(),
     nombre_completo: z.string({

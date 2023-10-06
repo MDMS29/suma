@@ -2,7 +2,8 @@ import {
     _QueryAutenticarUsuario, _QueryBuscarUsuarioCorreo, _QueryBuscarUsuarioID,
     _QueryMenuModulos, _QueryInsertarUsuario, _QueryPermisosModulo,
     _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario,
-    _QueryObtenerUsuarios, _QueryEditarUsuario, _QueryBuscarPerfilUsuario
+    _QueryObtenerUsuarios, _QueryEditarUsuario, _QueryBuscarPerfilUsuario,
+    _QueryEditarPerfilUsuario, _QueryBuscarRolUsuario, _QueryEditarRolUsuario, _QueryCambiarEstadoUsuario
 } from "../querys/QuerysUsuarios";
 import { PerfilUsuario, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
@@ -97,12 +98,20 @@ export class _UsuarioService {
             //FUNCIOÓN PARA REGISTRAR LA INFORMACIÓN PRINCIPAL DEL USUARIO 
             const respuesta = await _QueryInsertarUsuario(RequestUsuario, UsuarioCreador)
             if (respuesta) {
-                if (await _QueryInsertarRolModulo(respuesta, RequestUsuario.roles)) { // GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
-                    if (await _QueryInsertarPerfilUsuario(respuesta, RequestUsuario.perfiles)) { // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
-                        const data = await _QueryBuscarUsuarioID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
-                        return data
+                for (let perfil of RequestUsuario.perfiles) {
+                    const res = await _QueryInsertarPerfilUsuario(respuesta, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
+                    if (!res) {
+                        throw new Error('Error al insertar el perfil')
                     }
                 }
+                for (let rol of RequestUsuario.roles) {
+                    const res = await _QueryInsertarRolModulo(respuesta, rol)// GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
+                    if (!res) {
+                        throw new Error('Error al insertar el rol')
+                    }
+                }
+                const data = await _QueryBuscarUsuarioID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
+                return data
             }
             //ERRORES DE INSERCIÓN A LA BASE DE DATOS
             throw new Error('Error al guardar el usuario')
@@ -114,6 +123,9 @@ export class _UsuarioService {
     public async BuscarUsuario(id = 0, p_user = '') {
         if (p_user === 'param' && id !== 0) {
             const respuesta = await _QueryBuscarUsuarioID(id)
+            if (respuesta.length <= 0) {
+                return { error: true, message: "No se ha encontado el usuario" }
+            }
             if (respuesta) {
                 for (const res of respuesta) {
                     res.perfiles = {
@@ -134,12 +146,15 @@ export class _UsuarioService {
                         //CARGA DE MENUS DE LOS MODULOS
                         const response = await _QueryMenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
                         modulo.menus = response
+                        //CARGAR PERMISOS DEL MODULO
+                        const permisos = await _QueryPermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
+                        modulo.permisos = permisos
                     }
                 }
 
                 //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
                 const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
-                respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
+                // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
                     usuario:
                     {
@@ -149,7 +164,6 @@ export class _UsuarioService {
                         fecha_creacion,
                         correo,
                         id_estado,
-                        token: respuesta.token,
                         perfiles: perfilLogin
                     },
                     modulos: respuesta.modulos
@@ -181,7 +195,7 @@ export class _UsuarioService {
         //BUSCAR LA INFORMACIÓN DEL USUARIO
         const respuesta = await _QueryBuscarUsuarioID(id_usuario)
 
-        if(respuesta.length == 0){
+        if (respuesta.length == 0) {
             return { error: true, message: "No se ha encontrado el usuario" }
         }
 
@@ -195,12 +209,17 @@ export class _UsuarioService {
         // VERIFICACION PARA EL USUARIO INGRESADO NO ESTE DUPLICADO
         if (usuarioEditado != usuario) {
             const usuarioDuplicado = await _QueryBuscarUsuarioCorreo(usuarioEditado, '')
-            return usuarioDuplicado[0] ? { error: true, message: "Usuario ya registrado" } : { error: false, message: "" }
+            console.log(usuarioDuplicado)
+            if (usuarioDuplicado.legnth == 0) {
+                return { error: true, message: "Usuario ya registrado" }
+            }
         }
         // VERIFICACION PARA EL CORREO INGRESADO NO ESTE DUPLICADO
         if (correoEditado != correo) {
             const correoDuplicado = await _QueryBuscarUsuarioCorreo('', correoEditado)
-            return correoDuplicado[0] ? { error: true, message: "Correo ya registrado" } : { error: false, message: "" }
+            if (correoDuplicado.legnth == 0) {
+                return { error: true, message: "Correo ya registrado" }
+            }
         }
 
         let matchPass = await bcrypt.compare(RequestUsuario.clave, clave)
@@ -213,15 +232,64 @@ export class _UsuarioService {
         }
 
         const result = await _QueryEditarUsuario({ id_usuario, usuarioEditado, nombreEditado, correoEditado, claveEditada }, UsuarioModificador)
-        // console.log(result)
         return result
     }
-    public async EditarPerfilesUsuario(perfiles : [], usuario: number){
-        for(let perfil of perfiles) {
-            const perfilExistente = await _QueryBuscarPerfilUsuario(perfil, usuario)
-            if(perfilExistente){
-                console.log(perfilExistente)
+    public async EditarPerfilesUsuario(perfiles: any, usuario: number) {
+        try {
+            for (let perfil of perfiles) {
+                const perfilExistente: any = await _QueryBuscarPerfilUsuario(perfil, usuario)
+                if (perfilExistente.length == 0) {
+                    // SI EL PERFIL NO EXISTE LO AGREGARA
+                    const res = await _QueryInsertarPerfilUsuario(usuario, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
+                    if (!res) {
+                        return { error: true, message: 'No se pudo guardar el nuevo perfil' }
+                    }
+                } else {
+                    const res = await _QueryEditarPerfilUsuario(perfil.id_perfil, perfil.id_estado, usuario)
+                    if (!res) {
+                        return { error: true, message: 'No se pudo editar el nuevo perfil' }
+                    }
+                }
             }
+            return { error: false, message: '' }
+        } catch (error) {
+            return { error: true, message: 'Error al editar los perfiles del usuario' }
         }
+    }
+    public async EditarPermisosUsuario(permisos: any, usuario: number) {
+        try {
+            for (let permiso of permisos) {
+                const permisoExistente: any = await _QueryBuscarRolUsuario(permiso, usuario)
+                if (permisoExistente.length == 0) {
+                    // SI EL ESTADO NO EXISTE LO AGREGARA
+                    const res = await _QueryInsertarRolModulo(usuario, permiso) // GUARDAR PERMISOS DE USUARIO POR EL ID RETORNADO
+                    if (!res) {
+                        return { error: true, message: 'No se pudo guardar el nuevo permiso' }
+                    }
+                } else {
+                    //SI EL permiso EXISTE EDITARA SU ESTADO
+                    const res = await _QueryEditarRolUsuario(permiso.id_rol, permiso.id_estado, usuario)
+                    if (!res) {
+                        return { error: true, message: 'No se pudo editar el permiso' }
+                    }
+                }
+            }
+            return { error: false, message: '' }
+        } catch (error) {
+            return { error: true, message: 'Error al editar los permisos del usuario' }
+        }
+    }
+
+    public async CambiarEstadoUsuario(usuario: number, estado: number) {
+        const busqueda = await _QueryBuscarUsuarioID(usuario)
+        if (busqueda.length <= 0) {
+            return { error: true, message: 'No se ha encontrado el usuario' }
+        }
+
+        const res = await _QueryCambiarEstadoUsuario(usuario, estado)
+        if (!res) {
+            return { error: true, message: 'No se pudo cambiar el estado del usuario' }
+        }
+        return
     }
 }
