@@ -28,3 +28,13 @@ export const _EditarUsuario = `
     WHERE 
         id_usuario=$1;
 `
+
+export const _BuscarPerfilUsuario = `
+    SELECT 
+        *
+    FROM
+        seguridad.tbl_perfil_usuario tpu
+    WHERE 
+        tpu.id_usuario = $1 AND tpu.id_perfil = $2;
+        
+`

@@ -2,7 +2,7 @@ import {
     _QueryAutenticarUsuario, _QueryBuscarUsuarioCorreo, _QueryBuscarUsuarioID,
     _QueryMenuModulos, _QueryInsertarUsuario, _QueryPermisosModulo,
     _QueryInsertarRolModulo, _QueryInsertarPerfilUsuario, _QueryModulosUsuario,
-    _QueryObtenerUsuarios, _QueryEditarUsuario
+    _QueryObtenerUsuarios, _QueryEditarUsuario, _QueryBuscarPerfilUsuario
 } from "../querys/QuerysUsuarios";
 import { PerfilUsuario, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
@@ -215,5 +215,13 @@ export class _UsuarioService {
         const result = await _QueryEditarUsuario({ id_usuario, usuarioEditado, nombreEditado, correoEditado, claveEditada }, UsuarioModificador)
         // console.log(result)
         return result
+    }
+    public async EditarPerfilesUsuario(perfiles : [], usuario: number){
+        for(let perfil of perfiles) {
+            const perfilExistente = await _QueryBuscarPerfilUsuario(perfil, usuario)
+            if(perfilExistente){
+                console.log(perfilExistente)
+            }
+        }
     }
 }

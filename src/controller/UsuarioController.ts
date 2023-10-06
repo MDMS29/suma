@@ -99,17 +99,23 @@ export class _UsuarioController {
         // return res.status(400).json({ message: "No se ha podido crear el usuario" })
     }
     public async EditarUsuario(req: Request, res: Response) {
-        const { usuario } = req.body
+        const { usuario, perfiles, permisos } = req.body
+        //VALIDACION DE DATOS
         if (!usuario.id_usuario) {
             return res.json({ error: true, message: "Usuario no definido" })
         }
-
-        //VALIDACION DE DATOS
+        if (perfiles.length >= 0) {
+            return res.json({ error: true, message: "Debe asignarle al menos un perfil al usuario" })
+        }
+        if (permisos.length >= 0) {
+            return res.json({ error: true, message: "Debe asignarle permisos al usuario" })
+        }
         const result = UsusarioSchema.partial().safeParse(usuario)
         if (!result.success) {
             const error = result.error.issues
             return res.status(400).json(error)
         }
+
         //INICIALIZAR SERVICIO
         const ServiceUsuario = new _UsuarioService()
         //SERVICIO PARA EDITAR EL USUARIO
@@ -117,7 +123,11 @@ export class _UsuarioController {
         if (respuesta?.error) {
             return res.json(respuesta)
         }
-        
+
+        const perfil = await ServiceUsuario.EditarPerfilesUsuario(perfiles, usuario.id_usuario)
+        console.log(perfil)
+
+
         return res.json(result.data)
     }
 }

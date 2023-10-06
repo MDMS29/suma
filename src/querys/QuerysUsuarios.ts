@@ -4,7 +4,7 @@ import {
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
-    _FAObtenerUsuario, _EditarUsuario
+    _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario
 } from "../dao/DaoUsuarios";
 
 import {
@@ -104,9 +104,6 @@ export const _QueryBuscarUsuarioCorreo = async (usuario = '', correo = '') => {
     }
 }
 
-
-
-
 export const _QueryInsertarUsuario = async (RequestUsuario: any, UsuarioCreador: string): Promise<number | undefined> => {
     const { nombre_completo, usuario, clave, correo } = RequestUsuario
 
@@ -154,5 +151,14 @@ export const _QueryEditarUsuario = async ({ id_usuario, usuarioEditado, nombreEd
     } catch (error) {
         console.log(error)
         return
+    }
+}
+
+export const _QueryBuscarPerfilUsuario = async ({ id_perfil }: { id_perfil: number }, usuario: number) => {
+    try {
+        const result = await client.query(_BuscarPerfilUsuario, [usuario, id_perfil]);
+        return result.rows
+    } catch (error) {
+        
     }
 }
