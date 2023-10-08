@@ -1,6 +1,7 @@
 export type UsuarioLogin = {
     usuario: string
     clave?: string
+    captcha: string
 }
 
 export type PermisosModulos = {
@@ -30,18 +31,20 @@ export type PerfilUsuario = {
     modulos: ModulosUsuario[]
 }
 
-export interface UsuarioLogeado extends UsuarioLogin {
+export interface UsuarioLogueado extends UsuarioLogin {
     id_usuario: number
-    id_perfil?: number
     nombre_completo: string
     usuario: string
+    correo: string
     fecha_creacion?: Date
-    correo: null | string
-    id_estado?: number
+    id_estado?: string
     token?: string
+
+
+    id_perfil?: number
+    nombre_perfil: string
     perfiles?: PerfilUsuario
     modulos?: ModulosUsuario[]
-    // id_estado?: string;
     // fecha_modificacion: null;
     // usuario_creacion: string;
     // usuario_modificacion: null;

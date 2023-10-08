@@ -15,11 +15,9 @@ import {
 let bcrypt = require('bcrypt')
 
 export class _QueryUsuario {
-
-
-    public async AutenticarUsuario({ usuario, clave }: UsuarioLogin) {
+   
+    public async AutenticarUsuario({ usuario, clave }: Omit<UsuarioLogin, 'captcha'>)  {
         try {
-
             //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
             const result = await _DB.func(_FALoginUsuario, [usuario])
             if (result.length !== 0) {
@@ -186,7 +184,6 @@ export class _QueryUsuario {
             return
         }
     }
-
     public async CambiarEstadoUsuario(usuario: number, estado: number) {
         try {
             const result = await client.query(_CambiarEstadoUsuario, [usuario, estado]);

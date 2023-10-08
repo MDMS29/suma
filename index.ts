@@ -1,6 +1,6 @@
 import express, { Response } from 'express';
 import cors from 'cors';
-import { _UsuarioRouter } from './src/routes/UsuarioRoutes';
+import { _Usuario_Router } from './src/routes/UsuarioRoutes';
 import { resolve } from "path";
 import { config } from "dotenv";
 import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
@@ -15,6 +15,15 @@ app.disable('x-powered-by');
 app.use(express.json());
 app.use(cors());
 
+// DEFINIR TIPOS PARA EL OBJETO REQUEST
+declare global {
+    namespace Express {
+        interface Request {
+            usuario?: any;
+        }
+    }
+}
+
 //OBTENER LA IP DEL CLIENTE AL REALIZAR ALGUNA ACCIÓN
 app.use(async (__, _, next) => {
     const data = await fetch('https://ipinfo.io/json')
@@ -27,8 +36,10 @@ app.use(async (__, _, next) => {
     next()
 });
 
+
 //DEFINIR RUTA DEL USUARIO
-app.use('/suma/api/usuarios', _UsuarioRouter);
+// Crear una instancia del enrutador de usuario
+app.use('/suma/api/usuarios', _Usuario_Router);
 
 //DEFINIR RUTA DE LOS PERFILES
 app.use('/suma/api/perfiles', _PerfilesRouter)
@@ -41,12 +52,3 @@ app.use((_, res: Response) => {
 app.listen(PORT, () => {
     console.log(`Servidor en ejecución en el puerto ${PORT}`);
 });
-
-// DEFINIR TIPOS PARA EL OBJETO REQUEST
-declare global {
-    namespace Express {
-        interface Request {
-            usuario?: any;
-        }
-    }
-}
