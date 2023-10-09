@@ -6,7 +6,7 @@ import {
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
     _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
     _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario, _CambiarEstadoUsuario
-} from "../dao/DaoUsuarios";
+} from "../dao/DaoUsuario";
 
 import {
     UsuarioLogin, ModulosUsuario, MenusModulos, PermisosModulos

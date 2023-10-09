@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { _UsuarioService } from '../services/Service.Usuario';
+import { UsuarioService } from '../services/Service.Usuario';
 
 export const _Autorizacion = async (req: Request, res: Response, next: NextFunction) => {
-    const ServiceUsuario = new _UsuarioService()
+    const ServiceUsuario = new UsuarioService()
     try {
         if (!process.env.JWT_SECRET) {
             throw new Error('La variable de entorno JWT_SECRET no está configurada');

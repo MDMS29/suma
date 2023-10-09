@@ -1,16 +1,10 @@
 import { Request, Response } from 'express';
-import { _UsuarioService } from '../services/Service.Usuario';
+import { UsuarioService } from '../services/Service.Usuario';
 import { EstadosTablas, _ParseClave, _ParseCorreo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
 import { UsusarioSchema } from '../validations/UsuarioSchemas';
 
-export class _UsuarioController {
-    private _Usuario_Service: _UsuarioService;
-
-    constructor(_Usuario_Service: _UsuarioService) {
-        //INICIALIZAR SERVICIO
-        this._Usuario_Service = _Usuario_Service;
-    }
+export class UsuarioController {
 
     public async AutenticarUsuario(req: Request, res: Response) {
         //TOMAR LA INFORMACIÓN DEL USUARIO ENVIADO
@@ -26,8 +20,10 @@ export class _UsuarioController {
                 clave: _ParseClave(clave)
             }
 
+            const _Usuario_Service = new UsuarioService()
+
             //SERVICIO PARA LA AUTENTICACIÓN
-            const val = await this._Usuario_Service.AutenticarUsuario(UsuarioLogin)
+            const val = await _Usuario_Service.AutenticarUsuario(UsuarioLogin)
             //VERFICICARIÓN DE DATOS RETORNADOS
             if (!val) {
                 //RESPUESTA AL CLIENTE
@@ -51,8 +47,9 @@ export class _UsuarioController {
         }
 
         try {
+            const _Usuario_Service = new UsuarioService()
             //SERVICIO PARA OBTENER LOS USUARIOS
-            const respuesta = await this._Usuario_Service.ObtenerUsuarios(estado)
+            const respuesta = await _Usuario_Service.ObtenerUsuarios(estado)
             if (!respuesta) {
                 return res.json({ error: true, message: 'No se han encontrado usuarios activos' }) //ERROR
             }
@@ -73,8 +70,9 @@ export class _UsuarioController {
         const { id_usuario } = req.params //OBTENER LA ID DEL USUARIO POR PARAMETROS
 
         try {
+            const _Usuario_Service = new UsuarioService()
             if (id_usuario) { //VALIDAR ID
-                const respuesta = await this._Usuario_Service.BuscarUsuario(+id_usuario, 'param') //INVOCAR LA FUNCION PARA BUSCAR EL USUARIO
+                const respuesta = await _Usuario_Service.BuscarUsuario(+id_usuario, 'param') //INVOCAR LA FUNCION PARA BUSCAR EL USUARIO
                 if (!respuesta) { //VALIDAR SI NO HAY RESPUESTA
                     return res.json({ error: true, message: 'No se ha encontrado al usuario' }) //ERROR
                 }
@@ -98,13 +96,22 @@ export class _UsuarioController {
             return res.json({ error: true, message: result.error.issues }) //ERROR
         }
         try {
-
-            const respuesta = await this._Usuario_Service.InsertarUsuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA INSERTAR EL USUARIO
-            if (!respuesta.error) { //SI LA RESPUESTA LLEGA CORRECTAMENTE
-                return res.json(respuesta) //ENVIAR LA INFORMACION DEL USUARIO CREADO
-            } else {
-                return res.json({ error: true, message: respuesta }) //ERROR
+            const _Usuario_Service = new UsuarioService()
+            const respuesta = await _Usuario_Service.InsertarUsuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA INSERTAR EL USUARIO
+            if (respuesta.error) { //SI LA RESPUESTA LLEGA CORRECTAMENTE
+                return res.json(respuesta) //ERROR
             }
+            //TOMAR LA INFORMACION PERSONALIZADA PARA ENVIARLA HACIA EL CLIENTE
+            const { id_usuario, nombre_completo, usuario, id_estado, correo, estado_usuario } = respuesta
+
+            return res.json({
+                id_usuario,
+                nombre_completo,
+                usuario,
+                id_estado,
+                estado_usuario,
+                correo
+            }) //ENVIAR LA INFORMACION DEL USUARIO CREADO
         } catch (error) {
             return res.json({ error: true, message: 'Error al crear el usuario' }) //ERROR
         }
@@ -132,24 +139,29 @@ export class _UsuarioController {
             return res.json({ error: true, message: result.error.issues }) //ERROR
         }
 
-        const respuesta: any = await this._Usuario_Service.EditarUsuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA EDITAR EL USUARIO
-        if (respuesta?.error) { //VALIDAR SI HAY UN ERROR
-            return res.json(respuesta) //ERROR
+        try {
+            const _Usuario_Service = new UsuarioService()
+            const respuesta: any = await _Usuario_Service.EditarUsuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA EDITAR EL USUARIO
+            if (respuesta?.error) { //VALIDAR SI HAY UN ERROR
+                return res.json(respuesta) //ERROR
+            }
+            const perfilesEditados: any = await _Usuario_Service.EditarPerfilesUsuario(perfiles, usuario.id_usuario) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
+            if (perfilesEditados?.error) { //VALIDAR SI HAY UN ERROR
+                return res.json(perfilesEditados) //ERROR
+            }
+            const permisoEditado = await _Usuario_Service.EditarPermisosUsuario(roles, usuario.id_usuario) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
+            if (permisoEditado?.error) {//VALIDAR SI HAY UN ERROR
+                return res.json(permisoEditado) //ERROR
+            }
+            const usuarioEditado = await _Usuario_Service.BuscarUsuario(+id_usuario, 'param')
+            if (!usuarioEditado) {//VALIDAR SI HAY UN ERROR
+                return res.json({ error: true, message: 'Usuario no encontrado' })
+            }
+            return res.json(usuarioEditado) //RETORNO DE USUARIO EDITADO
+        } catch (error) {
+            console.log(error)
+            return res.json({ error: true, message: 'Error al editar el usuario' }) //ERROR
         }
-        const perfilesEditados: any = await this._Usuario_Service.EditarPerfilesUsuario(perfiles, usuario.id_usuario) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
-        if (perfilesEditados?.error) { //VALIDAR SI HAY UN ERROR
-            return res.json(perfilesEditados) //ERROR
-        }
-        const permisoEditado = await this._Usuario_Service.EditarPermisosUsuario(roles, usuario.id_usuario) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
-        if (permisoEditado?.error) {//VALIDAR SI HAY UN ERROR
-            return res.json(permisoEditado) //ERROR
-        }
-        const usuarioEditado = await this._Usuario_Service.BuscarUsuario(+id_usuario, 'param')
-        if (!usuarioEditado) {//VALIDAR SI HAY UN ERROR
-            return res.json({ error: true, message: 'Usuario no encontrado' })
-        }
-
-        return res.json(usuarioEditado) //RETORNO DE USUARIO EDITADO
     }
 
     public async CambiarEstadoUsuario(req: Request, res: Response) {
@@ -173,12 +185,18 @@ export class _UsuarioController {
                 return res.json({ error: true, message: "Estado no definido" }) //VALIDAR SI EL ESTADO ES UN VALOR VALIDO
             }
         }
-        const busqueda = await this._Usuario_Service.CambiarEstadoUsuario(+id_usuario, estado) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
-        if (busqueda?.error) { //VALIDAR SI HAY ALGUN ERROR
-            return res.json(busqueda) //ERROR
-        }
+        try {
+            const _Usuario_Service = new UsuarioService()
+            const busqueda = await _Usuario_Service.CambiarEstadoUsuario({ usuario: +id_usuario, estado }) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
+            if (busqueda?.error) { //VALIDAR SI HAY ALGUN ERROR
+                return res.json(busqueda) //ERROR
+            }
 
-        //ENVIAR INFORMACION DEPENDIENDO DEL ESTADO
-        return res.json({ error: false, message: estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el usuario' : 'Se ha desactivado el usuario' })
+            //ENVIAR INFORMACION DEPENDIENDO DEL ESTADO
+            return res.json({ error: false, message: estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el usuario' : 'Se ha desactivado el usuario' })
+        } catch (error) {
+            console.log(error)
+            return res.json({ error: true, message: "Error al cambiar el estado del usuario" }) //ERROR
+        }
     }
 }

@@ -7,4 +7,8 @@ export const _PerfilesRouter = Router()
 const PerfilController = new _PerfilController()
 
 //OBTENER TODOS LOS PERFILES
-_PerfilesRouter.get('/', _Autorizacion, PerfilController.ObtenerPerfiles)
+_PerfilesRouter.route('/')
+    .get(_Autorizacion, PerfilController.ObtenerPerfiles)
+    .post(_Autorizacion, PerfilController.InsertarPerfil)
+
+_PerfilesRouter.get('/modulos', _Autorizacion, PerfilController.ObtenerModulosPerfiles)

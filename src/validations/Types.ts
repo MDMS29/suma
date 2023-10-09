@@ -49,3 +49,8 @@ export interface UsuarioLogueado extends UsuarioLogin {
     // usuario_creacion: string;
     // usuario_modificacion: null;
 }
+
+export type MessageError = {
+    error: boolean
+    message: string
+}

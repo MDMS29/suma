@@ -1,16 +1,14 @@
-import {
-    _QueryUsuario
-} from "../querys/QuerysUsuarios";
+import { QueryUsuario } from "../querys/QuerysUsuario";
 import { PerfilUsuario, UsuarioLogin } from "../validations/Types";
 import { generarJWT } from "../validations/utils";
 
 let bcrypt = require('bcrypt')
 
-export class _UsuarioService {
-    private _Query_Usuario: _QueryUsuario;
+export class UsuarioService {
+    private _Query_Usuario: QueryUsuario;
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
-        this._Query_Usuario = new _QueryUsuario();
+        this._Query_Usuario = new QueryUsuario();
     }
 
     public async AutenticarUsuario(object: Omit<UsuarioLogin, 'captcha'>) {
@@ -88,9 +86,11 @@ export class _UsuarioService {
     public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
         const { usuario, correo, clave } = RequestUsuario
 
+        
         //BUSCAR EL USUARIO POR SU USUARIO Y CORREO
         const respuesta = await this._Query_Usuario.BuscarUsuarioCorreo(usuario, correo)
-        if (respuesta) {
+        console.log(respuesta)
+        if (respuesta.length > 0) {
             //SI EL USUARIO YA ESTA REGISTRADO MOSTRAR ERROR
             return { error: true, message: 'Este usuario ya existe' }
         }
@@ -115,7 +115,7 @@ export class _UsuarioService {
                     }
                 }
                 const data = await this._Query_Usuario.BuscarUsuarioID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
-                return data
+                return data[0]
             }
             //ERRORES DE INSERCIÓN A LA BASE DE DATOS
             throw new Error('Error al guardar el usuario') //ERROR
@@ -198,9 +198,8 @@ export class _UsuarioService {
 
     public async EditarUsuario(RequestUsuario: any, UsuarioModificador: string) {
         const { id_usuario } = RequestUsuario
-        //BUSCAR LA INFORMACIÓN DEL USUARIO
+        //BUSCAR LA INFORMACIÓN DEL USUARIO        
         const respuesta = await this._Query_Usuario.BuscarUsuarioID(id_usuario) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
-
         if (respuesta.length == 0) { //SI LA RESPUESTA ES VACIA ENVIAR ERROR
             return { error: true, message: "No se ha encontrado el usuario" } //ERROR
         }
@@ -212,8 +211,9 @@ export class _UsuarioService {
         let Correo_Editado: string = RequestUsuario.correo == correo ? correo : RequestUsuario.correo //NUEVO CORREO
         let Clave_Editada: string //VARIABLE PARA LA CLAVE
 
+        
         try {
-
+            
             // VERIFICACION PARA EL USUARIO INGRESADO NO ESTE DUPLICADO
             if (Usuario_Editado != usuario) {
                 const usuarioDuplicado = await this._Query_Usuario.BuscarUsuarioCorreo(Usuario_Editado, '') //INVOCAR FUNCION PARA BUSCAR EL USUARIO 
@@ -228,7 +228,7 @@ export class _UsuarioService {
                     return { error: true, message: "Correo ya registrado" } //ERROR
                 }
             }
-
+            
             let matchPass = await bcrypt.compare(RequestUsuario.clave, clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
             if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
                 Clave_Editada = clave
@@ -237,7 +237,7 @@ export class _UsuarioService {
                 const hash = await bcrypt.hash(RequestUsuario.clave, saltRounds)
                 Clave_Editada = hash
             }
-
+            
             //INVOCAR FUNCION PARA EDITAR EL USUARIO
             const result = await this._Query_Usuario.EditarUsuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador)
             return result //RETORNAR EL USUARIO EDITADO
@@ -246,7 +246,7 @@ export class _UsuarioService {
             return { error: true, message: "Error al editar el usuario" } //ERROR
         }
     }
-
+    
     public async EditarPerfilesUsuario(perfiles: any, usuario: number) {
         try {
             for (let perfil of perfiles) {
@@ -264,15 +264,15 @@ export class _UsuarioService {
                     }
                 }
             }
-            return { error: false, message: '' } 
+            return { error: false, message: '' }
         } catch (error) {
+            console.log(error)
             return { error: true, message: 'Error al editar los perfiles del usuario' } //ERROR
         }
     }
 
     public async EditarPermisosUsuario(permisos: any, usuario: number) {
         try {
-
             for (let permiso of permisos) {
                 const permisoExistente: any = await this._Query_Usuario.BuscarRolUsuario(permiso, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
                 if (permisoExistente.length == 0) { //VERIFICAR SI EL USUARIO TIENE UN ROL
@@ -290,20 +290,25 @@ export class _UsuarioService {
             }
             return { error: false, message: '' }
         } catch (error) {
+            console.log(error)
             return { error: true, message: 'Error al editar los permisos del usuario' } //ERROR
         }
     }
 
-    public async CambiarEstadoUsuario(usuario: number, estado: number) {
+    public async CambiarEstadoUsuario({ usuario, estado }: { usuario: number; estado: number; }){
         const busqueda = await this._Query_Usuario.BuscarUsuarioID(usuario)
         if (busqueda.length <= 0) {
             return { error: true, message: 'No se ha encontrado el usuario' }
         }
-
-        const res = await this._Query_Usuario.CambiarEstadoUsuario(usuario, estado)
-        if (!res) {
-            return { error: true, message: 'No se pudo cambiar el estado del usuario' }
+        try {
+            const res = await this._Query_Usuario.CambiarEstadoUsuario(usuario, estado)
+            if (!res) {
+                return { error: true, message: 'No se pudo cambiar el estado del usuario' }
+            }
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al cambiar el estado del usuario' }
         }
-        return
+       return  
     }
 }
