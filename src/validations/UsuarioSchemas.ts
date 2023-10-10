@@ -32,3 +32,11 @@ export const UsusarioSchema = z.object({
         })
     }).array(),
 })
+
+
+export const PerfilesSchema = z.object({
+    nombre_perfil : z.string().min(5).max(50),
+    modulos : z.object({
+        id_modulo: z.number()
+    }).array()
+})

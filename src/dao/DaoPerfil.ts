@@ -56,10 +56,32 @@ export const _BuscarPerfilNombre = `
 
 export const _PermisosModulosPerfil = `
     SELECT 
-        distinct trm.id_rol, tr.nombre
+        distinct trm.id_rol, tr.nombre, trm.id_rol_modulo
     FROM seguridad.tbl_rol_modulo trm
     INNER JOIN seguridad.tbl_modulo tm ON tm.id_modulo = trm.id_modulo
     INNER JOIN seguridad.tbl_roles tr ON tr.id_rol = trm.id_rol
     WHERE 
         trm.id_modulo = $1
+`
+
+export const _EditarPerfil = `
+    UPDATE 
+        seguridad.tbl_perfiles
+    SET 
+        nombre_perfil=$2, fecha_modificacion=now(), usuario_modificacion=$3
+    WHERE 
+        id_perfil=$1;
+`
+
+export const _BuscarModulosPerfil = `
+    SELECT 
+        tm.id_modulo, tm.cod_modulo, tm.nombre_modulo
+    FROM 
+        seguridad.tbl_modulo_perfiles tp
+
+    INNER JOIN seguridad.tbl_modulo tm ON tm.id_modulo = tp.id_modulo
+    WHERE 
+        tp.id_perfil = $1 AND
+        tm.id_modulo = $2 AND
+        tp.id_estado != 2;
 `

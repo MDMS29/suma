@@ -2,13 +2,18 @@ import { Router } from "express";
 import { _Autorizacion } from "../middleware/Autorizacion";
 import { _PerfilController } from "../controller/PerfilController";
 
+//INICIALIZAR RUTAS PARA PERFILES
 export const _PerfilesRouter = Router()
 
+//INICIALIZAR CONTROLADOR DE PERFIL
 const PerfilController = new _PerfilController()
 
-//OBTENER TODOS LOS PERFILES
-_PerfilesRouter.route('/')
-    .get(_Autorizacion, PerfilController.ObtenerPerfiles)
-    .post(_Autorizacion, PerfilController.InsertarPerfil)
 
-_PerfilesRouter.get('/modulos', _Autorizacion, PerfilController.ObtenerModulosPerfiles)
+_PerfilesRouter.route('/')
+    .get(_Autorizacion, PerfilController.ObtenerPerfiles) //OBTENER TODOS LOS PERFILES
+    .post(_Autorizacion, PerfilController.InsertarPerfil) //INSERTAR PERFIL
+
+_PerfilesRouter.post('/modulos', _Autorizacion, PerfilController.ObtenerModulosPerfiles)// OBTENER LOS MODULOS DE LOS PERFILES
+
+_PerfilesRouter.route('/:id_perfil')
+.patch (_Autorizacion, PerfilController.EditarPerfil)

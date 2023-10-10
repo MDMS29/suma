@@ -1,5 +1,12 @@
 import { client } from "../../config/db";
-import { _ObtenerPerfiles, _ObtenerModulosPerfil, _InsertarPerfil, _InsertarModuloPerfil, _BuscarPerfilID, _BuscarPerfilNombre, _PermisosModulosPerfil } from "../dao/DaoPerfil";
+import {
+    _ObtenerPerfiles, _ObtenerModulosPerfil, _InsertarPerfil,
+    _InsertarModuloPerfil, _BuscarPerfilID,
+    _PermisosModulosPerfil,
+    _EditarPerfil,
+    _BuscarModulosPerfil
+} from "../dao/DaoPerfil";
+// _BuscarPerfilNombre,
 import { PerfilUsuario } from "../validations/Types";
 
 export class QueryPerfil {
@@ -54,8 +61,9 @@ export class QueryPerfil {
 
     public async BuscarPerfilNombre(nombre_perfil: string) {
         try {
-            const result = await client.query(_BuscarPerfilNombre, [nombre_perfil]);
-            return result.rows
+            const result = await client.query(_ObtenerPerfiles, [1]);
+            const repetido = result.rows.filter(x => x.nombre_perfil.toLowerCase() === nombre_perfil.toLowerCase())
+            return repetido
         } catch (error) {
             console.log(error)
             return
@@ -65,7 +73,27 @@ export class QueryPerfil {
     public async PermisosModulosPerfil(id_modulo: number) {
         try {
             const result = await client.query(_PermisosModulosPerfil, [id_modulo]);
-            return result. rows
+            return result.rows
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
+
+    public async EditarPerfil({ id_perfil, nombre_editado, usuario_creacion }: { id_perfil: number, nombre_editado: string, usuario_creacion: string }) {
+        try {
+            const result = await client.query(_EditarPerfil, [id_perfil, nombre_editado, usuario_creacion])
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
+
+    public async BuscarModuloPerfil(id_perfil: number, id_modulo: number) {
+        try {
+            const result = await client.query(_BuscarModulosPerfil, [id_perfil, id_modulo])
+            return result.rows
         } catch (error) {
             console.log(error)
             return

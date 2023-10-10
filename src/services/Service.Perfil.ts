@@ -7,6 +7,15 @@ export class PerfilService {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Perfil = new QueryPerfil();
     }
+    private ReduceModulos(result: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>, modulos: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>) {
+        modulos.forEach((modulo) => {
+            const esModulo = result.find((existe) => existe.nombre_modulo === modulo.nombre_modulo);
+            if (!esModulo) {
+                result.push(modulo);
+            }
+        });
+        return result;
+    }
 
     public async ObtenerPerfiles(estado: number): Promise<MessageError | any> {
         if (!estado) {
@@ -33,15 +42,6 @@ export class PerfilService {
         }
     }
 
-    private ReduceModulos(result: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>, modulos: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>) {
-        modulos.forEach((modulo) => {
-            const esModulo = result.find((existe) => existe.nombre_modulo === modulo.nombre_modulo);
-            if (!esModulo) {
-                result.push(modulo);
-            }
-        });
-        return result;
-    }
     public async ObtenerModulosPerfil(perfiles: any): Promise<MessageError | any> {
         let Modulos = []
 
@@ -51,12 +51,13 @@ export class PerfilService {
                 const respuesta = await this._Query_Perfil.ModulosPerfil(perfil.id_perfil)
                 Modulos.push(respuesta);
             }
-            const result: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string,  permisos?: any }> = Modulos.reduce(this.ReduceModulos, []);
+            const result: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }> = Modulos.reduce(this.ReduceModulos, []);
 
             if (result.length <= 0) {
                 return { error: true, message: 'No se han podido cargar los modulos del perfil' }
             }
 
+            //OBTENER LOS PERMISOS DE LOS MODULOS
             for (let modulo of result) {
                 const permisos = await this._Query_Perfil.PermisosModulosPerfil(modulo.id_modulo)
                 modulo.permisos = permisos
@@ -109,5 +110,35 @@ export class PerfilService {
             console.log(error)
             return { error: true, message: 'Error al crear el perfil' } //ERROR
         }
+    }
+
+    public async EditarPerfil(id_perfil: number, nombre_perfil: string, usuario_creacion: string) {
+        let nombre_editado: string
+        try {
+            const respuesta = await this._Query_Perfil.BuscarPerfilID(id_perfil)
+            if (respuesta?.nombre_perfil === nombre_perfil) {
+                nombre_editado = respuesta.nombre_perfil
+            } else {
+                nombre_editado = nombre_perfil
+            }
+
+            const res = await this._Query_Perfil.EditarPerfil({ id_perfil, nombre_editado, usuario_creacion })
+            if (res?.rowCount != 1) {
+                return { error: true, message: 'Error al actualizar el perfil' }
+            }
+
+            return { error: false, message: '' }
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al editar perfil' }
+        }
+    }
+
+    public async EditarModulosPerfil(id_perfil: number, modulos: any) {
+        for (let modulo of modulos) {
+            const BModulo = await this._Query_Perfil.BuscarModuloPerfil(id_perfil, modulo.id_modulo)
+            console.log(BModulo)
+        }
+        return modulos
     }
 }

@@ -85,11 +85,9 @@ export class UsuarioService {
 
     public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
         const { usuario, correo, clave } = RequestUsuario
-
         
         //BUSCAR EL USUARIO POR SU USUARIO Y CORREO
         const respuesta = await this._Query_Usuario.BuscarUsuarioCorreo(usuario, correo)
-        console.log(respuesta)
         if (respuesta.length > 0) {
             //SI EL USUARIO YA ESTA REGISTRADO MOSTRAR ERROR
             return { error: true, message: 'Este usuario ya existe' }

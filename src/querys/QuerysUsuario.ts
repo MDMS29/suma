@@ -82,6 +82,7 @@ export class QueryUsuario {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU ID
             let result = await _DB.func(_FABuscarUsuarioID, [id])
+            
             return result
 
         } catch (error) {

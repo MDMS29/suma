@@ -41,6 +41,7 @@ export class UsuarioController {
 
     public async ObtenerUsuarios(req: Request, res: Response) {
         const { usuario } = req//TOMAR LA INFORMACION DEL MIDDLEWARE
+        // const { estado } = req.body
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.json({ error: true, message: 'Inicie sesion para continuar' })
@@ -90,7 +91,7 @@ export class UsuarioController {
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(400).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //ERROR
         }
-
+        
         const result = UsusarioSchema.safeParse(req.body) //VALIDACION DE LOS DATOS CON LA LIBRERIA ZOD
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
             return res.json({ error: true, message: result.error.issues }) //ERROR
@@ -166,10 +167,10 @@ export class UsuarioController {
 
     public async CambiarEstadoUsuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
-        let { estado } = req.body //OBTENER EL ESTADO QUE TENDRA EL USUARIO
+        let { estado } = req.query as { estado: string }//OBTENER EL ESTADO QUE TENDRA EL USUARIO
 
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
-            return res.status(400).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //ERROR
+            return res.json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //ERROR
         }
 
         if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
@@ -180,20 +181,20 @@ export class UsuarioController {
         }
         if (typeof estado === 'string') {
             //CONVERSION DEL ESTADO STRING A NUMBER PARA ENVIARLO AL SERVICE
-            estado = +estado
-            if (!estado) {
-                return res.json({ error: true, message: "Estado no definido" }) //VALIDAR SI EL ESTADO ES UN VALOR VALIDO
-            }
+            // estado = +estado
+            // if (!estado) {
+            //     return res.json({ error: true, message: "Estado no definido" }) //VALIDAR SI EL ESTADO ES UN VALOR VALIDO
+            // }
         }
         try {
             const _Usuario_Service = new UsuarioService()
-            const busqueda = await _Usuario_Service.CambiarEstadoUsuario({ usuario: +id_usuario, estado }) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
+            const busqueda = await _Usuario_Service.CambiarEstadoUsuario({ usuario: +id_usuario, estado: +estado }) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
             if (busqueda?.error) { //VALIDAR SI HAY ALGUN ERROR
                 return res.json(busqueda) //ERROR
             }
 
             //ENVIAR INFORMACION DEPENDIENDO DEL ESTADO
-            return res.json({ error: false, message: estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el usuario' : 'Se ha desactivado el usuario' })
+            return res.json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el usuario' : 'Se ha desactivado el usuario' })
         } catch (error) {
             console.log(error)
             return res.json({ error: true, message: "Error al cambiar el estado del usuario" }) //ERROR
