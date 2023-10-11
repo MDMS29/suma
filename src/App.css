@@ -1,0 +1,39 @@
+@font-face {
+    font-family: Cocogoose-light;
+    src: url("./fonts/Cocogoose/Cocogoose Light.ttf");
+}
+
+@font-face {
+    font-family: Sans-Semibold;
+    src: url("./fonts/OpenSans/OpenSans SemiBold.ttf");
+}
+
+@font-face {
+    font-family: Sans-Medium;
+    src: url("./fonts/OpenSans/OpenSans Medium.ttf");
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+#error {
+    font-family: Cocogoose-light;
+}
+
+form>div>input,
+form>input {
+    font-family: Sans-Medium;
+}
+
+/* --------------------------------- Mensajes Toast --------------------------------- */
+
+.p-toast-message-success {
+    background-color: #E9F6F0;
+    border: 2px solid #0FAB0B;
+    border-radius: 10px;
+    margin: 10px;
+    width: 350px;
+}

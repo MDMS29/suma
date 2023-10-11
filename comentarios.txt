@@ -1,0 +1,18 @@
+diseño modal
+
+<Dialog  visible={modalEliminar} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} modal onHide={esconderModalEliminar} footer={deleteProductDialogFooter}>
+            <div className="flex flex-col">
+                <div className="flex justify-center pb-4">
+                    <i className="pi pi-exclamation-triangle" style={{ fontSize: '5rem' }} />
+                </div>
+                <p className='text-2xl text-center'>
+                    {eliminarUsuario.estado_usuario == "ACTIVO" ? "¿Estás seguro de que deseas inactivar este usuario?" : "¿Deseas restaurar este usuario?"}
+                </p>
+            </div>
+            <div className="flex justify-center pt-4">
+                <Button label="Cancelar" onClick={esconderModalEliminar} className='px-4 p-2 mx-2 rounded-md font-semibold 
+            bg-neutralGray hover:bg-hoverGray transition duration-300 ease-in-out' />
+                <Button label="Eliminar" onClick={clickEliminarUsuario} className="px-4 p-2 mx-2 rounded-md font-semibold
+            bg-secundaryYellow hover:bg-primaryYellow transition duration-300 ease-in-out" />
+            </div>
+        </Dialog>
