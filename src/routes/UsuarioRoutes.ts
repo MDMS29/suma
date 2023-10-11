@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { _Autorizacion } from "../middleware/Autorizacion";
-import { UsuarioController } from "../controller/UsuarioController";
+import UsuarioController from "../controller/UsuarioController";
 
 //DEFINICÍON DE EL ROUTER
 export const _Usuario_Router = Router();
@@ -23,3 +23,5 @@ _Usuario_Router.route('/:id_usuario')
     .get(_Autorizacion, _UsuarioController.BuscarUsuario)//BUSCAR USUARIO CON POR MEDIO DE SU ID
     .patch(_Autorizacion, _UsuarioController.EditarUsuario)//EDITAR EL USUARIO POR ID
     .delete(_Autorizacion, _UsuarioController.CambiarEstadoUsuario)//CAMBIAR EL ESTADO DEL USUARIO POR ID
+
+_Usuario_Router.post('/cambiar-clave/:id_usuario', _Autorizacion, _UsuarioController.CambiarClaveUsuario) //CAMBIAR CONTRASEÑA DEL USUARIO POR ID

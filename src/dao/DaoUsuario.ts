@@ -60,7 +60,7 @@ export const _EditarRolUsuario = `
     SET 
         id_estado=$3
     WHERE 
-        id_usuario=$1 and  id_rol_modulo= $2;
+        id_usuario=$1 and id_rol_modulo= $2;
 `
 
 export const _CambiarEstadoUsuario = `
@@ -68,6 +68,15 @@ export const _CambiarEstadoUsuario = `
         seguridad.tbl_usuario
     SET 
         id_estado=$2
+    WHERE 
+        id_usuario=$1
+`
+
+export const _CambiarClaveUsuario = `
+    UPDATE 
+        seguridad.tbl_usuario
+    SET 
+        clave=$2
     WHERE 
         id_usuario=$1
 `

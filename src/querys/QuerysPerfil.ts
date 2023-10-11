@@ -1,15 +1,14 @@
 import { client } from "../../config/db";
 import {
     _ObtenerPerfiles, _ObtenerModulosPerfil, _InsertarPerfil,
-    _InsertarModuloPerfil, _BuscarPerfilID,
-    _PermisosModulosPerfil,
-    _EditarPerfil,
-    _BuscarModulosPerfil
+    _InsertarModuloPerfil, _BuscarPerfilID, _PermisosModulosPerfil,
+    _EditarPerfil, _BuscarModulosPerfil, _EditarModuloPerfil,
+    _CambiarEstadoPerfil
 } from "../dao/DaoPerfil";
-// _BuscarPerfilNombre,
+
 import { PerfilUsuario } from "../validations/Types";
 
-export class QueryPerfil {
+export default class QueryPerfil {
     public async ObtenerPerfiles(estado: number): Promise<any> {
         try {
             let result = await client.query(_ObtenerPerfiles, [estado]);
@@ -19,6 +18,7 @@ export class QueryPerfil {
             return
         }
     }
+    
     public async ModulosPerfil(id_perfil: number): Promise<any> {
         try {
             let result = await client.query(_ObtenerModulosPerfil, [id_perfil])
@@ -94,6 +94,25 @@ export class QueryPerfil {
         try {
             const result = await client.query(_BuscarModulosPerfil, [id_perfil, id_modulo])
             return result.rows
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
+    public async EditarModuloPerfil(id_perfil: number, modulo: any) {
+        try {
+            const result = await client.query(_EditarModuloPerfil, [id_perfil, modulo.id_modulo, modulo.id_estado])
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
+
+    public async CambiarEstadoPerfil(id_perfil: number, estado: number) {
+        try {
+            const result = await client.query(_CambiarEstadoPerfil, [id_perfil, estado]);
+            return result
         } catch (error) {
             console.log(error)
             return

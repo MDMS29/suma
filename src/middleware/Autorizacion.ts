@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { UsuarioService } from '../services/Service.Usuario';
+import UsuarioService  from '../services/Usuario.service';
 
 export const _Autorizacion = async (req: Request, res: Response, next: NextFunction) => {
     try {

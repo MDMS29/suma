@@ -82,6 +82,24 @@ export const _BuscarModulosPerfil = `
     INNER JOIN seguridad.tbl_modulo tm ON tm.id_modulo = tp.id_modulo
     WHERE 
         tp.id_perfil = $1 AND
-        tm.id_modulo = $2 AND
-        tp.id_estado != 2;
+        tm.id_modulo = $2;
+`
+
+export const _EditarModuloPerfil = `
+    UPDATE 
+        seguridad.tbl_modulo_perfiles
+    SET
+        id_estado=$3
+    WHERE  
+        id_perfil=$1 AND 
+        id_modulo=$2;
+`
+
+export const _CambiarEstadoPerfil = `
+    UPDATE 
+        seguridad.tbl_perfiles
+    SET
+        id_estado=$2
+    WHERE  
+        id_perfil=$1;
 `

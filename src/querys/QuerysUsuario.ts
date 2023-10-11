@@ -5,7 +5,7 @@ import {
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
     _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
-    _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario, _CambiarEstadoUsuario
+    _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario, _CambiarEstadoUsuario, _CambiarClaveUsuario
 } from "../dao/DaoUsuario";
 
 import {
@@ -14,9 +14,9 @@ import {
 
 let bcrypt = require('bcrypt')
 
-export class QueryUsuario {
-   
-    public async AutenticarUsuario({ usuario, clave }: Omit<UsuarioLogin, 'captcha'>)  {
+export default class QueryUsuario {
+
+    public async AutenticarUsuario({ usuario, clave }: Omit<UsuarioLogin, 'captcha'>) {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
             const result = await _DB.func(_FALoginUsuario, [usuario])
@@ -82,7 +82,7 @@ export class QueryUsuario {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU ID
             let result = await _DB.func(_FABuscarUsuarioID, [id])
-            
+
             return result
 
         } catch (error) {
@@ -200,9 +200,18 @@ export class QueryUsuario {
         }
     }
 
-    public async CambiarEstadoUsuario(usuario: number, estado: number) {
+    public async CambiarEstadoUsuario(usuario: number, estado: string) {
         try {
             const result = await client.query(_CambiarEstadoUsuario, [usuario, estado]);
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
+    public async CambiarClaveUsuario(id_usuario: number, clave: string) {
+        try {
+            const result = await client.query(_CambiarClaveUsuario, [id_usuario, clave]);
             return result
         } catch (error) {
             console.log(error)

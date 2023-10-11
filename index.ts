@@ -37,6 +37,10 @@ app.use(async (__, _, next) => {
 });
 
 
+
+
+
+
 //DEFINIR RUTA DEL USUARIO
 // Crear una instancia del enrutador de usuario
 app.use('/suma/api/usuarios', _Usuario_Router);
