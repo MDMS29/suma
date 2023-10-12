@@ -224,6 +224,7 @@ export default class UsuarioController {
                 return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
 
+            console.log('enviando')
             //ENVIAR CORREO AL USUARIO PARA RESTABLECER LA CONTRASEÑA DEL USUARIO
             const resend = new Resend("re_ReqxoEvZ_8CVFp4tcjMPzam3cJenXJMoB");
             const data = await resend.emails.send({
@@ -235,7 +236,6 @@ export default class UsuarioController {
                         <p>Cordial saludo, ${Usuario_Change.data_usuario?.nombre}!</p>
                         <br />
                         <p>Apreciado(a) usuario(a), Atentamente nos permitimos comunicarle que sus datos para el ingreso al Sistema Unificado de Mejora y Autogestión - <b>SUMA</b> son:</p>
-                        <br />
                         <p>Usuario: <strong>${Usuario_Change.data_usuario?.usuario}</strong></p>
                         <p>Nueva Clave: <strong>${Usuario_Change.data_usuario?.clave}</strong></p>
                         <br />

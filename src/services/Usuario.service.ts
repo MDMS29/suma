@@ -326,14 +326,15 @@ export default class UsuarioService {
     public async CambiarClaveUsuario(id_usuario: number, clave: string) {
         let _Nueva_Clave: string
         try {
-            const usuario: any = await this.BuscarUsuario(id_usuario, '')
-            let matchPass = await bcrypt.compare(clave, usuario?.clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
+            const usuario: any = await this._Query_Usuario.BuscarUsuarioID(id_usuario)
+            let matchPass = await bcrypt.compare(clave, usuario[0]?.clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
 
             if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
                 return { error: true, message: 'Las clave no puede ser igual a la ya existente' }
             } else { //SI SON DIFERENTES HASHEA LA NUEVA CLAVE
                 const saltRounds = 10
                 const hash = await bcrypt.hash(clave, saltRounds)
+                
                 _Nueva_Clave = hash
             }
 
@@ -348,9 +349,9 @@ export default class UsuarioService {
                 data_usuario: {
                     id_usuario,
                     clave,
-                    nombre: usuario?.nombre_completo,
-                    usuario: usuario?.usuario,
-                    correo: usuario?.correo
+                    nombre: usuario[0]?.nombre_completo,
+                    usuario: usuario[0]?.usuario,
+                    correo: usuario[0]?.correo
                 },
                 message: 'Clave cambiada con exito'
             }

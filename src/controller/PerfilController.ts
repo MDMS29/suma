@@ -124,6 +124,7 @@ export class _PerfilController {
             return res.json({ error: true, message: 'Error al editar el perfil' }) //!ERROR
         }
     }
+    
     public async CambiarEstadoPerfil(req: Request, res: Response) {
         const { usuario } = req
         const { id_perfil } = req.params
@@ -154,6 +155,20 @@ export class _PerfilController {
     }
 
     public async BuscarPerfil(req: Request, res: Response) {
-        res.json(req.usuario)
+        const { id_perfil } = req.params
+        const { usuario } = req
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+        }
+        if (!id_perfil) {
+            return res.json({ error: true, message: 'No se ha encontrado el perfil' }) //!ERROR
+        }
+        try {
+            console.log(id_perfil)
+        } catch (error) {
+            console.log(error)
+            return res.json({ error: true, message: 'Error al encontrar el perfil' }) //!ERROR
+        }
+        return res.json(req.usuario)
     }
 }
