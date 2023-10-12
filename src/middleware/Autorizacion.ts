@@ -20,7 +20,7 @@ export const _Autorizacion = async (req: Request, res: Response, next: NextFunct
             if (usuario === undefined) {
                 return res.json({ error: true, message: 'Usuario no encontrado' });
             }
-            req.usuario = usuario[0];
+            req.usuario = usuario;
             return next();
         } catch (error) {
             return res.json({ error: true, message: 'Inicie sesión para continuar' });

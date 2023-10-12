@@ -16,5 +16,6 @@ _PerfilesRouter.route('/')
 _PerfilesRouter.post('/modulos', _Autorizacion, PerfilController.ObtenerModulosPerfiles)// OBTENER LOS MODULOS DE LOS PERFILES
 
 _PerfilesRouter.route('/:id_perfil')
+.get(_Autorizacion, PerfilController.ObtenerModulosPerfiles)
     .patch (_Autorizacion, PerfilController.EditarPerfil) //EDITAR PERFIL SEGUN SU ID
     .delete(_Autorizacion, PerfilController.CambiarEstadoPerfil) //CAMBIAR ESTADO DEL PERFIL POR ID

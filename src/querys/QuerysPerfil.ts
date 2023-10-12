@@ -101,6 +101,7 @@ export default class QueryPerfil {
     }
     public async EditarModuloPerfil(id_perfil: number, modulo: any) {
         try {
+            console.log(modulo)
             const result = await client.query(_EditarModuloPerfil, [id_perfil, modulo.id_modulo, modulo.id_estado])
             return result
         } catch (error) {

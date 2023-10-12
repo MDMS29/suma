@@ -152,4 +152,8 @@ export class _PerfilController {
             return res.json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el perfil' : 'Error al desactivar del perfil' }) //!ERROR
         }
     }
+
+    public async BuscarPerfil(req: Request, res: Response) {
+        res.json(req.usuario)
+    }
 }

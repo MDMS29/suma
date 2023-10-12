@@ -43,7 +43,7 @@ export default class UsuarioService {
             }
 
             //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
+            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0]
             respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
             //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS
             return {
@@ -55,6 +55,7 @@ export default class UsuarioService {
                     fecha_creacion,
                     correo,
                     id_estado,
+                    cm_clave,
                     token: respuesta.token,
                     perfiles: perfilLogin
                 },
@@ -156,7 +157,7 @@ export default class UsuarioService {
                 }
 
                 //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado } = respuesta[0]
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0]
                 // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
                     usuario:
@@ -167,6 +168,7 @@ export default class UsuarioService {
                         fecha_creacion,
                         correo,
                         id_estado,
+                        cm_clave,
                         perfiles: perfilLogin
                     },
                     modulos: respuesta.modulos
@@ -188,8 +190,19 @@ export default class UsuarioService {
                 let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
                 respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
                 respuesta.perfiles = perfilLogin
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0]
+                // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
+                return {
+                    id_usuario,
+                    nombre_completo,
+                    usuario,
+                    fecha_creacion,
+                    correo,
+                    id_estado,
+                    cm_clave,
+                    perfiles: perfilLogin
+                }
             }
-            return respuesta
         }
         return undefined
     }
@@ -309,11 +322,12 @@ export default class UsuarioService {
         }
         return
     }
+
     public async CambiarClaveUsuario(id_usuario: number, clave: string) {
         let _Nueva_Clave: string
         try {
-            const usuario = await this.BuscarUsuario(id_usuario, '')
-            let matchPass = await bcrypt.compare(clave, usuario[0].clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
+            const usuario: any = await this.BuscarUsuario(id_usuario, '')
+            let matchPass = await bcrypt.compare(clave, usuario?.clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
 
             if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
                 return { error: true, message: 'Las clave no puede ser igual a la ya existente' }
@@ -334,9 +348,9 @@ export default class UsuarioService {
                 data_usuario: {
                     id_usuario,
                     clave,
-                    nombre: usuario[0].nombre_completo,
-                    usuario: usuario[0].usuario,
-                    correo: usuario[0].correo
+                    nombre: usuario?.nombre_completo,
+                    usuario: usuario?.usuario,
+                    correo: usuario?.correo
                 },
                 message: 'Clave cambiada con exito'
             }

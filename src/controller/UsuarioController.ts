@@ -225,26 +225,27 @@ export default class UsuarioController {
             }
 
             //ENVIAR CORREO AL USUARIO PARA RESTABLECER LA CONTRASEÑA DEL USUARIO
-            const resend = new Resend("re_SN4ZJ8Ww_LxWwx47G78CsTDKN8gXrygN5");
+            const resend = new Resend("re_ReqxoEvZ_8CVFp4tcjMPzam3cJenXJMoB");
             const data = await resend.emails.send({
-                from: "Acme <onboarding@resend.dev>",
+                from: "SUMA <onboarding@resend.dev>",
                 to: [Usuario_Change.data_usuario?.correo],
                 subject: "Restauración de contraseña",
                 html: `
-                <div>
-                    <p>Cordial saludo, ${Usuario_Change.data_usuario?.nombre}!</p>
-                    <br />
-                    <p>Apreciado(a) usuario(a), Atentamente nos permitimos comunicarle que sus datos para el ingreso al Sistema Unificado de Mejora y Autogestión - <b>SUMA</b> son:</p>
-                    <br />
-                    <p>Usuario: <strong>${Usuario_Change.data_usuario?.usuario}</strong></p>
-                    <p>Nueva Clave: <strong>${Usuario_Change.data_usuario?.clave}</strong></p>
-                    <br />
-                    <p>En caso de no haber solicitado este cambio, ponganse en contacto con nuestro equipo de soporte.</p>
-                    <p>Cordialmente,</p>
-                    <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
-                </div>
+                    <div>
+                        <p>Cordial saludo, ${Usuario_Change.data_usuario?.nombre}!</p>
+                        <br />
+                        <p>Apreciado(a) usuario(a), Atentamente nos permitimos comunicarle que sus datos para el ingreso al Sistema Unificado de Mejora y Autogestión - <b>SUMA</b> son:</p>
+                        <br />
+                        <p>Usuario: <strong>${Usuario_Change.data_usuario?.usuario}</strong></p>
+                        <p>Nueva Clave: <strong>${Usuario_Change.data_usuario?.clave}</strong></p>
+                        <br />
+                        <p>En caso de no haber solicitado este cambio, ponganse en contacto con nuestro equipo de soporte.</p>
+                        <p>Cordialmente,</p>
+                        <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
+                    </div>
                 `,
             });
+            console.log(data)
 
 
             if (data.id) {

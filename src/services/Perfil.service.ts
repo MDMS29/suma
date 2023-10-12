@@ -153,7 +153,7 @@ export class PerfilService {
             }
             const AllModulos = await this._Query_Perfil.ModulosPerfil(id_perfil)
             if (AllModulos.length <= 0) {
-                modulo.id_estado = 11 //CAMBIAR EL ESTADO DEL MODULO A "ACTIVO" PARA NO DEJAR EL PERFIL CON UN SOLO MODULO
+                modulo.id_estado = 1 //CAMBIAR EL ESTADO DEL MODULO A "ACTIVO" PARA NO DEJAR EL PERFIL CON UN SOLO MODULO
                 const Modulos_Editar = await this._Query_Perfil.EditarModuloPerfil(id_perfil, modulo)
                 if (!Modulos_Editar) {
                     return { error: true, message: 'Error al editar el modulo' } //!ERROR
