@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import UsuarioService from '../services/Usuario.service';
-import { EstadosTablas, _ParseClave, _ParseCorreo } from '../validations/utils';
+import { EstadosTablas, GenerarLlavesSecretas, _ParseClave, _ParseCorreo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
 import { UsusarioSchema } from '../validations/UsuarioSchemas';
 import { Resend } from "resend";
@@ -205,8 +205,6 @@ export default class UsuarioController {
 
     public async CambiarClaveUsuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
-        const { clave } = req.body
-        console.log(req.body)
 
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!ERROR
@@ -214,34 +212,36 @@ export default class UsuarioController {
         if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
             return res.json({ error: true, message: "Usuario no definido" }) //!ERROR
         }
-        if (clave === '') {
-            return res.json({ error: true, message: 'Se debe tener una contraseña para actualizar' }) //!ERROR
-        }
-
+        
         try {
             const _Usuario_Service = new UsuarioService()
+            let clave = GenerarLlavesSecretas()
+            if (clave === '') {
+                return res.json({ error: true, message: 'Error al generar clave' }) //!ERROR
+            }
             const Usuario_Change = await _Usuario_Service.CambiarClaveUsuario(+id_usuario, clave)
             if (Usuario_Change.error) {
                 return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
 
             //ENVIAR CORREO AL USUARIO PARA RESTABLECER LA CONTRASEÑA DEL USUARIO
-            const resend = new Resend("re_ReqxoEvZ_8CVFp4tcjMPzam3cJenXJMoB");
+            const resend = new Resend("re_SN4ZJ8Ww_LxWwx47G78CsTDKN8gXrygN5");
             const data = await resend.emails.send({
                 from: "Acme <onboarding@resend.dev>",
                 to: [Usuario_Change.data_usuario?.correo],
                 subject: "Restauración de contraseña",
                 html: `
                 <div>
-                    <p>Cordial saludo, ${Usuario_Change.data_usuario?.usuario}!</p>
+                    <p>Cordial saludo, ${Usuario_Change.data_usuario?.nombre}!</p>
                     <br />
-                    <p>En el presente correo le informamos que su clave del sistema <b>SUMA</b> a sido modificada.</p>
-                    <p>En caso de no haber solicitado este cambio, ponganse en contacto con nuestro equipo de soporte.</p>
+                    <p>Apreciado(a) usuario(a), Atentamente nos permitimos comunicarle que sus datos para el ingreso al Sistema Unificado de Mejora y Autogestión - <b>SUMA</b> son:</p>
                     <br />
+                    <p>Usuario: <strong>${Usuario_Change.data_usuario?.usuario}</strong></p>
                     <p>Nueva Clave: <strong>${Usuario_Change.data_usuario?.clave}</strong></p>
                     <br />
-                    <p>Saludos,</p>
-                    <img src="https://media.licdn.com/dms/image/C4D0BAQFTgYqeSggf7A/company-logo_200_200/0/1669135871332?e=2147483647&v=beta&t=WJr8dGPIp-r8eiGv3VXFu0mvICIDiJ7KAnYizwAFqW0" alt="Logo Empresa" />
+                    <p>En caso de no haber solicitado este cambio, ponganse en contacto con nuestro equipo de soporte.</p>
+                    <p>Cordialmente,</p>
+                    <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
                 </div>
                 `,
             });

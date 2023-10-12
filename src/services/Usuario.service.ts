@@ -334,7 +334,8 @@ export default class UsuarioService {
                 data_usuario: {
                     id_usuario,
                     clave,
-                    usuario: usuario[0].nombre_completo,
+                    nombre: usuario[0].nombre_completo,
+                    usuario: usuario[0].usuario,
                     correo: usuario[0].correo
                 },
                 message: 'Clave cambiada con exito'

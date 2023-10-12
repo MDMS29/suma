@@ -28,6 +28,12 @@ export const generarJWT = (id: number) => {
 
 // ESTADOS SEGUN LA TABLA DE ESTADO EN LA BASE DE DATOS
 export const EstadosTablas = {
-    ESTADO_ACTIVO : 1,
-    ESTADO_INACTIVO : 1
+    ESTADO_ACTIVO: 1,
+    ESTADO_INACTIVO: 1
+}
+
+export const GenerarLlavesSecretas = () => {
+    const random = Math.random().toString(15).substr(2);
+    const fecha = Date.now().toString(15)
+    return random + fecha
 }
