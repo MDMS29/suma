@@ -10,7 +10,7 @@ export const client = new Pool({
     host: process.env.PGHOST,
     database: process.env.PGDATABASE,
     password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
+    port: 7446,
 });
 // export const client = new Pool({
 //     user: process.env.PGUSER,
