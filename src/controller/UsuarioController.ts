@@ -224,7 +224,6 @@ export default class UsuarioController {
                 return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
 
-            console.log('enviando')
             //ENVIAR CORREO AL USUARIO PARA RESTABLECER LA CONTRASEÑA DEL USUARIO
             const resend = new Resend("re_ReqxoEvZ_8CVFp4tcjMPzam3cJenXJMoB");
             const data = await resend.emails.send({
@@ -245,11 +244,9 @@ export default class UsuarioController {
                     </div>
                 `,
             });
-            console.log(data)
 
 
             if (data.id) {
-                console.log(data)
                 return res.json({ error: false, message: 'Se ha restablecido la clave del usuario' }); //*SUCCESS
 
             }

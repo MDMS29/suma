@@ -4,6 +4,7 @@ import { _Usuario_Router } from './src/routes/UsuarioRoutes';
 import { resolve } from "path";
 import { config } from "dotenv";
 import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
+import { _ModulosRouter } from './src/routes/ModulosRoutes';
 
 const app = express();
 
@@ -36,17 +37,15 @@ app.use(async (__, _, next) => {
     next()
 });
 
-
-
-
-
-
 //DEFINIR RUTA DEL USUARIO
 // Crear una instancia del enrutador de usuario
 app.use('/suma/api/usuarios', _Usuario_Router);
 
 //DEFINIR RUTA DE LOS PERFILES
 app.use('/suma/api/perfiles', _PerfilesRouter)
+
+//DEFINIR RUTA DE LOS MODULOS
+app.use('/suma/api/modulos', _ModulosRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {

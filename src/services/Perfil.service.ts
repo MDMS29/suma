@@ -179,4 +179,23 @@ export class PerfilService {
             return { error: true, message: 'Error al editar el perfil' } //!ERROR
         }
     }
+
+    public async BuscarPerfil(id_perfil: number): Promise<MessageError | any> {
+        try {
+            const perfil = await this._Query_Perfil.BuscarPerfilID(id_perfil)
+            if (!perfil?.id_perfil) {
+                return { error: true, message: 'No se ha encontrado este perfil' } //!ERROR
+            }
+            // CARGAR LOS MODULOS DEL PERFIL
+            const modulos = await this._Query_Perfil.ModulosPerfil(id_perfil)
+            if (!modulos) {
+                return { error: true, message: 'No se han podido cargar los modulos del perfil' } //!ERROR
+            }
+            perfil.modulos = modulos
+            return perfil
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al editar el perfil' }
+        }
+    }
 }

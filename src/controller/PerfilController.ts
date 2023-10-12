@@ -118,13 +118,13 @@ export class _PerfilController {
             if (modulosEditado.error) {
                 return res.json({ error: modulosEditado.error, message: modulosEditado.message })
             }
-            return res.json({ error: false, message: 'Perfil editado correctamente' }) //*SUCCESS
+            return res.json({ error: false, message: 'Perfil editado correctamente' }) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
             return res.json({ error: true, message: 'Error al editar el perfil' }) //!ERROR
         }
     }
-    
+
     public async CambiarEstadoPerfil(req: Request, res: Response) {
         const { usuario } = req
         const { id_perfil } = req.params
@@ -164,11 +164,16 @@ export class _PerfilController {
             return res.json({ error: true, message: 'No se ha encontrado el perfil' }) //!ERROR
         }
         try {
-            console.log(id_perfil)
+            const _PerfilService = new PerfilService()
+
+            const respuesta = await _PerfilService.BuscarPerfil(+id_perfil)
+            if (respuesta.error) {
+                return res.json({ error: true, message: respuesta.message }) //!ERROR
+            }
+            return res.json(respuesta) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
             return res.json({ error: true, message: 'Error al encontrar el perfil' }) //!ERROR
         }
-        return res.json(req.usuario)
     }
 }
