@@ -5,7 +5,8 @@ import {
     _FAAccionesModulos, _FAInsertarUsuario, _FABuscarUsuarioID,
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
     _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
-    _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario, _CambiarEstadoUsuario, _CambiarClaveUsuario
+    _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario,
+    _CambiarEstadoUsuario, _CambiarClaveUsuario
 } from "../dao/DaoUsuario";
 
 import {
@@ -160,7 +161,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async BuscarPerfilUsuario({ id_perfil }: { id_perfil: number }, usuario: number) {
+    public async BuscarPerfilUsuario(id_perfil: number, usuario: number) {
         try {
             const result = await client.query(_BuscarPerfilUsuario, [usuario, id_perfil]);
             return result.rows
@@ -180,7 +181,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async BuscarRolUsuario({ id_rol }: { id_rol: number }, usuario: number) {
+    public async BuscarRolUsuario(id_rol: number , usuario: number) {
         try {
             const result = await client.query(_BuscarRolUsuario, [usuario, id_rol]);
             return result.rows
@@ -209,9 +210,9 @@ export default class QueryUsuario {
             return
         }
     }
-    public async CambiarClaveUsuario(id_usuario: number, clave: string) {
+    public async CambiarClaveUsuario(id_usuario: number, clave: string, cm_clave: boolean) {
         try {
-            const result = await client.query(_CambiarClaveUsuario, [id_usuario, clave]);
+            const result = await client.query(_CambiarClaveUsuario, [id_usuario, clave, cm_clave]);
             return result
         } catch (error) {
             console.log(error)

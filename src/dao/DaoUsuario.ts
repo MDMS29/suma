@@ -76,7 +76,7 @@ export const _CambiarClaveUsuario = `
     UPDATE 
         seguridad.tbl_usuario
     SET 
-        clave=$2
+        clave=$2, cm_clave=$3
     WHERE 
         id_usuario=$1
 `

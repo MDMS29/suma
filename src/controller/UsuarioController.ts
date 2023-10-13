@@ -121,7 +121,7 @@ export default class UsuarioController {
     }
 
     public async EditarUsuario(req: Request, res: Response) {
-        const { usuario, perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
+        const {  perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO POR PARAMETROS
         //VALIDACION DE DATOS
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
@@ -136,22 +136,22 @@ export default class UsuarioController {
         if (roles?.length <= 0) {//VALIDAR QUE SI SE ESTEN AGREGANDO ROLES
             return res.json({ error: true, message: "Debe asignarle permisos al usuario" }) //!ERROR
         }
-        const result = UsusarioSchema.partial().safeParse(usuario) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
-        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-            return res.json({ error: true, message: result.error.issues }) //!ERROR
-        }
+        // const result = UsusarioSchema.partial().safeParse(usuario) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        // if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+        //     return res.json({ error: true, message: result.error.issues }) //!ERROR
+        // }
 
         try {
             const _Usuario_Service = new UsuarioService()
-            const respuesta: any = await _Usuario_Service.EditarUsuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA EDITAR EL USUARIO
+            const respuesta: any = await _Usuario_Service.EditarUsuario(req.body, req.usuario?.usuario) //INVOCAR FUNCION PARA EDITAR EL USUARIO
             if (respuesta?.error) { //VALIDAR SI HAY UN ERROR
                 return res.json(respuesta) //!ERROR
             }
-            const perfilesEditados: any = await _Usuario_Service.EditarPerfilesUsuario(perfiles, usuario.id_usuario) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
+            const perfilesEditados: any = await _Usuario_Service.EditarPerfilesUsuario(perfiles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
             if (perfilesEditados?.error) { //VALIDAR SI HAY UN ERROR
                 return res.json(perfilesEditados) //!ERROR
             }
-            const permisoEditado = await _Usuario_Service.EditarPermisosUsuario(roles, usuario.id_usuario) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
+            const permisoEditado = await _Usuario_Service.EditarPermisosUsuario(roles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
             if (permisoEditado?.error) {//VALIDAR SI HAY UN ERROR
                 return res.json(permisoEditado) //!ERROR
             }
@@ -219,7 +219,7 @@ export default class UsuarioController {
             if (clave === '') {
                 return res.json({ error: true, message: 'Error al generar clave' }) //!ERROR
             }
-            const Usuario_Change = await _Usuario_Service.CambiarClaveUsuario(+id_usuario, clave)
+            const Usuario_Change = await _Usuario_Service.CambiarClaveUsuario(+id_usuario, clave, true)
             if (Usuario_Change.error) {
                 return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
@@ -257,4 +257,32 @@ export default class UsuarioController {
             return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
         }
     }
+
+    public async ResetearClaveUsuario(req: Request, res: Response){
+        const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
+        const { clave } = req.body //OBTENER LA NUEVA CLAVE DEL USUARIO
+
+        if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
+            return res.json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!ERROR
+        }
+        if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
+            return res.json({ error: true, message: "Usuario no definido" }) //!ERROR
+        }
+        if(clave === ''){
+            return res.json({ error: true, message: "No se ha definido la clave" }) //!ERROR
+        }
+        
+        try {
+            const _Usuario_Service = new UsuarioService()
+            const Usuario_Change = await _Usuario_Service.CambiarClaveUsuario(+id_usuario, clave, false)
+            if (Usuario_Change.error) {
+                return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
+            }
+
+            return res.json({ error: false, message:'Se ha restablecido la clave del usuario'}); //!ERROR
+        } catch (error) {
+            console.log(error)
+            return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
+        }
+    } 
 }

@@ -25,3 +25,5 @@ _Usuario_Router.route('/:id_usuario')
     .delete(_Autorizacion, _UsuarioController.CambiarEstadoUsuario)//CAMBIAR EL ESTADO DEL USUARIO POR ID
 
 _Usuario_Router.patch('/cambiar_clave/:id_usuario', _Autorizacion, _UsuarioController.CambiarClaveUsuario) //CAMBIAR CONTRASEÑA DEL USUARIO POR ID
+
+_Usuario_Router.patch('/restablecer_clave/:id_usuario', _Autorizacion, _UsuarioController.ResetearClaveUsuario) //RSETEAR LA CLAVE DEL USUARIO CUANDO SE LE HAYA ENVIADO EL CORREO

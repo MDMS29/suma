@@ -135,7 +135,7 @@ export default class UsuarioService {
                     res.perfiles = {
                         id_perfil: res.id_perfil,
                         nombre_perfil: res.nombre_perfil,
-                        estado_perfil: res.id_estado_perfil
+                        estado_perfil: +res.id_estado_perfil
                     }
                 }
 
@@ -261,7 +261,7 @@ export default class UsuarioService {
     public async EditarPerfilesUsuario(perfiles: any, usuario: number) {
         try {
             for (let perfil of perfiles) {
-                const perfilExistente: any = await this._Query_Usuario.BuscarPerfilUsuario(perfil, usuario) //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO
+                const perfilExistente: any = await this._Query_Usuario.BuscarPerfilUsuario(perfil.id_perfil, usuario) //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO
                 if (perfilExistente.length == 0) {
                     // SI EL PERFIL NO EXISTE LO AGREGARA
                     const res = await this._Query_Usuario.InsertarPerfilUsuario(usuario, perfil) //INVOCAR FUNCION PARA GUARDAR EL PERFIL DEL USUARIO
@@ -269,7 +269,7 @@ export default class UsuarioService {
                         return { error: true, message: 'No se pudo guardar el nuevo perfil' } //!ERROR
                     }
                 } else {
-                    const res = await this._Query_Usuario.EditarPerfilUsuario(perfil.id_perfil, perfil.id_estado, usuario) //INVOCAR FUNCION PARA EDITAR EL PERFIL DEL USUARIO
+                    const res = await this._Query_Usuario.EditarPerfilUsuario(perfil.id_perfil, perfil.estado_perfil, usuario) //INVOCAR FUNCION PARA EDITAR EL PERFIL DEL USUARIO
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el nuevo perfil' } //!ERROR
                     }
@@ -285,14 +285,14 @@ export default class UsuarioService {
     public async EditarPermisosUsuario(permisos: any, usuario: number) {
         try {
             for (let permiso of permisos) {
-                const permisoExistente: any = await this._Query_Usuario.BuscarRolUsuario(permiso, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
+                const permisoExistente: any = await this._Query_Usuario.BuscarRolUsuario(permiso.id_rol, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
                 if (permisoExistente.length == 0) { //VERIFICAR SI EL USUARIO TIENE UN ROL
                     // SI EL ESTADO NO EXISTE LO AGREGARA
                     const res = await this._Query_Usuario.InsertarRolModulo(usuario, permiso) //INVOCAR FUNCION PARA GUARDAR EL ROL DEL USUARIO
                     if (!res) {
                         return { error: true, message: 'No se pudo guardar el nuevo permiso' } //!ERROR
                     }
-                } else {//SI EL PERMISO EXISTE EDITARA SU ESTADO 
+                } else {//SI EL PERMISO EXISTE EDITARA SU ESTADO
                     const res = await this._Query_Usuario.EditarRolUsuario(permiso.id_rol, permiso.id_estado, usuario) //INVOCAR FUNCION PARA EDITAR EL ROL DEL USUARIO
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el permiso' } //!ERROR
@@ -323,41 +323,61 @@ export default class UsuarioService {
         return
     }
 
-    public async CambiarClaveUsuario(id_usuario: number, clave: string) {
+    public async CambiarClaveUsuario(id_usuario: number, clave: string, cm_clave: boolean) {
         let _Nueva_Clave: string
         try {
             const usuario: any = await this._Query_Usuario.BuscarUsuarioID(id_usuario)
-            let matchPass = await bcrypt.compare(clave, usuario[0]?.clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
 
-            if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
-                return { error: true, message: 'Las clave no puede ser igual a la ya existente' }
-            } else { //SI SON DIFERENTES HASHEA LA NUEVA CLAVE
-                const saltRounds = 10
-                const hash = await bcrypt.hash(clave, saltRounds)
-                
-                _Nueva_Clave = hash
+            //SI SE VA A ENVIAR LA CLAVE DEL USUARIO POR CORREO
+            if (cm_clave) {
+
+                let matchPass = await bcrypt.compare(clave, usuario[0]?.clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
+
+                if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
+                    return { error: true, message: 'Las clave no puede ser igual a la ya existente' } //!ERROR
+                } else { //SI SON DIFERENTES HASHEA LA NUEVA CLAVE
+                    const saltRounds = 10
+                    const hash = await bcrypt.hash(clave, saltRounds)
+
+                    _Nueva_Clave = hash
+                }
+
+                const res = await this._Query_Usuario.CambiarClaveUsuario(id_usuario, _Nueva_Clave, cm_clave)
+                if (!res?.rowCount) {
+                    return { error: true, message: 'Error al cambiar la clave del usuario' } //!ERROR
+                }
+
+                //RETORNAR LA INFORMACION PARA EL ENVIO DEL CORREO
+                return {
+                    error: false,
+                    data_usuario: {
+                        id_usuario,
+                        clave,
+                        nombre: usuario[0]?.nombre_completo,
+                        usuario: usuario[0]?.usuario,
+                        correo: usuario[0]?.correo
+                    },
+                    message: 'Clave cambiada con exito'
+                }
             }
 
-            const res = await this._Query_Usuario.CambiarClaveUsuario(id_usuario, _Nueva_Clave)
+            //SI SE RESTABLECE LA CLAVE DEL USUARIO
+            const saltRounds = 10
+            const hash = await bcrypt.hash(clave, saltRounds)
+            if (!hash) {
+                console.error(hash) //!ERROR
+            }
+
+            const res = await this._Query_Usuario.CambiarClaveUsuario(id_usuario, hash, cm_clave)
             if (!res?.rowCount) {
-                return { error: true, message: 'Error al cambiar la clave del usuario' }
+                return { error: true, message: 'Error al restablecer la clave del usuario' } //!ERROR
             }
 
-            //RETORNAR LA INFORMACION PARA EL ENVIO DEL CORREO
-            return {
-                error: false,
-                data_usuario: {
-                    id_usuario,
-                    clave,
-                    nombre: usuario[0]?.nombre_completo,
-                    usuario: usuario[0]?.usuario,
-                    correo: usuario[0]?.correo
-                },
-                message: 'Clave cambiada con exito'
-            }
+            return { error: false, message: 'Se ha restablecido la clave del usuario' } //*SUCCESS
+
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cambiar la clave del usuario' }
+            return { error: true, message: 'Error al restablecer la clave del usuario' } //!ERROR
         }
     }
 }

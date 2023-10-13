@@ -8,7 +8,7 @@ import { _ModulosRouter } from './src/routes/ModulosRoutes';
 
 const app = express();
 
-config({ path: resolve(__dirname, "./.env") });
+config({ path: resolve(__dirname, ".env") });
 
 const PORT = process.env.PORT ?? 3000;
 
@@ -27,14 +27,18 @@ declare global {
 
 //OBTENER LA IP DEL CLIENTE AL REALIZAR ALGUNA ACCIÓN
 app.use(async (__, _, next) => {
-    const data = await fetch('https://ipinfo.io/json')
-    const json = await data.json()
-    console.log('------------------------------------------------')
-    console.log('IP Cliente: ' + json.ip)
-    console.log(`Ubicación: ${json.country} ${json.region}/${json.city}`)
-    console.log('Fecha:', new Date(Date.now()))
-    console.log('------------------------------------------------')
-    next()
+    try {
+        const data = await fetch('https://ipinfo.io/json')
+        const json = await data.json()
+        console.log('------------------------------------------------')
+        console.log('IP Cliente: ' + json.ip)
+        console.log(`Ubicación: ${json.country} ${json.region}/${json.city}`)
+        console.log('Fecha:', new Date(Date.now()))
+        console.log('------------------------------------------------')
+        next()
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 //DEFINIR RUTA DEL USUARIO
