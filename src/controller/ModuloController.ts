@@ -27,12 +27,15 @@ export class _ModuloController {
     }
     public async InsertarModulo(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { nombre_modulo, icono } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
+        const { cod_modulo, nombre_modulo, icono } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (nombre_modulo == '') {
             return res.json({ error: true, message: 'Debe ingresar un nombre para el modulo' }) //!ERROR
+        }
+        if (cod_modulo == '') {
+            return res.json({ error: true, message: 'Debe ingresar un codigo para el modulo' }) //!ERROR
         }
         if (icono == '') {
             return res.json({ error: true, message: 'Debe ingresar un icono para el modulo' }) //!ERROR
@@ -40,7 +43,7 @@ export class _ModuloController {
 
         try {
             const _ModuloService = new ModuloService()
-            const respuesta = await _ModuloService.InsertarModulo(nombre_modulo, icono)
+            const respuesta = await _ModuloService.InsertarModulo(cod_modulo, nombre_modulo, icono, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json({ error: true, message: respuesta?.message }) //!ERROR
             }
