@@ -1,5 +1,5 @@
 import QueryModulo from "../querys/QuerysModulo";
-import { MessageError } from "../validations/Types"
+import { MessageError, ModulosUsuario } from "../validations/Types"
 import { EstadosTablas } from "../validations/utils";
 // import QueryPerfil from "../querys/QuerysPerfil"
 
@@ -25,7 +25,7 @@ export default class ModuloService {
         }
     }
 
-    public async InsertarModulo(codigo: string, nombre_modulo: string, usuario_creador: string, icono: string) {
+    public async InsertarModulo(codigo: string, nombre_modulo: string, usuario_creador: string, icono: string): Promise<MessageError | any> {
         try {
             // BUSCAR EL NOMBRE DEL MODULO SI NO SE ENCUENTRA DUPLICADO
             const modulo = await this._Query_Modulo.BuscarModuloNombre(nombre_modulo)
@@ -57,6 +57,55 @@ export default class ModuloService {
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al insertar el modulo' } //!ERROR
+        }
+    }
+
+    public async BuscarModulo(id_modulo: number): Promise<MessageError | any> {
+        try {
+            const modulo = await this._Query_Modulo.BuscarModuloID(id_modulo)
+            if (!modulo) {
+                return { error: true, message: 'No se ha encontrado el modulo' } //!ERROR
+            }
+            return modulo //*SUCCESSFUL
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al encontrar el modulo' } //!ERROR
+        }
+    }
+
+    public async EditarModulo(id_modulo: number, Request_Modulo: Partial<ModulosUsuario>, usuario_modi: string): Promise<MessageError | any> {
+        try {
+
+            const moduloB = await this._Query_Modulo.BuscarModuloID(id_modulo)
+            if (!moduloB) {
+                return { error: true, message: 'No se ha encontrado el modulo' }
+            }
+            if (!Request_Modulo) {
+                return
+            }
+
+            let nombreEditado: string
+            
+            if (Request_Modulo.nombre_modulo) {
+                if (moduloB.nombre_modulo !== Request_Modulo.nombre_modulo) {
+                    const nombre = await this._Query_Modulo.BuscarModuloNombre(Request_Modulo.nombre_modulo)
+                    if (nombre) {
+                        return { error: true, message: 'Ya existe este modulo' }
+                    }
+                    nombreEditado = Request_Modulo.nombre_modulo
+                } else {
+
+                }
+            }
+
+            const modulo = await this._Query_Modulo.EditarModulo(id_modulo, Request_Modulo, usuario_modi)
+            if (!modulo?.rowCount) {
+                return { error: true, message: 'Error al editar el modulo' } //!ERROR
+            }
+            return modulo //*SUCCESSFUL
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al editar el modulo' } //!ERROR
         }
     }
 }

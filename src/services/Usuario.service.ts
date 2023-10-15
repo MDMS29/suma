@@ -157,7 +157,7 @@ export default class UsuarioService {
                 }
 
                 //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0]
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, estado_usuario } = respuesta[0]
                 // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
                     usuario:
@@ -169,6 +169,7 @@ export default class UsuarioService {
                         correo,
                         id_estado,
                         cm_clave,
+                        estado_usuario,
                         perfiles: perfilLogin
                     },
                     modulos: respuesta.modulos

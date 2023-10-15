@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import UsuarioService from '../services/Usuario.service';
 import { EstadosTablas, GenerarLlavesSecretas, _ParseClave, _ParseCorreo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
-import { UsusarioSchema } from '../validations/UsuarioSchemas';
+import { UsusarioSchema } from '../validations/ValidacionesZod';
 import { Resend } from "resend";
 
 export default class UsuarioController {

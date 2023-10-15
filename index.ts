@@ -1,14 +1,10 @@
 import express, { Response } from 'express';
 import cors from 'cors';
 import { _Usuario_Router } from './src/routes/UsuarioRoutes';
-import { resolve } from "path";
-import { config } from "dotenv";
 import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
 import { _ModulosRouter } from './src/routes/ModulosRoutes';
 
 const app = express();
-
-config({ path: resolve(__dirname, ".env") });
 
 const PORT = process.env.PORT ?? 3000;
 

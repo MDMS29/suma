@@ -7,8 +7,9 @@ export type UsuarioLogin = {
 export type PermisosModulos = {
     readonly id_modulo: string | number;
     nombre_modulo: string;
-    id_rol: string | number;
+    id_rol_modulo: string | number;
     nombre: string;
+    id_estado: string | number;
 }
 
 export type MenusModulos = {
@@ -20,6 +21,7 @@ export type ModulosUsuario = {
     readonly id_modulo: number
     cod_modulo: string
     nombre_modulo: string
+    icono?: string
     menus: MenusModulos[]
     permisos: PermisosModulos[]
 }

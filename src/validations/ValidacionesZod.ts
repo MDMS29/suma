@@ -45,3 +45,18 @@ export const PerfilesSchema = z.object({
         id_modulo: z.number()
     }).array()
 })
+
+export const ModulosSchema = z.object({
+    cod_modulo: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El codigo del modulo es requerido'
+    }),
+    nombre_modulo: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre del modulo es requerido'
+    }),
+    icono: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El icono del modulo es requerido'
+    }),
+})

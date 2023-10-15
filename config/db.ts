@@ -1,11 +1,15 @@
 import { Pool } from 'pg';
 
+import { config } from 'dotenv';
+
 const pgp = require('pg-promise')();
 
+config();
 
-// const DATABASE_URL = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${Number(process.env.PORT)}/${process.env.PGDATABASE_URL}`;
 
-export const _DB = pgp(`postgres://postgres:123123@localhost:5432/data_suma`);
+const DATABASE_URL = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
+
+export const _DB = pgp(DATABASE_URL);
 export const client = new Pool({
     user: process.env.PGUSER,
     host: process.env.PGHOST,
