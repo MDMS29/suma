@@ -50,3 +50,12 @@ export const _EditarModulo = `
     WHERE 
         id_modulo=$1;
 `
+
+export const _BuscarIconoModulo = `
+    SELECT 
+        icono
+    FROM 
+        seguridad.tbl_modulo tm
+    WHERE
+        tm.icono = $1
+`

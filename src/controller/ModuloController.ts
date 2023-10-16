@@ -118,7 +118,7 @@ export class _ModuloController {
             const modulo = await _ModuloService.EditarModulo(+id_modulo, req.body, usuario.usuario)
 
             if (modulo?.error) {
-                return res.json({ error: true, message: 'Error al editar el modulo' }) //!ERROR
+                return res.json({ error: true, message: modulo.message }) //!ERROR
             }
 
             const moduloEditado = await _ModuloService.BuscarModulo(+id_modulo)

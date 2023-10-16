@@ -1,7 +1,7 @@
 import { client } from "../../config/db"
 import {
-    _BuscarCodigoModulo, _BuscarModuloID,
-    _BuscarModuloNombre, _InsertarModulo, _ObtenerModulos
+    _BuscarCodigoModulo, _BuscarIconoModulo, _BuscarModuloID,
+    _BuscarModuloNombre, _EditarModulo, _InsertarModulo, _ObtenerModulos
 } from "../dao/DaoModulo"
 import { ModulosUsuario } from "../validations/Types"
 
@@ -45,6 +45,16 @@ export default class QueryModulo {
             return
         }
     }
+    
+    public async BuscarIconoModulo(id_modulo: number): Promise<any> {
+        try {
+            const result = await client.query(_BuscarIconoModulo, [id_modulo])
+            return result.rows[0]
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
 
     public async InsertarModulo(nombre_modulo: string, usuario_creador: string, codigo: string, icono: string): Promise<any> {
         try {
@@ -55,9 +65,10 @@ export default class QueryModulo {
             return
         }
     }
-    public async EditarModulo(id_modulo: number, Request_Modulo: Partial<ModulosUsuario>, usuario_modi: string) {
+    
+    public async EditarModulo(id_modulo: number, nuevoModulo: Partial<ModulosUsuario>, usuario_modi: string) {
         try {
-            const result = await client.query(_InsertarModulo, [id_modulo, Request_Modulo.cod_modulo, Request_Modulo.nombre_modulo, Request_Modulo.icono, usuario_modi])
+            const result = await client.query(_EditarModulo, [id_modulo, nuevoModulo.cod_modulo, nuevoModulo.nombre_modulo, nuevoModulo.icono, usuario_modi])
             return result
         } catch (error) {
             console.log(error)

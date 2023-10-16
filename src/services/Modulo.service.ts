@@ -1,5 +1,5 @@
 import QueryModulo from "../querys/QuerysModulo";
-import { MessageError, ModulosUsuario } from "../validations/Types"
+import { MessageError } from "../validations/Types"
 import { EstadosTablas } from "../validations/utils";
 // import QueryPerfil from "../querys/QuerysPerfil"
 
@@ -73,32 +73,59 @@ export default class ModuloService {
         }
     }
 
-    public async EditarModulo(id_modulo: number, Request_Modulo: Partial<ModulosUsuario>, usuario_modi: string): Promise<MessageError | any> {
+    public async EditarModulo(id_modulo: number, Request_Modulo: Partial<any>, usuario_modi: string): Promise<MessageError | any> {
+        let _Codigo_Editado: string
+        let _Nombre_Editado: string
+        let _Icono_Editado: string
         try {
-
             const moduloB = await this._Query_Modulo.BuscarModuloID(id_modulo)
             if (!moduloB) {
                 return { error: true, message: 'No se ha encontrado el modulo' }
             }
-            if (!Request_Modulo) {
-                return
-            }
 
-            let nombreEditado: string
-            
-            if (Request_Modulo.nombre_modulo) {
-                if (moduloB.nombre_modulo !== Request_Modulo.nombre_modulo) {
-                    const nombre = await this._Query_Modulo.BuscarModuloNombre(Request_Modulo.nombre_modulo)
-                    if (nombre) {
-                        return { error: true, message: 'Ya existe este modulo' }
-                    }
-                    nombreEditado = Request_Modulo.nombre_modulo
-                } else {
-
+            if (moduloB.nombre_modulo !== Request_Modulo.nombre_modulo) {
+                const nombre = await this._Query_Modulo.BuscarModuloNombre(Request_Modulo.nombre_modulo)
+                if (nombre.nombre_modulo.toLowerCase() === Request_Modulo.nombre_modulo.toLowerCase()) {
+                    return { error: true, message: 'Ya existe este modulo, ingrese un nombre diferente' }
+                }else{ 
+                    _Nombre_Editado = Request_Modulo.nombre_modulo
                 }
+            } else {
+                _Nombre_Editado = moduloB.nombre_modulo
             }
 
-            const modulo = await this._Query_Modulo.EditarModulo(id_modulo, Request_Modulo, usuario_modi)
+            if (moduloB.cod_modulo !== Request_Modulo.cod_modulo) {
+                const codigo = await this._Query_Modulo.BuscarCodigoModulo(Request_Modulo.cod_modulo)
+                if (codigo) {
+                    return { error: true, message: 'Ya existe este modulo, ingrese un codigo diferente' }
+                }else{
+                    _Codigo_Editado = Request_Modulo.cod_modulo
+                }
+            } else {
+                _Codigo_Editado = moduloB.cod_modulo
+            }
+
+            if (moduloB.icono !== Request_Modulo.icono && Request_Modulo.icono !== 'pi-box') {
+                if(!Request_Modulo.icono.startsWith('pi-')){
+                    return { error: true, message: 'Este icono es invalido, ingrese a: https://primereact.org/icons/#list' }
+                }
+                const icono = await this._Query_Modulo.BuscarIconoModulo(Request_Modulo.icono)
+                if (icono) {
+                    return { error: true, message: 'Ya existe este modulo, ingrese un icono diferente' }
+                }else{
+                    _Icono_Editado = Request_Modulo.icono
+                }
+            } else {
+                _Icono_Editado = 'pi-box'
+            }
+
+            const nuevoModulo = {
+                cod_modulo: _Codigo_Editado,
+                nombre_modulo: _Nombre_Editado,
+                icono: _Icono_Editado
+            }
+
+            const modulo = await this._Query_Modulo.EditarModulo(id_modulo, nuevoModulo, usuario_modi)
             if (!modulo?.rowCount) {
                 return { error: true, message: 'Error al editar el modulo' } //!ERROR
             }
