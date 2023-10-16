@@ -3,7 +3,8 @@ import UsuarioService from '../services/Usuario.service';
 import { EstadosTablas, GenerarLlavesSecretas, _ParseClave, _ParseCorreo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
 import { UsusarioSchema } from '../validations/ValidacionesZod';
-import { Resend } from "resend";
+// import { Resend } from "resend";
+import { transporter } from '../../config/mailer';
 
 export default class UsuarioController {
 
@@ -121,7 +122,7 @@ export default class UsuarioController {
     }
 
     public async EditarUsuario(req: Request, res: Response) {
-        const {  perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
+        const { perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO POR PARAMETROS
         //VALIDACION DE DATOS
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
@@ -212,7 +213,7 @@ export default class UsuarioController {
         if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
             return res.json({ error: true, message: "Usuario no definido" }) //!ERROR
         }
-        
+
         try {
             const _Usuario_Service = new UsuarioService()
             let clave = GenerarLlavesSecretas()
@@ -224,41 +225,40 @@ export default class UsuarioController {
                 return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
 
+
             //ENVIAR CORREO AL USUARIO PARA RESTABLECER LA CONTRASEÑA DEL USUARIO
-            const resend = new Resend("re_ReqxoEvZ_8CVFp4tcjMPzam3cJenXJMoB");
-            const data = await resend.emails.send({
-                from: "SUMA <onboarding@resend.dev>",
-                to: [Usuario_Change.data_usuario?.correo],
-                subject: "Restauración de contraseña",
+            const info = await transporter.sendMail({
+                from: '"SUMA" <mazomoises@gmail.com>', // sender address
+                to: Usuario_Change.data_usuario?.correo, // list of receivers
+                subject: "Recuperación de contraseña", // Subject line
                 html: `
-                    <div>
-                        <p>Cordial saludo, ${Usuario_Change.data_usuario?.nombre}!</p>
-                        <br />
-                        <p>Apreciado(a) usuario(a), Atentamente nos permitimos comunicarle que sus datos para el ingreso al Sistema Unificado de Mejora y Autogestión - <b>SUMA</b> son:</p>
-                        <p>Usuario: <strong>${Usuario_Change.data_usuario?.usuario}</strong></p>
-                        <p>Nueva Clave: <strong>${Usuario_Change.data_usuario?.clave}</strong></p>
-                        <br />
-                        <p>En caso de no haber solicitado este cambio, ponganse en contacto con nuestro equipo de soporte.</p>
-                        <p>Cordialmente,</p>
-                        <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
-                    </div>
-                `,
+                        <div>
+                            <p>Cordial saludo, ${Usuario_Change.data_usuario?.nombre}!</p>
+                            <br />
+                            <p>Atentamente nos permitimos comunicarle que sus datos para el ingreso al Sistema Unificado de Mejora y Autogestión - <b>SUMA</b> son:</p>
+                            <p>Usuario: <strong>${Usuario_Change.data_usuario?.usuario}</strong></p>
+                            <p>Nueva Clave: <strong>${Usuario_Change.data_usuario?.clave}</strong></p>
+                            <br />
+                            <p>En caso de no haber solicitado este cambio, ponganse en contacto con nuestro equipo de soporte.</p>
+                            <p>Cordialmente,</p>
+                            <br />
+                            <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
+                        </div>
+                    `,
             });
 
-
-            if (data.id) {
-                return res.json({ error: false, message: 'Se ha restablecido la clave del usuario' }); //*SUCCESS
-
+            if (!info.accepted) {
+                return res.json({ error: true, message: 'Error al restablecer la clave del usuario' }); //!ERROR
             }
-
-            return res.json({ error: true, message:'Error al restablecer la clave del usuario'}); //!ERROR
+            
+            return res.json({ error: false, message: 'Se ha restablecido la clave del usuario' }); //*SUCCESS
         } catch (error) {
             console.log(error)
             return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
         }
     }
 
-    public async ResetearClaveUsuario(req: Request, res: Response){
+    public async ResetearClaveUsuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
         const { clave } = req.body //OBTENER LA NUEVA CLAVE DEL USUARIO
 
@@ -268,10 +268,10 @@ export default class UsuarioController {
         if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
             return res.json({ error: true, message: "Usuario no definido" }) //!ERROR
         }
-        if(clave === ''){
+        if (clave === '') {
             return res.json({ error: true, message: "No se ha definido la clave" }) //!ERROR
         }
-        
+
         try {
             const _Usuario_Service = new UsuarioService()
             const Usuario_Change = await _Usuario_Service.CambiarClaveUsuario(+id_usuario, clave, false)
@@ -279,10 +279,10 @@ export default class UsuarioController {
                 return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
 
-            return res.json({ error: false, message:'Se ha restablecido la clave del usuario'}); //!ERROR
+            return res.json({ error: false, message: 'Se ha restablecido la clave del usuario' }); //!ERROR
         } catch (error) {
             console.log(error)
             return res.json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
         }
-    } 
+    }
 }
