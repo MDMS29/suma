@@ -37,17 +37,17 @@ const AppMain = () => {
   return (
     <Routes>
       {/* Area Publica */}
-      <Route path="/" element={<AuthLayouth />}>
+      <Route path="/auth" element={<AuthLayouth />}>
         <Route index element={<Login />} />
-        <Route path="auth/resetear" element={<ResetearContraseñaUsuario />} />
+        <Route path="resetear" element={<ResetearContraseñaUsuario />} />
       </Route>
 
       {/* Area Privada */}
 
 
-      <Route path="/home" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="config/perfiles" element={<Perfiles />} />
+      <Route path="/" element={<Layout />}>
+        <Route path="/home" element={<Home />} />
+        {/* <Route path="config/perfiles" element={<Perfiles />} /> */}
 
         {rutas.map((ruta) => (
           <Route
