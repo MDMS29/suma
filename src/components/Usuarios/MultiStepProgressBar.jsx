@@ -5,8 +5,8 @@ const MultiStepProgressBar = ({ currentStep }) => {
   const stepPercentage = (currentStep / 3) * 100; 
 
   return (
-    <div>
-      <ProgressBar  percent={stepPercentage}>
+    <div className="bg-black flex justify-center items-center">
+      <ProgressBar  percent={stepPercentage} className="flex justify-center items-center" >
         <Step>
           {({ accomplished }) => (
             <div

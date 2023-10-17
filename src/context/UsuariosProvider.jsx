@@ -1,69 +1,25 @@
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState, createContext, useMemo } from "react";
 import conexionCliente from "../config/ConexionCliente";
 import { useLocation } from "react-router-dom";
+import useAuth from '../hooks/useAuth'
+
 
 const UsuariosContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 const UsuariosProvider = ({ children }) => {
   const [dataUsuarios, setDataUsuarios] = useState([])
-  const [eliminarUsuario, setEliminarUsuario] = useState({})
-  
+  const [usuarioState, setUsuarioState] = useState({})
+  const [contraseña, setConstraseña] = useState("")
 
-  const location = useLocation()
-
-  useEffect(() => {
-    const getUsuarios = async () => {
-      const token = localStorage.getItem('token')
-      
-      const config = {
-        headers: {
-          "Content-Type": "apllication/json",
-          Authorization: `Bearer ${token}`
-        }
-      }
-      
-      const estado = location.pathname.includes('inactivos') ? 2 : 1
+  const [perfilesAgg, setPerfilesAgg] = useState([]);
+  const [modulosAgg, setModulosAgg] = useState([]);
+  const [permisosAgg, setPermisosAgg] = useState([]);
 
 
-      try {
-        const { data } = await conexionCliente(`/usuarios?estado=${estado}`, config)
-        setDataUsuarios(data)
-      } catch (error) {
-        setDataUsuarios([])
-      }
-    }
-    getUsuarios()
-  }, [location.pathname])
+  const [perfilesEdit, setPerfilesEdit] = useState([])//? Nuevo
+  const [permisosEdit, setPermisosEdit] = useState([])//? Nuevo
 
-  const eliminarUsuarioProvider = async () => {
-    if (eliminarUsuario.id_usuario) {
-      const token = localStorage.getItem('token')
-      let estadoUsuario = 0
-      if (eliminarUsuario.estado_usuario == "ACTIVO") {
-        estadoUsuario = 2
-      } else {
-        estadoUsuario = 1
-      }
-      const config = {
-        headers: {
-          "Content-Type": "apllication/json",
-          Authorization: `Bearer ${token}`
-        }
-      }
-      try {
-        const { data } = await conexionCliente.delete(`/usuarios/${eliminarUsuario.id_usuario}?estado=${estadoUsuario}`, config)
-        console.log(data)
-        if (data.error) {
-          console.log(data.message)
-        }
-
-        const usuarioActualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== eliminarUsuario.id_usuario)
-        setDataUsuarios(usuarioActualizados)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }
   const [UsuariosAgg, setUsuariosAgg] = useState({
     nombre: "",
     usuario: "",
@@ -80,40 +36,136 @@ const UsuariosProvider = ({ children }) => {
     claverepetida: '',
   });
 
-  const [perfilesAgg, setPerfilesAgg] = useState([]);
-  const [modulosAgg, setModulosAgg] = useState([]);
-  const [permisosAgg, setPermisosAgg] = useState([]);
+  const { authUsuario } = useAuth()
 
-  const [validacionesExitosas, setValidacionesExitosas] = useState(true);
-
-
-  // const handleChangeUsuario = (e) => {
-  //   setUsuariosAgg({ ...UsuariosAgg, [e.target.name]: e.target.value });
-  // };
+  const location = useLocation()
 
   useEffect(() => {
     const getUsuarios = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token')
 
       const config = {
         headers: {
-          "Content-Type": "apllication/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const estado = location.pathname.includes('inactivos') ? 2 : 1
 
       try {
-        const { data } = await conexionCliente(`/usuarios?estado=1`, config);
-        console.log(data);
-        setDataUsuarios(data);
-        // navigate('/home')
+        const { data } = await conexionCliente(`/usuarios?estado=${estado}`, config)
+        setDataUsuarios(data)
       } catch (error) {
-        setDataUsuarios([]);
-        // navigate('/')
+        setDataUsuarios([])
       }
-    };
-    getUsuarios();
-  }, []);
+    }
+    getUsuarios()
+  }, [location.pathname])
+
+  const eliminarUsuarioProvider = async () => {
+    if (usuarioState.id_usuario) {
+      const token = localStorage.getItem('token')
+      let estadoUsuario = 0
+      if (usuarioState.estado_usuario == "ACTIVO") {
+        estadoUsuario = 2
+      } else {
+        estadoUsuario = 1
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      }
+      try {
+        const { data } = await conexionCliente.delete(`/usuarios/${usuarioState.id_usuario}?estado=${estadoUsuario}`, config)
+        if (data.error) {
+          console.log(data.message)
+        }
+
+        const usuarioActualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== usuarioState.id_usuario)
+        setDataUsuarios(usuarioActualizados)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const restaurarUsuarioProvider = async () => {
+    if (usuarioState.id_usuario) {
+      const token = localStorage.getItem('token')
+      let estadoUsuario = 0
+      if (usuarioState.estado_usuario == "INACTIVO") {
+        estadoUsuario = 1
+      } else {
+        estadoUsuario = 2
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      }
+      try {
+        const { data } = await conexionCliente.delete(`/usuarios/${usuarioState.id_usuario}?estado=${estadoUsuario}`, config)
+        if (data.error) {
+          console.log(data.message)
+        }
+
+        const usuarioActualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== usuarioState.id_usuario)
+        setDataUsuarios(usuarioActualizados)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const restablecerUsuarioProvider = async () => {
+    const token = localStorage.getItem('token')
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    }
+    try {
+      const { data } = await conexionCliente.patch(`usuarios/cambiar_clave/${usuarioState.id_usuario}`, {}, config)
+
+      if (data.error) {
+        console.log(data.message)
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const restablecerContraseñaProvider = async () => {
+    const token = localStorage.getItem('token')
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    }
+    const body = {
+      "clave": `${contraseña}`
+    }
+    try {
+      const { data } = await conexionCliente.patch(`usuarios/restablecer_clave/${authUsuario.id_usuario}`, body, config)
+      if (data.error) {
+        return console.log(data.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleChangeUsuario = (e) => {
+    setUsuariosAgg({ ...UsuariosAgg, [e.target.name]: e.target.value });
+  };
 
   const obtenerPerfiles = async () => {
     const token = localStorage.getItem("token");
@@ -127,12 +179,12 @@ const UsuariosProvider = ({ children }) => {
 
     try {
       const { data } = await conexionCliente(`/perfiles?estado=1`, config);
-      console.log(data);
       setPerfilesAgg(data);
     } catch (error) {
       console.error("Error al obtener perfiles:", error);
     }
   };
+
   const obtenerModulos = async (perfiles) => {
     const token = localStorage.getItem("token");
 
@@ -149,7 +201,6 @@ const UsuariosProvider = ({ children }) => {
         perfiles,
         config
       );
-      console.log(data);
       setModulosAgg(data);
     } catch (error) {
       console.error("Error al obtener perfiles:", error);
@@ -158,93 +209,110 @@ const UsuariosProvider = ({ children }) => {
 
   const guardarUsuario = async (formData) => {
     const token = localStorage.getItem("token");
-  
+
     const config = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     };
-  
+
     try {
       // Realiza la solicitud POST a la API para guardar la información del usuario
-      const response = await conexionCliente.post("/usuarios", formData, config);
-      console.log("Información guardada con éxito:", response);
-      return response.data; // Puedes devolver los datos guardados si es necesario
+      const { data } = await conexionCliente.post("/usuarios", formData, config);
+      if (!data?.error) {
+        setDataUsuarios([...dataUsuarios, data])
+        return true
+      }
+      return false;
     } catch (error) {
       console.error("Error al guardar la información:", error);
       throw error; // Puedes lanzar una excepción en caso de error
     }
   };
 
-   // -----------------validaciones-----------------------------
+  const buscarUsuario = async (id) => {
+    const token = localStorage.getItem("token");
 
-   const handleChangeUsuario = (e) => {
-    const { name, value } = e.target;
-    setUsuariosAgg({ ...UsuariosAgg, [name]: value });
-    // setUsuariosAgg({ ...UsuariosAgg, [name]: value });
-    // setUsuariosAgg({ ...UsuariosAgg, [e.target.name]: e.target.value });
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    // Realiza validaciones específicas para cada campo
-    if (name === 'nombre') {
-      if (value.length < 10 || value.length > 30) {
-        setErrors({ ...errors, [name]: 'Debe tener entre 10 y 30 caracteres' });
-      } else {
-        setErrors({ ...errors, [name]: '' });
+    try {
+      const { data } = await conexionCliente(`/usuarios/${id}`, config);
+      if (data?.error) {
+        return { error: true, message: data.message }
       }
-    }
 
-    if (name === 'usuario') {
-      if (value.length < 5 || value.length > 15) {
-        setErrors({ ...errors, [name]: 'El usuario debe tener entre 5 y 15 caracteres' });
-      } else {
-        setErrors({ ...errors, [name]: '' });
+      const { id_usuario, nombre_completo, usuario, correo, perfiles } = data.usuario
+      let permisos = []
+      setUsuariosAgg(
+        {
+          id_usuario,
+          nombre: nombre_completo,
+          usuario: usuario,
+          correo: correo,
+          clave: "",
+          claverepetida: "",
+        }
+      )
+      await data?.modulos.map((modulo) => {
+        modulo?.permisos.map((permiso) => {
+          permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
+        })
+      })
+
+      setPerfilesEdit(perfiles)
+      setPermisosEdit(permisos)
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  const editarUsuario = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      // Realiza la solicitud PATCH API para editar la información del usuario
+      const { data } = await conexionCliente.patch(`/usuarios/${formData.id_usuario}`, formData, config);
+
+      if (data?.usuario) {
+        // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
+        const usuariosActualizados = dataUsuarios.map(usuario => usuario.id_usuario === data.usuario.id_usuario ? data.usuario : usuario)
+        setDataUsuarios(usuariosActualizados)
+        return true
       }
+      return false
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
+      throw error; // Puedes lanzar una excepción en caso de error
     }
+  }
 
-    if (name === 'correo') {
-      // Realiza validación de correo electrónico (puedes utilizar una expresión regular)
-      const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-      if (!emailPattern.test(value)) {
-        setErrors({ ...errors, [name]: 'El correo electrónico no es válido' });
-      } else {
-        setErrors({ ...errors, [name]: '' });
-      }
-    }
-
-    // if (name === 'clave' || name === 'claverepetida') {
-    //   if (UsuariosAgg.clave !== UsuariosAgg.claverepetida) {
-    //     setErrors({ ...errors, clave: 'Las contraseñas no coinciden' });
-    //   } else {
-    //     setErrors({ ...errors, clave: '', claverepetida: '' });
-    //   }
-    // }
-
-    
-    
-  };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const obj = useMemo(() => ({
+    dataUsuarios, handleChangeUsuario, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
+      obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
+      setErrors, setUsuarioState, usuarioState, eliminarUsuarioProvider, restaurarUsuarioProvider, restablecerUsuarioProvider,
+      restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,
+      perfilesEdit, permisosEdit, setPerfilesEdit, setPermisosEdit, editarUsuario
+  }))
 
   return (
     <UsuariosContext.Provider
-      value={{
-        dataUsuarios,
-        handleChangeUsuario,
-        UsuariosAgg,
-        setUsuariosAgg,
-        obtenerPerfiles,
-        perfilesAgg,
-        obtenerModulos,
-        modulosAgg,
-        setModulosAgg, 
-        permisosAgg,
-        guardarUsuario,
-        errors,
-        setErrors,
-        setEliminarUsuario, 
-        eliminarUsuario, 
-        eliminarUsuarioProvider 
-      }}
+      value={obj}
     >
       {children}
     </UsuariosContext.Provider>

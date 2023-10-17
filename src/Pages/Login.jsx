@@ -34,16 +34,13 @@ const Login = () => {
                 "clave": clave,
                 "captcha": captcha.current.getValue()
             }
-
             try {
                 const { data } = await conexionCliente.post('usuarios/autenticar_usuario', body, { mode: "cors" })
-
                 if (data?.error) {
                     setError({ error: true, message: data.message })
                     setTimeout(() => { setError({ error: false, message: "" }) }, 1500)
                     return
                 }
-
                 localStorage.setItem('token', data.usuario.token)
                 localStorage.setItem('modulos', JSON.stringify(data.modulos))
                 setAuthUsuario(data.usuario)
@@ -84,7 +81,7 @@ const Login = () => {
                                 />
                             </div>
 
-                            <input type="submit" value="Ingresar" className="w-full px-4 py-2 border-2 border-primaryYellow rounded-lg bg-secundaryYellow hover:bg-primaryYellow font-bold" />
+                            <input type="submit" value="Ingresar" className="w-full px-4 py-2 border-2 border-primaryYellow rounded-lg bg-secundaryYellow hover:bg-primaryYellow font-bold"/>
                         </form>
                     </div>
                     <div className=' rounded-r-lg w-full  md:w-1/2 lg:w-1/2 xl:w-1/2 hidden md:block'>
