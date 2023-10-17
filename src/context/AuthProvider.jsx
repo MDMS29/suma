@@ -37,11 +37,11 @@ const AuthProvider = ({ children }) => {
           navigate('/auth/resetear')
         }
         setAuthModulos(JSON.parse(localStorage.getItem('modulos')));
-        navigate('/home')
+        navigate('/')
 
       } catch (error) {
         setAuthUsuario({})
-        navigate('/')
+        navigate('/auth')
       }
     }
     autenticarUsuario()
@@ -61,7 +61,7 @@ const AuthProvider = ({ children }) => {
     setAuthModulos([])
     localStorage.removeItem('token')
     localStorage.removeItem('modulos')
-    navigate("/")
+    navigate("/auth")
   }
 
   const Permisos_DB = {

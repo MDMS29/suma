@@ -8,7 +8,6 @@ import AuthLayouth from "../layout/AuthLayouth.jsx";
 import useAuth from "../hooks/useAuth.jsx";
 import routesUsuario from "./routes.jsx";
 import ResetearContraseñaUsuario from "../Pages/Usuarios/ResetearContraseñaUsuario.jsx";
-import Perfiles from "../Pages/Perfiles.jsx"
 
 let rutas = [];
 
