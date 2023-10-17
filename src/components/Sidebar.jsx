@@ -17,12 +17,20 @@ const Sidebar = () => {
         return modulos;
       })
     );
+    // setOpen(!open);
+
   };
   const toggleSidebar = () => {
     setOpen(!open);
   };
+  const toggleSidebarAbierto = () => {
+    setOpen(!open);
+  };
+  const toggleSidebarCerrado = () => {
+    setOpen(!open);
+  };
   return (
-    <div className="h-full flex flex-col border-r shadow-sm bg-white  max-sm:absolute z-10">
+    <div onMouseEnter={toggleSidebarAbierto} onMouseLeave={toggleSidebarCerrado} className="h-full transition-all ease-out flex flex-col border-r shadow-sm bg-white  max-sm:absolute z-10">
       <button
         className="fixed z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-full drop-shadow-lg flex justify-center items-center text-white text-4xl hover:bg-amber-500 duration-300"
         onClick={toggleSidebar}
@@ -44,8 +52,8 @@ const Sidebar = () => {
 
       <div
         className={` ${open
-            ? "w-auto px-2 overflow-hidden transition-all duration-700 ease-in-out"
-            : "w-16 overflow-hidden transition-all duration-700 ease-in-out max-sm:w-0 z-10"
+          ? "w-auto px-2 overflow-hidden transition-all duration-700 ease-in-out"
+          : "w-16 overflow-hidden transition-all duration-700 ease-in-out max-sm:w-0 z-10"
           } bg-white `}
       >
         <div className=" flex p-2 mx-1">
@@ -63,15 +71,15 @@ const Sidebar = () => {
           <div
             onClick={cerrar_salir}
             className={` ${open
-                ? "w-52 p-2 m-2 mx-3 overflow-hidden transition-all duration-700 ease-in-out "
-                : "w-14 p-2 mx-1 justify-center opacity-0"
+              ? "w-52 p-2 m-2 mx-3 overflow-hidden transition-all duration-700 ease-in-out "
+              : "w-14 p-2 mx-1 justify-center opacity-0"
               } hover:bg-primaryYellow overflow-hidden absolute inset-x-0 bottom-5 flex rounded-md cursor-pointer font-semibold hover:bg-amarillo text-sm`}
           >
 
             <i className="pi pi-sign-out"></i>
             {open && <span className="ml-2">SALIR</span>}
           </div>
-          
+
         </div>
         <ul className="">
           {authModulos.map((modulo, index) => (

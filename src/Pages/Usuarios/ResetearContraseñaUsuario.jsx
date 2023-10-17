@@ -41,6 +41,10 @@ const ResetearContraseñaUsuario = () => {
         setRepContraseña("")
     }
 
+    const cerrarSesion = () => {
+        cerrar_salir()
+    }
+
     return (
         <div className='h-screen w-screen flex justify-center items-center'>
             <Toast ref={toast} />
@@ -67,6 +71,13 @@ const ResetearContraseñaUsuario = () => {
                     />
                     <input onClick={restablecerContraseña} type="submit" className="mt-3 p-2 mx-2 rounded-md font-semibold
                 bg-secundaryYellow hover:bg-primaryYellow transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-yellow-200" />
+
+                    <div className='text-gray-500 flex w-100 items-center gap-3'>
+                        <hr className='w-100' />
+                        <span>o</span>
+                        <hr className='w-100' />
+                    </div>
+                    <a onClick={cerrarSesion} className='text-primaryYellow hover:underline hover:text-secundaryYellow text-center cursor-pointer'>  Ingresar desde una cuenta diferente</a>
                 </form>
             </div>
         </div>
