@@ -165,6 +165,9 @@ const UsuariosProvider = ({ children }) => {
 
   const handleChangeUsuario = (e) => {
     setUsuariosAgg({ ...UsuariosAgg, [e.target.name]: e.target.value });
+
+    const inputValue = e.target.value;
+    setUsuariosAgg(inputValue);
   };
 
   const obtenerPerfiles = async () => {
