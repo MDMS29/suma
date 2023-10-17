@@ -9,6 +9,9 @@ import { Button } from "primereact/button";
 import useUsuarios from '../../hooks/useUsuarios'
 import { Restore_Icono } from "../../../public/Icons/Iconos";
 import Confirmar from "../../components/Modales/Confirmar";
+import Loader from "../../components/Loader";
+import Forbidden from "../Errors/forbidden";
+import useAuth from "../../hooks/useAuth";
 
 
 const UsuariosInactivos = () => {
@@ -16,7 +19,17 @@ const UsuariosInactivos = () => {
 
   const [modalEliminar, setModalEliminar] = useState(false)
 
-  const { dataUsuarios, setUsuarioState } = useUsuarios()
+  const { dataUsuarios, setUsuarioState, permisosUsuario, setPermisosUsuario } = useUsuarios()
+  const { authPermisos, Permisos_DB } = useAuth()
+
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (authPermisos !== undefined) {
+  //       return setPermisosUsuario(authPermisos)
+  //     }
+  //   }, 10)
+  // }, [authPermisos])
 
   const redirectToPreviousPage = () => {
     window.history.back();
@@ -73,16 +86,14 @@ const UsuariosInactivos = () => {
     toast.current.show({ severity: 'success', detail: 'El registro se ha activado correctamente. ', life: 1500 });
   }
 
-  return (
+  const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
+      {modalEliminar ? <Confirmar modalEliminar={modalEliminar} setModalEliminar={setModalEliminar} mensajeRestaurado={mensajeRestaurado} /> : ""}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Usuarios Inactivos</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
       </div>
-      {modalEliminar ? <Confirmar modalEliminar={modalEliminar} setModalEliminar={setModalEliminar} mensajeRestaurado={mensajeRestaurado} /> : ""}
-
-
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>
           <button onClick={redirectToPreviousPage} className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500">
@@ -119,21 +130,38 @@ const UsuariosInactivos = () => {
             key="actions"
             style={{ width: "10%" }}
             body={(rowData) => (
-              <div className="text-center flex gap-x-3">
-                <Button
-                  tooltip="Restaurar"
-                  tooltipOptions={{ position: "top" }}
-                  className="p-button-rounded p-mr-2"
-                  onClick={e => confirmRestaurarUsuario(e, rowData)}
-                >
-                  {Restore_Icono}
-                </Button>
-              </div>
-            )}
+              permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR).length > 0 ? (
+                <div className="text-center flex gap-x-3">
+                  <Button
+                    tooltip="Restaurar"
+                    tooltipOptions={{ position: "top" }}
+                    className="p-button-rounded p-mr-2"
+                    onClick={e => confirmRestaurarUsuario(e, rowData)}
+                  >
+                    {Restore_Icono}
+                  </Button>
+                </div>
+              ) : '' )}
           />
         </DataTable>
       </div>
     </div>
+  )
+  return (
+    <>
+      {
+        permisosUsuario.length === 0
+          ?
+          (<Loader />)
+          :
+          (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
+            ?
+            (main())
+            :
+            (<Forbidden />))
+      }
+    </>
+
   );
 };
 

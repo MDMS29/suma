@@ -45,7 +45,7 @@ const AppMain = () => {
 
 
       <Route path="/" element={<Layout />}>
-        <Route path="/home" element={<Home />} />
+        <Route path="home" element={<Home />} />
         {/* <Route path="config/perfiles" element={<Perfiles />} /> */}
 
         {rutas.map((ruta) => (

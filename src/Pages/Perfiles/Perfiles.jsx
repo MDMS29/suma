@@ -28,7 +28,7 @@ const Perfiles = () => {
     { field: "nombre_perfil", header: "Nombre" },
   ];
 
-  const { dataPerfiles, setDataPerfiles } = usePerfiles();
+  const { dataPerfiles, setDataPerfiles, permisosUsuario } = usePerfiles();
 
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonPerfil, setBotonPerfil] = useState();
@@ -120,13 +120,12 @@ const Perfiles = () => {
           </button>
           <Link
             className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-            to="/home/config/perfiles/inactivos"
+            to="/configuracion/perfiles/inactivos"
           >
             Inactivos
           </Link>
         </div>
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
-        
           <i className="pi pi-search" />
           <InputText
             className="h-10 pl-8 rounded-md"
