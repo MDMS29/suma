@@ -73,13 +73,11 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     setErrors({});
   };
 
-
   const handleKeyPress = (e) => {
     if (e.key === ' ') {
       e.preventDefault(); // Evitar la entrada de espacios en blanco
     }
   };
-
 
   const handleGuardar = async () => {
     try {
@@ -140,6 +138,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   };
 
   const handleNext = () => {
+
     // Realiza las validaciones aquí antes de avanzar al siguiente paso
     const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const errors = {};

@@ -17,10 +17,11 @@ const UsuariosProvider = ({ children }) => {
   const [permisosAgg, setPermisosAgg] = useState([]);
 
 
-  const [perfilesEdit, setPerfilesEdit] = useState([])//? Nuevo
-  const [permisosEdit, setPermisosEdit] = useState([])//? Nuevo
+  const [perfilesEdit, setPerfilesEdit] = useState([])
+  const [permisosEdit, setPermisosEdit] = useState([])
 
   const [UsuariosAgg, setUsuariosAgg] = useState({
+    id_usuario: 0,
     nombre: "",
     usuario: "",
     correo: "",
@@ -167,11 +168,11 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-  const handleChangeUsuario = (e) => {
-    setUsuariosAgg({ ...UsuariosAgg, [e.target.name]: e.target.value });
-
-    const inputValue = e.target.value;
-    setUsuariosAgg(inputValue);
+  const handleChangeUsuario = e => {
+    setUsuariosAgg({
+      ...UsuariosAgg,
+      [e.target.name]: e.target.value
+    });
   };
 
   const obtenerPerfiles = async () => {
