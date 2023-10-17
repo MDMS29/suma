@@ -5,12 +5,9 @@ export const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        // TODO: replace `user` and `pass` values from <https://forwardemail.net>
         user: process.env.MAILER_USER,
-        pass: process.env.MAILER_PASS 
+        pass: process.env.MAILER_PASS
     }
 });
 
-transporter.verify().then(()=> {
-    console.log('Mailer listo')
-})
+transporter.verify().then(() => console.log('Mailer listo'))

@@ -176,4 +176,6 @@ export class _PerfilController {
             return res.json({ error: true, message: 'Error al encontrar el perfil' }) //!ERROR
         }
     }
+
+  
 }

@@ -1,8 +1,6 @@
 import QueryModulo from "../querys/QuerysModulo";
-import { MessageError } from "../validations/Types"
+// import { MessageError } from "../validations/Types"
 import { EstadosTablas } from "../validations/utils";
-// import QueryPerfil from "../querys/QuerysPerfil"
-
 export default class ModuloService {
     private _Query_Modulo: QueryModulo;
 
@@ -11,7 +9,7 @@ export default class ModuloService {
         this._Query_Modulo = new QueryModulo();
     }
 
-    public async ObtenerModulos(estado: number): Promise<MessageError | any> {
+    public async ObtenerModulos(estado: number): Promise<any> {
         if (!estado) return { error: true, message: 'Estado no definido' } //!ERROR
         try {
             const modulos = await this._Query_Modulo.ObtenerModulos(estado)
@@ -25,7 +23,7 @@ export default class ModuloService {
         }
     }
 
-    public async InsertarModulo(codigo: string, nombre_modulo: string, usuario_creador: string, icono: string): Promise<MessageError | any> {
+    public async InsertarModulo(codigo: string, nombre_modulo: string, usuario_creador: string, icono: string, roles: any): Promise<any> {
         try {
             // BUSCAR EL NOMBRE DEL MODULO SI NO SE ENCUENTRA DUPLICADO
             const modulo = await this._Query_Modulo.BuscarModuloNombre(nombre_modulo)
@@ -48,11 +46,24 @@ export default class ModuloService {
                 return { error: true, message: 'Error al insertar el modulo' } //!ERROR
             }
 
+            for (let rol of roles) {
+                const roles_modulo = await this._Query_Modulo.InsertarRolesModulo(rol.id_rol, modulo_insertado.id_modulo, usuario_creador)
+                if (!roles_modulo) {
+                    return { error: true, message: 'Error al insertar el rol del modulo' }
+                }
+            }
+
             // BUSCAR EL MODULO AGREGADO
             const modulo_nuevo = await this._Query_Modulo.BuscarModuloID(modulo_insertado.id_modulo)
             if (!modulo_nuevo.id_modulo) {
                 return { error: true, message: 'No se ha encontrado el modulo' } //!ERROR
             }
+
+            const roles_modulo = await this._Query_Modulo.ObtenerRolesModulo(modulo_insertado.id_modulo)
+            if (!roles_modulo) {
+                return { error: true, message: 'Error al encontrar los permisos del modulo' } //!ERROR
+            }
+            modulo_nuevo.roles = roles_modulo
             return modulo_nuevo //*SUCCESSFUL
         } catch (error) {
             console.log(error)
@@ -60,12 +71,18 @@ export default class ModuloService {
         }
     }
 
-    public async BuscarModulo(id_modulo: number): Promise<MessageError | any> {
+    public async BuscarModulo(id_modulo: number): Promise<any> {
         try {
             const modulo = await this._Query_Modulo.BuscarModuloID(id_modulo)
             if (!modulo) {
                 return { error: true, message: 'No se ha encontrado el modulo' } //!ERROR
             }
+
+            const roles = await this._Query_Modulo.ObtenerRolesModulo(id_modulo)
+            if (!roles) {
+                return { error: true, message: 'Error al encontrar los permisos del modulo' } //!ERROR
+            }
+            modulo.roles = roles
             return modulo //*SUCCESSFUL
         } catch (error) {
             console.log(error)
@@ -73,7 +90,7 @@ export default class ModuloService {
         }
     }
 
-    public async EditarModulo(id_modulo: number, Request_Modulo: Partial<any>, usuario_modi: string): Promise<MessageError | any> {
+    public async EditarModulo(id_modulo: number, Request_Modulo: Partial<any>, usuario_modi: string, roles: any): Promise<any> {
         let _Codigo_Editado: string
         let _Nombre_Editado: string
         let _Icono_Editado: string
@@ -87,7 +104,7 @@ export default class ModuloService {
                 const nombre = await this._Query_Modulo.BuscarModuloNombre(Request_Modulo.nombre_modulo)
                 if (nombre.nombre_modulo.toLowerCase() === Request_Modulo.nombre_modulo.toLowerCase()) {
                     return { error: true, message: 'Ya existe este modulo, ingrese un nombre diferente' }
-                }else{ 
+                } else {
                     _Nombre_Editado = Request_Modulo.nombre_modulo
                 }
             } else {
@@ -98,7 +115,7 @@ export default class ModuloService {
                 const codigo = await this._Query_Modulo.BuscarCodigoModulo(Request_Modulo.cod_modulo)
                 if (codigo) {
                     return { error: true, message: 'Ya existe este modulo, ingrese un codigo diferente' }
-                }else{
+                } else {
                     _Codigo_Editado = Request_Modulo.cod_modulo
                 }
             } else {
@@ -106,13 +123,13 @@ export default class ModuloService {
             }
 
             if (moduloB.icono !== Request_Modulo.icono && Request_Modulo.icono !== 'pi-box') {
-                if(!Request_Modulo.icono.startsWith('pi-')){
+                if (!Request_Modulo.icono.startsWith('pi-')) {
                     return { error: true, message: 'Este icono es invalido, ingrese a: https://primereact.org/icons/#list' }
                 }
                 const icono = await this._Query_Modulo.BuscarIconoModulo(Request_Modulo.icono)
                 if (icono) {
                     return { error: true, message: 'Ya existe este modulo, ingrese un icono diferente' }
-                }else{
+                } else {
                     _Icono_Editado = Request_Modulo.icono
                 }
             } else {
@@ -129,10 +146,47 @@ export default class ModuloService {
             if (!modulo?.rowCount) {
                 return { error: true, message: 'Error al editar el modulo' } //!ERROR
             }
+
+            // EDITAR LOS ROLES DEL MODULO
+            for (let rol of roles) {
+                const rol_buscado = await this._Query_Modulo.BuscarRolModulo(id_modulo, rol.id_rol)
+                if (rol_buscado?.length === 0) {
+                    //INSERTAR
+                    const roles_modulo = await this._Query_Modulo.InsertarRolesModulo(rol.id_rol, id_modulo, usuario_modi)
+                    if (!roles_modulo) {
+                        return { error: true, message: 'Error al insertar el rol del modulo' }
+                    }
+                } else {
+                    //EDITAR ESTADO
+                    const rol_editado = await this._Query_Modulo.EditarRolModulo(rol.id_rol, id_modulo)
+                    if(!rol_editado) {
+                        return { error: true, message: 'Error al editar el rol del modulo' }
+                    }
+                }
+            }
+
+
             return modulo //*SUCCESSFUL
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al editar el modulo' } //!ERROR
+        }
+    }
+
+    public async CambiarEstadoModulo(id_modulo: number, estado: number): Promise<any> {
+        const busqueda = await this._Query_Modulo.BuscarModuloID(id_modulo)
+        if (busqueda.length <= 0) {
+            return { error: true, message: 'No se ha encontrado el modulo' }
+        }
+        try {
+            const res = await this._Query_Modulo.CambiarEstadoModulo(id_modulo, estado)
+            if (!res) {
+                return { error: true, message: 'No se pudo cambiar el estado del modulo' }
+            }
+            return { error: false, message: '' }
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al cambiar el estado del modulo' }
         }
     }
 }

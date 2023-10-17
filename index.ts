@@ -49,7 +49,7 @@ app.use('/suma/api/modulos', _ModulosRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {
-    res.send({ error: true, message: "Pagína no encontrada" });
+    res.status(404).send({ error: true, message: "Pagína no encontrada" });
 })
 
 app.listen(PORT, () => {

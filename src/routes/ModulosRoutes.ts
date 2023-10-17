@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { _Autorizacion } from "../middleware/Autorizacion";
-import { _PerfilController } from "../controller/PerfilController";
 import { _ModuloController } from "../controller/ModuloController";
 
 //INICIALIZAR RUTAS PARA PERFILES
@@ -13,8 +12,6 @@ const ModuloController = new _ModuloController()
 _ModulosRouter.route('/')
     .get(_Autorizacion, ModuloController.ObtenerModulos) //OBTENER TODOS LOS PERFILES
     .post(_Autorizacion, ModuloController.InsertarModulo) //INSERTAR PERFIL
-
-// _ModulosRouter.post('/modulos', _Autorizacion, ModuloController.ObtenerModulosPerfiles)// OBTENER LOS MODULOS DE LOS PERFILES
 
 _ModulosRouter.route('/:id_modulo')
 .get(_Autorizacion, ModuloController.BuscarModulo)
