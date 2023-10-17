@@ -1,8 +1,9 @@
-import { useRef } from "react";
-import usePerfiles from "../hooks/usePerfiles";
+import { useState, useEffect, useRef } from "react";
+import usePerfiles from "../../hooks/usePerfiles";
 import { MultiSelect } from "primereact/multiselect";
-import ModalAgregarPerfil from "../components/Perfiles/ModalAgregarPerfil";
-import { useState, useEffect } from "react";
+import ModalAgregarPerfil from "../../components/Perfiles/ModalAgregarPerfil";
+import Confirmar from "../../components/Modales/Confirmar";
+
 import { Link } from "react-router-dom";
 
 
@@ -15,7 +16,7 @@ import {
   Key_Icono,
   Trash_Icono,
   Edit_Icono,
-} from "../../public/Icons/Iconos";
+} from "../../../public/Icons/Iconos";
 import { InputText } from "primereact/inputtext"
 
 
@@ -49,7 +50,7 @@ const Perfiles = () => {
     setDataPerfiles(perfil);
     setBotonPerfil(1);
   };
-  
+
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
     let orderedSelectedColumns = columns.filter((col) =>
@@ -90,10 +91,7 @@ const Perfiles = () => {
   return (
     <div className="w-5/6">
       <Toast ref={toast} />
-      <div className="flex justify-center gap-x-4 m-2 p-3">
-        <h1 className="text-3xl">Perfiles</h1>
-        <i className="pi pi-users" style={{ fontSize: "2rem" }}></i>
-      </div>
+      {modalVisible && <ModalAgregarPerfil visible={modalVisible} onClose={toggleModal} />}
       {modalEliminar ? (
         <Confirmar
           modalEliminar={modalEliminar}
@@ -104,11 +102,18 @@ const Perfiles = () => {
       ) : (
         ""
       )}
-      <div className="bg-white border my-3 p-3 rounded-sm w-full flex">
+
+      <div className="flex justify-center gap-x-4 m-2 p-3">
+        <h1 className="text-3xl">Perfiles</h1>
+        <i className="pi pi-users" style={{ fontSize: "2rem" }}></i>
+      </div>
+
+      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+
         <div>
           <button
             className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-            onClick={(e) => setModalVisible(true)}
+            onClick={(e) => setModalVisible(true, e)}
           >
             <i className="pi pi-plus mx-2 font-medium"></i>
             Agregar
@@ -119,9 +124,9 @@ const Perfiles = () => {
           >
             Inactivos
           </Link>
-          {/* <ModalAgregarPerfil visible={modalVisible} onClose={toggleModal} /> */}
         </div>
-        <span className="p-input-icon-left ml-auto border rounded-md">
+        <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
+        
           <i className="pi pi-search" />
           <InputText
             className="h-10 pl-8 rounded-md"
@@ -131,6 +136,7 @@ const Perfiles = () => {
           />
         </span>
       </div>
+
       <div className="card">
         <DataTable
           className="custom-datatable"

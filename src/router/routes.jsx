@@ -2,7 +2,7 @@ import Login from "../Pages/Login";
 import ResetearContraseñaUsuario from "../Pages/Usuarios/ResetearContraseñaUsuario";
 import Usuario from "../Pages/Usuarios/Usuarios";
 import UsuarioInactivos from "../Pages/Usuarios/UsuariosInactivos";
-import Perfiles from "../Pages/Perfiles"
+import Perfiles from "../Pages/Perfiles/Perfiles"
 
 const routesUsuario = [
   {

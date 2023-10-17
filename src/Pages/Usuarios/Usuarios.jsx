@@ -161,8 +161,8 @@ const Usuarios = () => {
         <h1 className="text-3xl">Usuarios</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
       </div>
+    
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-      
         <div>
           <button
             className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
@@ -180,7 +180,6 @@ const Usuarios = () => {
           >
             Inactivos
           </Link>
-          <ModalAgregarUsuarios visible={modalVisible} onClose={toggleModal} />
         </div>
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
