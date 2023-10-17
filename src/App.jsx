@@ -8,6 +8,7 @@ import { UsuariosProvider } from "./context/UsuariosProvider.jsx";
 
 import AppMain from "./router/AppMain.jsx";
 import { PerfilesProvider } from "./context/PerfilesProvider.jsx";
+import { ModulosProvider } from "./context/ModulosProvider.jsx";
 
 const App = () => {
   return (
@@ -16,7 +17,9 @@ const App = () => {
         <PrimeReactProvider>
           <UsuariosProvider>
             <PerfilesProvider>
+              <ModulosProvider>
               <AppMain />
+              </ModulosProvider>
             </PerfilesProvider>
           </UsuariosProvider>
         </PrimeReactProvider>

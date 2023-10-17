@@ -3,6 +3,8 @@ import ResetearContraseñaUsuario from "../Pages/Usuarios/ResetearContraseñaUsu
 import Usuario from "../Pages/Usuarios/Usuarios";
 import UsuarioInactivos from "../Pages/Usuarios/UsuariosInactivos";
 import Perfiles from "../Pages/Perfiles"
+import Modulos from "../Pages/Modulos/Modulos";
+import ModulosInactivos from "../Pages/Modulos/ModulosInactivos";
 
 const routesUsuario = [
   {
@@ -34,6 +36,18 @@ const routesUsuario = [
     route: "configuracion/perfiles",
     component: <Perfiles />,
     key: 5
+  },
+  {
+    name: "Modulos",
+    route: "configuracion/modulos",
+    component: <Modulos />,
+    key: 6
+  },
+  {
+    name: "Modulos Inactivos",
+    route: "configuracion/modulos/inactivos",
+    component: <ModulosInactivos />,
+    key: 7
   }
 ];
 
