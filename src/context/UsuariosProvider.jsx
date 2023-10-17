@@ -36,30 +36,34 @@ const UsuariosProvider = ({ children }) => {
     claverepetida: '',
   });
 
+  const [permisosUsuario, setPermisosUsuario] = useState([])
+
   const { authUsuario } = useAuth()
 
   const location = useLocation()
 
   useEffect(() => {
-    const getUsuarios = async () => {
-      const token = localStorage.getItem('token')
+    if (location.pathname.includes('usuarios')) {
+      const getUsuarios = async () => {
+        const token = localStorage.getItem('token')
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
+        }
+        const estado = location.pathname.includes('inactivos') ? 2 : 1
+
+        try {
+          const { data } = await conexionCliente(`/usuarios?estado=${estado}`, config)
+          setDataUsuarios(data)
+        } catch (error) {
+          setDataUsuarios([])
         }
       }
-      const estado = location.pathname.includes('inactivos') ? 2 : 1
-
-      try {
-        const { data } = await conexionCliente(`/usuarios?estado=${estado}`, config)
-        setDataUsuarios(data)
-      } catch (error) {
-        setDataUsuarios([])
-      }
+      getUsuarios()
     }
-    getUsuarios()
   }, [location.pathname])
 
   const eliminarUsuarioProvider = async () => {
@@ -304,10 +308,11 @@ const UsuariosProvider = ({ children }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const obj = useMemo(() => ({
     dataUsuarios, handleChangeUsuario, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
-      obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
-      setErrors, setUsuarioState, usuarioState, eliminarUsuarioProvider, restaurarUsuarioProvider, restablecerUsuarioProvider,
-      restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,
-      perfilesEdit, permisosEdit, setPerfilesEdit, setPermisosEdit, editarUsuario
+    obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
+    setErrors, setUsuarioState, usuarioState, eliminarUsuarioProvider, restaurarUsuarioProvider, restablecerUsuarioProvider,
+    restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,
+    perfilesEdit, permisosEdit, setPerfilesEdit, setPermisosEdit, editarUsuario,
+    permisosUsuario, setPermisosUsuario
   }))
 
   return (

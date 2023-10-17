@@ -7,13 +7,13 @@ import Perfiles from "../Pages/Perfiles"
 const routesUsuario = [
   {
     name: "Usuarios",
-    route: "config/usuarios",
+    route: "configuracion/usuarios",
     component: <Usuario />,
     key: 1
   },
   {
-    name: "Usuarios",
-    route: "config/usuarios/inactivos",
+    name: "Usuarios Inactivos",
+    route: "configuracion/usuarios/inactivos",
     component: <UsuarioInactivos />,
     key: 2
   },
@@ -31,7 +31,7 @@ const routesUsuario = [
   },
   {
     name: "Perfiles",
-    route: "config/perfiles",
+    route: "configuracion/perfiles",
     component: <Perfiles />,
     key: 5
   }
