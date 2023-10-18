@@ -1,3 +1,4 @@
+import React from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Button } from "primereact/button";
 import useUsuarios from '../../hooks/useUsuarios'
@@ -64,7 +65,8 @@ const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeR
     }
 
     switch (variableModal) {
-        case (2 || 5):
+        case 2:
+        case 5:
             mss = "¿Deseas restaurar este registro?"
             btn = "Restaurar"
             break;
@@ -72,7 +74,8 @@ const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeR
             mss = "¿Estás seguro de que deseas restaurar la contraseña?"
             btn = "Restablecer"
             break;
-        case (1 || 4):
+        case 1:
+        case 4:
             mss = "¿Estás seguro de que deseas inactivar este registro?"
             btn = "Eliminar"
             break;

@@ -243,8 +243,11 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   const fncChkPerfil = (row) => {
     const perfil = perfilesSeleccionados.filter((perfil) => perfil.id_perfil === row.id_perfil)
+    // console.log(perfil)
     if (perfil) {
       return perfil[0]?.estado_perfil === 1
+    } else {
+      return false
     }
   }
 
@@ -277,14 +280,14 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   return (
     <Dialog
-      header={<h1>Agregar Usuario</h1>}
+      header={perfilesEdit.length !== 0 ? <h1>Editar Usuario</h1> : <h1>Agregar Usuario</h1>}
       visible={visible}
       onHide={handleClose}
       className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
       footer={footerContent}
     >
       <div>
-      <Toast ref={toast} />
+        <Toast ref={toast} />
         <Steps
           model={[
             { label: "Informacion" },
@@ -322,7 +325,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   name="usuario"
                   className={`border-1 p-1 rounded-md h-10 px-3 py-2 ${errors.usuario ? "border-red-500" : "border-gray-300"
                     }`}
-                    onKeyPress={handleKeyPress}
+                  onKeyPress={handleKeyPress}
                   onChange={(e) => handleChangeUsuario(e)}
                 />
                 {errors.usuario && (

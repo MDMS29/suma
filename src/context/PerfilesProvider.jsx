@@ -29,28 +29,31 @@ const PerfilesProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const ObtenerPerfiles = async () => {
-      const token = localStorage.getItem("token");
+    if (location.pathname.includes('perfiles')) {
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const ObtenerPerfiles = async () => {
+        const token = localStorage.getItem("token");
+  
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const estado = location.pathname.includes("inactivos") ? 2 : 1;
+  
+        try {
+          const { data } = await conexionCliente(
+            `/perfiles?estado=${estado}`,
+            config
+          );
+          setDataPerfiles(data);
+        } catch (error) {
+          setDataPerfiles([]);
+        }
       };
-      const estado = location.pathname.includes("inactivos") ? 2 : 1;
-
-      try {
-        const { data } = await conexionCliente(
-          `/perfiles?estado=${estado}`,
-          config
-        );
-        setDataPerfiles(data);
-      } catch (error) {
-        setDataPerfiles([]);
-      }
-    };
-    ObtenerPerfiles();
+      ObtenerPerfiles();
+    }
   }, [location.pathname]);
 
 
@@ -116,7 +119,7 @@ const PerfilesProvider = ({ children }) => {
     if (perfilState.id_perfil) {
       const token = localStorage.getItem("token");
       let estadoPerfil = 0;
-      if (perfilState.estado_perfil == "INACTIVO") {
+      if (perfilState.id_estado == 2) {
         estadoPerfil = 1;
       } else {
         estadoPerfil = 2;
