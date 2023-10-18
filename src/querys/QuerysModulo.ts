@@ -2,7 +2,7 @@ import { client } from "../../config/db"
 import {
     _BuscarCodigoModulo, _BuscarIconoModulo, _BuscarModuloID,
     _BuscarModuloNombre, _BuscarRolModulo, _CambiarEstadoModulo, _EditarModulo,
-    _InsertarModulo, _InsertarRolModulo, _ObtenerModulos,
+    _EditarRolModulo, _InsertarModulo, _InsertarRolModulo, _ObtenerModulos,
     _ObtenerRolesModulo, _ObtenerUltimoID
 } from "../dao/DaoModulo"
 import { ModulosUsuario } from "../validations/Types"
@@ -121,10 +121,10 @@ export default class QueryModulo {
             return
         }
     }
-    public async EditarRolModulo(id_modulo: number, rol: number) {
+    public async EditarRolModulo(rol_modulo: number, estado: number) {
         try {
-            const result = await client.query(_BuscarRolModulo, [id_modulo, rol]);
-            return result.rows
+            const result = await client.query(_EditarRolModulo, [rol_modulo, estado]);
+            return result.rowCount
         } catch (error) {
             console.log(error)
             return

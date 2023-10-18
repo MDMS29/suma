@@ -22,7 +22,7 @@ export const _ObtenerRolesModulo = `
         seguridad.tbl_rol_modulo trm 
     INNER JOIN seguridad.tbl_roles tr on tr.id_rol = trm.id_rol 
     WHERE 
-        trm.id_modulo = $1 ORDER BY trm.id_rol ASC ;
+        trm.id_modulo = $1 AND trm.id_estado = 1 ORDER BY trm.id_rol ASC ;
 `
 
 export const _InsertarModulo = `
@@ -107,4 +107,13 @@ export const _BuscarRolModulo = `
         seguridad.tbl_rol_modulo trm 
     WHERE trm.id_modulo = $1 
         AND trm.id_rol = $2;
+`
+
+export const _EditarRolModulo = `
+    UPDATE 
+        seguridad.tbl_rol_modulo trm
+    SET 
+        id_estado=$2
+    WHERE 
+        trm.id_rol_modulo = $1;
 `

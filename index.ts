@@ -1,5 +1,6 @@
 import express, { Response } from 'express';
 import cors from 'cors';
+import logger from 'morgan'
 import { _Usuario_Router } from './src/routes/UsuarioRoutes';
 import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
 import { _ModulosRouter } from './src/routes/ModulosRoutes';
@@ -36,6 +37,9 @@ app.use(async (__, _, next) => {
         console.log(error)
     }
 });
+
+//VER LAS ACCIONES QUE REALIZA EL USUARIO
+app.use(logger('dev'))
 
 //DEFINIR RUTA DEL USUARIO
 // Crear una instancia del enrutador de usuario

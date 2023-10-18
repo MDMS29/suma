@@ -149,7 +149,7 @@ export default class ModuloService {
 
             // EDITAR LOS ROLES DEL MODULO
             for (let rol of roles) {
-                const rol_buscado = await this._Query_Modulo.BuscarRolModulo(id_modulo, rol.id_rol)
+                const rol_buscado: any = await this._Query_Modulo.BuscarRolModulo(id_modulo, rol.id_rol)
                 if (rol_buscado?.length === 0) {
                     //INSERTAR
                     const roles_modulo = await this._Query_Modulo.InsertarRolesModulo(rol.id_rol, id_modulo, usuario_modi)
@@ -158,9 +158,16 @@ export default class ModuloService {
                     }
                 } else {
                     //EDITAR ESTADO
-                    const rol_editado = await this._Query_Modulo.EditarRolModulo(rol.id_rol, id_modulo)
-                    if(!rol_editado) {
+                    const rol_editado = await this._Query_Modulo.EditarRolModulo(rol_buscado[0]?.id_rol_modulo, rol.id_estado)
+                    if (rol_editado === 0) {
                         return { error: true, message: 'Error al editar el rol del modulo' }
+                    }
+                    const roles = await this._Query_Modulo.ObtenerRolesModulo(id_modulo)
+                    if (roles.length === 0) { //SI NO HAY ROLES ACTIVOS DEBERÁ ACTIVAR EL ACTUAL
+                        const rol_editado = await this._Query_Modulo.EditarRolModulo(rol_buscado[0]?.id_rol_modulo, 1)
+                        if (!rol_editado) {
+                            return { error: true, message: 'Error al editar el rol del modulo' }
+                        }
                     }
                 }
             }
