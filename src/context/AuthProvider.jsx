@@ -11,9 +11,15 @@ const AuthProvider = ({ children }) => {
 
   const [authUsuario, setAuthUsuario] = useState({})
   const [authModulos, setAuthModulos] = useState([])
-  
+
   const [authPermisos, setAuthPermiso] = useState([])
-  
+
+
+  const [alerta, setAlerta] = useState({
+    error: false,
+    show: false,
+    message: ''
+  })
 
   useEffect(() => {
     const autenticarUsuario = async () => {
@@ -47,13 +53,13 @@ const AuthProvider = ({ children }) => {
       }
     }
     autenticarUsuario()
-  },[])
+  }, [])
 
   //CARGAR LOS PERMISOS SEGUN EL MODULO
   useEffect(() => {
     if (authUsuario.id_usuario) {
       const modulos = JSON.parse(localStorage.getItem('modulos'))
-      const [modulo] = modulos.filter(m => m.nombre_modulo.toLowerCase() === location.pathname.split('/')[1]) 
+      const [modulo] = modulos.filter(m => m.nombre_modulo.toLowerCase() === location.pathname.split('/')[1])
       setAuthPermiso(modulo?.permisos)
     }
   }, [location.pathname, authUsuario.id_usuario])
@@ -75,9 +81,8 @@ const AuthProvider = ({ children }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const obj = useMemo(() => ({
-    authUsuario, setAuthUsuario,
-    authModulos, setAuthModulos,
-    cerrar_salir, authPermisos, Permisos_DB
+    authUsuario, setAuthUsuario, authModulos, setAuthModulos,
+    cerrar_salir, authPermisos, Permisos_DB, alerta, setAlerta
   }))
 
   return (

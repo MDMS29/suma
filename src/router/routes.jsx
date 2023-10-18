@@ -1,4 +1,3 @@
-
 import Home from "../Pages/Home";
 import ErrorRoutes from "./ErrorRoutes";
 import AdminRoutes from "./AdminRoutes";

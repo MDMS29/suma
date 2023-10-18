@@ -49,6 +49,9 @@ const Login = () => {
 
             } catch (error) {
                 console.log(error)
+                setError({ error: true, message: error.response.data.message })
+                    setTimeout(() => { setError({ error: false, message: "" }) }, 1500)
+                    return
             }
         }
     }
@@ -70,7 +73,7 @@ const Login = () => {
                             <div className="p-inputgroup flex-1">
                                 <InputText type={eye ? "text" : "password"} id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} className=' focus:outline-none focus:ring-2 focus:ring-yellow-200 border rounded-l-lg px-3 py-2' />
                                 <span className="p-inputgroup-addon rounded-r-lg">
-                                <i onClick={e => setEye(!eye)} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
+                                <i onClick={e => setEye(!eye, e)} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
                                 </span>
                             </div>
 

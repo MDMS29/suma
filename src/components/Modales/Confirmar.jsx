@@ -5,6 +5,7 @@ import useUsuarios from '../../hooks/useUsuarios'
 import usePerfiles from "../../hooks/usePerfiles";
 
 
+// eslint-disable-next-line react/prop-types
 const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeRestaurado, botonUsuario, mensajeRestablecido, mensajeEliminadoPerfil, mensajeRestauradoPerfil }) => {
 
 

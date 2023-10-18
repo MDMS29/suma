@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import useUsuarios from "../../hooks/useUsuarios";
-import { Toast } from "primereact/toast";
 import { Steps } from "primereact/steps";
+import { Message } from "primereact/message";
 
 // eslint-disable-next-line react/prop-types
 const ModalAgregarUsuarios = ({ visible, onClose }) => {
@@ -15,7 +15,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     UsuariosAgg, handleChangeUsuario, obtenerPerfiles, perfilesAgg, obtenerModulos, modulosAgg,
     guardarUsuario, errors, setErrors, setUsuariosAgg, perfilesEdit, permisosEdit, editarUsuario
   } = useUsuarios();
-
 
   const [perfilesSeleccionados, setPerfilesSeleccionados] = useState([]);
   const [permisosPorModulo, setPermisosPorModulo] = useState([]);
@@ -28,12 +27,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permisosEdit, perfilesEdit])
-
-  const toast = useRef(null);
-
-  const mensajeGuardado = () => {
-    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Registro guardado con éxito', life: 5000 });
-  }
 
   // const msgs = useRef(null);
 
@@ -66,31 +59,23 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   };
 
   const handleGuardar = async () => {
+    const formData = {
+      id_usuario: UsuariosAgg.id_usuario,
+      nombre_completo: UsuariosAgg.nombre,
+      usuario: UsuariosAgg.usuario,
+      correo: UsuariosAgg.correo,
+      clave: UsuariosAgg.clave,
+      perfiles: perfilesSeleccionados,
+      roles: permisosPorModulo,
+    };
+
+    if (permisosPorModulo.length === 0 || permisosPorModulo.filter(permiso => permiso?.id_estado === 1).length === 0) {
+      errors.modulos = "Debes seleccionar al menos un modulo";
+      return
+    }
+
+
     try {
-      const formData = {
-        id_usuario: UsuariosAgg.id_usuario,
-        nombre_completo: UsuariosAgg.nombre,
-        usuario: UsuariosAgg.usuario,
-        correo: UsuariosAgg.correo,
-        clave: UsuariosAgg.clave,
-        perfiles: perfilesSeleccionados,
-        roles: permisosPorModulo,
-      };
-
-      if (step === 2 && perfilesSeleccionados.length === 0) {
-        console.error(
-          "No se puede guardar si no se ha seleccionado ningún perfil"
-        );
-        return;
-      }
-
-      if (step === 3 && permisosPorModulo.length === 0) {
-        console.error(
-          "No se puede guardar si no se ha seleccionado ningún permiso de módulo"
-        );
-        return;
-      }
-
       let response
       if (permisosEdit.length !== 0) {
         response = await editarUsuario(formData)
@@ -100,7 +85,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
       if (response) {
         onClose(); // Cierra el modal
-        setStep(1); // Vuelve al primer paso --> no funciona
+        setStep(1); // Vuelve al primer paso
 
         // Limpia los campos del formulario
         setUsuariosAgg({
@@ -113,18 +98,14 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
         });
         setPerfilesSeleccionados([]);
         setPermisosPorModulo([]);
-
-        // Muestra el mensaje de éxito
-        mensajeGuardado();
       }
     } catch (error) {
       // Maneja los errores si ocurren
-      console.error("Error al guardar el usuario:", error);
+      console.error("Error al guardar el usuario:", error.response.data.message);
     }
   };
 
   const handleNext = () => {
-
     // Realiza las validaciones aquí antes de avanzar al siguiente paso
     const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const errors = {};
@@ -156,12 +137,12 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       }
     }
     if (step === 2) {
-      if (perfilesSeleccionados.length === 0) {
+      if (perfilesSeleccionados.length === 0 || perfilesSeleccionados.filter(perfil => perfil?.estado_perfil === 1).length === 0) {
         errors.perfiles = "Debes seleccionar al menos un perfil";
       }
     }
     if (step === 3) {
-      if (permisosPorModulo.length === 0) {
+      if (permisosPorModulo.length === 0 || permisosPorModulo.filter(permiso => permiso?.id_estado === 1).length === 0) {
         errors.modulos = "Debes seleccionar al menos un modulo";
       }
     }
@@ -188,34 +169,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
-  // Botones de Atrás, Siguiente y Guardar del Modal
-  const footerContent = (
-    <div>
-      {step > 1 && (
-        <Button
-          className="p-button-text bg-gray-300 p-2 mx-2 rounded-md px-3 hover:bg-gray-400 font-semibold"
-          onClick={handlePrev}
-        >
-          Atrás
-        </Button>
-      )}
-      {step < 3 ? (
-        <Button
-          className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
-          onClick={handleNext}
-        >
-          Siguiente
-        </Button>
-      ) : (
-        <Button
-          className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
-          onClick={handleGuardar}
-        >
-          {perfilesEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
-        </Button>
-      )}
-    </div>
-  );
 
   const CheckboxChange = (rowData) => {
     const perfilId = rowData.id_perfil;
@@ -279,6 +232,36 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     }
   }
 
+  // Botones de Atrás, Siguiente y Guardar del Modal
+  const footerContent = (
+    <div>
+      {step > 1 && (
+        <Button
+          className="p-button-text bg-gray-300 p-2 mx-2 rounded-md px-3 hover:bg-gray-400 font-semibold"
+          onClick={handlePrev}
+        >
+          Atrás
+        </Button>
+      )}
+      {step < 3 ? (
+        <Button
+          className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
+          onClick={handleNext}
+        >
+          Siguiente
+        </Button>
+      ) : (
+        <Button
+          className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
+          onClick={handleGuardar}
+        >
+          {perfilesEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
+        </Button>
+      )}
+    </div>
+  );
+
+
   return (
     <Dialog
       header={perfilesEdit.length !== 0 ? <h1>Editar Usuario</h1> : <h1>Agregar Usuario</h1>}
@@ -288,7 +271,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       footer={footerContent}
     >
       <div>
-        <Toast ref={toast} />
         <Steps
           model={[
             { label: "Informacion" },
@@ -404,7 +386,13 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 />
               </DataTable>
               {errors.perfiles && (
-                <div className="text-red-600 mt-2">{errors.perfiles}</div>
+                <Message
+                  severity="warn"
+                  text="Debes seleccionar al menos un perfil"
+                  className="w-full"
+                >
+                  {errors.perfiles}
+                </Message>
               )}
 
             </div>
@@ -497,6 +485,15 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   style={{ width: "5em" }}
                 />
               </DataTable>
+              {errors.modulos || permisosPorModulo.filter(permiso => permiso?.id_estado === 1).length === 0 && (
+                <Message
+                  severity="warn"
+                  text="Debes seleccionar al menos un permiso"
+                  className="w-full"
+                >
+                  {errors.modulos}
+                </Message>
+              )}
             </div>
           </div>
         )}
