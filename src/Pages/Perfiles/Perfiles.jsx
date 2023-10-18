@@ -6,7 +6,6 @@ import Confirmar from "../../components/Modales/Confirmar";
 
 import { Link } from "react-router-dom";
 
-
 import { Toast } from "primereact/toast";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
@@ -36,7 +35,6 @@ const Perfiles = () => {
 
   const { dataPerfiles, permisosPerfil, setPermisosPerfil, setPerfilState } = usePerfiles();
   const { authPermisos, Permisos_DB } = useAuth()
-
 
   const [modalEliminar, setModalEliminar] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState(columns);

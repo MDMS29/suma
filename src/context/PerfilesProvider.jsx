@@ -30,9 +30,10 @@ const PerfilesProvider = ({ children }) => {
 
   useEffect(() => {
     if (location.pathname.includes('perfiles')) {
+
       const ObtenerPerfiles = async () => {
         const token = localStorage.getItem("token");
-
+  
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -40,7 +41,6 @@ const PerfilesProvider = ({ children }) => {
           },
         };
         const estado = location.pathname.includes("inactivos") ? 2 : 1;
-
         try {
           const { data } = await conexionCliente(
             `/perfiles?estado=${estado}`,
@@ -118,7 +118,7 @@ const PerfilesProvider = ({ children }) => {
     if (perfilState.id_perfil) {
       const token = localStorage.getItem("token");
       let estadoPerfil = 0;
-      if (perfilState.estado_perfil == "INACTIVO") {
+      if (perfilState.id_estado == 2) {
         estadoPerfil = 1;
       } else {
         estadoPerfil = 2;

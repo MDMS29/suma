@@ -44,7 +44,7 @@ const UsuariosProvider = ({ children }) => {
 
   useEffect(() => {
     if (location.pathname.includes('usuarios')) {
-      const getUsuarios = async () => {
+      const obtenerUsuarios = async () => {
         const token = localStorage.getItem('token')
 
         const config = {
@@ -62,7 +62,7 @@ const UsuariosProvider = ({ children }) => {
           setDataUsuarios([])
         }
       }
-      getUsuarios()
+      obtenerUsuarios()
     }
   }, [location.pathname])
 
