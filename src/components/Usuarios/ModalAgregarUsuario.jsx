@@ -59,6 +59,12 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     setErrors({});
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === ' ') {
+      e.preventDefault(); // Evitar la entrada de espacios en blanco
+    }
+  };
+
   const handleGuardar = async () => {
     try {
       const formData = {
@@ -118,6 +124,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   };
 
   const handleNext = () => {
+
     // Realiza las validaciones aquí antes de avanzar al siguiente paso
     const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const errors = {};
@@ -315,6 +322,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   name="usuario"
                   className={`border-1 p-1 rounded-md h-10 px-3 py-2 ${errors.usuario ? "border-red-500" : "border-gray-300"
                     }`}
+                    onKeyPress={handleKeyPress}
                   onChange={(e) => handleChangeUsuario(e)}
                 />
                 {errors.usuario && (

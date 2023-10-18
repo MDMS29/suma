@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useMemo } from "react";
 import conexionCliente from "../config/ConexionCliente";
 import { useLocation } from "react-router-dom";
 
@@ -8,8 +8,11 @@ const PerfilesContext = createContext();
 const PerfilesProvider = ({ children }) => {
 
   const [dataPerfiles, setDataPerfiles] = useState([]);
-  const [PerfilState, setPerfilState] = useState({});
+  const [perfilState, setPerfilState] = useState({});
   const [modulosAgg, setModulosAgg] = useState([]);
+
+  const [permisosPerfil, setPermisosPerfil] = useState([])
+
 
   const [PerfilesAgg, setPerfilesAgg] = useState({
     nombre_perfil: "",
@@ -75,10 +78,10 @@ const PerfilesProvider = ({ children }) => {
   };
 
   const eliminarPerfilProvider = async () => {
-    if (PerfilState.id_perfil) {
+    if (perfilState.id_perfil) {
       const token = localStorage.getItem("token");
       let estadoPerfil = 0;
-      if (PerfilState.estado_perfil == "ACTIVO") {
+      if (perfilState.id_estado == 1) {
         estadoPerfil = 2;
       } else {
         estadoPerfil = 1;
@@ -91,7 +94,7 @@ const PerfilesProvider = ({ children }) => {
       };
       try {
         const { data } = await conexionCliente.delete(
-          `/perfiles/${PerfilState.id_perfil}?estado=${estadoPerfil}`,
+          `/perfiles/${perfilState.id_perfil}?estado=${estadoPerfil}`,
           config
         );
         console.log(data);
@@ -100,7 +103,7 @@ const PerfilesProvider = ({ children }) => {
         }
 
         const perfilActualizados = dataPerfiles.filter(
-          (perfil) => perfil.id_perfil !== PerfilState.id_perfil
+          (perfil) => perfil.id_perfil !== perfilState.id_perfil
         );
         setDataPerfiles(perfilActualizados);
       } catch (error) {
@@ -110,10 +113,10 @@ const PerfilesProvider = ({ children }) => {
   };
 
   const restaurarPerfilProvider = async () => {
-    if (PerfilState.id_perfil) {
+    if (perfilState.id_perfil) {
       const token = localStorage.getItem("token");
       let estadoPerfil = 0;
-      if (PerfilState.estado_perfil == "INACTIVO") {
+      if (perfilState.estado_perfil == "INACTIVO") {
         estadoPerfil = 1;
       } else {
         estadoPerfil = 2;
@@ -126,7 +129,7 @@ const PerfilesProvider = ({ children }) => {
       };
       try {
         const { data } = await conexionCliente.delete(
-          `/perfiles/${PerfilState.id_perfil}?estado=${estadoPerfil}`,
+          `/perfiles/${perfilState.id_perfil}?estado=${estadoPerfil}`,
           config
         );
         console.log(data);
@@ -135,7 +138,7 @@ const PerfilesProvider = ({ children }) => {
         }
 
         const perfilActualizados = dataPerfiles.filter(
-          (perfil) => perfil.id_perfil !== PerfilState.id_perfil
+          (perfil) => perfil.id_perfil !== perfilState.id_perfil
         );
         setDataPerfiles(perfilActualizados);
       } catch (error) {
@@ -161,30 +164,34 @@ const PerfilesProvider = ({ children }) => {
         config
       );
       console.log("Información guardada con éxito:", response);
-      setDataUsuarios([...dataPerfiles, response.data]); // Puede devolver los datos guardados si es necesario
+      setDataPerfiles([...dataPerfiles, response.data]); // Puede devolver los datos guardados si es necesario
     } catch (error) {
       console.error("Error al guardar la información:", error);
       throw error; // Puedes lanzar una excepción en caso de error
     }
   };
 
+  const obj = useMemo(() => ({
+    dataPerfiles,
+    setDataPerfiles,
+    perfilState,
+    setPerfilState,
+    modulosAgg,
+    setModulosAgg,
+    errors,
+    setErrors,
+    handleChangePerfiles,
+    obtenerModulos,
+    eliminarPerfilProvider,
+    restaurarPerfilProvider,
+    guardarPerfil,
+    permisosPerfil,
+    setPermisosPerfil
+  }))
+
   return (
     <PerfilesContext.Provider
-      value={{
-        dataPerfiles,
-        setDataPerfiles,
-        PerfilState,
-        setPerfilState,
-        modulosAgg,
-        setModulosAgg,
-        errors,
-        setErrors,
-        handleChangePerfiles,
-        obtenerModulos, 
-        eliminarPerfilProvider,
-        restaurarPerfilProvider,
-        guardarPerfil
-      }}
+      value={obj}
     >
       {children}
     </PerfilesContext.Provider>

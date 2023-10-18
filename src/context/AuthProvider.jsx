@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (authUsuario.id_usuario) {
       const modulos = JSON.parse(localStorage.getItem('modulos'))
-      const [modulo] = modulos.filter(m => m.nombre_modulo.toLowerCase() === location.pathname.split('/')[1])
+      const [modulo] = modulos.filter(m => m.nombre_modulo.toLowerCase() === location.pathname.split('/')[1]) 
       setAuthPermiso(modulo?.permisos)
     }
   }, [location.pathname, authUsuario.id_usuario])

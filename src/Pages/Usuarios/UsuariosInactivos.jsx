@@ -19,17 +19,8 @@ const UsuariosInactivos = () => {
 
   const [modalEliminar, setModalEliminar] = useState(false)
 
-  const { dataUsuarios, setUsuarioState, permisosUsuario, setPermisosUsuario } = useUsuarios()
-  const { authPermisos, Permisos_DB } = useAuth()
-
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (authPermisos !== undefined) {
-  //       return setPermisosUsuario(authPermisos)
-  //     }
-  //   }, 10)
-  // }, [authPermisos])
+  const { dataUsuarios, setUsuarioState, permisosUsuario } = useUsuarios()
+  const { Permisos_DB } = useAuth()
 
   const redirectToPreviousPage = () => {
     window.history.back();

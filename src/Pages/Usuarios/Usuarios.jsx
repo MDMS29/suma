@@ -47,6 +47,7 @@ const Usuarios = () => {
   useEffect(() => {
     setFilteredData(dataUsuarios);
   }, [dataUsuarios]);
+
   useEffect(() => {
     setTimeout(() => {
       if (authPermisos !== undefined) {
@@ -178,7 +179,14 @@ const Usuarios = () => {
       <div className="w-5/6">
         <Toast ref={toast} />
         {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />}
-        {modalEliminar ? <Confirmar modalEliminar={modalEliminar} setModalEliminar={setModalEliminar} mensajeEliminado={mensajeEliminado} botonUsuario={botonUsuario} mensajeRestablecido={mensajeRestablecido} /> : ""}
+        {modalEliminar ? 
+        <Confirmar 
+        modalEliminar={modalEliminar} 
+        setModalEliminar={setModalEliminar} 
+        mensajeEliminado={mensajeEliminado} 
+        botonUsuario={botonUsuario} 
+        mensajeRestablecido={mensajeRestablecido} /> : ""}
+        
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Usuarios</h1>
           <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>

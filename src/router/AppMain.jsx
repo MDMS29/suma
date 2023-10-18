@@ -23,7 +23,6 @@ const AppMain = () => {
 
   useEffect(() => {
     const nuevasRutas = [];
-
     authModulos.forEach((modulo) => {
       modulo.menus.forEach((menu) => {
         nuevasRutas.push(...obtenerRutas(menu));
