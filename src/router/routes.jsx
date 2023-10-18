@@ -4,6 +4,8 @@ import Usuario from "../Pages/Usuarios/Usuarios";
 import UsuarioInactivos from "../Pages/Usuarios/UsuariosInactivos";
 import Perfiles from "../Pages/Perfiles/Perfiles"
 import PerfilesInactivos from "../Pages/Perfiles/PerfilesInactivos";
+import Modulos from "../Pages/Modulos/Modulos";
+import ModulosInactivos from "../Pages/Modulos/ModulosInactivos";
 
 const routesUsuario = [
   {
@@ -41,6 +43,19 @@ const routesUsuario = [
     route: "configuracion/perfiles/inactivos",
     component: <PerfilesInactivos />,
     key: 6
+
+  },
+  {
+    name: "Modulos",
+    route: "configuracion/modulos",
+    component: <Modulos />,
+    key: 7
+  },
+  {
+    name: "Modulos Inactivos",
+    route: "configuracion/modulos/inactivos",
+    component: <ModulosInactivos />,
+    key: 8
   }
 ];
 

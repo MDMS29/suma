@@ -1,4 +1,3 @@
-import React, { useEffect } from "react"
 import { Dialog } from 'primereact/dialog';
 import { Button } from "primereact/button";
 import useUsuarios from '../../hooks/useUsuarios'
@@ -64,20 +63,20 @@ const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeR
         }
     }
 
-        switch (variableModal) {
-            case (2 || 5):
-                mss = "¿Deseas restaurar este registro?"
-                btn = "Restaurar"
-                break;
-            case 3:
-                mss = "¿Estás seguro de que deseas restaurar la contraseña?"
-                btn = "Restablecer"
-                break;
-            case (1 || 4):
-                mss = "¿Estás seguro de que deseas inactivar este registro?"
-                btn = "Eliminar"
-                break;
-        }
+    switch (variableModal) {
+        case (2 || 5):
+            mss = "¿Deseas restaurar este registro?"
+            btn = "Restaurar"
+            break;
+        case 3:
+            mss = "¿Estás seguro de que deseas restaurar la contraseña?"
+            btn = "Restablecer"
+            break;
+        case (1 || 4):
+            mss = "¿Estás seguro de que deseas inactivar este registro?"
+            btn = "Eliminar"
+            break;
+    }
 
 
     const deleteProductDialogFooter = (
