@@ -12,7 +12,7 @@ export default class UsuarioController {
         const { usuario, clave, captcha }: UsuarioLogin = req.body
         //VERIFICACIÓN DEL CAPTCHA
         if (captcha === '') {
-            return res.send({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
+            return res.status(404).send({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
         }
         try {
             //ORGANIZAR INFORMACIÓN CLAVE PARA LA AUTENTICACIÓN
@@ -25,10 +25,11 @@ export default class UsuarioController {
 
             //SERVICIO PARA LA AUTENTICACIÓN
             const val = await _Usuario_Service.AutenticarUsuario(UsuarioLogin)
+            // console.log(val)
             //VERFICICARIÓN DE DATOS RETORNADOS
             if (!val) {
                 //RESPUESTA AL CLIENTE
-                return res.json({ error: true, message: 'Usuario o contraseña invalido' }) //!ERROR
+                return res.status(401).json({ error: true, message: 'Usuario o contraseña invalido' }) //!ERROR
             }
 
             //RESPUESTA AL CLIENTE
@@ -126,6 +127,7 @@ export default class UsuarioController {
     public async EditarUsuario(req: Request, res: Response) {
         const { perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO POR PARAMETROS
+        console.log(req.body)
         //VALIDACION DE DATOS
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(400).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!Error

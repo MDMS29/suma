@@ -30,7 +30,7 @@ app.use(async (__, _, next) => {
         console.log('------------------------------------------------')
         console.log('IP Cliente: ' + json.ip)
         console.log(`Ubicación: ${json.country} ${json.region}/${json.city}`)
-        console.log('Fecha:', new Date(Date.now()))
+        console.log('Fecha:', new Date(Date.now())) 
         console.log('------------------------------------------------')
         next()
     } catch (error) {

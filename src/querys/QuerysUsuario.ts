@@ -191,10 +191,10 @@ export default class QueryUsuario {
         }
     }
 
-    public async EditarRolUsuario(id_rol: number, id_estado: number, usuario: number) {
+    public async EditarRolUsuario(id_rol: number, id_estado: string, usuario: number) {
         try {
             const result = await client.query(_EditarRolUsuario, [usuario, id_rol, id_estado]);
-            return result.rows
+            return result.rowCount
         } catch (error) {
             console.log(error)
             return

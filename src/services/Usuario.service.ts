@@ -16,6 +16,7 @@ export default class UsuarioService {
         //----OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO----
         // Promise<UsuarioLogeado | undefined>
         const respuesta = await this._Query_Usuario.AutenticarUsuario({ usuario, clave })
+        // console.log('service', respuesta)
         if (respuesta) {
             for (const res of respuesta) {
                 res.perfiles = {
@@ -241,13 +242,17 @@ export default class UsuarioService {
                 }
             }
 
-            let matchPass = await bcrypt.compare(RequestUsuario.clave, clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
-            if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
+            if (RequestUsuario.clave === '') {
                 Clave_Editada = clave
-            } else { //SI SON DIFERENTES HASHEA LA NUEVA CLAVE
-                const saltRounds = 10
-                const hash = await bcrypt.hash(RequestUsuario.clave, saltRounds)
-                Clave_Editada = hash
+            } else {
+                let matchPass = await bcrypt.compare(RequestUsuario.clave, clave) //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
+                if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
+                    Clave_Editada = clave
+                } else { //SI SON DIFERENTES HASHEA LA NUEVA CLAVE
+                    const saltRounds = 10
+                    const hash = await bcrypt.hash(RequestUsuario.clave, saltRounds)
+                    Clave_Editada = hash
+                }
             }
 
             //INVOCAR FUNCION PARA EDITAR EL USUARIO
@@ -260,6 +265,7 @@ export default class UsuarioService {
     }
 
     public async EditarPerfilesUsuario(perfiles: any, usuario: number) {
+        // console.log(perfiles)
         try {
             for (let perfil of perfiles) {
                 const perfilExistente: any = await this._Query_Usuario.BuscarPerfilUsuario(perfil.id_perfil, usuario) //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO
@@ -284,9 +290,12 @@ export default class UsuarioService {
     }
 
     public async EditarPermisosUsuario(permisos: any, usuario: number) {
+        console.log('293 - service - todos los permisos ', permisos)
         try {
             for (let permiso of permisos) {
                 const permisoExistente: any = await this._Query_Usuario.BuscarRolUsuario(permiso.id_rol, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
+                console.log('297 - service - existe el permiso ', permisoExistente)
+
                 if (permisoExistente.length == 0) { //VERIFICAR SI EL USUARIO TIENE UN ROL
                     // SI EL ESTADO NO EXISTE LO AGREGARA
                     const res = await this._Query_Usuario.InsertarRolModulo(usuario, permiso) //INVOCAR FUNCION PARA GUARDAR EL ROL DEL USUARIO
@@ -294,7 +303,9 @@ export default class UsuarioService {
                         return { error: true, message: 'No se pudo guardar el nuevo permiso' } //!ERROR
                     }
                 } else {//SI EL PERMISO EXISTE EDITARA SU ESTADO
-                    const res = await this._Query_Usuario.EditarRolUsuario(permiso.id_rol, permiso.id_estado, usuario) //INVOCAR FUNCION PARA EDITAR EL ROL DEL USUARIO
+                    const res = await this._Query_Usuario.EditarRolUsuario(permiso.id_rol, `${permiso.id_estado}`, usuario) //INVOCAR FUNCION PARA EDITAR EL ROL DEL USUARIO
+                    console.log('308 - service', res)
+
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el permiso' } //!ERROR
                     }

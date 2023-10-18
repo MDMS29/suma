@@ -38,12 +38,9 @@ export const _BuscarPerfilUsuario = `
     
 `
 export const _EditarPerfilUsuario = `
-    UPDATE 
-        seguridad.tbl_perfil_usuario
-    SET 
-        id_estado=$3
-    WHERE 
-        id_usuario=$1 and id_perfil=$2;
+    UPDATE seguridad.tbl_perfil_usuario
+    SET id_estado=$3
+    WHERE id_usuario=$1 AND id_perfil=$2;
 `
 
 export const _BuscarRolUsuario = `
@@ -55,12 +52,9 @@ export const _BuscarRolUsuario = `
         tur.id_usuario = $1 AND tur.id_rol_modulo = $2;
 `
 export const _EditarRolUsuario = `
-    UPDATE 
-        seguridad.tbl_usuario_roles tur
-    SET 
-        id_estado=$3
-    WHERE 
-        id_usuario=$1 and id_rol_modulo= $2;
+    UPDATE seguridad.tbl_usuario_roles
+    SET id_estado=$3
+    WHERE id_usuario=$1 AND id_rol_modulo=$2;
 `
 
 export const _CambiarEstadoUsuario = `

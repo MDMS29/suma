@@ -23,7 +23,7 @@ export default class ModuloService {
         }
     }
 
-    public async InsertarModulo(codigo: string, nombre_modulo: string, usuario_creador: string, icono: string, roles: any): Promise<any> {
+    public async InsertarModulo(codigo: string, nombre_modulo: string, icono: string, usuario_creador: string, roles: any): Promise<any> {
         try {
             // BUSCAR EL NOMBRE DEL MODULO SI NO SE ENCUENTRA DUPLICADO
             const modulo = await this._Query_Modulo.BuscarModuloNombre(nombre_modulo)
