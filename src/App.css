@@ -1,3 +1,12 @@
+/* estilos PrimeReact */
+@import 'primereact/resources/themes/saga-blue/theme.css';
+@import 'primereact/resources/primereact.min.css';
+@import 'primeicons/primeicons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
     font-family: Cocogoose-light;
     src: url("./fonts/Cocogoose/Cocogoose Light.ttf");

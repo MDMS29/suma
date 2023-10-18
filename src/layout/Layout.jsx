@@ -17,12 +17,14 @@ const Layout = () => {
     }
     funcionModal()
 
-    let bloqueLayout = (<div className="flex h-screen">
-        <Sidebar />
-        <main className="flex justify-center flex-1 md:h-screen overflow-y-scroll">
-            <Outlet />
-        </main>
-    </div>)
+    let bloqueLayout = (
+        <div className="flex h-screen">
+            <Sidebar />
+            <main className="flex justify-center flex-1 md:h-screen overflow-y-scroll">
+                <Outlet />
+            </main>
+        </div>
+    )
 
     const switchPagina = () => {
         let contentPagina = ""

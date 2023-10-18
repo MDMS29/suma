@@ -4,6 +4,7 @@ import conexionCliente from "../config/ConexionCliente";
 
 const ModulosContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 const ModulosProvider = ({ children }) => {
   const [dataModulos, setDataModulos] = useState([]);
   const [ModuloState, setModuloState] = useState({});
@@ -27,28 +28,30 @@ const ModulosProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const ObtenerModulos = async () => {
-      const token = localStorage.getItem("token");
+    if (location.pathname.includes('modulos')) {
+      const ObtenerModulos = async () => {
+        const token = localStorage.getItem("token");
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const estado = location.pathname.includes("inactivos") ? 2 : 1;
+
+        try {
+          const { data } = await conexionCliente(
+            `/modulos?estado=${estado}`,
+            config
+          );
+          setDataModulos(data);
+        } catch (error) {
+          setDataModulos([]);
+        }
       };
-      const estado = location.pathname.includes("inactivos") ? 2 : 1;
-
-      try {
-        const { data } = await conexionCliente(
-          `/modulos?estado=${estado}`,
-          config
-        );
-        setDataModulos(data);
-      } catch (error) {
-        setDataModulos([]);
-      }
-    };
-    ObtenerModulos();
+      ObtenerModulos();
+    }
   }, [location.pathname]);
 
   const eliminarModuloProvider = async () => {

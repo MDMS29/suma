@@ -217,7 +217,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     </div>
   );
 
-
   const CheckboxChange = (rowData) => {
     const perfilId = rowData.id_perfil;
 
@@ -245,6 +244,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     const perfil = perfilesSeleccionados.filter((perfil) => perfil.id_perfil === row.id_perfil)
     if (perfil) {
       return perfil[0]?.estado_perfil === 1
+    } else {
+      return false
     }
   }
 
@@ -272,6 +273,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     const permiso = permisosPorModulo.filter((permiso) => permiso.id_rol === row.id_rol_modulo)
     if (permiso) {
       return permiso[0]?.id_estado == 1
+    } else {
+      return false
     }
   }
 
@@ -284,7 +287,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       footer={footerContent}
     >
       <div>
-      <Toast ref={toast} />
+        <Toast ref={toast} />
         <Steps
           model={[
             { label: "Informacion" },
@@ -322,7 +325,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   name="usuario"
                   className={`border-1 p-1 rounded-md h-10 px-3 py-2 ${errors.usuario ? "border-red-500" : "border-gray-300"
                     }`}
-                    onKeyPress={handleKeyPress}
+                  onKeyPress={handleKeyPress}
                   onChange={(e) => handleChangeUsuario(e)}
                 />
                 {errors.usuario && (
@@ -384,7 +387,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
             <h1>Perfiles</h1>
             <div className="p-mx-auto mt-3 p-datatable">
               <DataTable value={perfilesAgg}>
-                <Column field="id_perfil" header="ID" />
+                {/* <Column field="id_perfil" header="ID" /> */}
                 <Column field="nombre_perfil" header="Nombre" />
                 <Column
                   field="col1"
@@ -411,7 +414,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
             <h1>Modulos</h1>
             <div className="p-mx-auto mt-3 p-datatable">
               <DataTable value={modulosAgg}>
-                <Column field="id_modulo" header="ID" />
+                {/* <Column field="id_modulo" header="ID" /> */}
                 <Column field="nombre_modulo" header="Nombre del Módulo" />
 
                 {/* Columna para el permiso "Consultar" */}

@@ -19,6 +19,8 @@ const AuthProvider = ({ children }) => {
     const autenticarUsuario = async () => {
       const token = localStorage.getItem('token')
       if (!token) {
+        setAuthUsuario({})
+        navigate('/auth')
         return
       }
 
@@ -37,7 +39,7 @@ const AuthProvider = ({ children }) => {
           navigate('/auth/resetear')
         }
         setAuthModulos(JSON.parse(localStorage.getItem('modulos')));
-        navigate('/')
+        navigate('/home')
 
       } catch (error) {
         setAuthUsuario({})

@@ -1,4 +1,4 @@
-import '../App.css'
+
 import { useRef, useState } from "react"
 import Error from "../components/Error"
 import useAuth from '../hooks/useAuth'
