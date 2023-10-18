@@ -302,7 +302,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
           <div className="flex flex-col pt-3 flex-wrap sm:w-full">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col">
-                <label className="text-gray-600 pb-2 font-semibold">Nombre completo <span className="font-bold text-red-00">*</span></label>
+                <label className="text-gray-600 pb-2 font-semibold">Nombre completo <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.nombre}
                   type="text"
@@ -318,7 +318,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 )}
               </div>
               <div className="flex flex-col">
-                <label className="text-gray-600 pb-2 font-semibold">Usuario <span className="font-bold text-red-00">*</span></label>
+                <label className="text-gray-600 pb-2 font-semibold">Usuario <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.usuario}
                   type="text"
@@ -335,7 +335,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 )}
               </div>
               <div className="flex flex-col col-span-2">
-                <label className="text-gray-600 pb-2 font-semibold">Correo <span className="font-bold text-red-00">*</span></label>
+                <label className="text-gray-600 pb-2 font-semibold">Correo <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.correo}
                   type="email"
@@ -350,7 +350,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
               </div>
 
               <div className="flex flex-col">
-                <label className="text-gray-600 pb-2 font-semibold">Contraseña <span className="font-bold text-red-00">*</span></label>
+                <label className="text-gray-600 pb-2 font-semibold">Contraseña <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.clave}
                   type="password"
@@ -364,7 +364,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 )}
               </div>
               <div className="flex flex-col">
-                <label className="text-gray-600 pb-2 font-semibold">Repetir Contraseña <span className="font-bold text-red-00">*</span></label>
+                <label className="text-gray-600 pb-2 font-semibold">Repetir Contraseña <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.claverepetida}
                   type="password"
