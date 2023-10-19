@@ -42,3 +42,21 @@ export const _ObtenerUltimoID = `
     ORDER BY 
     tr.id_rol DESC
 `
+
+export const _EditarRol = `
+    UPDATE 
+        seguridad.tbl_roles
+    SET 
+        nombre=$2, descripcion=$3, fecha_modificacion=now(), usuario_modificacion=$4
+    WHERE 
+        id_rol=$1;
+`
+
+export const _CambiarEstadoRol = `
+    UPDATE 
+        seguridad.tbl_roles
+    SET 
+        id_estado=$2
+    WHERE 
+        id_rol=$1;
+`
