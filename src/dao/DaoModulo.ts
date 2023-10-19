@@ -17,7 +17,7 @@ export const _BuscarModuloNombre = `
 
 export const _ObtenerRolesModulo = `
     SELECT 
-        trm.id_rol , tr.nombre 
+        trm.id_rol , tr.nombre, trm.id_estado
     FROM 
         seguridad.tbl_rol_modulo trm 
     INNER JOIN seguridad.tbl_roles tr on tr.id_rol = trm.id_rol 
@@ -30,7 +30,7 @@ export const _InsertarModulo = `
         seguridad.tbl_modulo
         (id_modulo, cod_modulo, nombre_modulo, fecha_creacion, usuario_creacion, icono, id_estado)
     VALUES
-        (nextval('seguridad.tbl_modulo_id_modulo_seq'::regclass),$1, $2, now(), $3, $4, 1)
+        (nextval('seguridad.tbl_modulo_id_modulo_seq'::regclass),$1, $2, now(), $4, $3, 1)
     RETURNING id_modulo;
 
 `

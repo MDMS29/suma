@@ -33,17 +33,19 @@ export class _PerfilController {
     public async ObtenerModulosPerfiles(req: Request, res: Response) {
         // const { perfiles } = req.body
         const { usuario } = req
+        const { perfiles } = req.body
+
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!req.body || req.body.length <= 0) {
+        if (!perfiles || perfiles.length <= 0) {
             return res.status(404).json({ error: true, message: 'Debe asignar perfiles' }) //!ERROR
         }
 
         try {
             const Perfil_Service = new PerfilService();
             //OBTENER LOS MODULOS DE LOS PERFILES
-            const respuesta = await Perfil_Service.ObtenerModulosPerfil(req.body)
+            const respuesta = await Perfil_Service.ObtenerModulosPerfil(perfiles)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -177,5 +179,5 @@ export class _PerfilController {
         }
     }
 
-  
+
 }

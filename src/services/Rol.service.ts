@@ -1,4 +1,3 @@
-// import QueryPerfil from "../querys/QuerysPerfil"
 import QueryRol from "../querys/QueryRol";
 
 export class RolService {
@@ -8,16 +7,6 @@ export class RolService {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Rol = new QueryRol();
     }
-
-    // private ReduceModulos(result: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>, modulos: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>) {
-    //     modulos.forEach((modulo) => {
-    //         const esModulo = result.find((existe) => existe.nombre_modulo === modulo.nombre_modulo);
-    //         if (!esModulo) {
-    //             result.push(modulo);
-    //         }
-    //     });
-    //     return result;
-    // }
 
     public async ObtenerRoles(estado: number): Promise<any> {
         if (!estado) {
@@ -33,7 +22,7 @@ export class RolService {
             return respuesta
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cargar los modulos del perfil' } //!ERROR
+            return { error: true, message: 'Error al cargar los roles' } //!ERROR
         }
     }
 
@@ -73,7 +62,7 @@ export class RolService {
             return rol[0]
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar el perfil' }
+            return { error: true, message: 'Error al editar el rol' }
         }
     }
 
@@ -102,14 +91,14 @@ export class RolService {
             return { error: false, message: '' }
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar perfil' } //!ERROR
+            return { error: true, message: 'Error al editar rol' } //!ERROR
         }
     }
 
-    public async CambiarEstadoRol(id_perfil: number, estado: number) {
+    public async CambiarEstadoRol(id_rol: number, estado: number) {
         try {
 
-            const rol_editado = await this._Query_Rol.CambiarEstadoPerfil(id_perfil, estado);
+            const rol_editado = await this._Query_Rol.CambiarEstadoRol(id_rol, estado);
             if (!rol_editado?.rowCount) {
                 return { error: true, message: 'Error al editar el rol' } //!ERROR
             }

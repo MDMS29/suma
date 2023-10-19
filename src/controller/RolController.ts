@@ -52,7 +52,7 @@ export class _RolController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al crear el perfil' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al crear el reol' }) //!ERROR
         }
     }
 

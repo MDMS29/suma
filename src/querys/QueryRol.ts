@@ -55,7 +55,7 @@ export default class QueryRol {
         }
     }
 
-    public async CambiarEstadoPerfil(id_rol: number, estado: number) {
+    public async CambiarEstadoRol(id_rol: number, estado: number) {
         try {
             let result = await client.query(_CambiarEstadoRol, [id_rol, estado]);
             return result

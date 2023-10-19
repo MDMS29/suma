@@ -12,7 +12,7 @@ export default class UsuarioController {
         const { usuario, clave, captcha }: UsuarioLogin = req.body
         //VERIFICACIÓN DEL CAPTCHA
         if (captcha === '') {
-            return res.status(404).send({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
+            return res.status(404).json({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
         }
         try {
             //ORGANIZAR INFORMACIÓN CLAVE PARA LA AUTENTICACIÓN

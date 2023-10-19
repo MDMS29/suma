@@ -40,6 +40,10 @@ export default class ModuloService {
 
             }
 
+            if (!icono.startsWith('pi-')) {
+                icono = 'pi-box'
+            }
+
             // INSERTAR EL MODULO
             const modulo_insertado = await this._Query_Modulo.InsertarModulo(nombre_modulo, usuario_creador, codigo, icono)
             if (!modulo_insertado) {
@@ -94,15 +98,17 @@ export default class ModuloService {
         let _Codigo_Editado: string
         let _Nombre_Editado: string
         let _Icono_Editado: string
+
+        
         try {
             const moduloB = await this._Query_Modulo.BuscarModuloID(id_modulo)
             if (!moduloB) {
                 return { error: true, message: 'No se ha encontrado el modulo' }
             }
-
+            
             if (moduloB.nombre_modulo !== Request_Modulo.nombre_modulo) {
-                const nombre = await this._Query_Modulo.BuscarModuloNombre(Request_Modulo.nombre_modulo)
-                if (nombre.nombre_modulo.toLowerCase() === Request_Modulo.nombre_modulo.toLowerCase()) {
+                //TODO: const nombre = await this._Query_Modulo.BuscarModuloNombre(Request_Modulo.nombre_modulo)
+                if (moduloB.nombre_modulo.toLowerCase() === Request_Modulo.nombre_modulo.toLowerCase()) {
                     return { error: true, message: 'Ya existe este modulo, ingrese un nombre diferente' }
                 } else {
                     _Nombre_Editado = Request_Modulo.nombre_modulo
