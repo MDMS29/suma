@@ -12,7 +12,7 @@ import { Message } from "primereact/message";
 const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   const {
-    UsuariosAgg, handleChangeUsuario, obtenerPerfiles, perfilesAgg, obtenerModulos, modulosAgg,
+    UsuariosAgg, obtenerPerfiles, perfilesAgg, obtenerModulos, modulosAgg,
     guardarUsuario, errors, setErrors, setUsuariosAgg, perfilesEdit, permisosEdit, editarUsuario
   } = useUsuarios();
 
@@ -58,6 +58,13 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     }
   };
 
+  const handleChangeUsuario = e => {
+    setUsuariosAgg({
+      ...UsuariosAgg,
+      [e.target.name]: e.target.value
+    });
+  };
+
   const handleGuardar = async () => {
     const formData = {
       id_usuario: UsuariosAgg.id_usuario,
@@ -77,7 +84,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
     try {
       let response
-      if (permisosEdit.length !== 0) {
+      if (UsuariosAgg.id_usuario !== 0) {
         response = await editarUsuario(formData)
       } else {
         response = await guardarUsuario(formData);
@@ -139,11 +146,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     if (step === 2) {
       if (perfilesSeleccionados.length === 0 || perfilesSeleccionados.filter(perfil => perfil?.estado_perfil === 1).length === 0) {
         errors.perfiles = "Debes seleccionar al menos un perfil";
-      }
-    }
-    if (step === 3) {
-      if (permisosPorModulo.length === 0 || permisosPorModulo.filter(permiso => permiso?.id_estado === 1).length === 0) {
-        errors.modulos = "Debes seleccionar al menos un modulo";
       }
     }
 

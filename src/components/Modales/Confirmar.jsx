@@ -3,6 +3,7 @@ import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import useUsuarios from "../../hooks/useUsuarios";
 import usePerfiles from "../../hooks/usePerfiles";
+import useAuth from "../../hooks/useAuth";
 
 // eslint-disable-next-line react/prop-types
 const Confirmar = ({
@@ -23,12 +24,13 @@ const Confirmar = ({
   } = useUsuarios();
   const { perfilState, eliminarPerfilProvider, restaurarPerfilProvider } =
     usePerfiles();
+  const { setAlerta } = useAuth();
 
   let mss = "";
   let btn = "";
   let variableModal = 0;
   const funcionModal = () => {
-     if (usuarioState) {
+    if (usuarioState) {
       if (usuarioState.id_estado == 1 && botonUsuario == 1) {
         variableModal = 1;
       }
@@ -38,15 +40,15 @@ const Confirmar = ({
       if (usuarioState.id_estado == 1 && botonUsuario == 2) {
         variableModal = 3;
       }
-     }
-     if (perfilState) {
-       if (perfilState.id_estado == 1) {
-         variableModal = 4;
-       }
-       if (perfilState.id_estado == 2) {
-         variableModal = 5;
-       }
-     }
+    }
+    if (perfilState) {
+      if (perfilState.id_estado == 1) {
+        variableModal = 4;
+      }
+      if (perfilState.id_estado == 2) {
+        variableModal = 5;
+      }
+    }
   };
   funcionModal();
 
@@ -54,11 +56,19 @@ const Confirmar = ({
     setModalEliminar(false);
   };
 
+  const mensajeEliminar = () => {
+    setAlerta({
+      error: false,
+      show: true,
+      message: "El registro se ha inactivado correctamente.",
+    });
+  };
+
   const clickModalUsuario = () => {
     if (variableModal == 1) {
       eliminarUsuarioProvider();
       setModalEliminar(false);
-      mensajeEliminado();
+      mensajeEliminar();
     }
     if (variableModal == 2) {
       restaurarUsuarioProvider();
@@ -81,10 +91,11 @@ const Confirmar = ({
       mensajeRestauradoPerfil();
     }
   };
-//   los casos de menos a mayor para que funcione
+
+  //   los casos de menos a mayor para que funcione
   switch (variableModal) {
-      case 5:
-        case 2:
+    case 5:
+    case 2:
       mss = "¿Deseas restaurar este registro?";
       btn = "Restaurar";
       break;
@@ -92,7 +103,7 @@ const Confirmar = ({
       mss = "¿Estás seguro de que deseas restaurar la contraseña?";
       btn = "Restablecer";
       break;
-      case 4:
+    case 4:
     case 1:
       mss = "¿Estás seguro de que deseas inactivar este registro?";
       btn = "Eliminar";

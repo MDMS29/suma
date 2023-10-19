@@ -29,15 +29,15 @@ const Sidebar = () => {
       <div onMouseEnter={toggleSidebarAbierto} onMouseLeave={toggleSidebarCerrado} className="h-screen flex border-r shadow-sm bg-white">
         <div
           className={` ${open
-              ? "w-auto px-2 overflow-hidden transition-all duration-700 ease-in-out"
-              : "w-16 overflow-hidden transition-all duration-700 ease-in-out max-sm:w-0 z-10"
-            } bg-white `}
+              ? "w-auto px-2"
+              : "w-16 max-sm:w-0 z-10"
+            } bg-white overflow-hidden transition-all duration-500 ease-in-out`}
         >
           <div className="flex p-2 mx-1">
             <img
               src="https://img.freepik.com/vector-premium/avatar-hombre-sonriente-joven-hombre-bigote-barba-marron-cabello-sueter-amarillo-o-sudadera-ilustracion-personaje-personas-vector-3d-estilo-minimalista-dibujos-animados_365941-860.jpg?w=740"
               alt=""
-              className={`w-10 h-10 rounded-md`}
+              className="h-10 rounded-md"
             />
             <div className={`flex justify-between items-center w-40 ml-3 mr-4`}>
               <div className={`leading-4 ${!open && "invisible"}`}>

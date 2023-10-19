@@ -13,7 +13,6 @@ import useUsuarios from "../../hooks/useUsuarios";
 import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
 import useAuth from "../../hooks/useAuth";
 import Forbidden from "../Errors/forbidden";
-import Loader from "../../components/Loader";
 
 const Usuarios = () => {
   const toast = useRef(null);
@@ -28,7 +27,7 @@ const Usuarios = () => {
 
   const { dataUsuarios, setUsuarioState, buscarUsuario, setPerfilesEdit, setPermisosEdit, permisosUsuario, setPermisosUsuario } = useUsuarios();
 
-  const { authPermisos, Permisos_DB, alerta } = useAuth()
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth()
 
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonUsuario, setBotonUsuario] = useState();
@@ -61,9 +60,11 @@ const Usuarios = () => {
           detail: alerta.message,
           life: 1500,
         });
+        setTimeout(() => setAlerta({}), 1500)
       }
       show_alert()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta])
 
   const mensajeRestablecido = () => {
@@ -264,15 +265,12 @@ const Usuarios = () => {
   return (
     <>
       {
-        permisosUsuario.length === 0
+
+        (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
           ?
-          (<Loader />)
+          (main())
           :
-          (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
+          (<Forbidden />))
       }
     </>
   );
