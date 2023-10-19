@@ -14,11 +14,12 @@ const UsuariosProvider = ({ children }) => {
 
   const [perfilesAgg, setPerfilesAgg] = useState([]);
   const [modulosAgg, setModulosAgg] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [permisosAgg, setPermisosAgg] = useState([]);
 
   const [perfilesEdit, setPerfilesEdit] = useState([])
   const [permisosEdit, setPermisosEdit] = useState([])
-
+  
   const [UsuariosAgg, setUsuariosAgg] = useState({
     id_usuario: 0,
     nombre: "",
@@ -38,7 +39,7 @@ const UsuariosProvider = ({ children }) => {
 
   const [permisosUsuario, setPermisosUsuario] = useState([])
 
-  const { authUsuario } = useAuth()
+  const { authUsuario, setAlerta } = useAuth()
 
   const location = useLocation()
 
@@ -167,13 +168,6 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-  const handleChangeUsuario = e => {
-    setUsuariosAgg({
-      ...UsuariosAgg,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const obtenerPerfiles = async () => {
     const token = localStorage.getItem("token");
 
@@ -229,12 +223,27 @@ const UsuariosProvider = ({ children }) => {
       const { data } = await conexionCliente.post("/usuarios", formData, config);
       if (!data?.error) {
         setDataUsuarios([...dataUsuarios, data])
+
+        setAlerta({
+          error: false,
+          show: true,
+          message: 'Usuario creado con exito'
+        })
+
+        setTimeout(() => setAlerta({}), 1500)
+
         return true
       }
       return false;
     } catch (error) {
-      console.error("Error al guardar la información:", error);
-      throw error; // Puedes lanzar una excepción en caso de error
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
+
     }
   };
 
@@ -299,18 +308,40 @@ const UsuariosProvider = ({ children }) => {
         // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
         const usuariosActualizados = dataUsuarios.map(usuario => usuario.id_usuario === data.usuario.id_usuario ? data.usuario : usuario)
         setDataUsuarios(usuariosActualizados)
+
+        setAlerta({
+          error: false,
+          show: true,
+          message: 'Usuario editado con exito'
+        })
+
+        setTimeout(() => setAlerta({}), 1500)
         return true
       }
+
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: data.message
+      })
+      setTimeout(() => setAlerta({}), 1500)
       return false
+
     } catch (error) {
-      console.error("Error al guardar la información:", error);
-      throw error; // Puedes lanzar una excepción en caso de error
+      setAlerta({
+        error: true,
+        show: true,
+        message:  error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
     }
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const obj = useMemo(() => ({
-    dataUsuarios, handleChangeUsuario, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
+    dataUsuarios, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
     obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
     setErrors, setUsuarioState, usuarioState, eliminarUsuarioProvider, restaurarUsuarioProvider, restablecerUsuarioProvider,
     restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,

@@ -3,11 +3,7 @@ import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import {
-  Key_Icono,
-  Trash_Icono,
-  Edit_Icono,
-} from "../../../public/Icons/Iconos";
+import { Key_Icono, Trash_Icono, Edit_Icono } from "../../../public/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 
 import Confirmar from "../../components/Modales/Confirmar";
@@ -17,7 +13,6 @@ import useUsuarios from "../../hooks/useUsuarios";
 import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
 import useAuth from "../../hooks/useAuth";
 import Forbidden from "../Errors/forbidden";
-import Loader from "../../components/Loader";
 
 const Usuarios = () => {
   const toast = useRef(null);
@@ -30,10 +25,9 @@ const Usuarios = () => {
     { field: "estado_usuario", header: "Estado" },
   ];
 
-
   const { dataUsuarios, setUsuarioState, buscarUsuario, setPerfilesEdit, setPermisosEdit, permisosUsuario, setPermisosUsuario } = useUsuarios();
 
-  const { authPermisos, Permisos_DB } = useAuth()
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth()
 
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonUsuario, setBotonUsuario] = useState();
@@ -54,7 +48,24 @@ const Usuarios = () => {
         return setPermisosUsuario(authPermisos)
       }
     }, 10)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authPermisos])
+
+  //MOSTRAR ALERTA
+  useEffect(() => {
+    if (alerta.show) {
+      const show_alert = () => {
+        toast.current.show({
+          severity: alerta.error ? 'error' : 'success',
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500)
+      }
+      show_alert()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta])
 
   const mensajeRestablecido = () => {
     toast.current.show({ severity: 'success', detail: 'Se ha restablecido la clave del usuario correctamente. ', life: 1500 });
@@ -179,20 +190,20 @@ const Usuarios = () => {
       <div className="w-5/6">
         <Toast ref={toast} />
         {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />}
-        {modalEliminar ? 
-        <Confirmar 
-        modalEliminar={modalEliminar} 
-        setModalEliminar={setModalEliminar} 
-        mensajeEliminado={mensajeEliminado} 
-        botonUsuario={botonUsuario} 
-        mensajeRestablecido={mensajeRestablecido} /> : ""}
-        
+        {modalEliminar ?
+          <Confirmar
+            modalEliminar={modalEliminar}
+            setModalEliminar={setModalEliminar}
+            mensajeEliminado={mensajeEliminado}
+            botonUsuario={botonUsuario}
+            mensajeRestablecido={mensajeRestablecido} /> : ""}
+
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Usuarios</h1>
           <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
         </div>
-      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-        
+        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+
           {
             permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
               <button
@@ -254,15 +265,12 @@ const Usuarios = () => {
   return (
     <>
       {
-        permisosUsuario.length === 0
+
+        (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
           ?
-          (<Loader />)
+          (main())
           :
-          (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
+          (<Forbidden />))
       }
     </>
   );

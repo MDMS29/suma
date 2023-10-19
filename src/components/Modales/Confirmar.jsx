@@ -3,10 +3,20 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from "primereact/button";
 import useUsuarios from '../../hooks/useUsuarios'
 import usePerfiles from "../../hooks/usePerfiles";
+<<<<<<< HEAD
 import useModulos from '../../hooks/useModulos';
 
 
 const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeRestaurado, botonUsuario, mensajeRestablecido, mensajeEliminadoPerfil, mensajeRestauradoPerfil, mensajeEliminadoModulo, mensajeRestauradoModulo, botonModulo   }) => {
+=======
+import useAuth from '../../hooks/useAuth';
+
+
+// eslint-disable-next-line react/prop-types
+const Confirmar = ({ modalEliminar, setModalEliminar, mensajeRestaurado, botonUsuario, mensajeRestablecido, mensajeEliminadoPerfil, mensajeRestauradoPerfil }) => {
+
+    const { setAlerta } = useAuth()
+>>>>>>> 0a728aa61d7601af8cb69ed548be59a68ad8a117
 
 
     const { eliminarUsuarioProvider, usuarioState, restaurarUsuarioProvider, restablecerUsuarioProvider } = useUsuarios()
@@ -21,15 +31,19 @@ const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeR
         if (usuarioState) {
             if (usuarioState.id_estado == 1 && botonUsuario == 1) {
                 variableModal = 1
-            } if (usuarioState.id_estado == 2) {
+            }
+            if (usuarioState.id_estado == 2) {
                 variableModal = 2
-            } if (usuarioState.id_estado == 1 && botonUsuario == 2) {
+            }
+            if (usuarioState.id_estado == 1 && botonUsuario == 2) {
                 variableModal = 3
             }
-        } if (perfilState) {
+        }
+        if (perfilState) {
             if (perfilState.id_estado == 1) {
                 variableModal = 4
-            } if (perfilState.id_estado == 2) {
+            }
+            if (perfilState.id_estado == 2) {
                 variableModal = 5
             }
         }if (ModuloState) {
@@ -46,16 +60,27 @@ const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeR
         setModalEliminar(false);
     };
 
+    const mensajeEliminar = () => {
+        setAlerta({
+            error: false,
+            show: true,
+            message: 'El registro se ha inactivado correctamente.'
+        })
+    }
+
     const clickModalUsuario = () => {
         if (variableModal == 1) {
             eliminarUsuarioProvider()
             setModalEliminar(false);
-            mensajeEliminado()
-        } if (variableModal == 2) {
+            mensajeEliminar()
+
+        }
+        if (variableModal == 2) {
             restaurarUsuarioProvider()
             setModalEliminar(false);
             mensajeRestaurado()
-        } if (variableModal == 3) {
+        }
+        if (variableModal == 3) {
             restablecerUsuarioProvider()
             setModalEliminar(false);
             mensajeRestablecido()
