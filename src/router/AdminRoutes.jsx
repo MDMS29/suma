@@ -2,6 +2,7 @@ import Modulos from "../Pages/Modulos/Modulos";
 import ModulosInactivos from "../Pages/Modulos/ModulosInactivos";
 import Perfiles from "../Pages/Perfiles/Perfiles";
 import PerfilesInactivos from "../Pages/Perfiles/PerfilesInactivos";
+import Roles from "../Pages/Roles/Roles";
 import ResetearContraseñaUsuario from "../Pages/Usuarios/ResetearContraseñaUsuario";
 import Usuario from "../Pages/Usuarios/Usuarios";
 import UsuarioInactivos from "../Pages/Usuarios/UsuariosInactivos";
@@ -47,6 +48,18 @@ const AdminRoutes = [
     {
         name: "Modulos Inactivos",
         route: "/configuracion/modulos/inactivos",
+        component: <ModulosInactivos />,
+        key: 7
+    },
+    {
+        name: "Roles",
+        route: "/configuracion/roles",
+        component: <Roles />,
+        key: 6
+    },
+    {
+        name: "Roles Inactivos",
+        route: "/configuracion/roles/inactivos",
         component: <ModulosInactivos />,
         key: 7
     },

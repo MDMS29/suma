@@ -9,6 +9,7 @@ import { PerfilesProvider } from "./context/PerfilesProvider.jsx";
 import { ModulosProvider } from "./context/ModulosProvider.jsx";
 
 import AppMain from "./router/AppMain.jsx";
+import { RolesProvider } from "./context/RolesProvider.jsx";
 
 const App = () => {
   return (
@@ -18,7 +19,9 @@ const App = () => {
           <UsuariosProvider>
             <PerfilesProvider>
               <ModulosProvider>
-                <AppMain />
+                <RolesProvider>
+                  <AppMain />
+                </RolesProvider>
               </ModulosProvider>
             </PerfilesProvider>
           </UsuariosProvider>
