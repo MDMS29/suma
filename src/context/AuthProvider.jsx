@@ -14,7 +14,6 @@ const AuthProvider = ({ children }) => {
 
   const [authPermisos, setAuthPermiso] = useState([])
 
-
   const [alerta, setAlerta] = useState({
     error: false,
     show: false,

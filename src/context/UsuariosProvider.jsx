@@ -168,13 +168,6 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-  const handleChangeUsuario = e => {
-    setUsuariosAgg({
-      ...UsuariosAgg,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const obtenerPerfiles = async () => {
     const token = localStorage.getItem("token");
 
@@ -348,7 +341,7 @@ const UsuariosProvider = ({ children }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const obj = useMemo(() => ({
-    dataUsuarios, handleChangeUsuario, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
+    dataUsuarios, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
     obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
     setErrors, setUsuarioState, usuarioState, eliminarUsuarioProvider, restaurarUsuarioProvider, restablecerUsuarioProvider,
     restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,
