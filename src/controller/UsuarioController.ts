@@ -66,8 +66,8 @@ export default class UsuarioController {
 
     public async PerfilUsuario(req: Request, res: Response) {
         const { usuario } = req //TOMAR LA INFORMACION DEL MIDDLEWARE
-        if(!usuario.id_usuario){
-            return res.status(401).send({error: true, message:'Inicie sesion para continuar'})
+        if (!usuario.id_usuario) {
+            return res.status(401).send({ error: true, message: 'Inicie sesion para continuar' })
         }
         return res.status(200).json(usuario) //ENVIAR LA INFORMACION DEL MIDDLEWARE
     }
@@ -141,10 +141,11 @@ export default class UsuarioController {
         if (roles?.length <= 0) {//VALIDAR QUE SI SE ESTEN AGREGANDO ROLES
             return res.status(400).json({ error: true, message: "Debe asignarle permisos al usuario" }) //!ERROR
         }
-        // const result = UsusarioSchema.partial().safeParse(usuario) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
-        // if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-        //     return res.json({ error: true, message: result.error.issues }) //!ERROR
-        // }
+
+        const result = UsusarioSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.json({ error: true, message: result.error.issues }) //!ERROR
+        }
 
         try {
             const _Usuario_Service = new UsuarioService()
@@ -253,7 +254,7 @@ export default class UsuarioController {
             if (!info.accepted) {
                 return res.status(500).json({ error: true, message: 'Error al restablecer la clave del usuario' }); //!ERROR
             }
-            
+
             return res.status(200).json({ error: false, message: 'Se ha restablecido la clave del usuario' }); //*SUCCESS
         } catch (error) {
             console.log(error)

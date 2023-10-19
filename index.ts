@@ -4,6 +4,7 @@ import logger from 'morgan'
 import { _Usuario_Router } from './src/routes/UsuarioRoutes';
 import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
 import { _ModulosRouter } from './src/routes/ModulosRoutes';
+import { _RolesRouter } from './src/routes/RolesRoutes';
 
 const app = express();
 
@@ -50,6 +51,9 @@ app.use('/suma/api/perfiles', _PerfilesRouter)
 
 //DEFINIR RUTA DE LOS MODULOS
 app.use('/suma/api/modulos', _ModulosRouter)
+
+//DEFINIR RUTA DE LOS ROLES
+app.use('/suma/api/roles', _RolesRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {

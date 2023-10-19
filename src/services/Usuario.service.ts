@@ -290,12 +290,9 @@ export default class UsuarioService {
     }
 
     public async EditarPermisosUsuario(permisos: any, usuario: number) {
-        console.log('293 - service - todos los permisos ', permisos)
         try {
             for (let permiso of permisos) {
                 const permisoExistente: any = await this._Query_Usuario.BuscarRolUsuario(permiso.id_rol, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
-                console.log('297 - service - existe el permiso ', permisoExistente)
-
                 if (permisoExistente.length == 0) { //VERIFICAR SI EL USUARIO TIENE UN ROL
                     // SI EL ESTADO NO EXISTE LO AGREGARA
                     const res = await this._Query_Usuario.InsertarRolModulo(usuario, permiso) //INVOCAR FUNCION PARA GUARDAR EL ROL DEL USUARIO
@@ -304,7 +301,6 @@ export default class UsuarioService {
                     }
                 } else {//SI EL PERMISO EXISTE EDITARA SU ESTADO
                     const res = await this._Query_Usuario.EditarRolUsuario(permiso.id_rol, `${permiso.id_estado}`, usuario) //INVOCAR FUNCION PARA EDITAR EL ROL DEL USUARIO
-                    console.log('308 - service', res)
 
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el permiso' } //!ERROR
