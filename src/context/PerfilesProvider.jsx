@@ -84,9 +84,9 @@ const PerfilesProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       let estadoPerfil = 0;
       if (perfilState.id_estado == 1) {
-        estadoPerfil = 1;
-      } else {
         estadoPerfil = 2;
+      } else {
+        estadoPerfil = 1;
       }
       const config = {
         headers: {

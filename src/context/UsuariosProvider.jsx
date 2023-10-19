@@ -71,7 +71,7 @@ const UsuariosProvider = ({ children }) => {
     if (usuarioState.id_usuario) {
       const token = localStorage.getItem('token')
       let estadoUsuario = 0
-      if (usuarioState.estado_usuario == "ACTIVO") {
+      if (usuarioState.id_estado == 1) {
         estadoUsuario = 2
       } else {
         estadoUsuario = 1
@@ -100,7 +100,7 @@ const UsuariosProvider = ({ children }) => {
     if (usuarioState.id_usuario) {
       const token = localStorage.getItem('token')
       let estadoUsuario = 0
-      if (usuarioState.estado_usuario == "INACTIVO") {
+      if (usuarioState.id_estado == 2) {
         estadoUsuario = 1
       } else {
         estadoUsuario = 2

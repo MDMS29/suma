@@ -205,7 +205,6 @@ const Perfiles = () => {
     </>
   )
 
-  console.log(permisosPerfil)
   return (
     <>
        {
