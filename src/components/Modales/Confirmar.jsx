@@ -3,13 +3,15 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from "primereact/button";
 import useUsuarios from '../../hooks/useUsuarios'
 import usePerfiles from "../../hooks/usePerfiles";
+import useModulos from '../../hooks/useModulos';
 
 
-const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeRestaurado, botonUsuario, mensajeRestablecido, mensajeEliminadoPerfil, mensajeRestauradoPerfil }) => {
+const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeRestaurado, botonUsuario, mensajeRestablecido, mensajeEliminadoPerfil, mensajeRestauradoPerfil, mensajeEliminadoModulo, mensajeRestauradoModulo, botonModulo   }) => {
 
 
     const { eliminarUsuarioProvider, usuarioState, restaurarUsuarioProvider, restablecerUsuarioProvider } = useUsuarios()
     const { perfilState, eliminarPerfilProvider, restaurarPerfilProvider } = usePerfiles()
+    const { ModuloState, eliminarModuloProvider, restaurarModuloProvider } = useModulos()
 
     let mss = ""
     let btn = ""
@@ -28,6 +30,12 @@ const Confirmar = ({ modalEliminar, setModalEliminar, mensajeEliminado, mensajeR
             if (perfilState.id_estado == 1) {
                 variableModal = 4
             } if (perfilState.id_estado == 2) {
+                variableModal = 5
+            }
+        }if (ModuloState) {
+            if (ModuloState.id_estado == 1 && botonModulo == 1) {
+                variableModal = 4
+            } if (ModuloState.id_estado == 2) {
                 variableModal = 5
             }
         }

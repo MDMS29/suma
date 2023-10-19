@@ -8,10 +8,13 @@ const ModulosContext = createContext();
 const ModulosProvider = ({ children }) => {
   const [dataModulos, setDataModulos] = useState([]);
   const [ModuloState, setModuloState] = useState({});
+  const [roles, setRoles] = useState([]);
+  const [rolesEdit, setrolesEdit] = useState([]);
 
   const [ModulosAgg, setModulosAgg] = useState({
+    cod_modulo: "",
     nombre_modulo: "",
-    icono: "",
+    roles: [],
   });
 
   const [errors, setErrors] = useState({
@@ -24,11 +27,15 @@ const ModulosProvider = ({ children }) => {
   const location = useLocation();
 
   const handleChangeModulos = (e) => {
-    setModulosAgg({ ...ModulosAgg, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setModulosAgg((prevModulosAgg) => ({
+      ...prevModulosAgg,
+      [name]: value,
+    }));
   };
 
   useEffect(() => {
-    if (location.pathname.includes('modulos')) {
+    if (location.pathname.includes("modulos")) {
       const ObtenerModulos = async () => {
         const token = localStorage.getItem("token");
 
@@ -118,13 +125,33 @@ const ModulosProvider = ({ children }) => {
           (modulo) => modulo.id_modulo !== ModuloState.id_modulo
         );
         setDataModulos(moduloActualizados);
+        
       } catch (error) {
         console.log(error);
       }
     }
   };
 
-  const guardarModulo = async (formData) => {
+  const obtenerroles = async () => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await conexionCliente(`/roles?estado=1`, config);
+      setRoles(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error al obtener roles:", error);
+    }
+  };
+
+  const guardarModulos = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -144,6 +171,40 @@ const ModulosProvider = ({ children }) => {
     }
   };
 
+  const editarModulo = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      // Realiza la solicitud PATCH API para editar la información del modulo
+      const { data } = await conexionCliente.patch(
+        `/modulos/${formData.id_modulo}`,
+        formData,
+        config
+      );
+
+      if (data?.id_modulo) {
+        console.log(data)
+        // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
+        const modulosActualizados = dataModulos.map((modulo) =>
+          modulo.id_modulo === data.id_modulo ? data : modulo
+        );
+        setDataModulos(modulosActualizados);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
+      throw error; // Puedes lanzar una excepción en caso de error
+    }
+  };
+
   const buscarModulo = async (id) => {
     const token = localStorage.getItem("token");
 
@@ -157,22 +218,33 @@ const ModulosProvider = ({ children }) => {
     try {
       const { data } = await conexionCliente(`/modulos/${id}`, config);
       if (data?.error) {
-        return { error: true, message: data.message }
+        return { error: true, message: data.message };
       }
+      
+      const { id_modulo, cod_modulo, nombre_modulo, icono } = data;
+      
+      let rolesModulo = [];
+      setModulosAgg({
+        id_modulo,
+        cod_modulo: cod_modulo,
+        nombre_modulo: nombre_modulo,
+        icono: icono,
+      });
+      
+      await data?.roles.map((roles) => {
+        rolesModulo.push({
+          id_rol: +roles?.id_rol,
+          id_estado: +roles?.id_estado,
+        });
+      });
 
-      const { id_modulo, nombre_modulo, icono } = data.modulo
-      setUsuariosAgg(
-        {
-          id_modulo,
-          nombre: nombre_modulo,
-          icono: icono,
-        }
-      )
+      setrolesEdit(rolesModulo)
+      // console.log(rolesModulo);
     } catch (error) {
       console.error(error);
       throw error;
     }
-  }
+  };
 
   const obj = useMemo(() => ({
     dataModulos,
@@ -186,18 +258,19 @@ const ModulosProvider = ({ children }) => {
     handleChangeModulos,
     eliminarModuloProvider,
     restaurarModuloProvider,
-    guardarModulo,
+    guardarModulos,
     permisosModulo,
     setPermisosModulo,
-    buscarModulo
+    buscarModulo,
+    roles,
+    obtenerroles,
+    rolesEdit,
+    setrolesEdit,
+    editarModulo,
   }));
 
   return (
-    <ModulosContext.Provider
-      value={obj}
-    >
-      {children}
-    </ModulosContext.Provider>
+    <ModulosContext.Provider value={obj}>{children}</ModulosContext.Provider>
   );
 };
 
