@@ -6,7 +6,7 @@ import { Message } from "primereact/message";
 
 import { InputText } from "primereact/inputtext";
 import usePerfiles from "../../hooks/usePerfiles";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const ModalAgregarPerfil = ({ visible, onClose }) => {
   const {
@@ -16,10 +16,10 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     setErrors,
     modulosAgg,
     obtenerModulos,
+    guardarPerfil,
   } = usePerfiles();
 
   const [modulosSeleccionados, setModulosSeleccionados] = useState([]);
-
 
   const handleChangePerfiles = (e) => {
     setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: e.target.value });
@@ -39,7 +39,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
           modulo.estado_modulo = 1;
         }
         const modulosActualizados = modulosSeleccionados.map((moduloState) =>
-        moduloState.id_modulo == modulo.id_modulo ? modulo : moduloState
+          moduloState.id_modulo == modulo.id_modulo ? modulo : moduloState
         );
         setModulosSeleccionados(modulosActualizados);
       } else {
@@ -58,7 +58,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
   const fncChkModulo = (row) => {
     const modulo = modulosSeleccionados.filter(
-      (modulos) => modulo.id_modulo === row.id_modulo
+      (modulo) => modulo.id_modulo === row.id_modulo
     );
     // console.log(perfil)
     if (modulo) {
@@ -72,7 +72,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     const formData = {
       id_perfil: PerfilesAgg.id_perfil,
       nombre_perfil: PerfilesAgg.nombre_perfil,
-      modulos: modulosSeleccionados
+      modulos: modulosSeleccionados,
     };
     const regex = /^[a-zA-Z0-9\s]*$/;
     const errors = {};
@@ -80,10 +80,28 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     if (!regex.test(PerfilesAgg.nombre_perfil)) {
       errors.nombre_perfil = "No se permiten caracteres especiales";
     }
+
+    if ([PerfilesAgg.nombre_perfil].includes(" ")) {
+      errors.nombre_perfil = "Este campo es obligatorio";
+      console.log("Este campo es obligatorio");
+    }
+
+    if (
+      modulosSeleccionados.length === 0 ||
+      modulosSeleccionados.filter((modulo) => modulo?.estado_modulo === 1)
+        .length === 0
+    ) {
+      errors.modulos = "Debes seleccionar al menos un modulo";
+    }
+    console.log(modulosSeleccionados);
+    let response;
+    // response = await guardarPerfil(formData);
+
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
       return;
     }
+    setErrors({});
   };
 
   const handleClose = () => {
@@ -120,7 +138,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
         <div className="grid gap-4 w-full">
           <div className="flex flex-col">
             <label className="text-gray-600 pb-2 font-semibold">
-              Nombre<span className="font-bold text-red-900">*</span>
+              Nombre <span className="font-bold text-red-900">*</span>
             </label>
             <InputText
               value={PerfilesAgg.nombre_perfil}
@@ -138,7 +156,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
             )}
             <div className="pt-4">
               <h1>Modulos</h1>
-              <DataTable value={modulosAgg} className="pt-2">
+              <DataTable value={modulosAgg} className="custom-datatable pt-2">
                 <Column field="nombre_modulo" header="Nombre del Módulo" />
                 <Column
                   field="col1"
@@ -153,13 +171,16 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
                   style={{ width: "3em" }}
                 />
               </DataTable>
-              {/* <Message
-              severity="warn"
-              text="Debes seleccionar al menos un permiso"
-              className="w-full"
-            >
-              {errors.modulos}
-            </Message> */}
+              <br />
+              {errors.modulos && (
+                <Message
+                  severity="warn"
+                  text="Debes seleccionar al menos un modulo"
+                  className="w-full"
+                >
+                  {errors.modulos}
+                </Message>
+              )}
             </div>
           </div>
         </div>

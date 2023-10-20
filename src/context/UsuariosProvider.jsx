@@ -204,7 +204,7 @@ const UsuariosProvider = ({ children }) => {
       );
       setModulosAgg(data);
     } catch (error) {
-      console.error("Error al obtener modulos:", error);
+      console.error("Error al obtener perfiles:", error);
     }
   };
 

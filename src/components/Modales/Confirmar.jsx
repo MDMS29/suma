@@ -5,7 +5,6 @@ import useUsuarios from "../../hooks/useUsuarios";
 import usePerfiles from "../../hooks/usePerfiles";
 import useAuth from "../../hooks/useAuth";
 import useModulos from "../../hooks/useModulos";
-import useAuth from "../../hooks/useAuth";
 
 const Confirmar = ({
   modalEliminar,
