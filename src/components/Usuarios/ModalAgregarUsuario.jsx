@@ -292,7 +292,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 <label className="text-gray-600 pb-2 font-semibold">Nombre completo <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.nombre}
-                  type="text"D
+                  type="text" D
                   name="nombre"
                   className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre ? "border-red-500" : "border-gray-300"
                     }`}
@@ -373,7 +373,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
           <div>
             <h1>Perfiles</h1>
             <div className="p-mx-auto mt-3 p-datatable">
-            
+
               <DataTable value={perfilesAgg} className="custom-datatable">
                 {/* <Column field="id_perfil" header="ID" /> */}
                 <Column field="nombre_perfil" header="Nombre" />

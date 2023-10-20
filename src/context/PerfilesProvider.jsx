@@ -1,11 +1,13 @@
 import { createContext, useState, useEffect, useMemo } from "react";
 import conexionCliente from "../config/ConexionCliente";
 import { useLocation } from "react-router-dom";
+import useAuth from '../hooks/useAuth'
 
 const PerfilesContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const PerfilesProvider = ({ children }) => {
+  const { setAlerta } = useAuth()
 
   const [dataPerfiles, setDataPerfiles] = useState([]);
   const [perfilState, setPerfilState] = useState({});
@@ -67,7 +69,6 @@ const PerfilesProvider = ({ children }) => {
 
     try {
       const { data } = await conexionCliente(`/modulos?estado=1`, config);
-      console.log(data);
       setModulosAgg(data);
     } catch (error) {
       console.error("Error al obtener modulos:", error);
@@ -86,26 +87,25 @@ const PerfilesProvider = ({ children }) => {
 
     try {
       const { data } = await conexionCliente(`/perfiles/${id}`, config);
-      
+
       if (data?.error) {
         return { error: true, message: data.message }
       }
 
-      const { id_perfil, nombre_perfil, modulos } = data.perfil
-      let permisos = []
+      const { id_perfil, nombre_perfil } = data
+      let moduloCheck = []
 
       setPerfilesAgg({
-          id_perfil,
-          nombre_perfil: nombre_perfil
-        })
-        
-      await data?.modulos.map((modulo) => {
-        modulo?.permisos.map((permiso) => {
-          permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
-        })
+        id_perfil,
+        nombre_perfil: nombre_perfil
       })
 
-      setModulosEdit(modulos)
+      await data?.modulos.map((modulo) => {
+        moduloCheck.push({ id_modulo: +modulo?.id_modulo, id_estado: +modulo?.id_estado })
+      })
+
+      setModulosEdit(moduloCheck)
+
 
     } catch (error) {
       console.error(error);
@@ -199,10 +199,27 @@ const PerfilesProvider = ({ children }) => {
         formData,
         config
       );
-      console.log("Información guardada con éxito:", response);
-      setDataPerfiles([...dataPerfiles, response.data]); // Puede devolver los datos guardados si es necesario
+
+        console.log("Información guardada con éxito:", response);
+        setDataPerfiles([...dataPerfiles, response.data]);
+        setAlerta({
+          error: false,
+          show: true,
+          message: 'Perfil creado con exito'
+        })
+
+        setTimeout(() => setAlerta({}), 1500)
+        
     } catch (error) {
       console.error("Error al guardar la información:", error);
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
       throw error; // Puedes lanzar una excepción en caso de error
     }
   };
@@ -218,13 +235,35 @@ const PerfilesProvider = ({ children }) => {
     };
 
     try {
-      // Realiza la solicitud PATCH API para editar la información del usuario
+
       const { data } = await conexionCliente.patch(`/perfiles/${formData.id_perfil}`, formData, config);
-      console.log("Información guardada con éxito:", data);
-      setDataPerfiles([...dataPerfiles, data]); // Puede devolver los datos guardados si es necesario
+      console.log(data);
+
+
+        const perfilesActualizados = dataPerfiles.map((perfil) =>
+          perfil.id_perfil === data.id_perfil ? {id_perfil: data.id_perfil, nombre_perfil: data.nombre_perfil} : perfil
+        );
+        setDataPerfiles(perfilesActualizados);
+
+        setAlerta({
+          error: false,
+          show: true,
+          message: 'Perfil editado con exito'
+        })
+
+        setTimeout(() => setAlerta({}), 1500)
+
 
     } catch (error) {
       console.error("Error al guardar la información:", error);
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
       throw error; // Puedes lanzar una excepción en caso de error
 
 

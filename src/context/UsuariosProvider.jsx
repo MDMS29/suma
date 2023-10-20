@@ -273,14 +273,14 @@ const UsuariosProvider = ({ children }) => {
           clave: "",
           claverepetida: "",
         })
-      await data?.modulos.map((modulo) => {
-        modulo?.permisos.map((permiso) => {
-          permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
+        await data?.modulos.map((modulo) => {
+          modulo?.permisos.map((permiso) => {
+            permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
+          })
         })
-      })
 
-      setPerfilesEdit(perfiles)
-      setPermisosEdit(permisos)
+        setPerfilesEdit(perfiles)
+        setPermisosEdit(permisos)
 
     } catch (error) {
       console.error(error);
@@ -316,7 +316,6 @@ const UsuariosProvider = ({ children }) => {
         setTimeout(() => setAlerta({}), 1500)
         return true
       }
-
 
       setAlerta({
         error: true,

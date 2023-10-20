@@ -34,7 +34,7 @@ const Perfiles = () => {
   ];
 
   const { dataPerfiles, permisosPerfil, setPermisosPerfil, setPerfilState, buscarPerfil } = usePerfiles();
-  const { authPermisos, Permisos_DB } = useAuth()
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth()
 
   const [modalEliminar, setModalEliminar] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -49,6 +49,7 @@ const Perfiles = () => {
   };
 
   const editarPerfil = async (e, id_perfil) => {
+    console.log(id_perfil);
     e.preventDefault()
     setModalVisible(true)
     await buscarPerfil(id_perfil)
@@ -98,6 +99,21 @@ const Perfiles = () => {
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+    //MOSTRAR ALERTA
+    useEffect(() => {
+      if (alerta.show) {
+        const show_alert = () => {
+          toast.current.show({
+            severity: alerta.error ? 'error' : 'success',
+            detail: alerta.message,
+            life: 1500,
+          });
+          setTimeout(() => setAlerta({}), 1500)
+        }
+        show_alert()
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [alerta])
 
   const columnAcciones = rowData => {
     return (
@@ -164,7 +180,7 @@ const Perfiles = () => {
                 <i className="pi pi-plus mx-2 font-medium"></i>
                 Agregar
               </button>
-            )
+            ) 
           }
           {
             permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
