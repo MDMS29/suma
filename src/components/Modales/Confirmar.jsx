@@ -107,12 +107,12 @@ const Confirmar = ({
     if (variableModal == 6) {
       eliminarModuloProvider()
       setModalEliminar(false);
-      mensajeRestauradoPerfil();
+      mensajeEliminadoModulo();
     }
     if (variableModal == 7) {
       restaurarModuloProvider()
       setModalEliminar(false);
-      mensajeRestauradoPerfil();
+      mensajeRestauradoModulo();
     }
   };
 

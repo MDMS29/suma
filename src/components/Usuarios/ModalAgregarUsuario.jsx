@@ -373,7 +373,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
           <div>
             <h1>Perfiles</h1>
             <div className="p-mx-auto mt-3 p-datatable">
-
               <DataTable value={perfilesAgg} className="custom-datatable">
                 {/* <Column field="id_perfil" header="ID" /> */}
                 <Column field="nombre_perfil" header="Nombre" />

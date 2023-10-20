@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import conexionCliente from "../config/ConexionCliente";
+import useAuth from "../hooks/useAuth";
 
 const ModulosContext = createContext();
 
@@ -10,8 +11,10 @@ const ModulosProvider = ({ children }) => {
   const [ModuloState, setModuloState] = useState({});
   const [roles, setRoles] = useState([]);
   const [rolesEdit, setrolesEdit] = useState([]);
+  const { authModulo, setAlerta } = useAuth();
 
   const [ModulosAgg, setModulosAgg] = useState({
+    id_modulo: 0,
     cod_modulo: "",
     nombre_modulo: "",
     roles: [],
@@ -125,7 +128,6 @@ const ModulosProvider = ({ children }) => {
           (modulo) => modulo.id_modulo !== ModuloState.id_modulo
         );
         setDataModulos(moduloActualizados);
-        
       } catch (error) {
         console.log(error);
       }
@@ -145,7 +147,7 @@ const ModulosProvider = ({ children }) => {
     try {
       const { data } = await conexionCliente(`/roles?estado=1`, config);
       setRoles(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error("Error al obtener roles:", error);
     }
@@ -162,12 +164,31 @@ const ModulosProvider = ({ children }) => {
     };
 
     try {
-      const response = await conexionCliente.post("/modulos", formData, config);
-      console.log("Información guardada con éxito:", response);
-      setDataModulos([...dataModulos, response.data]); // Puede devolver los datos guardados si es necesario
+      const { data } = await conexionCliente.post("/modulos", formData, config);
+      // console.log("Información guardada con éxito:", response);
+      if (!data?.error) {
+        setDataModulos([...dataModulos, data]);
+        // setDataUsuarios([...dataUsuarios, data])
+
+        setAlerta({
+          error: false,
+          show: true,
+          message: "Modulo creado con exito",
+        });
+
+        setTimeout(() => setAlerta({}), 1500);
+
+        return true;
+      }
+      return false;
     } catch (error) {
-      console.error("Error al guardar la información:", error);
-      throw error; // Puedes lanzar una excepción en caso de error
+      // console.log(error);
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response,
+      });
+      setTimeout(() => setAlerta({}), 1500);
     }
   };
 
@@ -190,7 +211,7 @@ const ModulosProvider = ({ children }) => {
       );
 
       if (data?.id_modulo) {
-        console.log(data)
+        console.log(data);
         // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
         const modulosActualizados = dataModulos.map((modulo) =>
           modulo.id_modulo === data.id_modulo ? data : modulo
@@ -220,9 +241,9 @@ const ModulosProvider = ({ children }) => {
       if (data?.error) {
         return { error: true, message: data.message };
       }
-      
+
       const { id_modulo, cod_modulo, nombre_modulo, icono } = data;
-      
+
       let rolesModulo = [];
       setModulosAgg({
         id_modulo,
@@ -230,7 +251,7 @@ const ModulosProvider = ({ children }) => {
         nombre_modulo: nombre_modulo,
         icono: icono,
       });
-      
+
       await data?.roles.map((roles) => {
         rolesModulo.push({
           id_rol: +roles?.id_rol,
@@ -238,7 +259,7 @@ const ModulosProvider = ({ children }) => {
         });
       });
 
-      setrolesEdit(rolesModulo)
+      setrolesEdit(rolesModulo);
       // console.log(rolesModulo);
     } catch (error) {
       console.error(error);

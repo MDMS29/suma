@@ -41,20 +41,20 @@ const ModulosInactivos = () => {
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) => selectedColumns.some((sCol) => sCol.field === col.field));
+    let orderedSelectedColumns = columns.filter((col) =>
+      selectedColumns.some((sCol) => sCol.field === col.field)
+    );
 
     setVisibleColumns(orderedSelectedColumns);
   };
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
     const filteredItems = dataModulos.filter((item) => {
-      return (
-        item.nombre_modulo.toLowerCase().includes(value)
-      );
+      return item.nombre_modulo.toLowerCase().includes(value);
     });
     setFilteredData(filteredItems);
   };
@@ -63,23 +63,47 @@ const ModulosInactivos = () => {
     setFilteredData(dataModulos);
   }, [dataModulos]);
 
-  const header = <MultiSelect value={visibleColumns} options={columns} optionLabel="header" onChange={onColumnToggle} className="w-full sm:w-20rem" display="chip" />;
+  const header = (
+    <MultiSelect
+      value={visibleColumns}
+      options={columns}
+      optionLabel="header"
+      onChange={onColumnToggle}
+      className="w-full sm:w-20rem"
+      display="chip"
+    />
+  );
 
-  const mensajeRestaurado = () => {
-    toast.current.show({ severity: 'success', detail: 'El registro se ha activado correctamente. ', life: 1500 });
-  }
+  const mensajeRestauradoModulo = () => {
+    toast.current.show({
+      severity: "success",
+      detail: "El registro se ha activado correctamente. ",
+      life: 1500,
+    });
+  };
 
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {modalEliminar ? <Confirmar modalEliminar={modalEliminar} setModalEliminar={setModalEliminar} mensajeRestaurado={mensajeRestaurado} /> : ""}
+      {modalEliminar ? (
+        <Confirmar
+          modalEliminar={modalEliminar}
+          setModalEliminar={setModalEliminar}
+          mensajeRestauradoModulo={mensajeRestauradoModulo}
+        />
+      ) : (
+        ""
+      )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Modulos Inactivos</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>
-          <button onClick={redirectToPreviousPage} className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500">
+          <button
+            onClick={redirectToPreviousPage}
+            className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
+          >
             <i className="pi pi-replay mx-2 font-medium"></i>
             Regresar
           </button>
@@ -87,7 +111,12 @@ const ModulosInactivos = () => {
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
-          <InputText className="h-10 pl-8 w-auto rounded-md" placeholder="Buscar" onChange={e => handleSearch(e)} value={searchTerm} />
+          <InputText
+            className="h-10 pl-8 w-auto rounded-md"
+            placeholder="Buscar"
+            onChange={(e) => handleSearch(e)}
+            value={searchTerm}
+          />
         </span>
       </div>
 
@@ -112,40 +141,43 @@ const ModulosInactivos = () => {
           <Column
             key="actions"
             style={{ width: "10%" }}
-            body={(rowData) => (
-              permisosModulo.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR).length > 0 ? (
+            body={(rowData) =>
+              permisosModulo.filter(
+                (permiso) =>
+                  permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
+              ).length > 0 ? (
                 <div className="text-center flex gap-x-3">
                   <Button
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
                     className="p-button-rounded p-mr-2"
-                    onClick={e => confirmRestaurarModulo(e, rowData)}
+                    onClick={(e) => confirmRestaurarModulo(e, rowData)}
                   >
                     {Restore_Icono}
                   </Button>
                 </div>
-              ) : '' )}
+              ) : (
+                ""
+              )
+            }
           />
         </DataTable>
       </div>
     </div>
-  )
+  );
 
   return (
     <>
-      {
-        permisosModulo.length === 0
-          ?
-          (<Loader />)
-          :
-          (permisosModulo.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosModulo.length === 0 ? (
+        <Loader />
+      ) : permisosModulo.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
-
   );
 };
 
