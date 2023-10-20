@@ -290,7 +290,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 <label className="text-gray-600 pb-2 font-semibold">Nombre completo <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.nombre}
-                  type="text"D
+                  type="text"
                   name="nombre"
                   className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre ? "border-red-500" : "border-gray-300"
                     }`}

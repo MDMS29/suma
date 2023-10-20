@@ -6,6 +6,9 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+
+import { Restore_Icono } from "../../components/Icons/Iconos";
+
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import useAuth from "../../hooks/useAuth";

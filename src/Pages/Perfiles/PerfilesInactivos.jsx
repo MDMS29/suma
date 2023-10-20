@@ -13,7 +13,7 @@ import useAuth from "../../hooks/useAuth";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { Restore_Icono } from "../../../public/Icons/Iconos";
+import { Restore_Icono } from "../../components/Icons/Iconos" ;
 
 import { InputText } from "primereact/inputtext"
 

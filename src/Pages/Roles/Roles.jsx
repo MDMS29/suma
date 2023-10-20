@@ -1,22 +1,26 @@
 import { useState, useRef, useEffect } from "react";
 
-import { Link } from "react-router-dom";
-
 import { Toast } from "primereact/toast";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
-import { Key_Icono, Trash_Icono, Edit_Icono } from "../../../public/Icons/Iconos";
+import {
+    Trash_Icono, Edit_Icono,
+    Add_Icono, Rol_Icono
+} from "../../components/Icons/Iconos";
 
-// import Confirmar from "../../components/Modales/Confirmar";
-import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
+import { Button as PButton } from "primereact/button";
+
 import Forbidden from "../Errors/forbidden";
 
 import useRoles from "../../hooks/useRoles";
 import useAuth from "../../hooks/useAuth";
+
+import ModalPrinRoles from "../../components/Modales/ModalPrinRoles";
+import Button from "../../components/Botones/Button";
+import BLink from "../../components/Botones/BLink";
 
 const Roles = () => {
     const toast = useRef(null);
@@ -27,12 +31,9 @@ const Roles = () => {
         { field: "id_estado", header: "Estado" },
     ];
 
-    const { dataRoles, permisosRoles, setPermisosRoles } = useRoles();
+    const { dataRoles, permisosRoles, setPermisosRoles, buscarRol } = useRoles();
 
     const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth()
-
-    // const [modalEliminar, setModalEliminar] = useState(false);
-    // const [botonUsuario, setBotonUsuario] = useState();
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -40,17 +41,25 @@ const Roles = () => {
     const [filteredData, setFilteredData] = useState(dataRoles);
     const [searchTerm, setSearchTerm] = useState("");
 
+    const timing = window.performance.timing;
+
+    // Calcula la latencia de red restando el tiempo de inicio de la solicitud (fetchStart) al tiempo de inicio de la navegación (navigationStart)
+    const networkLatency = timing.responseStart - timing.navigationStart;
+
+
+    console.log(navigator.onLine)
+    console.log(`Latencia de red: ${networkLatency} milisegundos`);
+
+
     useEffect(() => {
         setFilteredData(dataRoles);
     }, [dataRoles]);
-
     useEffect(() => {
         setTimeout(() => {
             if (authPermisos !== undefined) return setPermisosRoles(authPermisos)
         }, 10)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authPermisos])
-
     //MOSTRAR ALERTA
     useEffect(() => {
         if (alerta.show) {
@@ -78,7 +87,7 @@ const Roles = () => {
         const value = e.target.value.toLowerCase();
         setSearchTerm(value);
 
-        const filteredItems = dataUsuarios.filter((item) => {
+        const filteredItems = dataRoles.filter((item) => {
             return (
                 item.nombre_completo.toLowerCase().includes(value) ||
                 item.usuario.toLowerCase().includes(value) ||
@@ -89,9 +98,8 @@ const Roles = () => {
         setFilteredData(filteredItems);
     };
 
-    const toggleModal = () => {
-        
-    };
+    const toggleModal = () => { setModalVisible(!modalVisible) };
+    const estadoTexto = (numero) => +numero === 1 ? "Activo" : "Inactivo";
 
 
     const header = (
@@ -106,45 +114,36 @@ const Roles = () => {
     );
 
     const columnAcciones = rowData => {
-        console.log(rowData)
         return (
             (
                 <div className="text-center flex gap-x-3">
                     {
                         permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-                            <Button
+                            <PButton
                                 tooltip="Editar"
                                 tooltipOptions={{ position: "top" }}
                                 className="p-button-rounded p-mr-2"
-                            // onClick={e => editarUsuario(e, rowData.id_usuario)}
+                                onClick={() => {
+                                    console.log('first')
+                                    setModalVisible(true)
+                                    buscarRol(rowData.id_rol)
+                                }}
                             >
                                 {Edit_Icono}
-                            </Button>
+                            </PButton>
 
                         )
                     }
                     {
                         permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR).length > 0 && (
-                            <Button
+                            <PButton
                                 tooltip="Eliminar"
                                 className="p-button-rounded p-button-danger p-mr-2"
                                 tooltipOptions={{ position: "top" }}
                             // onClick={e => confirmDeleteUsuario(e, rowData)}
                             >
                                 {Trash_Icono}
-                            </Button>
-                        )
-                    }
-                    {
-                        permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR).length > 0 && (
-                            <Button
-                                tooltip="Restablecer"
-                                className="p-button-rounded p-button-info"
-                                tooltipOptions={{ position: "top" }}
-                            // onClick={e => confirmRestablecer(e, rowData)}
-                            >
-                                {Key_Icono}
-                            </Button>
+                            </PButton>
                         )
                     }
                 </div>
@@ -156,34 +155,27 @@ const Roles = () => {
         <>
             <div className="w-5/6">
                 <Toast ref={toast} />
-                {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />}
+                {modalVisible && <ModalPrinRoles visible={modalVisible} onClose={toggleModal} />}
 
-                <div className="flex justify-center gap-x-4 m-2 p-3">
-                    <h1 className="text-3xl">Usuarios</h1>
-                    <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+                <div className="flex justify-center items-center gap-x-4 m-2 p-3">
+                    <h1 className="text-3xl">Roles</h1>
+                    {Rol_Icono}
                 </div>
                 <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
 
                     {
                         permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-                            <button
-                                className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-                                onClick={(e) => setModalVisible(true, e)}
-                            >
-                                <i className="pi pi-plus mx-2 font-medium"></i>
-                                Agregar
-                            </button>
+                            <Button tipo={'PRINCIPAL'} funcion={(e) => setModalVisible(true, e)}>
+                                {Add_Icono} Agregar
+                            </Button>
                         )
                     }
                     {
                         permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
                             <div className="h-full flex justify-center items-center">
-                                <Link
-                                    className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-                                    to="/configuracion/usuarios/inactivos"
-                                >
+                                <BLink url={"/configuracion/usuarios/inactivos"} tipo={'INACTIVOS'}>
                                     Inactivos
-                                </Link>
+                                </BLink>
                             </div>
                         )
                     }
@@ -208,8 +200,15 @@ const Roles = () => {
                         tableStyle={{ minWidth: "50rem" }}
                     >
                         {visibleColumns.map((col) => (
-                            <Column key={col.field} field={col.field} header={col.header} />
+                            col.field !== 'id_estado' && <Column key={col.field} field={col.field} header={col.header} />
                         ))}
+
+                        <Column
+                            key="estado"
+                            field="id_estado"
+                            header="Estado"
+                            body={(rowData) => estadoTexto(rowData.id_estado)}
+                        />
 
                         <Column
                             key="actions"

@@ -17,7 +17,7 @@ import { Button } from "primereact/button";
 import {
   Trash_Icono,
   Edit_Icono,
-} from "../../../public/Icons/Iconos";
+} from "../../components/Icons/Iconos" ;
 import { InputText } from "primereact/inputtext"
 
 

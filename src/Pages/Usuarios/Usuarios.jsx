@@ -3,7 +3,7 @@ import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { Key_Icono, Trash_Icono, Edit_Icono } from "../../../public/Icons/Iconos";
+import { Key_Icono, Trash_Icono, Edit_Icono } from "../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 
 import Confirmar from "../../components/Modales/Confirmar";
@@ -13,6 +13,7 @@ import useUsuarios from "../../hooks/useUsuarios";
 import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
 import useAuth from "../../hooks/useAuth";
 import Forbidden from "../Errors/forbidden";
+import Loader from "../../components/Loader";
 
 const Usuarios = () => {
   const toast = useRef(null);
@@ -265,12 +266,13 @@ const Usuarios = () => {
   return (
     <>
       {
-
-        (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-          ?
-          (main())
-          :
-          (<Forbidden />))
+        permisosUsuario.length === 0 ?
+          (<Loader />) :
+          (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
+            ?
+            (main())
+            :
+            (<Forbidden />))
       }
     </>
   );

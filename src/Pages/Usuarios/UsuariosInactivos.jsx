@@ -7,7 +7,7 @@ import { Toast } from 'primereact/toast';
 
 import { Button } from "primereact/button";
 import useUsuarios from '../../hooks/useUsuarios'
-import { Restore_Icono } from "../../../public/Icons/Iconos";
+import { Restore_Icono } from "../../components/Icons/Iconos";
 import Confirmar from "../../components/Modales/Confirmar";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";

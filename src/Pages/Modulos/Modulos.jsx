@@ -11,7 +11,7 @@ import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo"
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import { Button } from "primereact/button";
-import { Edit_Icono, Trash_Icono } from "../../../public/Icons/Iconos";
+import { Edit_Icono, Trash_Icono } from "../../components/Icons/Iconos" ;
 
 const Modulos = () => {
   const toast = useRef(null);
