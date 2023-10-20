@@ -7,7 +7,7 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import useAuth from "../../hooks/useAuth";
-import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo"
+import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import { Button } from "primereact/button";
@@ -18,13 +18,21 @@ const Modulos = () => {
   const toast = useRef(null);
 
   const columns = [
-    { field: "id_modulo", header: "ID" },
+    { field: "cod_modulo", header: "Codigo" },
     { field: "nombre_modulo", header: "Nombre" },
     { field: "icono", header: "Icono" },
   ];
 
-  const { authPermisos, Permisos_DB } = useAuth()
-  const { dataModulos, setDataModulos, permisosModulo, setPermisosModulo, buscarModulo, guardarModulo, setModuloState } = useModulos();
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const {
+    dataModulos,
+    setDataModulos,
+    permisosModulo,
+    setPermisosModulo,
+    buscarModulo,
+    guardarModulo,
+    setModuloState,
+  } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -38,25 +46,32 @@ const Modulos = () => {
   useEffect(() => {
     setTimeout(() => {
       if (authPermisos !== undefined) {
-        return setPermisosModulo(authPermisos)
+        return setPermisosModulo(authPermisos);
       }
-    }, 10)
-  }, [authPermisos])
+    }, 10);
+  }, [authPermisos]);
 
-  const mensajeEliminado = () => {
-    toast.current.show({
-      severity: "success",
-      detail: "El registro se ha inactivado correctamente. ",
-      life: 1500,
-    });
-  };
+    //MOSTRAR ALERTA
+    useEffect(() => {
+      if (alerta.show) {
+        const show_alert = () => {
+          toast.current.show({
+            severity: alerta.error ? "error" : "success",
+            detail: alerta.message,
+            life: 1500,
+          });
+          setTimeout(() => setAlerta({}), 1500);
+        };
+        show_alert();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [alerta]);
 
   const editarModulo = async (e, id_modulo) => {
     e.preventDefault();
-    setModalVisible(true)
-    await buscarModulo(id_modulo)
-  }
-
+    setModalVisible(true);
+    await buscarModulo(id_modulo);
+  };
 
   const confirmDeleteModulo = (e, modulo) => {
     e.preventDefault();
@@ -64,9 +79,7 @@ const Modulos = () => {
     setModuloState(modulo);
     setBotonModulo(1);
   };
-  const mensajeRestablecido = () => {
-    toast.current.show({ severity: 'success', detail: 'Se ha restablecido la clave del usuario correctamente. ', life: 1500 });
-  }
+
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
@@ -75,7 +88,6 @@ const Modulos = () => {
     );
     setVisibleColumns(orderedSelectedColumns);
   };
-
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
@@ -106,77 +118,96 @@ const Modulos = () => {
     />
   );
 
-  const columnAcciones = rowData => {
+  const columnAcciones = (rowData) => {
     return (
-      (
-        <div className="text-center flex gap-x-3">
-          {
-            permisosModulo.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <Button
-                tooltip="Editar"
-                tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2"
-                onClick={e => editarModulo(e, rowData.id_modulo)}
-              >
-                {Edit_Icono}
-              </Button>
-
-            )
-          }
-          {
-            permisosModulo.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR).length > 0 && (
-              <Button
-                tooltip="Eliminar"
-                className="p-button-rounded p-button-danger p-mr-2"
-                tooltipOptions={{ position: "top" }}
-                onClick={e => confirmDeleteModulo(e, rowData)}
-              >
-                {Trash_Icono}
-              </Button>
-            )
-          }
-        </div>
-      )
-    )
-  }
+      <div className="text-center flex gap-x-3">
+        {permisosModulo.filter(
+          (permiso) =>
+            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+        ).length > 0 && (
+          <Button
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editarModulo(e, rowData.id_modulo)}
+          >
+            {Edit_Icono}
+          </Button>
+        )}
+        {permisosModulo.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
+        ).length > 0 && (
+          <Button
+            tooltip="Eliminar"
+            className="p-button-rounded p-button-danger p-mr-2"
+            tooltipOptions={{ position: "top" }}
+            onClick={(e) => confirmDeleteModulo(e, rowData)}
+          >
+            {Trash_Icono}
+          </Button>
+        )}
+      </div>
+    );
+  };
 
   const main = () => (
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} guardarModulo={guardarModulo}/>}
-        {modalEliminar ? <Confirmar modalEliminar={modalEliminar} setModalEliminar={setModalEliminar} mensajeEliminado={mensajeEliminado} botonModulo={botonModulo} mensajeRestablecido={mensajeRestablecido} /> : ""}
+        {modalVisible && (
+          <ModalAgregarModulo
+            visible={modalVisible}
+            onClose={toggleModal}
+            guardarModulo={guardarModulo}
+          />
+        )}
+        {modalEliminar ? (
+          <Confirmar
+            modalEliminar={modalEliminar}
+            setModalEliminar={setModalEliminar}
+            mensajeEliminadoModulo={mensajeEliminadoModulo}
+            botonModulo={botonModulo}
+          />
+        ) : (
+          ""
+        )}
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Modulos</h1>
           <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex">
-          {
-            permisosModulo.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <button
-                className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-                onClick={(e) => setModalVisible(true, e)}
+          {permisosModulo.filter(
+            (permiso) =>
+              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+          ).length > 0 && (
+            <button
+              className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
+              onClick={(e) => setModalVisible(true, e)}
+            >
+              <i className="pi pi-plus mx-2 font-medium"></i>
+              Agregar
+            </button>
+          )}
+          {permisosModulo.filter(
+            (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+          ).length > 0 && (
+            <div className="h-full flex justify-center items-center">
+              <Link
+                className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
+                to="/configuracion/modulos/inactivos"
               >
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </button>
-            )
-          }
-          {
-            permisosModulo.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
-              <div className="h-full flex justify-center items-center">
-                <Link
-                  className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-                  to="/configuracion/modulos/inactivos"
-                >
-                  Inactivos
-                </Link>
-              </div>
-            )
-          }
+                Inactivos
+              </Link>
+            </div>
+          )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => handleSearch(e)} value={searchTerm} />
+            <InputText
+              className="h-10 pl-8 rounded-md"
+              placeholder="Buscar"
+              onChange={(e) => handleSearch(e)}
+              value={searchTerm}
+            />
           </span>
         </div>
 
@@ -207,22 +238,20 @@ const Modulos = () => {
         </div>
       </div>
     </>
-  )
+  );
 
   return (
-   <>
-   {
-        permisosModulo.length === 0
-          ?
-          (<Loader />)
-          :
-          (permisosModulo.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
-   </>
+    <>
+      {permisosModulo.length === 0 ? (
+        <Loader />
+      ) : permisosModulo.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
+    </>
   );
 };
 
