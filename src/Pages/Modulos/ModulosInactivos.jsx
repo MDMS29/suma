@@ -9,6 +9,8 @@ import { Button } from "primereact/button";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import useAuth from "../../hooks/useAuth";
+import Confirmar from "../../components/Modales/Confirmar";
+import { Restore_Icono } from "../../../public/Icons/Iconos";
 
 const ModulosInactivos = () => {
   const toast = useRef(null);

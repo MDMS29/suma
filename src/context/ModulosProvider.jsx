@@ -65,7 +65,7 @@ const ModulosProvider = ({ children }) => {
     if (ModuloState.id_modulo) {
       const token = localStorage.getItem("token");
       let estadoModulo = 0;
-      if (ModuloState.estado_modulo == "ACTIVO") {
+      if (ModuloState.id_estado == 1) {
         estadoModulo = 2;
       } else {
         estadoModulo = 1;
@@ -100,7 +100,7 @@ const ModulosProvider = ({ children }) => {
     if (ModuloState.id_modulo) {
       const token = localStorage.getItem("token");
       let estadoModulo = 0;
-      if (ModuloState.estado_modulo == "INACTIVO") {
+      if (ModuloState.id_estado == 2) {
         estadoModulo = 1;
       } else {
         estadoModulo = 2;

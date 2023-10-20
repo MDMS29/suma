@@ -12,6 +12,7 @@ import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import { Button } from "primereact/button";
 import { Edit_Icono, Trash_Icono } from "../../../public/Icons/Iconos";
+import Confirmar from "../../components/Modales/Confirmar";
 
 const Modulos = () => {
   const toast = useRef(null);
@@ -23,7 +24,7 @@ const Modulos = () => {
   ];
 
   const { authPermisos, Permisos_DB } = useAuth()
-  const { dataModulos, setDataModulos, permisosModulo, setPermisosModulo, buscarModulo, guardarModulo } = useModulos();
+  const { dataModulos, setDataModulos, permisosModulo, setPermisosModulo, buscarModulo, guardarModulo, setModuloState } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -57,12 +58,15 @@ const Modulos = () => {
   }
 
 
-  const confirmDeleteModulo = (e, perfil) => {
+  const confirmDeleteModulo = (e, modulo) => {
     e.preventDefault();
     setModalEliminar(true);
-    setDataModulos(perfil);
+    setModuloState(modulo);
     setBotonModulo(1);
   };
+  const mensajeRestablecido = () => {
+    toast.current.show({ severity: 'success', detail: 'Se ha restablecido la clave del usuario correctamente. ', life: 1500 });
+  }
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;

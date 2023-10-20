@@ -95,7 +95,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     }
     console.log(modulosSeleccionados);
     let response;
-    // response = await guardarPerfil(formData);
+    response = await guardarPerfil(formData);
 
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
