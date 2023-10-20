@@ -6,8 +6,6 @@ import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
 
 const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
-  // const [rolesSeleccionados, setRolesSeleccionados] = useState("");
-
   const {
     ModulosAgg,
     roles,
@@ -18,14 +16,10 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     obtenerroles,
     rolesEdit,
     editarModulo,
-    guardarModulos
+    guardarModulos,
   } = useModulos();
 
   const [rolesporModulo, setrolesporModulo] = useState([]);
-
-  const mensajeGuardado = () => {
-    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Registro guardado con éxito', life: 5000 });
-  }
 
   const toast = useRef(null);
 
@@ -50,7 +44,44 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
   }, [rolesEdit]);
 
+  const handleSpacePrevention = (e, fieldName) => {
+    if (fieldName === "cod_modulo" && e.key === " ") {
+      e.preventDefault();
+    }
+  };
+
   const handleGuardar = async () => {
+    const errors = {};
+
+    const codModuloRegex = /^[0-9]*$/;
+    if (!ModulosAgg.cod_modulo) {
+      errors.cod_modulo = "El código del módulo es obligatorio";
+    } else if (!codModuloRegex.test(ModulosAgg.cod_modulo)) {
+      errors.cod_modulo = "El código del módulo debe contener solo dígitos";
+    }
+    const nombreModuloRegex = /^[A-Za-z\s]*$/;
+    if (!ModulosAgg.nombre_modulo) {
+      errors.nombre_modulo = "El nombre del módulo es obligatorio";
+    } else if (!nombreModuloRegex.test(ModulosAgg.nombre_modulo)) {
+      errors.nombre_modulo =
+        "El nombre del módulo no puede contener números ni caracteres especiales";
+    }
+
+    if (!ModulosAgg.icono || !ModulosAgg.icono.startsWith("pi-")) {
+      errors.icono = "El icono del módulo es obligario y comenzar con 'pi-'";
+    }
+
+    if (rolesporModulo.length === 0) {
+      errors.roles = "Debes seleccionar al menos un rol";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      return;
+    }
+
+    setErrors({});
+
     try {
       const formData = {
         id_modulo: ModulosAgg.id_modulo,
@@ -59,17 +90,17 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
         icono: ModulosAgg.icono,
         roles: rolesporModulo,
       };
-  
+
       let response;
-  
+
       if (ModulosAgg.id_modulo !== 0) {
         response = await editarModulo(formData);
       } else {
         response = await guardarModulos(formData);
       }
-  
+
       if (response) {
-        onClose(); 
+        onClose();
         setModulosAgg({
           id_modulo: 0,
           cod_modulo: "",
@@ -83,7 +114,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
       console.error("Error al guardar el módulo:", error);
     }
   };
-  
+
   const CheckboxChangeroles = (nombrePermiso, idRolModulo) => {
     console.log("idRolModulo:", idRolModulo);
     if (rolesporModulo.find((permiso) => permiso.id_rol == idRolModulo)) {
@@ -133,69 +164,96 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
       className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2"
     >
       <div>
-      <Toast ref={toast} />
+        <Toast ref={toast} />
         <div className="flex flex-col pt-3 flex-wrap sm:w-full">
-          <div className="flex flex-col">
-            <label className="text-gray-600 pb-2 font-semibold">
-              Código del Módulo
-            </label>
-            <InputText
-              value={ModulosAgg.cod_modulo}
-              name="cod_modulo"
-              className="border-1 p-1 rounded-md h-10 px-3 py-2"
-              onChange={(e) => handleChangeModulos(e)}
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col">
+              <label className="text-gray-600 pb-2 font-semibold">
+                Código del Módulo
+              </label>
+              <InputText
+                value={ModulosAgg.cod_modulo}
+                name="cod_modulo"
+                className={`border-1 h-10 rounded-md px-3 py-2 ${
+                  errors.cod_modulo ? "border-red-500" : "border-gray-300"
+                }`}
+                onChange={(e) => handleChangeModulos(e, "cod_modulo")}
+                onKeyDown={(e) => handleSpacePrevention(e, "cod_modulo")}
+              />
+              {errors.cod_modulo && (
+                <div className="text-red-600 text-xs ">{errors.cod_modulo}</div>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <label className="text-gray-600 pb-2 font-semibold">
+                Icono de Modulo
+              </label>
+              <InputText
+                value={ModulosAgg.icono}
+                name="icono"
+                className={`border-1 h-10 rounded-md px-3 py-2 ${
+                  errors.icono ? "border-red-500" : "border-gray-300"
+                }`}
+                onChange={(e) => handleChangeModulos(e)}
+              />
+              {errors.icono && (
+                <div className="text-red-600 text-xs">{errors.icono}</div>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col mt-2">
             <label className="text-gray-600 pb-2 font-semibold">
               Nombre del Módulo
             </label>
             <InputText
               value={ModulosAgg.nombre_modulo}
               name="nombre_modulo"
-              className="border-1 p-1 rounded-md h-10 px-3 py-2"
+              className={`border-1 h-10 rounded-md px-3 py-2 ${
+                errors.nombre_modulo ? "border-red-500" : "border-gray-300"
+              }`}
               onChange={(e) => handleChangeModulos(e)}
             />
+            {errors.nombre_modulo && (
+              <div className="text-red-600 text-xs ">
+                {errors.nombre_modulo}
+              </div>
+            )}
           </div>
-          <div className="flex flex-col">
-            <label className="text-gray-600 pb-2 font-semibold">
-              Icono de Modulo
-            </label>
-            <InputText
-              value={ModulosAgg.icono}
-              name="icono"
-              className="border-1 p-1 rounded-md h-10 px-3 py-2"
-              onChange={(e) => handleChangeModulos(e)}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-gray-600 pb-2 font-semibold">Roles</label>
-            <div className="p-datatable">
+          <div>
+            <h1 className="py-3">Roles</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md">
               {roles.map((rol) => (
                 <div key={rol.id}>
-                  <label className="p-checkbox">
+                  <label
+                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${
+                      fncChkPermiso(rol) ? "bg-primaryYellow" : "bg-gray-300"
+                    }`}
+                  >
                     <input
                       type="checkbox"
                       checked={fncChkPermiso(rol)}
+                      className="sr-only peer"
                       onChange={() =>
                         CheckboxChangeroles(rol.id_rol, rol.id_rol)
                       }
                     />
-                    <span className="p-checkbox-box"></span>
+                    <span
+                      className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
+                    ></span>
                   </label>
-                  <span className="ml-2">{rol.nombre}</span>
+                  <span className="ml-6">{rol.nombre}</span>
                 </div>
               ))}
             </div>
             {errors.roles && (
-              <div className="text-red-600 mt-2">{errors.roles}</div>
+              <div className="ml-8 text-red-600 mt-2">{errors.roles}</div>
             )}
           </div>
         </div>
       </div>
       <div>
         <Button
-          className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
+          className="bg-primaryYellow p-2 mx-2 rounded-md mt-3 px-3 hover:bg-yellow-500 font-semibold"
           onClick={handleGuardar}
         >
           {rolesEdit.length !== 0 ? "Actualizar" : "Guardar"}

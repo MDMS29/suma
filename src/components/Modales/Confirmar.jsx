@@ -104,10 +104,21 @@ const Confirmar = ({
       setModalEliminar(false);
       mensajeRestauradoPerfil();
     }
+    if (variableModal == 6) {
+      eliminarModuloProvider()
+      setModalEliminar(false);
+      mensajeEliminadoModulo();
+    }
+    if (variableModal == 7) {
+      restaurarModuloProvider()
+      setModalEliminar(false);
+      mensajeRestauradoModulo();
+    }
   };
 
   //   los casos de menor a mayor para que funcione
   switch (variableModal) {
+    case 7:
     case 5:
     case 2:
       mss = "¿Deseas restaurar este registro?";
@@ -117,6 +128,7 @@ const Confirmar = ({
       mss = "¿Estás seguro de que deseas restaurar la contraseña?";
       btn = "Restablecer";
       break;
+    case 6:
     case 4:
     case 1:
       mss = "¿Estás seguro de que deseas inactivar este registro?";

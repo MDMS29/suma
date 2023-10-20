@@ -265,24 +265,22 @@ const UsuariosProvider = ({ children }) => {
 
       const { id_usuario, nombre_completo, usuario, correo, perfiles } = data.usuario
       let permisos = []
-      setUsuariosAgg(
-        {
+      setUsuariosAgg({
           id_usuario,
           nombre: nombre_completo,
           usuario: usuario,
           correo: correo,
           clave: "",
           claverepetida: "",
-        }
-      )
-      await data?.modulos.map((modulo) => {
-        modulo?.permisos.map((permiso) => {
-          permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
         })
-      })
+        await data?.modulos.map((modulo) => {
+          modulo?.permisos.map((permiso) => {
+            permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
+          })
+        })
 
-      setPerfilesEdit(perfiles)
-      setPermisosEdit(permisos)
+        setPerfilesEdit(perfiles)
+        setPermisosEdit(permisos)
 
     } catch (error) {
       console.error(error);
@@ -318,7 +316,6 @@ const UsuariosProvider = ({ children }) => {
         setTimeout(() => setAlerta({}), 1500)
         return true
       }
-
 
       setAlerta({
         error: true,

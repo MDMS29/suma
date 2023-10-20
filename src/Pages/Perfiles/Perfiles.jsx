@@ -33,20 +33,27 @@ const Perfiles = () => {
     { field: "nombre_perfil", header: "Nombre" },
   ];
 
-  const { dataPerfiles, permisosPerfil, setPermisosPerfil, setPerfilState } = usePerfiles();
-  const { authPermisos, Permisos_DB } = useAuth()
+  const { dataPerfiles, permisosPerfil, setPermisosPerfil, setPerfilState, buscarPerfil } = usePerfiles();
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth()
 
   const [modalEliminar, setModalEliminar] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataPerfiles);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  
+
   const confirmDeletePerfil = (e, perfil) => {
     e.preventDefault();
     setModalEliminar(true);
     setPerfilState(perfil);
   };
+
+  const editarPerfil = async (e, id_perfil) => {
+    console.log(id_perfil);
+    e.preventDefault()
+    setModalVisible(true)
+    await buscarPerfil(id_perfil)
+  }
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
@@ -92,6 +99,21 @@ const Perfiles = () => {
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+    //MOSTRAR ALERTA
+    useEffect(() => {
+      if (alerta.show) {
+        const show_alert = () => {
+          toast.current.show({
+            severity: alerta.error ? 'error' : 'success',
+            detail: alerta.message,
+            life: 1500,
+          });
+          setTimeout(() => setAlerta({}), 1500)
+        }
+        show_alert()
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [alerta])
 
   const columnAcciones = rowData => {
     return (
@@ -102,7 +124,9 @@ const Perfiles = () => {
               <Button
                 tooltip="Editar"
                 tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2 "
+                className="p-button-rounded p-mr-2"
+                onClick={e => editarPerfil(e, rowData.id_perfil)}
+
               >
                 {Edit_Icono}
               </Button>
@@ -156,7 +180,7 @@ const Perfiles = () => {
                 <i className="pi pi-plus mx-2 font-medium"></i>
                 Agregar
               </button>
-            )
+            ) 
           }
           {
             permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
@@ -207,7 +231,7 @@ const Perfiles = () => {
 
   return (
     <>
-       {
+      {
         permisosPerfil.length === 0
           ?
           (<Loader />)

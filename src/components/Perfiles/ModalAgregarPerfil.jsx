@@ -16,56 +16,22 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     setErrors,
     modulosAgg,
     obtenerModulos,
-    guardarPerfil,
+    editarPerfil,
+    modulosEdit,
+    setModulosEdit,
+    guardarPerfil
   } = usePerfiles();
 
   const [modulosSeleccionados, setModulosSeleccionados] = useState([]);
 
+  useEffect(()=>{
+    if(PerfilesAgg.id_perfil){
+      setModulosSeleccionados(modulosEdit)
+    }
+  },[modulosEdit])
+
   const handleChangePerfiles = (e) => {
     setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: e.target.value });
-  };
-
-  const CheckboxChange = (rowData) => {
-    const moduloId = rowData.id_modulo;
-
-    if (modulosSeleccionados.find((modulo) => modulo.id_modulo == moduloId)) {
-      if (modulosEdit.find((modulo) => modulo.id_modulo == moduloId)) {
-        const [modulo] = modulosSeleccionados.filter(
-          (modulo) => modulo.id_modulo == moduloId
-        );
-        if (modulo.estado_modulo == 1) {
-          modulo.estado_modulo = 2;
-        } else {
-          modulo.estado_modulo = 1;
-        }
-        const modulosActualizados = modulosSeleccionados.map((moduloState) =>
-          moduloState.id_modulo == modulo.id_modulo ? modulo : moduloState
-        );
-        setModulosSeleccionados(modulosActualizados);
-      } else {
-        const modulos = modulosSeleccionados.filter(
-          (modulo) => modulo.id_modulo !== moduloId
-        );
-        setModulosSeleccionados(modulos);
-      }
-    } else {
-      setModulosSeleccionados([
-        ...modulosSeleccionados,
-        { id_modulo: moduloId, estado_modulo: 1 },
-      ]);
-    }
-  };
-
-  const fncChkModulo = (row) => {
-    const modulo = modulosSeleccionados.filter(
-      (modulo) => modulo.id_modulo === row.id_modulo
-    );
-    // console.log(perfil)
-    if (modulo) {
-      return modulo[0]?.estado_modulo === 1;
-    } else {
-      return false;
-    }
   };
 
   const handleGuardar = async () => {
@@ -88,14 +54,35 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
     if (
       modulosSeleccionados.length === 0 ||
-      modulosSeleccionados.filter((modulo) => modulo?.estado_modulo === 1)
+      modulosSeleccionados.filter((modulo) => modulo?.id_estado === 1)
         .length === 0
     ) {
       errors.modulos = "Debes seleccionar al menos un modulo";
     }
-    console.log(modulosSeleccionados);
-    let response;
-    // response = await guardarPerfil(formData);
+
+    try {
+      let response;
+      if (PerfilesAgg.id_perfil !== 0) {
+        response = await editarPerfil(formData);
+        onClose(); 
+      } else {
+        response = await guardarPerfil(formData);
+        onClose(); 
+      }
+
+      if (response) {
+        onClose(); 
+        setPerfilesAgg({
+          id_perfil: 0,
+          nombre_perfil: ""
+        });
+        setModulosSeleccionados([]);
+      }
+
+
+    } catch (error) {
+      console.error("Error al guardar el usuario:", error.response.data.message);
+    }
 
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
@@ -110,25 +97,68 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       nombre_perfil: "",
     });
     setErrors({});
+    setModulosEdit([])
   };
 
   useEffect(() => {
-    obtenerModulos();
+    obtenerModulos(modulosSeleccionados);
   }, []);
 
+
+  const CheckboxChange = (rowData) => {
+    const moduloId = rowData.id_modulo;
+
+    if (modulosSeleccionados.find((modulo) => modulo.id_modulo == moduloId)) {
+      if (modulosEdit.find((modulo) => modulo.id_modulo == moduloId)) {
+        const [modulo] = modulosSeleccionados.filter(
+          (modulo) => modulo.id_modulo == moduloId
+        );
+        if (modulo.id_estado == 1) {
+          modulo.id_estado = 2;
+        } else {
+          modulo.id_estado = 1;
+        }
+        const modulosActualizados = modulosSeleccionados.map((moduloState) =>
+          moduloState.id_modulo == modulo.id_modulo ? modulo : moduloState
+        );
+        setModulosSeleccionados(modulosActualizados);
+      } else {
+        const modulos = modulosSeleccionados.filter(
+          (modulo) => modulo.id_modulo !== moduloId
+        );
+        setModulosSeleccionados(modulos);
+      }
+    } else {
+      setModulosSeleccionados([
+        ...modulosSeleccionados,
+        { id_modulo: moduloId, id_estado: 1 },
+      ]);
+    }
+  };
+
+  const fncChkModulo = (row) => {
+    const modulo = modulosSeleccionados.filter((modulo) => modulo.id_modulo === row.id_modulo);
+    // console.log(perfil)
+    if (modulo) {
+      return modulo[0]?.id_estado === 1;
+    } else {
+      return false;
+    }
+  };
   const footerContent = (
     <div>
       <Button
         onClick={handleGuardar}
         className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
       >
-        Guardar
+          {modulosEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
+
       </Button>
     </div>
   );
   return (
     <Dialog
-      header={<h1>Agregar Perfil</h1>}
+      header={modulosEdit.length !== 0 ? <h1>Editar Perfil</h1> : <h1>Agregar Perfil</h1>}
       visible={visible}
       onHide={handleClose}
       className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
@@ -144,9 +174,8 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
               value={PerfilesAgg.nombre_perfil}
               type="text"
               name="nombre_perfil"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.nombre_perfil ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre_perfil ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => handleChangePerfiles(e)}
             />
             {errors.nombre_perfil && (
@@ -160,7 +189,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
                 <Column field="nombre_modulo" header="Nombre del Módulo" />
                 <Column
                   field="col1"
-                  header="Check"
+                  header="Seleccione"
                   body={(row) => (
                     <input
                       type="checkbox"

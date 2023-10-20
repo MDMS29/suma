@@ -1,15 +1,18 @@
 import { createContext, useState, useEffect, useMemo } from "react";
 import conexionCliente from "../config/ConexionCliente";
 import { useLocation } from "react-router-dom";
+import useAuth from '../hooks/useAuth'
 
 const PerfilesContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const PerfilesProvider = ({ children }) => {
+  const { setAlerta } = useAuth()
 
   const [dataPerfiles, setDataPerfiles] = useState([]);
   const [perfilState, setPerfilState] = useState({});
   const [modulosAgg, setModulosAgg] = useState([]);
+  const [modulosEdit, setModulosEdit] = useState([])
 
   const [permisosPerfil, setPermisosPerfil] = useState([])
 
@@ -31,7 +34,7 @@ const PerfilesProvider = ({ children }) => {
 
       const ObtenerPerfiles = async () => {
         const token = localStorage.getItem("token");
-  
+
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -66,12 +69,49 @@ const PerfilesProvider = ({ children }) => {
 
     try {
       const { data } = await conexionCliente(`/modulos?estado=1`, config);
-      console.log(data);
       setModulosAgg(data);
     } catch (error) {
       console.error("Error al obtener modulos:", error);
     }
   };
+
+  const buscarPerfil = async (id) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await conexionCliente(`/perfiles/${id}`, config);
+
+      if (data?.error) {
+        return { error: true, message: data.message }
+      }
+
+      const { id_perfil, nombre_perfil } = data
+      let moduloCheck = []
+
+      setPerfilesAgg({
+        id_perfil,
+        nombre_perfil: nombre_perfil
+      })
+
+      await data?.modulos.map((modulo) => {
+        moduloCheck.push({ id_modulo: +modulo?.id_modulo, id_estado: +modulo?.id_estado })
+      })
+
+      setModulosEdit(moduloCheck)
+
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 
   const eliminarPerfilProvider = async () => {
     if (perfilState.id_perfil) {
@@ -159,13 +199,77 @@ const PerfilesProvider = ({ children }) => {
         formData,
         config
       );
-      console.log("Información guardada con éxito:", response);
-      setDataPerfiles([...dataPerfiles, response.data]); // Puede devolver los datos guardados si es necesario
+
+        console.log("Información guardada con éxito:", response);
+        setDataPerfiles([...dataPerfiles, response.data]);
+        setAlerta({
+          error: false,
+          show: true,
+          message: 'Perfil creado con exito'
+        })
+
+        setTimeout(() => setAlerta({}), 1500)
+        
     } catch (error) {
       console.error("Error al guardar la información:", error);
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
       throw error; // Puedes lanzar una excepción en caso de error
     }
   };
+
+  const editarPerfil = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+
+      const { data } = await conexionCliente.patch(`/perfiles/${formData.id_perfil}`, formData, config);
+      console.log(data);
+
+
+        const perfilesActualizados = dataPerfiles.map((perfil) =>
+          perfil.id_perfil === data.id_perfil ? {id_perfil: data.id_perfil, nombre_perfil: data.nombre_perfil} : perfil
+        );
+        setDataPerfiles(perfilesActualizados);
+
+        setAlerta({
+          error: false,
+          show: true,
+          message: 'Perfil editado con exito'
+        })
+
+        setTimeout(() => setAlerta({}), 1500)
+
+
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
+      throw error; // Puedes lanzar una excepción en caso de error
+
+
+    }
+  }
+
 
   const obj = useMemo(() => ({
     dataPerfiles,
@@ -176,14 +280,18 @@ const PerfilesProvider = ({ children }) => {
     setModulosAgg,
     errors,
     setErrors,
+    buscarPerfil,
     obtenerModulos,
     eliminarPerfilProvider,
     restaurarPerfilProvider,
     guardarPerfil,
     permisosPerfil,
     setPermisosPerfil,
-    PerfilesAgg, 
-    setPerfilesAgg
+    PerfilesAgg,
+    setPerfilesAgg,
+    editarPerfil,
+    modulosEdit,
+    setModulosEdit
   }))
 
   return (
