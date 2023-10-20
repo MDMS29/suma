@@ -15,7 +15,8 @@ const PerfilesProvider = ({ children }) => {
 
 
   const [PerfilesAgg, setPerfilesAgg] = useState({
-    nombre_perfil: "",
+    id_perfil: 0,
+    nombre_perfil: ""
   });
 
   const [errors, setErrors] = useState({
@@ -24,9 +25,6 @@ const PerfilesProvider = ({ children }) => {
 
   const location = useLocation();
 
-  const handleChangePerfiles = (e) => {
-    setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: e.target.value });
-  };
 
   useEffect(() => {
     if (location.pathname.includes('perfiles')) {
@@ -56,7 +54,7 @@ const PerfilesProvider = ({ children }) => {
   }, [location.pathname]);
 
 
-  const obtenerModulos = async (perfiles) => {
+  const obtenerModulos = async () => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -67,15 +65,11 @@ const PerfilesProvider = ({ children }) => {
     };
 
     try {
-      const { data } = await conexionCliente.post(
-        `/perfiles/modulos`,
-        perfiles,
-        config
-      );
+      const { data } = await conexionCliente(`/modulos?estado=1`, config);
       console.log(data);
       setModulosAgg(data);
     } catch (error) {
-      console.error("Error al obtener perfiles:", error);
+      console.error("Error al obtener modulos:", error);
     }
   };
 
@@ -182,13 +176,14 @@ const PerfilesProvider = ({ children }) => {
     setModulosAgg,
     errors,
     setErrors,
-    handleChangePerfiles,
     obtenerModulos,
     eliminarPerfilProvider,
     restaurarPerfilProvider,
     guardarPerfil,
     permisosPerfil,
-    setPermisosPerfil
+    setPermisosPerfil,
+    PerfilesAgg, 
+    setPerfilesAgg
   }))
 
   return (

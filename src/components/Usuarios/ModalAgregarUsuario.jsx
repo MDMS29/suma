@@ -277,7 +277,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
           model={[
             { label: "Informacion" },
             { label: "Perfiles" },
-            { label: "Permisos" },
+            { label: "Permisos" }
           ]}
           activeIndex={step - 1}
           className="custom-stepper p-4 hidden md:block"
