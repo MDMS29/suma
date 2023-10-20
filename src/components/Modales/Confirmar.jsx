@@ -4,8 +4,9 @@ import { Button } from "primereact/button";
 import useUsuarios from "../../hooks/useUsuarios";
 import usePerfiles from "../../hooks/usePerfiles";
 import useAuth from "../../hooks/useAuth";
+import useModulos from "../../hooks/useModulos";
+import useAuth from "../../hooks/useAuth";
 
-// eslint-disable-next-line react/prop-types
 const Confirmar = ({
   modalEliminar,
   setModalEliminar,
@@ -15,6 +16,9 @@ const Confirmar = ({
   mensajeRestablecido,
   mensajeEliminadoPerfil,
   mensajeRestauradoPerfil,
+  mensajeEliminadoModulo,
+  mensajeRestauradoModulo,
+  botonModulo,
 }) => {
   const {
     eliminarUsuarioProvider,
@@ -24,11 +28,14 @@ const Confirmar = ({
   } = useUsuarios();
   const { perfilState, eliminarPerfilProvider, restaurarPerfilProvider } =
     usePerfiles();
+  const { ModuloState, eliminarModuloProvider, restaurarModuloProvider } =
+    useModulos();
   const { setAlerta } = useAuth();
 
   let mss = "";
   let btn = "";
   let variableModal = 0;
+
   const funcionModal = () => {
     if (usuarioState) {
       if (usuarioState.id_estado == 1 && botonUsuario == 1) {
@@ -47,6 +54,14 @@ const Confirmar = ({
       }
       if (perfilState.id_estado == 2) {
         variableModal = 5;
+      }
+    }
+    if (ModuloState) {
+      if (ModuloState.id_estado == 1 && botonModulo == 1) {
+        variableModal = 6;
+      }
+      if (ModuloState.id_estado == 2) {
+        variableModal = 7;
       }
     }
   };
@@ -92,7 +107,7 @@ const Confirmar = ({
     }
   };
 
-  //   los casos de menos a mayor para que funcione
+  //   los casos de menor a mayor para que funcione
   switch (variableModal) {
     case 5:
     case 2:

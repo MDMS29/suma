@@ -19,7 +19,7 @@ const UsuariosProvider = ({ children }) => {
 
   const [perfilesEdit, setPerfilesEdit] = useState([])
   const [permisosEdit, setPermisosEdit] = useState([])
-
+  
   const [UsuariosAgg, setUsuariosAgg] = useState({
     id_usuario: 0,
     nombre: "",

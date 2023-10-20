@@ -290,7 +290,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 <label className="text-gray-600 pb-2 font-semibold">Nombre completo <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.nombre}
-                  type="text"
+                  type="text"D
                   name="nombre"
                   className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre ? "border-red-500" : "border-gray-300"
                     }`}
@@ -439,11 +439,11 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 <Column
                   header="Crear/Editar"
                   body={(rowData) =>
-                    rowData.permisos.map((r, index) => {
+                    rowData.permisos.map((r) => {
                       if (r.nombre === "Crear/Editar") {
                         return (
                           <input
-                            key={index}
+                            key={r.id_rol}
                             type="checkbox"
                             data-idrolmodulo={r.id_rol_modulo}
                             checked={fncChkPermiso(r)}
@@ -465,17 +465,41 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 <Column
                   header="Eliminar"
                   body={(rowData) =>
-                    rowData.permisos.map((r, index) => {
+                    rowData.permisos.map((r) => {
                       if (r.nombre === "Borrar") {
                         return (
                           <input
-                            key={index}
+                            key={r.id_rol}
                             type="checkbox"
                             data-idrolmodulo={r.id_rol_modulo}
                             checked={fncChkPermiso(r)}
                             onChange={() =>
                               CheckboxChangePermiso(
                                 "Borrar",
+                                r.id_rol_modulo
+                              )
+                            }
+                          />
+                        );
+                      }
+                    })
+                  }
+                  style={{ width: "5em" }}
+                />
+                <Column
+                  header="Restaurar"
+                  body={(rowData) =>
+                    rowData.permisos.map((r) => {
+                      if (r.nombre === "Restaurar") {
+                        return (
+                          <input
+                            key={r.id_rol}
+                            type="checkbox"
+                            data-idrolmodulo={r.id_rol_modulo}
+                            checked={fncChkPermiso(r)}
+                            onChange={() =>
+                              CheckboxChangePermiso(
+                                "Restaurar",
                                 r.id_rol_modulo
                               )
                             }

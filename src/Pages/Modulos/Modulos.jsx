@@ -19,10 +19,11 @@ const Modulos = () => {
   const columns = [
     { field: "id_modulo", header: "ID" },
     { field: "nombre_modulo", header: "Nombre" },
+    { field: "icono", header: "Icono" },
   ];
 
   const { authPermisos, Permisos_DB } = useAuth()
-  const { dataModulos, setDataModulos, permisosModulo, setPermisosModulo, buscarModulo } = useModulos();
+  const { dataModulos, setDataModulos, permisosModulo, setPermisosModulo, buscarModulo, guardarModulo } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -49,10 +50,10 @@ const Modulos = () => {
     });
   };
 
-  const editarModulo = async (e, id_usuario) => {
+  const editarModulo = async (e, id_modulo) => {
     e.preventDefault();
     setModalVisible(true)
-    await buscarModulo(id_usuario)
+    await buscarModulo(id_modulo)
   }
 
 
@@ -139,7 +140,7 @@ const Modulos = () => {
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />}
+        {modalVisible && <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} guardarModulo={guardarModulo}/>}
         {modalEliminar ? <Confirmar modalEliminar={modalEliminar} setModalEliminar={setModalEliminar} mensajeEliminado={mensajeEliminado} botonModulo={botonModulo} mensajeRestablecido={mensajeRestablecido} /> : ""}
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Modulos</h1>
