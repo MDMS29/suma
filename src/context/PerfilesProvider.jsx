@@ -10,6 +10,7 @@ const PerfilesProvider = ({ children }) => {
   const [dataPerfiles, setDataPerfiles] = useState([]);
   const [perfilState, setPerfilState] = useState({});
   const [modulosAgg, setModulosAgg] = useState([]);
+  const [modulosEdit, setModulosEdit] = useState([])
 
   const [permisosPerfil, setPermisosPerfil] = useState([])
 
@@ -31,7 +32,7 @@ const PerfilesProvider = ({ children }) => {
 
       const ObtenerPerfiles = async () => {
         const token = localStorage.getItem("token");
-  
+
         const config = {
           headers: {
             "Content-Type": "application/json",
@@ -72,6 +73,45 @@ const PerfilesProvider = ({ children }) => {
       console.error("Error al obtener modulos:", error);
     }
   };
+
+  const buscarPerfil = async (id) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await conexionCliente(`/perfiles/${id}`, config);
+      
+      if (data?.error) {
+        return { error: true, message: data.message }
+      }
+
+      const { id_perfil, nombre_perfil, modulos } = data.perfil
+      let permisos = []
+
+      setPerfilesAgg({
+          id_perfil,
+          nombre_perfil: nombre_perfil
+        })
+        
+      await data?.modulos.map((modulo) => {
+        modulo?.permisos.map((permiso) => {
+          permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
+        })
+      })
+
+      setModulosEdit(modulos)
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 
   const eliminarPerfilProvider = async () => {
     if (perfilState.id_perfil) {
@@ -167,6 +207,31 @@ const PerfilesProvider = ({ children }) => {
     }
   };
 
+  const editarPerfil = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      // Realiza la solicitud PATCH API para editar la información del usuario
+      const { data } = await conexionCliente.patch(`/perfiles/${formData.id_perfil}`, formData, config);
+      console.log("Información guardada con éxito:", data);
+      setDataPerfiles([...dataPerfiles, data]); // Puede devolver los datos guardados si es necesario
+
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
+      throw error; // Puedes lanzar una excepción en caso de error
+
+
+    }
+  }
+
+
   const obj = useMemo(() => ({
     dataPerfiles,
     setDataPerfiles,
@@ -176,14 +241,18 @@ const PerfilesProvider = ({ children }) => {
     setModulosAgg,
     errors,
     setErrors,
+    buscarPerfil,
     obtenerModulos,
     eliminarPerfilProvider,
     restaurarPerfilProvider,
     guardarPerfil,
     permisosPerfil,
     setPermisosPerfil,
-    PerfilesAgg, 
-    setPerfilesAgg
+    PerfilesAgg,
+    setPerfilesAgg,
+    editarPerfil,
+    modulosEdit,
+    setModulosEdit
   }))
 
   return (

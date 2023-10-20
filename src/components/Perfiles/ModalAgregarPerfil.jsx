@@ -16,7 +16,8 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     setErrors,
     modulosAgg,
     obtenerModulos,
-    guardarPerfil,
+    editarPerfil,
+    guardarPerfil
   } = usePerfiles();
 
   const [modulosSeleccionados, setModulosSeleccionados] = useState([]);
@@ -33,10 +34,10 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
         const [modulo] = modulosSeleccionados.filter(
           (modulo) => modulo.id_modulo == moduloId
         );
-        if (modulo.estado_modulo == 1) {
-          modulo.estado_modulo = 2;
+        if (modulo.id_estado == 1) {
+          modulo.id_estado = 2;
         } else {
-          modulo.estado_modulo = 1;
+          modulo.id_estado = 1;
         }
         const modulosActualizados = modulosSeleccionados.map((moduloState) =>
           moduloState.id_modulo == modulo.id_modulo ? modulo : moduloState
@@ -51,7 +52,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     } else {
       setModulosSeleccionados([
         ...modulosSeleccionados,
-        { id_modulo: moduloId, estado_modulo: 1 },
+        { id_modulo: moduloId, id_estado: 1 },
       ]);
     }
   };
@@ -62,7 +63,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     );
     // console.log(perfil)
     if (modulo) {
-      return modulo[0]?.estado_modulo === 1;
+      return modulo[0]?.id_estado === 1;
     } else {
       return false;
     }
@@ -74,6 +75,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       nombre_perfil: PerfilesAgg.nombre_perfil,
       modulos: modulosSeleccionados,
     };
+    console.log(formData)
     const regex = /^[a-zA-Z0-9\s]*$/;
     const errors = {};
 
@@ -88,14 +90,33 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
     if (
       modulosSeleccionados.length === 0 ||
-      modulosSeleccionados.filter((modulo) => modulo?.estado_modulo === 1)
+      modulosSeleccionados.filter((modulo) => modulo?.id_estado === 1)
         .length === 0
     ) {
       errors.modulos = "Debes seleccionar al menos un modulo";
     }
-    console.log(modulosSeleccionados);
-    let response;
-    response = await guardarPerfil(formData);
+
+    try {
+      let response;
+      if (modulosAgg.id_modulo !== 0) {
+        response = await editarPerfil(formData);
+      } else {
+        response = await guardarPerfil(formData);
+      }
+
+      if (response) {
+        onClose(); // Cierra el modal
+        setPerfilesAgg({
+          id_perfil: 0,
+          nombre_perfil: ""
+        });
+        setModulosSeleccionados([]);
+      }
+
+
+    } catch (error) {
+      console.error("Error al guardar el usuario:", error.response.data.message);
+    }
 
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
@@ -144,9 +165,8 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
               value={PerfilesAgg.nombre_perfil}
               type="text"
               name="nombre_perfil"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.nombre_perfil ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre_perfil ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => handleChangePerfiles(e)}
             />
             {errors.nombre_perfil && (
@@ -160,7 +180,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
                 <Column field="nombre_modulo" header="Nombre del Módulo" />
                 <Column
                   field="col1"
-                  header="Check"
+                  header="Seleccione"
                   body={(row) => (
                     <input
                       type="checkbox"

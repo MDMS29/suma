@@ -33,7 +33,7 @@ const Perfiles = () => {
     { field: "nombre_perfil", header: "Nombre" },
   ];
 
-  const { dataPerfiles, permisosPerfil, setPermisosPerfil, setPerfilState } = usePerfiles();
+  const { dataPerfiles, permisosPerfil, setPermisosPerfil, setPerfilState, buscarPerfil } = usePerfiles();
   const { authPermisos, Permisos_DB } = useAuth()
 
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -41,12 +41,18 @@ const Perfiles = () => {
   const [filteredData, setFilteredData] = useState(dataPerfiles);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  
+
   const confirmDeletePerfil = (e, perfil) => {
     e.preventDefault();
     setModalEliminar(true);
     setPerfilState(perfil);
   };
+
+  const editarPerfil = async (e, id_perfil) => {
+    e.preventDefault()
+    setModalVisible(true)
+    await buscarPerfil(id_perfil)
+  }
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
@@ -102,7 +108,9 @@ const Perfiles = () => {
               <Button
                 tooltip="Editar"
                 tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2 "
+                className="p-button-rounded p-mr-2"
+                onClick={e => editarPerfil(e, rowData.id_perfil)}
+
               >
                 {Edit_Icono}
               </Button>
@@ -207,7 +215,7 @@ const Perfiles = () => {
 
   return (
     <>
-       {
+      {
         permisosPerfil.length === 0
           ?
           (<Loader />)

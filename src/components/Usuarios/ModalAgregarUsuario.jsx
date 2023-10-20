@@ -76,6 +76,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       roles: permisosPorModulo,
     };
 
+    console.log(formData)
+
     if (permisosPorModulo.length === 0 || permisosPorModulo.filter(permiso => permiso?.id_estado === 1).length === 0) {
       errors.modulos = "Debes seleccionar al menos un modulo";
       return
