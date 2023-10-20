@@ -56,6 +56,8 @@ export default class ModuloService {
                     return { error: true, message: 'Error al insertar el rol del modulo' }
                 }
             }
+            console.log('59 - service', modulo_insertado)
+
 
             // BUSCAR EL MODULO AGREGADO
             const modulo_nuevo = await this._Query_Modulo.BuscarModuloID(modulo_insertado.id_modulo)
@@ -128,7 +130,7 @@ export default class ModuloService {
                 _Codigo_Editado = moduloB.cod_modulo
             }
 
-            if (moduloB.icono !== Request_Modulo.icono && Request_Modulo.icono !== 'pi-box') {
+            if (moduloB.icono !== Request_Modulo.icono) {
                 if (!Request_Modulo.icono.startsWith('pi-')) {
                     return { error: true, message: 'Este icono es invalido, ingrese a: https://primereact.org/icons/#list' }
                 }
@@ -139,7 +141,7 @@ export default class ModuloService {
                     _Icono_Editado = Request_Modulo.icono
                 }
             } else {
-                _Icono_Editado = 'pi-box'
+                _Icono_Editado =  Request_Modulo.icono
             }
 
             const nuevoModulo = {

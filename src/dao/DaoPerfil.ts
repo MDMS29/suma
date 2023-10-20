@@ -5,11 +5,12 @@ export const _ObtenerPerfiles = `
         seguridad.tbl_perfiles tp 
     WHERE  
         tP.id_estado = $1
+    ORDER BY id_perfil DESC
 `
 
 export const _ObtenerModulosPerfil = `
     SELECT 
-        tm.id_modulo, tm.cod_modulo, tm.nombre_modulo
+        tm.id_modulo, tm.cod_modulo, tm.nombre_modulo, tp.id_estado
     FROM 
         seguridad.tbl_modulo_perfiles tp
     

@@ -31,7 +31,6 @@ export class _ModuloController {
     public async InsertarModulo(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { cod_modulo, nombre_modulo, icono, roles } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
-        console.log('34 - moduloController: ', req.body)
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
@@ -59,11 +58,12 @@ export class _ModuloController {
 
         try {
             const _ModuloService = new ModuloService()
+            console.log('61 - controller', req.body)
             const respuesta = await _ModuloService.InsertarModulo(cod_modulo, nombre_modulo, icono, usuario?.usuario, roles)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
-
+            
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)

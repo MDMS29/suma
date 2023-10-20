@@ -5,6 +5,7 @@ export const _ObtenerRoles = `
         seguridad.tbl_roles tr
     WHERE
         tr.id_estado = $1
+    ORDER BY tr.id_rol DESC
 `
 
 export const _BuscarRolNombre = `

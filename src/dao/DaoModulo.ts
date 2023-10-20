@@ -5,6 +5,7 @@ export const _ObtenerModulos = `
         seguridad.tbl_modulo tm
     WHERE
         tm.id_estado = $1
+    ORDER BY tm.id_modulo DESC
 `
 export const _BuscarModuloNombre = `
     SELECT 

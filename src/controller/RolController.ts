@@ -109,7 +109,11 @@ export class _RolController {
                 return res.status(404).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            return res.status(200).json({ error: false, message: 'Rol editado correctamente' }) //*SUCCESSFUL
+            const response = await _RolService.BuscarRol(+id_rol)
+            if (!response) {
+                return res.status(404).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
+            }
+            return res.status(200).json(response) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
