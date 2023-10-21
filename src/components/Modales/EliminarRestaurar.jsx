@@ -32,7 +32,7 @@ const EliminarRestaurar = ({ tipo, funcion }) => {
             onHide={e => setVerEliminarRestaurar(false)}
             footer={footerModal}
         >
-            <div className="flex px-4">
+            <div className="flex px-4 items-center">
                 <i
                     className="pi pi-exclamation-triangle mr-3"
                     style={{ fontSize: "3rem" }}

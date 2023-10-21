@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-import { Toast } from "primereact/toast";
+import { Toast } from 'primereact/toast';
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -56,11 +56,7 @@ const Roles = () => {
     useEffect(() => {
         if (alerta.show) {
             (() => {
-                toast.current.show({
-                    severity: alerta.error ? 'error' : 'success',
-                    detail: alerta.message,
-                    life: 1500,
-                });
+                toast.current.show({ severity: alerta.error ? 'error' : 'success', summary:  alerta.error ? 'Error' : 'Exitoso', detail: alerta.message, life: 1500, });
                 setTimeout(() => setAlerta({}), 1500)
             })()
         }
@@ -88,7 +84,7 @@ const Roles = () => {
         setFilteredData(filteredItems);
     };
     const toggleModal = () => { setModalVisible(!modalVisible) };
-    const estadoTexto = (numero) => +numero === 1 ? "Activo" : "Inactivo";
+    const estadoTexto = (numero) => +numero === 1 ? "ACTIVO" : "INACTIVO";
 
 
     const mostrarModalEliminar = (row) => {
@@ -106,6 +102,7 @@ const Roles = () => {
             display="chip"
         />
     );
+    
     const columnAcciones = rowData => {
         return (
             (

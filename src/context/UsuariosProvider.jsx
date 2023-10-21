@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useMemo } from "react";
 import conexionCliente from "../config/ConexionCliente";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../hooks/useAuth'
 
 
@@ -8,6 +8,9 @@ const UsuariosContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const UsuariosProvider = ({ children }) => {
+
+  const navigate = useNavigate()
+
   const [dataUsuarios, setDataUsuarios] = useState([])
   const [usuarioState, setUsuarioState] = useState({})
   const [contraseña, setConstraseña] = useState("")
@@ -19,7 +22,7 @@ const UsuariosProvider = ({ children }) => {
 
   const [perfilesEdit, setPerfilesEdit] = useState([])
   const [permisosEdit, setPermisosEdit] = useState([])
-  
+
   const [UsuariosAgg, setUsuariosAgg] = useState({
     id_usuario: 0,
     nombre: "",
@@ -39,7 +42,7 @@ const UsuariosProvider = ({ children }) => {
 
   const [permisosUsuario, setPermisosUsuario] = useState([])
 
-  const { authUsuario, setAlerta } = useAuth()
+  const { authUsuario, setAuthUsuario, setAlerta, setVerEliminarRestaurar } = useAuth()
 
   const location = useLocation()
 
@@ -67,63 +70,46 @@ const UsuariosProvider = ({ children }) => {
     }
   }, [location.pathname])
 
-  const eliminarUsuarioProvider = async () => {
-    if (usuarioState.id_usuario) {
-      const token = localStorage.getItem('token')
-      let estadoUsuario = 0
-      if (usuarioState.id_estado == 1) {
-        estadoUsuario = 2
-      } else {
-        estadoUsuario = 1
-      }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        }
-      }
-      try {
-        const { data } = await conexionCliente.delete(`/usuarios/${usuarioState.id_usuario}?estado=${estadoUsuario}`, config)
-        if (data.error) {
-          console.log(data.message)
-        }
+  const eliminarRestablecerUsuario = async (id) => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setAuthUsuario({})
+      navigate('/auth')
+      return
+    }
 
-        const usuarioActualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== usuarioState.id_usuario)
-        setDataUsuarios(usuarioActualizados)
-      } catch (error) {
-        console.log(error)
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
+    }
+
+    try {
+      const estado = location.pathname.includes("inactivos") ? 1 : 2;
+      const { data } = await conexionCliente.delete(`/usuarios/${id}?estado=${estado}`, config)
+
+      if (data?.error) {
+        setAlerta({ error: false, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
+      }
+
+      const usuariosActualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== id)
+      setDataUsuarios(usuariosActualizados)
+
+      setAlerta({ error: false, show: true, message: data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      setVerEliminarRestaurar(false)
+      return true
+
+    } catch (error) {
+      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
     }
   }
 
-  const restaurarUsuarioProvider = async () => {
-    if (usuarioState.id_usuario) {
-      const token = localStorage.getItem('token')
-      let estadoUsuario = 0
-      if (usuarioState.id_estado == 2) {
-        estadoUsuario = 1
-      } else {
-        estadoUsuario = 2
-      }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        }
-      }
-      try {
-        const { data } = await conexionCliente.delete(`/usuarios/${usuarioState.id_usuario}?estado=${estadoUsuario}`, config)
-        if (data.error) {
-          console.log(data.message)
-        }
-
-        const usuarioActualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== usuarioState.id_usuario)
-        setDataUsuarios(usuarioActualizados)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }
 
   const restablecerUsuarioProvider = async () => {
     const token = localStorage.getItem('token')
@@ -266,21 +252,21 @@ const UsuariosProvider = ({ children }) => {
       const { id_usuario, nombre_completo, usuario, correo, perfiles } = data.usuario
       let permisos = []
       setUsuariosAgg({
-          id_usuario,
-          nombre: nombre_completo,
-          usuario: usuario,
-          correo: correo,
-          clave: "",
-          claverepetida: "",
+        id_usuario,
+        nombre: nombre_completo,
+        usuario: usuario,
+        correo: correo,
+        clave: "",
+        claverepetida: "",
+      })
+      await data?.modulos.map((modulo) => {
+        modulo?.permisos.map((permiso) => {
+          permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
         })
-        await data?.modulos.map((modulo) => {
-          modulo?.permisos.map((permiso) => {
-            permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
-          })
-        })
+      })
 
-        setPerfilesEdit(perfiles)
-        setPermisosEdit(permisos)
+      setPerfilesEdit(perfiles)
+      setPermisosEdit(permisos)
 
     } catch (error) {
       console.error(error);
@@ -329,7 +315,7 @@ const UsuariosProvider = ({ children }) => {
       setAlerta({
         error: true,
         show: true,
-        message:  error.response.data.message
+        message: error.response.data.message
       })
 
       setTimeout(() => setAlerta({}), 1500)
@@ -340,7 +326,7 @@ const UsuariosProvider = ({ children }) => {
   const obj = useMemo(() => ({
     dataUsuarios, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
     obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
-    setErrors, setUsuarioState, usuarioState, eliminarUsuarioProvider, restaurarUsuarioProvider, restablecerUsuarioProvider,
+    setErrors, setUsuarioState, usuarioState, eliminarRestablecerUsuario, restablecerUsuarioProvider,
     restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,
     perfilesEdit, permisosEdit, setPerfilesEdit, setPermisosEdit, editarUsuario,
     permisosUsuario, setPermisosUsuario

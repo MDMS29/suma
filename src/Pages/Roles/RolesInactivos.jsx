@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useRef, useEffect } from "react";
 
 import { Toast } from "primereact/toast";
@@ -41,12 +42,14 @@ const RolesInactivos = () => {
     useEffect(() => {
         setFilteredData(dataRoles);
     }, [dataRoles]);
+
     useEffect(() => {
         setTimeout(() => {
             if (authPermisos !== undefined) return setPermisosRoles(authPermisos)
         }, 10)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authPermisos])
+
     //MOSTRAR ALERTA
     useEffect(() => {
         if (alerta.show) {
@@ -83,8 +86,7 @@ const RolesInactivos = () => {
         setFilteredData(filteredItems);
     };
 
-    const estadoTexto = (numero) => +numero === 1 ? "Activo" : "Inactivo";
-
+    const estadoTexto = (numero) => +numero === 1 ? "ACTIVO" : "INACTIVO";
 
     const mostrarModalEliminar = (row) => {
         setVerEliminarRestaurar(true)
@@ -101,6 +103,7 @@ const RolesInactivos = () => {
             display="chip"
         />
     );
+
     const columnAcciones = rowData => {
         return (
             (
@@ -134,13 +137,10 @@ const RolesInactivos = () => {
                     {Rol_Icono}
                 </div>
                 <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-                    {
-                        permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-                            <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
-                                {Return_Icono} Regresar
-                            </Button>
-                        )
-                    }
+                    <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+                        {Return_Icono} Regresar
+                    </Button>
+
                     <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
                         <i className="pi pi-search" />
                         <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => handleSearch(e)} value={searchTerm} />

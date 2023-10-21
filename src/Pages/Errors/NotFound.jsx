@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import BLink from "../../components/Botones/BLink"
 
 const NotFound = () => {
     return (
@@ -11,9 +11,9 @@ const NotFound = () => {
                 <p className="text-center p-2">Lo sentimos pero esta pagina no existe.</p>
                 <p className="text-center p-2 text-gray-400">ERR_NOT_FOUND</p>
                 <div className="w-full text-center">
-                    <Link to="/home" className='text-primaryYellow underline hover:text-secundaryYellow text-center cursor-pointer'>
+                    <BLink url="/home" tipo='BASIC'>
                         Volver
-                    </Link>
+                    </BLink>
                 </div>
             </div>
         </section >

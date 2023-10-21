@@ -96,7 +96,7 @@ const ModulosInactivos = () => {
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Modulos Inactivos</h1>
-        <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+        <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>

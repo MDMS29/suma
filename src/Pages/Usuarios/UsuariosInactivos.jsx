@@ -5,29 +5,26 @@ import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
 import { Toast } from "primereact/toast";
 
-import { Button } from "primereact/button";
 import useUsuarios from '../../hooks/useUsuarios'
-import { Restore_Icono } from "../../components/Icons/Iconos";
-import Confirmar from "../../components/Modales/Confirmar";
+import { Restore_Icono, Return_Icono } from "../../components/Icons/Iconos";
+
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import useAuth from "../../hooks/useAuth";
+import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
+import { Button as PButton } from "primereact/button";
+import Button from "../../components/Botones/Button";
 
 const UsuariosInactivos = () => {
   const toast = useRef(null);
 
-  const [modalEliminar, setModalEliminar] = useState(false);
+  // const [modalEliminar, setModalEliminar] = useState(false);
 
-  const { dataUsuarios, setUsuarioState, permisosUsuario } = useUsuarios();
-  const { Permisos_DB } = useAuth();
+  const { dataUsuarios, setUsuarioState, permisosUsuario, eliminarRestablecerUsuario, usuarioState } = useUsuarios();
+  const { alerta, setAlerta, Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
-  const redirectToPreviousPage = () => {
-    window.history.back();
-  };
-
-  const confirmRestaurarUsuario = (e, usuario) => {
-    e.preventDefault();
-    setModalEliminar(true);
+  const mostrarModalEliminar = (usuario) => {
+    setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
   };
 
@@ -67,6 +64,19 @@ const UsuariosInactivos = () => {
     });
     setFilteredData(filteredItems);
   };
+  useEffect(() => {
+    if (alerta.show) {
+      (() => {
+        toast.current.show({
+          severity: alerta.error ? 'error' : 'success',
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500)
+      })()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta])
 
   useEffect(() => {
     setFilteredData(dataUsuarios);
@@ -83,40 +93,20 @@ const UsuariosInactivos = () => {
     />
   );
 
-  const mensajeRestaurado = () => {
-    toast.current.show({
-      severity: "success",
-      detail: "El registro se ha activado correctamente. ",
-      life: 1500,
-    });
-  };
 
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {modalEliminar ? (
-        <Confirmar
-          modalEliminar={modalEliminar}
-          setModalEliminar={setModalEliminar}
-          mensajeRestaurado={mensajeRestaurado}
-        />
-      ) : (
-        ""
-      )}
+      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminarRestablecerUsuario(usuarioState.id_usuario, e)} />}
+
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Usuarios Inactivos</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-        <div>
-          <button
-            onClick={redirectToPreviousPage}
-            className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-          >
-            <i className="pi pi-replay mx-2 font-medium"></i>
-            Regresar
-          </button>
-        </div>
+        <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+          {Return_Icono} Regresar
+        </Button>
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
@@ -156,14 +146,15 @@ const UsuariosInactivos = () => {
                   permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
               ).length > 0 ? (
                 <div className="text-center flex gap-x-3">
-                  <Button
-                    tooltip="Restaurar"
+                  <PButton
+                    tooltip="Eliminar"
+                    className="p-button-rounded p-button-danger p-mr-2"
                     tooltipOptions={{ position: "top" }}
-                    className="p-button-rounded p-mr-2"
-                    onClick={(e) => confirmRestaurarUsuario(e, rowData)}
+                    // eslint-disable-next-line no-unused-vars
+                    onClick={e => mostrarModalEliminar(rowData)}
                   >
                     {Restore_Icono}
-                  </Button>
+                  </PButton>
                 </div>
               ) : (
                 ""
@@ -179,8 +170,8 @@ const UsuariosInactivos = () => {
       {permisosUsuario.length === 0 ? (
         <Loader />
       ) : permisosUsuario.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

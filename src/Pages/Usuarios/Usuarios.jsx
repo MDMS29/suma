@@ -6,7 +6,6 @@ import { Button } from "primereact/button";
 import { Key_Icono, Trash_Icono, Edit_Icono } from "../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 
-import Confirmar from "../../components/Modales/Confirmar";
 import { Link } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
 import useUsuarios from "../../hooks/useUsuarios";
@@ -14,6 +13,7 @@ import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
 import useAuth from "../../hooks/useAuth";
 import Forbidden from "../Errors/forbidden";
 import Loader from "../../components/Loader";
+import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 
 const Usuarios = () => {
   const toast = useRef(null);
@@ -26,20 +26,9 @@ const Usuarios = () => {
     { field: "estado_usuario", header: "Estado" },
   ];
 
-  const {
-    dataUsuarios,
-    setUsuarioState,
-    buscarUsuario,
-    setPerfilesEdit,
-    setPermisosEdit,
-    permisosUsuario,
-    setPermisosUsuario,
-  } = useUsuarios();
+  const { dataUsuarios, usuarioState, setUsuarioState, buscarUsuario, setPerfilesEdit, setPermisosEdit, permisosUsuario, setPermisosUsuario, eliminarRestablecerUsuario } = useUsuarios();
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
-
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const [botonUsuario, setBotonUsuario] = useState();
+  const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -76,14 +65,6 @@ const Usuarios = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
 
-  const mensajeRestablecido = () => {
-    toast.current.show({
-      severity: "success",
-      detail: "Se ha restablecido la clave del usuario correctamente. ",
-      life: 1500,
-    });
-  };
-
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
     let orderedSelectedColumns = columns.filter((col) =>
@@ -107,18 +88,16 @@ const Usuarios = () => {
     setFilteredData(filteredItems);
   };
 
-  const confirmDeleteUsuario = (e, usuario) => {
+  const modalEliminarUsuario = (e, usuario) => {
     e.preventDefault();
-    setModalEliminar(true);
     setUsuarioState(usuario);
-    setBotonUsuario(1);
+    setVerEliminarRestaurar(true);
   };
 
   const confirmRestablecer = (e, usuario) => {
     e.preventDefault();
-    setModalEliminar(true);
+    setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
-    setBotonUsuario(2);
   };
 
   const toggleModal = () => {
@@ -131,14 +110,6 @@ const Usuarios = () => {
     e.preventDefault();
     setModalVisible(true);
     await buscarUsuario(id_usuario);
-  };
-
-  const mensajeEliminado = () => {
-    toast.current.show({
-      severity: "success",
-      detail: "El registro se ha inactivado correctamente. ",
-      life: 1500,
-    });
   };
 
   const header = (
@@ -159,39 +130,39 @@ const Usuarios = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <Button
-            tooltip="Editar"
-            tooltipOptions={{ position: "top" }}
-            className="p-button-rounded p-mr-2"
-            onClick={(e) => editarUsuario(e, rowData.id_usuario)}
-          >
-            {Edit_Icono}
-          </Button>
-        )}
+            <Button
+              tooltip="Editar"
+              tooltipOptions={{ position: "top" }}
+              className="p-button-rounded p-mr-2"
+              onClick={(e) => editarUsuario(e, rowData.id_usuario)}
+            >
+              {Edit_Icono}
+            </Button>
+          )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-          <Button
-            tooltip="Eliminar"
-            className="p-button-rounded p-button-danger p-mr-2"
-            tooltipOptions={{ position: "top" }}
-            onClick={(e) => confirmDeleteUsuario(e, rowData)}
-          >
-            {Trash_Icono}
-          </Button>
-        )}
+            <Button
+              tooltip="Eliminar"
+              className="p-button-rounded p-button-danger p-mr-2"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => modalEliminarUsuario(e, rowData)}
+            >
+              {Trash_Icono}
+            </Button>
+          )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
         ).length > 0 && (
-          <Button
-            tooltip="Restablecer"
-            className="p-button-rounded p-button-info"
-            tooltipOptions={{ position: "top" }}
-            onClick={(e) => confirmRestablecer(e, rowData)}
-          >
-            {Key_Icono}
-          </Button>
-        )}
+            <Button
+              tooltip="Restablecer"
+              className="p-button-rounded p-button-info"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => confirmRestablecer(e, rowData)}
+            >
+              {Key_Icono}
+            </Button>
+          )}
       </div>
     );
   };
@@ -200,20 +171,10 @@ const Usuarios = () => {
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && (
-          <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />
-        )}
-        {modalEliminar ? (
-          <Confirmar
-            modalEliminar={modalEliminar}
-            setModalEliminar={setModalEliminar}
-            mensajeEliminado={mensajeEliminado}
-            botonUsuario={botonUsuario}
-            mensajeRestablecido={mensajeRestablecido}
-          />
-        ) : (
-          ""
-        )}
+
+        {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />}
+        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRestablecerUsuario(usuarioState.id_usuario, e)} />}
+
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Usuarios</h1>
@@ -224,26 +185,26 @@ const Usuarios = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-            <button
-              className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-              onClick={(e) => setModalVisible(true, e)}
-            >
-              <i className="pi pi-plus mx-2 font-medium"></i>
-              Agregar
-            </button>
-          )}
+              <button
+                className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
+                onClick={(e) => setModalVisible(true, e)}
+              >
+                <i className="pi pi-plus mx-2 font-medium"></i>
+                Agregar
+              </button>
+            )}
           {permisosUsuario.filter(
             (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
           ).length > 0 && (
-            <div className="h-full flex justify-center items-center">
-              <Link
-                className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-                to="/configuracion/usuarios/inactivos"
-              >
-                Inactivos
-              </Link>
-            </div>
-          )}
+              <div className="h-full flex justify-center items-center">
+                <Link
+                  className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
+                  to="/configuracion/usuarios/inactivos"
+                >
+                  Inactivos
+                </Link>
+              </div>
+            )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
             <InputText
