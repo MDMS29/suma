@@ -2,11 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
+import { Button as PButton } from "primereact/button";
 import { Key_Icono, Trash_Icono, Edit_Icono } from "../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
 import useUsuarios from "../../hooks/useUsuarios";
 import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
@@ -14,6 +14,8 @@ import useAuth from "../../hooks/useAuth";
 import Forbidden from "../Errors/forbidden";
 import Loader from "../../components/Loader";
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
+import Button from "../../components/Botones/Button";
+import BLink from "../../components/Botones/BLink";
 
 const Usuarios = () => {
   const toast = useRef(null);
@@ -26,7 +28,8 @@ const Usuarios = () => {
     { field: "estado_usuario", header: "Estado" },
   ];
 
-  const { dataUsuarios, usuarioState, setUsuarioState, buscarUsuario, setPerfilesEdit, setPermisosEdit, permisosUsuario, setPermisosUsuario, eliminarRestablecerUsuario } = useUsuarios();
+  const { dataUsuarios, usuarioState, setUsuarioState, buscarUsuario, setPerfilesEdit, restablecerUsuarioProvider,
+    setPermisosEdit, permisosUsuario, setPermisosUsuario, eliminarRestablecerUsuario, resClave, setResClave } = useUsuarios();
 
   const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
@@ -54,7 +57,7 @@ const Usuarios = () => {
     if (alerta.show) {
       const show_alert = () => {
         toast.current.show({
-          severity: alerta.error ? "error" : "success",
+          severity: alerta.error && !resClave ? "error" : resClave ? "info" : "success",
           detail: alerta.message,
           life: 1500,
         });
@@ -92,12 +95,14 @@ const Usuarios = () => {
     e.preventDefault();
     setUsuarioState(usuario);
     setVerEliminarRestaurar(true);
+    setResClave(false)
   };
 
   const confirmRestablecer = (e, usuario) => {
     e.preventDefault();
     setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
+    setResClave(true)
   };
 
   const toggleModal = () => {
@@ -130,38 +135,38 @@ const Usuarios = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <Button
+            <PButton
               tooltip="Editar"
               tooltipOptions={{ position: "top" }}
               className="p-button-rounded p-mr-2"
               onClick={(e) => editarUsuario(e, rowData.id_usuario)}
             >
               {Edit_Icono}
-            </Button>
+            </PButton>
           )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-            <Button
+            <PButton
               tooltip="Eliminar"
               className="p-button-rounded p-button-danger p-mr-2"
               tooltipOptions={{ position: "top" }}
               onClick={(e) => modalEliminarUsuario(e, rowData)}
             >
               {Trash_Icono}
-            </Button>
+            </PButton>
           )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
         ).length > 0 && (
-            <Button
+            <PButton
               tooltip="Restablecer"
               className="p-button-rounded p-button-info"
               tooltipOptions={{ position: "top" }}
               onClick={(e) => confirmRestablecer(e, rowData)}
             >
               {Key_Icono}
-            </Button>
+            </PButton>
           )}
       </div>
     );
@@ -173,7 +178,7 @@ const Usuarios = () => {
         <Toast ref={toast} />
 
         {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />}
-        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRestablecerUsuario(usuarioState.id_usuario, e)} />}
+        {verEliminarRestaurar && <EliminarRestaurar tipo={resClave ? 'RESTABLECER_CLAVE' : 'ELIMINAR'} funcion={e => resClave ? restablecerUsuarioProvider(usuarioState.id_usuario, e) : eliminarRestablecerUsuario(usuarioState.id_usuario, e)} />}
 
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
@@ -185,24 +190,24 @@ const Usuarios = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-              <button
-                className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-                onClick={(e) => setModalVisible(true, e)}
+              <Button
+                tipo={'PRINCIPAL'}
+                funcion={(e) => setModalVisible(true, e)}
               >
                 <i className="pi pi-plus mx-2 font-medium"></i>
                 Agregar
-              </button>
+              </Button>
             )}
           {permisosUsuario.filter(
             (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
           ).length > 0 && (
               <div className="h-full flex justify-center items-center">
-                <Link
-                  className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-                  to="/configuracion/usuarios/inactivos"
+                <BLink
+                  tipo={'INACTIVOS'}
+                  url="/configuracion/usuarios/inactivos"
                 >
                   Inactivos
-                </Link>
+                </BLink>
               </div>
             )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">

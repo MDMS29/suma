@@ -77,7 +77,7 @@ const RolesProvider = ({ children }) => {
     try {
       const { data } = await conexionCliente.post('/roles', formData, config)
       if (data?.error) {
-        setAlerta({ error: false, show: true, message: data.message })
+        setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -88,7 +88,7 @@ const RolesProvider = ({ children }) => {
       return true
 
     } catch (error) {
-      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setAlerta({ error: true, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
@@ -113,7 +113,7 @@ const RolesProvider = ({ children }) => {
     try {
       const { data } = await conexionCliente(`roles/${id}`, config)
       if (data?.error) {
-        setAlerta({ error: false, show: true, message: data.message })
+        setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -122,7 +122,7 @@ const RolesProvider = ({ children }) => {
       return
 
     } catch (error) {
-      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setAlerta({ error: true, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
@@ -146,7 +146,7 @@ const RolesProvider = ({ children }) => {
     try {
       const { data } = await conexionCliente.patch(`/roles/${formData.id_rol}`, formData, config)
       if (data?.error) {
-        setAlerta({ error: false, show: true, message: data.message })
+        setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -159,7 +159,7 @@ const RolesProvider = ({ children }) => {
       return true
 
     } catch (error) {
-      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setAlerta({ error: true, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
@@ -185,7 +185,7 @@ const RolesProvider = ({ children }) => {
       const { data } = await conexionCliente.delete(`/roles/${id}?estado=${estado}`, config)
 
       if (data?.error) {
-        setAlerta({ error: false, show: true, message: data.message })
+        setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -199,7 +199,7 @@ const RolesProvider = ({ children }) => {
       return true
 
     } catch (error) {
-      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setAlerta({ error: true, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
