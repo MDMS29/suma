@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
 import UsuarioService from '../services/Usuario.service';
-import { EstadosTablas, GenerarLlavesSecretas, _ParseClave, _ParseCorreo } from '../validations/utils';
+import { EstadosTablas, Generar_Llaves_Secretas, _Parse_Clave, _Parse_Correo } from '../validations/utils';
 import { UsuarioLogin } from '../validations/Types';
 import { UsusarioSchema } from '../validations/ValidacionesZod';
 import { transporter } from '../../config/mailer';
 
 export default class UsuarioController {
-
-    public async AutenticarUsuario(req: Request, res: Response) {
+    public async Autenticar_Usuario(req: Request, res: Response) {
         //TOMAR LA INFORMACIÓN DEL USUARIO ENVIADO
         const { usuario, clave, captcha }: UsuarioLogin = req.body
         //VERIFICACIÓN DEL CAPTCHA
@@ -16,15 +15,15 @@ export default class UsuarioController {
         }
         try {
             //ORGANIZAR INFORMACIÓN CLAVE PARA LA AUTENTICACIÓN
-            const UsuarioLogin: Omit<UsuarioLogin, 'captcha'> = {
-                usuario: _ParseCorreo(usuario),
-                clave: _ParseClave(clave)
+            const usuario_login: Omit<UsuarioLogin, 'captcha'> = {
+                usuario: _Parse_Correo(usuario),
+                clave: _Parse_Clave(clave)
             }
 
-            const _Usuario_Service = new UsuarioService()
+            const usuario_service = new UsuarioService()
 
             //SERVICIO PARA LA AUTENTICACIÓN
-            const val = await _Usuario_Service.AutenticarUsuario(UsuarioLogin)
+            const val = await usuario_service.Autenticar_Usuario(usuario_login)
             // console.log(val)
             //VERFICICARIÓN DE DATOS RETORNADOS
             if (!val) {
@@ -41,7 +40,7 @@ export default class UsuarioController {
         }
     }
 
-    public async ObtenerUsuarios(req: Request, res: Response) {
+    public async Obtener_Usuarios(req: Request, res: Response) {
         const { usuario } = req//TOMAR LA INFORMACION DEL MIDDLEWARE
         // const { estado } = req.body
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
@@ -50,9 +49,9 @@ export default class UsuarioController {
         }
 
         try {
-            const _Usuario_Service = new UsuarioService()
+            const usuario_service = new UsuarioService()
             //SERVICIO PARA OBTENER LOS USUARIOS
-            const respuesta = await _Usuario_Service.ObtenerUsuarios(estado)
+            const respuesta = await usuario_service.Obtener_Usuarios(estado)
             if (!respuesta) {
                 return res.status(200).json({ error: true, message: 'No se han encontrado usuarios activos' }) //!ERROR
             }
@@ -64,7 +63,7 @@ export default class UsuarioController {
         }
     }
 
-    public async PerfilUsuario(req: Request, res: Response) {
+    public async Perfil_Usuario(req: Request, res: Response) {
         const { usuario } = req //TOMAR LA INFORMACION DEL MIDDLEWARE
         if (!usuario.id_usuario) {
             return res.status(401).send({ error: true, message: 'Inicie sesion para continuar' })
@@ -72,13 +71,13 @@ export default class UsuarioController {
         return res.status(200).json(usuario) //ENVIAR LA INFORMACION DEL MIDDLEWARE
     }
 
-    public async BuscarUsuario(req: Request, res: Response) {
+    public async Buscar_Usuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER LA ID DEL USUARIO POR PARAMETROS
 
         try {
-            const _Usuario_Service = new UsuarioService()
+            const usuario_service = new UsuarioService()
             if (id_usuario) { //VALIDAR ID
-                const respuesta = await _Usuario_Service.BuscarUsuario(+id_usuario, 'param') //INVOCAR LA FUNCION PARA BUSCAR EL USUARIO
+                const respuesta = await usuario_service.Buscar_Usuario(+id_usuario, 'param') //INVOCAR LA FUNCION PARA BUSCAR EL USUARIO
                 if (!respuesta) { //VALIDAR SI NO HAY RESPUESTA
                     return res.status(404).json({ error: true, message: 'No se ha encontrado al usuario' }) //!ERROR
                 }
@@ -92,7 +91,7 @@ export default class UsuarioController {
         }
     }
 
-    public async CrearUsuario(req: Request, res: Response) {
+    public async Crear_Usuario(req: Request, res: Response) {
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!ERROR
         }
@@ -102,8 +101,8 @@ export default class UsuarioController {
             return res.status(400).json({ error: true, message: result.error.issues }) //!ERROR
         }
         try {
-            const _Usuario_Service = new UsuarioService()
-            const respuesta = await _Usuario_Service.InsertarUsuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA INSERTAR EL USUARIO
+            const usuario_service = new UsuarioService()
+            const respuesta = await usuario_service.Insertar_Usuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA INSERTAR EL USUARIO
             if (respuesta.error) { //SI LA RESPUESTA LLEGA CORRECTAMENTE
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -124,7 +123,7 @@ export default class UsuarioController {
 
     }
 
-    public async EditarUsuario(req: Request, res: Response) {
+    public async Editar_Usuario(req: Request, res: Response) {
         const { perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO POR PARAMETROS
         console.log(req.body)
@@ -148,20 +147,20 @@ export default class UsuarioController {
         }
 
         try {
-            const _Usuario_Service = new UsuarioService()
-            const respuesta: any = await _Usuario_Service.EditarUsuario(req.body, req.usuario?.usuario) //INVOCAR FUNCION PARA EDITAR EL USUARIO
+            const usuario_service = new UsuarioService()
+            const respuesta: any = await usuario_service.Editar_Usuario(req.body, req.usuario?.usuario) //INVOCAR FUNCION PARA EDITAR EL USUARIO
             if (respuesta?.error) { //VALIDAR SI HAY UN ERROR
                 return res.status(400).json(respuesta) //!ERROR
             }
-            const perfilesEditados: any = await _Usuario_Service.EditarPerfilesUsuario(perfiles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
+            const perfilesEditados: any = await usuario_service.Editar_Perfiles_Usuario(perfiles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
             if (perfilesEditados?.error) { //VALIDAR SI HAY UN ERROR
                 return res.status(400).json(perfilesEditados) //!ERROR
             }
-            const permisoEditado = await _Usuario_Service.EditarPermisosUsuario(roles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
+            const permisoEditado = await usuario_service.Editar_Permisos_Usuario(roles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
             if (permisoEditado?.error) {//VALIDAR SI HAY UN ERROR
                 return res.status(400).json(permisoEditado) //!ERROR
             }
-            const usuarioEditado = await _Usuario_Service.BuscarUsuario(+id_usuario, 'param')
+            const usuarioEditado = await usuario_service.Buscar_Usuario(+id_usuario, 'param')
             if (!usuarioEditado) {//VALIDAR SI HAY UN ERROR
                 return res.status(400).json({ error: true, message: 'Usuario no encontrado' })
             }
@@ -172,7 +171,7 @@ export default class UsuarioController {
         }
     }
 
-    public async CambiarEstadoUsuario(req: Request, res: Response) {
+    public async Cambiar_Estado_Usuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
         let { estado } = req.query as { estado: string }//OBTENER EL ESTADO QUE TENDRA EL USUARIO
 
@@ -194,8 +193,8 @@ export default class UsuarioController {
             // }
         }
         try {
-            const _Usuario_Service = new UsuarioService()
-            const busqueda = await _Usuario_Service.CambiarEstadoUsuario({ usuario: +id_usuario, estado: estado }) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
+            const usuario_service = new UsuarioService()
+            const busqueda = await usuario_service.Cambiar_Estado_Usuario({ usuario: +id_usuario, estado: estado }) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
             if (busqueda?.error) { //VALIDAR SI HAY ALGUN ERROR
                 return res.status(400).json(busqueda) //!ERROR
             }
@@ -209,7 +208,7 @@ export default class UsuarioController {
         }
     }
 
-    public async CambiarClaveUsuario(req: Request, res: Response) {
+    public async Cambiar_Clave_Usuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
 
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
@@ -220,12 +219,12 @@ export default class UsuarioController {
         }
 
         try {
-            const _Usuario_Service = new UsuarioService()
-            let clave = GenerarLlavesSecretas()
+            const usuario_service = new UsuarioService()
+            let clave = Generar_Llaves_Secretas()
             if (clave === '') {
                 return res.status(400).json({ error: true, message: 'Error al generar clave' }) //!ERROR
             }
-            const Usuario_Change = await _Usuario_Service.CambiarClaveUsuario(+id_usuario, clave, true)
+            const Usuario_Change = await usuario_service.Cambiar_Clave_Usuario(+id_usuario, clave, true)
             if (Usuario_Change.error) {
                 return res.status(400).json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
@@ -262,7 +261,7 @@ export default class UsuarioController {
         }
     }
 
-    public async ResetearClaveUsuario(req: Request, res: Response) {
+    public async Resetear_Clave_Usuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
         const { clave } = req.body //OBTENER LA NUEVA CLAVE DEL USUARIO
 
@@ -277,8 +276,8 @@ export default class UsuarioController {
         }
 
         try {
-            const _Usuario_Service = new UsuarioService()
-            const Usuario_Change = await _Usuario_Service.CambiarClaveUsuario(+id_usuario, clave, false)
+            const usuario_service = new UsuarioService()
+            const Usuario_Change = await usuario_service.Cambiar_Clave_Usuario(+id_usuario, clave, false)
             if (Usuario_Change.error) {
                 return res.status(400).json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }

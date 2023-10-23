@@ -9,9 +9,10 @@ exports._PerfilesRouter = (0, express_1.Router)();
 //INICIALIZAR CONTROLADOR DE PERFIL
 const PerfilController = new PerfilController_1._PerfilController();
 exports._PerfilesRouter.route('/')
-    .get(Autorizacion_1._Autorizacion, PerfilController.ObtenerPerfiles) //OBTENER TODOS LOS PERFILES
-    .post(Autorizacion_1._Autorizacion, PerfilController.InsertarPerfil); //INSERTAR PERFIL
-exports._PerfilesRouter.post('/modulos', Autorizacion_1._Autorizacion, PerfilController.ObtenerModulosPerfiles); // OBTENER LOS MODULOS DE LOS PERFILES
+    .get(Autorizacion_1._Autorizacion, PerfilController.Obtener_Perfiles) //OBTENER TODOS LOS PERFILES
+    .post(Autorizacion_1._Autorizacion, PerfilController.Insertar_Perfil); //INSERTAR PERFIL
+exports._PerfilesRouter.post('/modulos', Autorizacion_1._Autorizacion, PerfilController.Obtener_Modulos_Perfiles); // OBTENER LOS MODULOS DE LOS PERFILES
 exports._PerfilesRouter.route('/:id_perfil')
-    .patch(Autorizacion_1._Autorizacion, PerfilController.EditarPerfil) //EDITAR PERFIL SEGUN SU ID
-    .delete(Autorizacion_1._Autorizacion, PerfilController.CambiarEstadoPerfil); //CAMBIAR ESTADO DEL PERFIL POR ID
+    .get(Autorizacion_1._Autorizacion, PerfilController.Buscar_Perfil)
+    .patch(Autorizacion_1._Autorizacion, PerfilController.Editar_Perfil) //EDITAR PERFIL SEGUN SU ID
+    .delete(Autorizacion_1._Autorizacion, PerfilController.Cambiar_Estado_Perfil); //CAMBIAR ESTADO DEL PERFIL POR ID

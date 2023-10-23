@@ -1,7 +1,7 @@
 import express, { NextFunction, Response } from 'express';
 import cors from 'cors';
 import logger from 'morgan'
-import { _Usuario_Router } from './src/routes/UsuarioRoutes';
+import { _UsuarioRouter } from './src/routes/UsuarioRoutes';
 import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
 import { _ModulosRouter } from './src/routes/ModulosRoutes';
 import { _RolesRouter } from './src/routes/RolesRoutes';
@@ -40,10 +40,9 @@ app.use(async (__, _, next: NextFunction) => {
     }
 });
 
-
 //DEFINIR RUTA DEL USUARIO
 // Crear una instancia del enrutador de usuario
-app.use('/suma/api/usuarios', _Usuario_Router);
+app.use('/suma/api/usuarios', _UsuarioRouter);
 
 //DEFINIR RUTA DE LOS PERFILES
 app.use('/suma/api/perfiles', _PerfilesRouter)
@@ -58,7 +57,6 @@ app.use('/suma/api/roles', _RolesRouter)
 app.use((_, res: Response) => {
     res.status(405).send({ error: true, message: "No se ha encontrado la request" });
 })
-
 
 const PORT = process.env.PORT ?? 3000;
 

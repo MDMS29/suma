@@ -7,6 +7,7 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev --inspect -- index.ts",
+    "dev:nodemon": "nodemon -- index.ts",
     "start": "node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +22,8 @@
     "@types/morgan": "^1.9.6",
     "@types/nodemailer": "^6.4.11",
     "@types/pg": "^8.10.2",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "ts-standard": "^12.0.2",
     "typescript": "^5.2.2"

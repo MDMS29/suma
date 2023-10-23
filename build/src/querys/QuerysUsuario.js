@@ -13,7 +13,7 @@ const db_1 = require("../../config/db");
 const DaoUsuario_1 = require("../dao/DaoUsuario");
 let bcrypt = require('bcrypt');
 class QueryUsuario {
-    AutenticarUsuario({ usuario, clave }) {
+    Autenticar_Usuario({ usuario, clave }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
@@ -33,7 +33,7 @@ class QueryUsuario {
             }
         });
     }
-    ModulosUsuario(id_usuario) {
+    Modulos_Usuario(id_usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //FUNCTIÓN ALMACENADA PARA BUSCAR LOS MODULOS DEL USUARIO POR EL ID DEL USUARIO
@@ -46,7 +46,7 @@ class QueryUsuario {
             }
         });
     }
-    MenuModulos(id_usuario, id_modulo) {
+    Menu_Modulos(id_usuario, id_modulo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //FUNCIÓN ALMACENADA PARA TOMAR LOS MENUS DE CADA UNO DE LOS MODULOS DEL USUARIO
@@ -59,7 +59,7 @@ class QueryUsuario {
             }
         });
     }
-    PermisosModulo(id_modulo, id_usuario) {
+    Permisos_Modulo(id_modulo, id_usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //FUNCIÓN ALMACENADA PARA TOMAR LOS ACCIONES PERMITIDAS PARA CADA UNO DE LOS MODULOS DEL USUARIO
@@ -72,7 +72,7 @@ class QueryUsuario {
             }
         });
     }
-    ObtenerUsuarios(estado) {
+    Obtener_Usuarios(estado) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //FUNCIÓN ALMACENADA PARA TOMAR LOS USUARIOS SEGUN UN ESTADO
@@ -85,7 +85,7 @@ class QueryUsuario {
             }
         });
     }
-    BuscarUsuarioID(id) {
+    Buscar_Usuario_ID(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU ID
@@ -98,7 +98,7 @@ class QueryUsuario {
             }
         });
     }
-    BuscarUsuarioCorreo(usuario = '', correo = '') {
+    Buscar_Usuario_Correo(usuario = '', correo = '') {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (usuario !== '' && correo !== '') {
@@ -121,7 +121,7 @@ class QueryUsuario {
             }
         });
     }
-    InsertarUsuario(RequestUsuario, UsuarioCreador) {
+    Insertar_Usuario(RequestUsuario, UsuarioCreador) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre_completo, usuario, clave, correo } = RequestUsuario;
             try {
@@ -138,7 +138,7 @@ class QueryUsuario {
             }
         });
     }
-    InsertarPerfilUsuario(id_usuario, perfil) {
+    Insertar_Perfil_Usuario(id_usuario, perfil) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //PROCESO ALMACENADO PARA INSERTAR LOS PERFILES DEL USUARIO 
@@ -151,7 +151,7 @@ class QueryUsuario {
             }
         });
     }
-    InsertarRolModulo(id_usuario, rol) {
+    Insertar_Rol_Modulo(id_usuario, rol) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //PROCESO ALMACENADO PARA INSERTAR LOS ROLES DEL USUARIO 
@@ -164,7 +164,7 @@ class QueryUsuario {
             }
         });
     }
-    EditarUsuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador) {
+    Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield db_1.client.query(DaoUsuario_1._EditarUsuario, [id_usuario, Nombre_Editado, Usuario_Editado, Clave_Editada, UsuarioModificador, Correo_Editado]);
@@ -176,7 +176,7 @@ class QueryUsuario {
             }
         });
     }
-    BuscarPerfilUsuario({ id_perfil }, usuario) {
+    Buscar_Perfil_Usuario(id_perfil, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield db_1.client.query(DaoUsuario_1._BuscarPerfilUsuario, [usuario, id_perfil]);
@@ -188,7 +188,7 @@ class QueryUsuario {
             }
         });
     }
-    EditarPerfilUsuario(id_perfil, id_estado, usuario) {
+    Editar_Perfil_Usuario(id_perfil, id_estado, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield db_1.client.query(DaoUsuario_1._EditarPerfilUsuario, [usuario, id_perfil, id_estado]);
@@ -200,7 +200,7 @@ class QueryUsuario {
             }
         });
     }
-    BuscarRolUsuario({ id_rol }, usuario) {
+    Buscar_Rol_Usuario(id_rol, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield db_1.client.query(DaoUsuario_1._BuscarRolUsuario, [usuario, id_rol]);
@@ -212,11 +212,11 @@ class QueryUsuario {
             }
         });
     }
-    EditarRolUsuario(id_rol, id_estado, usuario) {
+    Editar_Rol_Usuario(id_rol, id_estado, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield db_1.client.query(DaoUsuario_1._EditarRolUsuario, [usuario, id_rol, id_estado]);
-                return result.rows;
+                return result.rowCount;
             }
             catch (error) {
                 console.log(error);
@@ -224,7 +224,7 @@ class QueryUsuario {
             }
         });
     }
-    CambiarEstadoUsuario(usuario, estado) {
+    Cambiar_Estado_Usuario(usuario, estado) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield db_1.client.query(DaoUsuario_1._CambiarEstadoUsuario, [usuario, estado]);
@@ -236,10 +236,10 @@ class QueryUsuario {
             }
         });
     }
-    CambiarClaveUsuario(id_usuario, clave) {
+    Cambiar_Clave_Usuario(id_usuario, clave, cm_clave) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield db_1.client.query(DaoUsuario_1._CambiarClaveUsuario, [id_usuario, clave]);
+                const result = yield db_1.client.query(DaoUsuario_1._CambiarClaveUsuario, [id_usuario, clave, cm_clave]);
                 return result;
             }
             catch (error) {

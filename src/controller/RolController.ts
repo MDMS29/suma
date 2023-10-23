@@ -4,7 +4,7 @@ import { EstadosTablas } from "../validations/utils";
 
 export class _RolController {
 
-    public async ObtenerRoles(req: Request, res: Response) {
+    public async Obtener_Roles(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -16,7 +16,7 @@ export class _RolController {
 
         try {
             const _RolService = new RolService()
-            const respuesta = await _RolService.ObtenerRoles(+estado)
+            const respuesta = await _RolService.Obtener_Roles(+estado)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -28,7 +28,7 @@ export class _RolController {
         }
     }
 
-    public async InsertarRol(req: Request, res: Response) {
+    public async Insertar_Rol(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { nombre, descripcion } = req.body
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -43,7 +43,7 @@ export class _RolController {
 
         try {
             const _RolService = new RolService()
-            const respuesta = await _RolService.InsertarRol(nombre, descripcion, usuario?.usuario)
+            const respuesta = await _RolService.Insertar_Rol(nombre, descripcion, usuario?.usuario)
 
             if (respuesta?.error) {
                 return res.status(404).json(respuesta)
@@ -56,7 +56,7 @@ export class _RolController {
         }
     }
 
-    public async BuscarRol(req: Request, res: Response) {
+    public async Buscar_Rol(req: Request, res: Response) {
         const { id_rol } = req.params
         const { usuario } = req
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -68,7 +68,7 @@ export class _RolController {
         try {
             const _RolService = new RolService()
 
-            const respuesta = await _RolService.BuscarRol(+id_rol)
+            const respuesta = await _RolService.Buscar_Rol(+id_rol)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -79,7 +79,7 @@ export class _RolController {
         }
     }
 
-    public async EditarRol(req: Request, res: Response) {
+    public async Editar_Rol(req: Request, res: Response) {
         const { usuario } = req
         const { id_rol } = req.params
         const { nombre, descripcion } = req.body
@@ -104,12 +104,12 @@ export class _RolController {
         try {
             const _RolService = new RolService()
 
-            const respuesta = await _RolService.EditarRol(+id_rol, nombre, descripcion, usuario.usuario)
+            const respuesta = await _RolService.Editar_Rol(+id_rol, nombre, descripcion, usuario.usuario)
             if (respuesta.error) {
                 return res.status(404).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await _RolService.BuscarRol(+id_rol)
+            const response = await _RolService.Buscar_Rol(+id_rol)
             if (!response) {
                 return res.status(404).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
             }
@@ -120,7 +120,7 @@ export class _RolController {
         }
     }
 
-    public async CambiarEstadoRol(req: Request, res: Response) {
+    public async Cambiar_Estado_Rol(req: Request, res: Response) {
         const { usuario } = req
         const { id_rol } = req.params
         const { estado } = req.query as { estado: string }
@@ -136,12 +136,12 @@ export class _RolController {
 
         try {
             const _RolService = new RolService()
-            const respuesta = await _RolService.CambiarEstadoRol(+id_rol, +estado)
+            const respuesta = await _RolService.Cambiar_Estado_Rol(+id_rol, +estado)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
 
-            return res.json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el rol' : 'Se ha desactivado el rol' }) //*SUCCESSFUL
+            return res.json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el rol' : 'Se ha desactivado el rol' }) //*SUCCESSFUL
 
         } catch (error) {
             console.log(error)

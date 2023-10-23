@@ -8,7 +8,7 @@ export class RolService {
         this._Query_Rol = new QueryRol();
     }
 
-    public async ObtenerRoles(estado: number): Promise<any> {
+    public async Obtener_Roles(estado: number): Promise<any> {
         if (!estado) {
             return { error: true, message: 'Estado no definido' } //!ERROR
         }
@@ -26,22 +26,22 @@ export class RolService {
         }
     }
 
-    public async InsertarRol(nombre: string, descripcion: string, usuario_creacion: string) {
+    public async Insertar_Rol(nombre: string, descripcion: string, usuario_creacion: string) {
         try {
             //VALIDAR SI EL ROL EXISTE
-            const Brol: any = await this._Query_Rol.BuscarRolNombre(nombre)
+            const Brol: any = await this._Query_Rol.Buscar_Rol_Nombre(nombre)
             if (Brol?.length > 0) {
                 return { error: true, message: 'Ya existe este rol' } //!ERROR
             }
 
             //INVOCAR FUNCION PARA INSERTAR ROL
-            const respuesta = await this._Query_Rol.InsertarRol(nombre, descripcion, usuario_creacion)
+            const respuesta = await this._Query_Rol.Insertar_Rol(nombre, descripcion, usuario_creacion)
             if (!respuesta) {
                 return { error: true, message: 'No se ha podido crear el rol' } //!ERROR
             }
 
             //INVOCAR FUNCION PARA BUSCAR EL ROL POR ID
-            const rol = await this._Query_Rol.BuscarRolID(respuesta[0].id_rol)
+            const rol = await this._Query_Rol.Buscar_Rol_ID(respuesta[0].id_rol)
             if (!rol) {
                 return { error: true, message: 'No se ha encontrado el rol' } //!ERROR
             }
@@ -53,9 +53,9 @@ export class RolService {
         }
     }
 
-    public async BuscarRol(id_rol: number): Promise<any> {
+    public async Buscar_Rol(id_rol: number): Promise<any> {
         try {
-            const rol = await this._Query_Rol.BuscarRolID(id_rol)
+            const rol = await this._Query_Rol.Buscar_Rol_ID(id_rol)
             if (!rol) {
                 return { error: true, message: 'No se ha encontrado este rol' } //!ERROR
             }
@@ -66,11 +66,11 @@ export class RolService {
         }
     }
 
-    public async EditarRol(id_rol: number, nombre: string, descripcion: string, usuario_modificacion: string) {
+    public async Editar_Rol(id_rol: number, nombre: string, descripcion: string, usuario_modificacion: string) {
         let nombre_editado: string
         let descripcion_editado: string
         try {
-            const respuesta: any = await this._Query_Rol.BuscarRolID(id_rol)
+            const respuesta: any = await this._Query_Rol.Buscar_Rol_ID(id_rol)
             if (respuesta[0]?.nombre === nombre) {
                 nombre_editado = respuesta[0]?.nombre
             } else {
@@ -83,7 +83,7 @@ export class RolService {
                 descripcion_editado = descripcion
             }
 
-            const res = await this._Query_Rol.EditarRol(id_rol, nombre_editado, descripcion_editado, usuario_modificacion)
+            const res = await this._Query_Rol.Editar_Rol(id_rol, nombre_editado, descripcion_editado, usuario_modificacion)
             if (res?.rowCount != 1) {
                 return { error: true, message: 'Error al actualizar el rol' } //!ERROR
             }
@@ -95,10 +95,10 @@ export class RolService {
         }
     }
 
-    public async CambiarEstadoRol(id_rol: number, estado: number) {
+    public async Cambiar_Estado_Rol(id_rol: number, estado: number) {
         try {
 
-            const rol_editado = await this._Query_Rol.CambiarEstadoRol(id_rol, estado);
+            const rol_editado = await this._Query_Rol.Cambiar_Estado_Rol(id_rol, estado);
             if (!rol_editado?.rowCount) {
                 return { error: true, message: 'Error al editar el rol' } //!ERROR
             }

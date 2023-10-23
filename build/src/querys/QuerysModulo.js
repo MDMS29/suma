@@ -10,12 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../../config/db");
-const DaoPerfil_1 = require("../dao/DaoPerfil");
-class QueryPerfil {
-    Obtener_Perfiles(estado) {
+const DaoModulo_1 = require("../dao/DaoModulo");
+class QueryModulo {
+    Obtener_Modulos(estado) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let result = yield db_1.client.query(DaoPerfil_1._ObtenerPerfiles, [estado]);
+                const result = yield db_1.client.query(DaoModulo_1._ObtenerModulos, [estado]);
                 return result.rows;
             }
             catch (error) {
@@ -24,46 +24,10 @@ class QueryPerfil {
             }
         });
     }
-    Modulos_Perfil(id_perfil) {
+    Buscar_Modulo_Nombre(nombre_modulo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let result = yield db_1.client.query(DaoPerfil_1._ObtenerModulosPerfil, [id_perfil]);
-                return result.rows;
-            }
-            catch (error) {
-                console.log(error);
-                return;
-            }
-        });
-    }
-    Insertar_Perfil({ nombre_perfil, usuario_creacion }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield db_1.client.query(DaoPerfil_1._InsertarPerfil, [nombre_perfil, usuario_creacion]);
-                return result.rows;
-            }
-            catch (error) {
-                console.log(error);
-                return;
-            }
-        });
-    }
-    Insertar_Modulo_Perfil(id_perfil, id_modulo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield db_1.client.query(DaoPerfil_1._InsertarModuloPerfil, [id_perfil, id_modulo]);
-                return result;
-            }
-            catch (error) {
-                console.log(error);
-                return;
-            }
-        });
-    }
-    Buscar_Perfil_ID(id_perfil) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield db_1.client.query(DaoPerfil_1._BuscarPerfilID, [id_perfil]);
+                const result = yield db_1.client.query(DaoModulo_1._BuscarModuloNombre, [nombre_modulo]);
                 return result.rows[0];
             }
             catch (error) {
@@ -72,12 +36,11 @@ class QueryPerfil {
             }
         });
     }
-    Buscar_Perfil_Nombre(nombre_perfil) {
+    Buscar_Codigo_Modulo(codigo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield db_1.client.query(DaoPerfil_1._ObtenerPerfiles, [1]);
-                const repetido = result.rows.filter(x => x.nombre_perfil.toLowerCase() === nombre_perfil.toLowerCase());
-                return repetido;
+                const result = yield db_1.client.query(DaoModulo_1._BuscarCodigoModulo, [codigo]);
+                return result.rows[0];
             }
             catch (error) {
                 console.log(error);
@@ -85,10 +48,22 @@ class QueryPerfil {
             }
         });
     }
-    Permisos_Modulos_Perfil(id_modulo) {
+    Buscar_Modulo_ID(id_modulo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield db_1.client.query(DaoPerfil_1._PermisosModulosPerfil, [id_modulo]);
+                const result = yield db_1.client.query(DaoModulo_1._BuscarModuloID, [id_modulo]);
+                return result.rows[0];
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+        });
+    }
+    Obtener_Roles_Modulo(id_modulo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield db_1.client.query(DaoModulo_1._ObtenerRolesModulo, [id_modulo]);
                 return result.rows;
             }
             catch (error) {
@@ -97,10 +72,48 @@ class QueryPerfil {
             }
         });
     }
-    Editar_Perfil({ id_perfil, nombre_editado, usuario_creacion }) {
+    Buscar_Icono_Modulo(id_modulo) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield db_1.client.query(DaoPerfil_1._EditarPerfil, [id_perfil, nombre_editado, usuario_creacion]);
+                const result = yield db_1.client.query(DaoModulo_1._BuscarIconoModulo, [id_modulo]);
+                return result.rows[0];
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+        });
+    }
+    Insertar_Modulo(nombre_modulo, usuario_creador, codigo, icono) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield db_1.client.query(DaoModulo_1._InsertarModulo, [codigo, nombre_modulo, icono, usuario_creador]);
+                return result.rows[0];
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+        });
+    }
+    Insertar_Roles_Modulo(id_rol, id_modulo, usuario_creador) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let ultimo_id = yield db_1.client.query(DaoModulo_1._ObtenerUltimoID);
+                ultimo_id = ultimo_id.rows[0].id_rol_modulo + 1;
+                const result = yield db_1.client.query(DaoModulo_1._InsertarRolModulo, [ultimo_id, id_modulo, id_rol, usuario_creador]);
+                return result.rowCount;
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+        });
+    }
+    Editar_Modulo(id_modulo, nuevoModulo, usuario_modi) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield db_1.client.query(DaoModulo_1._EditarModulo, [id_modulo, nuevoModulo.cod_modulo, nuevoModulo.nombre_modulo, nuevoModulo.icono, usuario_modi]);
                 return result;
             }
             catch (error) {
@@ -109,10 +122,22 @@ class QueryPerfil {
             }
         });
     }
-    Buscar_Modulo_Perfil(id_perfil, id_modulo) {
+    Cambiar_Estado_Modulo(id_modulo, estado) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield db_1.client.query(DaoPerfil_1._BuscarModulosPerfil, [id_perfil, id_modulo]);
+                const result = yield db_1.client.query(DaoModulo_1._CambiarEstadoModulo, [id_modulo, estado]);
+                return result;
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+        });
+    }
+    Buscar_Rol_Modulo(id_modulo, rol) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield db_1.client.query(DaoModulo_1._BuscarRolModulo, [id_modulo, rol]);
                 return result.rows;
             }
             catch (error) {
@@ -121,23 +146,11 @@ class QueryPerfil {
             }
         });
     }
-    Editar_Modulo_Perfil(id_perfil, modulo) {
+    Editar_Rol_Modulo(rol_modulo, estado) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield db_1.client.query(DaoPerfil_1._EditarModuloPerfil, [id_perfil, modulo.id_modulo, modulo.id_estado]);
-                return result;
-            }
-            catch (error) {
-                console.log(error);
-                return;
-            }
-        });
-    }
-    Cambiar_Estado_Perfil(id_perfil, estado) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield db_1.client.query(DaoPerfil_1._CambiarEstadoPerfil, [id_perfil, estado]);
-                return result;
+                const result = yield db_1.client.query(DaoModulo_1._EditarRolModulo, [rol_modulo, estado]);
+                return result.rowCount;
             }
             catch (error) {
                 console.log(error);
@@ -146,4 +159,4 @@ class QueryPerfil {
         });
     }
 }
-exports.default = QueryPerfil;
+exports.default = QueryModulo;

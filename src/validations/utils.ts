@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 
-export const _ParseCorreo = (correo: any): string => {
+export const _Parse_Correo = (correo: any): string => {
     if (!EsString(correo)) {
         throw new Error("¡Correo Invalido!")
     }
     return correo;
 }
-export const _ParseClave = (clave: any): string => {
+export const _Parse_Clave = (clave: any): string => {
     if (!EsString(clave)) {
         throw new Error("¡Clave Invalida!")
     }
@@ -32,7 +32,7 @@ export const EstadosTablas = {
     ESTADO_INACTIVO: 2
 }
 
-export const GenerarLlavesSecretas = () => {
+export const Generar_Llaves_Secretas = () => {
     const random = Math.random().toString(15).substr(2);
     const fecha = Date.now().toString(15)
     return random + fecha

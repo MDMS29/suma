@@ -18,7 +18,7 @@ const Usuario_service_1 = __importDefault(require("../services/Usuario.service")
 const _Autorizacion = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        const ServiceUsuario = new Usuario_service_1.default();
+        const service_usuario = new Usuario_service_1.default();
         if (!process.env.JWT_SECRET) {
             throw new Error('La variable de entorno JWT_SECRET no está configurada');
         }
@@ -28,11 +28,11 @@ const _Autorizacion = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         }
         try {
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-            const usuario = yield ServiceUsuario.BuscarUsuario(decoded.id, '');
+            const usuario = yield service_usuario.Buscar_Usuario(decoded.id, '');
             if (usuario === undefined) {
                 return res.json({ error: true, message: 'Usuario no encontrado' });
             }
-            req.usuario = usuario[0];
+            req.usuario = usuario;
             return next();
         }
         catch (error) {

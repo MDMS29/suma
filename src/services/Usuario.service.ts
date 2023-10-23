@@ -11,11 +11,11 @@ export default class UsuarioService {
         this._Query_Usuario = new QueryUsuario();
     }
 
-    public async AutenticarUsuario(object: Omit<UsuarioLogin, 'captcha'>) {
+    public async Autenticar_Usuario(object: Omit<UsuarioLogin, 'captcha'>) {
         const { usuario, clave } = object
         //----OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO----
         // Promise<UsuarioLogeado | undefined>
-        const respuesta = await this._Query_Usuario.AutenticarUsuario({ usuario, clave })
+        const respuesta = await this._Query_Usuario.Autenticar_Usuario({ usuario, clave })
         // console.log('service', respuesta)
         if (respuesta) {
             for (const res of respuesta) {
@@ -30,15 +30,15 @@ export default class UsuarioService {
             let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
             respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
             //----CARGAR MODULOS DEL USUARIO----
-            const modulos = await this._Query_Usuario.ModulosUsuario(respuesta[0]?.id_usuario)
+            const modulos = await this._Query_Usuario.Modulos_Usuario(respuesta[0]?.id_usuario)
             if (modulos) {
                 respuesta.modulos = modulos
                 for (const modulo of modulos) {
                     //CARGA DE MENUS DE LOS MODULOS
-                    const response = await this._Query_Usuario.MenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
+                    const response = await this._Query_Usuario.Menu_Modulos(respuesta[0]?.id_usuario, modulo.id_modulo)
                     modulo.menus = response
                     //CARGAR PERMISOS DEL MODULO
-                    const permisos = await this._Query_Usuario.PermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
+                    const permisos = await this._Query_Usuario.Permisos_Modulo(modulo.id_modulo, respuesta[0]?.id_usuario)
                     modulo.permisos = permisos
                 }
             }
@@ -66,14 +66,14 @@ export default class UsuarioService {
         return undefined
     }
 
-    public async ObtenerUsuarios(estado: string) {
+    public async Obtener_Usuarios(estado: string) {
         //VERIFICACIÓN DEL TIPO DE LA VARIABLE
         if (typeof estado === 'number') {
             throw new Error('Error al obtener el estado del usuario') //!ERROR
         }
 
         try {
-            const respuesta = await this._Query_Usuario.ObtenerUsuarios(estado) //INVOCAR FUNCION PARA OBTENER LOS USUARIOS
+            const respuesta = await this._Query_Usuario.Obtener_Usuarios(estado) //INVOCAR FUNCION PARA OBTENER LOS USUARIOS
             if (respuesta) { //VALIDACION SI HAY ALGUNA RESPUESTA
                 return respuesta //RETORNAR LA RESPUESTA
             }
@@ -85,11 +85,11 @@ export default class UsuarioService {
 
     }
 
-    public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
+    public async Insertar_Usuario(RequestUsuario: any, UsuarioCreador: string): Promise<any> {
         const { usuario, correo, clave } = RequestUsuario
 
         //BUSCAR EL USUARIO POR SU USUARIO Y CORREO
-        const respuesta = await this._Query_Usuario.BuscarUsuarioCorreo(usuario, correo)
+        const respuesta = await this._Query_Usuario.Buscar_Usuario_Correo(usuario, correo)
         if (respuesta.length > 0) {
             //SI EL USUARIO YA ESTA REGISTRADO MOSTRAR ERROR
             return { error: true, message: 'Este usuario ya existe' }
@@ -100,21 +100,21 @@ export default class UsuarioService {
             const hash = await bcrypt.hash(clave, saltRounds)
             RequestUsuario.clave = hash
             //FUNCIOÓN PARA REGISTRAR LA INFORMACIÓN PRINCIPAL DEL USUARIO 
-            const respuesta = await this._Query_Usuario.InsertarUsuario(RequestUsuario, UsuarioCreador)
+            const respuesta = await this._Query_Usuario.Insertar_Usuario(RequestUsuario, UsuarioCreador)
             if (respuesta) {
                 for (let perfil of RequestUsuario.perfiles) {
-                    const res = await this._Query_Usuario.InsertarPerfilUsuario(respuesta, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
+                    const res = await this._Query_Usuario.Insertar_Perfil_Usuario(respuesta, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         throw new Error('Error al insertar el perfil') //!ERROR
                     }
                 }
                 for (let rol of RequestUsuario.roles) {
-                    const res = await this._Query_Usuario.InsertarRolModulo(respuesta, rol)// GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
+                    const res = await this._Query_Usuario.Insertar_Rol_Modulo(respuesta, rol)// GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         throw new Error('Error al insertar el rol') //!ERROR
                     }
                 }
-                const data = await this._Query_Usuario.BuscarUsuarioID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
+                const data = await this._Query_Usuario.Buscar_Usuario_ID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
                 return data[0]
             }
             //!ERRORES DE INSERCIÓN A LA BASE DE DATOS
@@ -125,9 +125,9 @@ export default class UsuarioService {
         }
     }
 
-    public async BuscarUsuario(id = 0, p_user = '') {
+    public async Buscar_Usuario(id = 0, p_user = '') {
         if (p_user === 'param' && id !== 0) { //CONDICION SI EL USUARIO VIENE POR PARAMETROS
-            const respuesta = await this._Query_Usuario.BuscarUsuarioID(id) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
+            const respuesta = await this._Query_Usuario.Buscar_Usuario_ID(id) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
             if (respuesta.length <= 0) {
                 return { error: true, message: "No se ha encontado el usuario" } //!ERROR
             }
@@ -144,15 +144,15 @@ export default class UsuarioService {
                 let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
                 respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
                 //----CARGAR MODULOS DEL USUARIO----
-                const modulos = await this._Query_Usuario.ModulosUsuario(respuesta[0]?.id_usuario)
+                const modulos = await this._Query_Usuario.Modulos_Usuario(respuesta[0]?.id_usuario)
                 if (modulos) {
                     respuesta.modulos = modulos
                     for (const modulo of modulos) {
                         //CARGA DE MENUS DE LOS MODULOS
-                        const response = await this._Query_Usuario.MenuModulos(respuesta[0]?.id_usuario, modulo.id_modulo)
+                        const response = await this._Query_Usuario.Menu_Modulos(respuesta[0]?.id_usuario, modulo.id_modulo)
                         modulo.menus = response
                         //CARGAR PERMISOS DEL MODULO
-                        const permisos = await this._Query_Usuario.PermisosModulo(modulo.id_modulo, respuesta[0]?.id_usuario)
+                        const permisos = await this._Query_Usuario.Permisos_Modulo(modulo.id_modulo, respuesta[0]?.id_usuario)
                         modulo.permisos = permisos
                     }
                 }
@@ -178,7 +178,7 @@ export default class UsuarioService {
             }
         }
         if (id !== 0 && p_user == '') { //CONDICION SI EL USUARIO NO VIENE POR PARAMETROS
-            const respuesta = await this._Query_Usuario.BuscarUsuarioID(id) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
+            const respuesta = await this._Query_Usuario.Buscar_Usuario_ID(id) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
             if (respuesta) {
                 for (const res of respuesta) {
                     res.perfiles = {
@@ -209,10 +209,10 @@ export default class UsuarioService {
         return undefined
     }
 
-    public async EditarUsuario(RequestUsuario: any, UsuarioModificador: string) {
+    public async Editar_Usuario(RequestUsuario: any, UsuarioModificador: string) {
         const { id_usuario } = RequestUsuario
         //BUSCAR LA INFORMACIÓN DEL USUARIO        
-        const respuesta = await this._Query_Usuario.BuscarUsuarioID(id_usuario) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
+        const respuesta = await this._Query_Usuario.Buscar_Usuario_ID(id_usuario) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
         if (respuesta.length == 0) { //SI LA RESPUESTA ES VACIA ENVIAR ERROR
             return { error: true, message: "No se ha encontrado el usuario" } //!ERROR
         }
@@ -229,14 +229,14 @@ export default class UsuarioService {
 
             // VERIFICACION PARA EL USUARIO INGRESADO NO ESTE DUPLICADO
             if (Usuario_Editado != usuario) {
-                const usuarioDuplicado = await this._Query_Usuario.BuscarUsuarioCorreo(Usuario_Editado, '') //INVOCAR FUNCION PARA BUSCAR EL USUARIO 
+                const usuarioDuplicado = await this._Query_Usuario.Buscar_Usuario_Correo(Usuario_Editado, '') //INVOCAR FUNCION PARA BUSCAR EL USUARIO 
                 if (usuarioDuplicado.legnth == 0) { //VERIFICAR SI HAY INFORMACION IGUAL 
                     return { error: true, message: "Usuario ya registrado" } //!ERROR
                 }
             }
             // VERIFICACION PARA EL CORREO INGRESADO NO ESTE DUPLICADO
             if (Correo_Editado != correo) {
-                const correoDuplicado = await this._Query_Usuario.BuscarUsuarioCorreo('', Correo_Editado)  //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR EL CORREO
+                const correoDuplicado = await this._Query_Usuario.Buscar_Usuario_Correo('', Correo_Editado)  //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR EL CORREO
                 if (correoDuplicado.legnth == 0) { //VERIFICAR SI HAY INFORMACION IGUAL
                     return { error: true, message: "Correo ya registrado" } //!ERROR
                 }
@@ -256,7 +256,7 @@ export default class UsuarioService {
             }
 
             //INVOCAR FUNCION PARA EDITAR EL USUARIO
-            const result = await this._Query_Usuario.EditarUsuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador)
+            const result = await this._Query_Usuario.Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador)
             return result //RETORNAR EL USUARIO EDITADO
         } catch (error) {
             console.log(error)
@@ -264,19 +264,19 @@ export default class UsuarioService {
         }
     }
 
-    public async EditarPerfilesUsuario(perfiles: any, usuario: number) {
+    public async Editar_Perfiles_Usuario(perfiles: any, usuario: number) {
         // console.log(perfiles)
         try {
             for (let perfil of perfiles) {
-                const perfilExistente: any = await this._Query_Usuario.BuscarPerfilUsuario(perfil.id_perfil, usuario) //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO
+                const perfilExistente: any = await this._Query_Usuario.Buscar_Perfil_Usuario(perfil.id_perfil, usuario) //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO
                 if (perfilExistente.length == 0) {
                     // SI EL PERFIL NO EXISTE LO AGREGARA
-                    const res = await this._Query_Usuario.InsertarPerfilUsuario(usuario, perfil) //INVOCAR FUNCION PARA GUARDAR EL PERFIL DEL USUARIO
+                    const res = await this._Query_Usuario.Insertar_Perfil_Usuario(usuario, perfil) //INVOCAR FUNCION PARA GUARDAR EL PERFIL DEL USUARIO
                     if (!res) {
                         return { error: true, message: 'No se pudo guardar el nuevo perfil' } //!ERROR
                     }
                 } else {
-                    const res = await this._Query_Usuario.EditarPerfilUsuario(perfil.id_perfil, perfil.estado_perfil, usuario) //INVOCAR FUNCION PARA EDITAR EL PERFIL DEL USUARIO
+                    const res = await this._Query_Usuario.Editar_Perfil_Usuario(perfil.id_perfil, perfil.estado_perfil, usuario) //INVOCAR FUNCION PARA EDITAR EL PERFIL DEL USUARIO
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el nuevo perfil' } //!ERROR
                     }
@@ -289,18 +289,18 @@ export default class UsuarioService {
         }
     }
 
-    public async EditarPermisosUsuario(permisos: any, usuario: number) {
+    public async Editar_Permisos_Usuario(permisos: any, usuario: number) {
         try {
             for (let permiso of permisos) {
-                const permisoExistente: any = await this._Query_Usuario.BuscarRolUsuario(permiso.id_rol, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
+                const permisoExistente: any = await this._Query_Usuario.Buscar_Rol_Usuario(permiso.id_rol, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
                 if (permisoExistente.length == 0) { //VERIFICAR SI EL USUARIO TIENE UN ROL
                     // SI EL ESTADO NO EXISTE LO AGREGARA
-                    const res = await this._Query_Usuario.InsertarRolModulo(usuario, permiso) //INVOCAR FUNCION PARA GUARDAR EL ROL DEL USUARIO
+                    const res = await this._Query_Usuario.Insertar_Rol_Modulo(usuario, permiso) //INVOCAR FUNCION PARA GUARDAR EL ROL DEL USUARIO
                     if (!res) {
                         return { error: true, message: 'No se pudo guardar el nuevo permiso' } //!ERROR
                     }
                 } else {//SI EL PERMISO EXISTE EDITARA SU ESTADO
-                    const res = await this._Query_Usuario.EditarRolUsuario(permiso.id_rol, `${permiso.id_estado}`, usuario) //INVOCAR FUNCION PARA EDITAR EL ROL DEL USUARIO
+                    const res = await this._Query_Usuario.Editar_Rol_Usuario(permiso.id_rol, `${permiso.id_estado}`, usuario) //INVOCAR FUNCION PARA EDITAR EL ROL DEL USUARIO
 
                     if (!res) {
                         return { error: true, message: 'No se pudo editar el permiso' } //!ERROR
@@ -314,13 +314,13 @@ export default class UsuarioService {
         }
     }
 
-    public async CambiarEstadoUsuario({ usuario, estado }: { usuario: number; estado: string; }) {
-        const busqueda = await this._Query_Usuario.BuscarUsuarioID(usuario)
+    public async Cambiar_Estado_Usuario({ usuario, estado }: { usuario: number; estado: string; }) {
+        const busqueda = await this._Query_Usuario.Buscar_Usuario_ID(usuario)
         if (busqueda.length <= 0) {
             return { error: true, message: 'No se ha encontrado el usuario' }
         }
         try {
-            const res = await this._Query_Usuario.CambiarEstadoUsuario(usuario, estado)
+            const res = await this._Query_Usuario.Cambiar_Estado_Usuario(usuario, estado)
             if (!res) {
                 return { error: true, message: 'No se pudo cambiar el estado del usuario' }
             }
@@ -331,10 +331,10 @@ export default class UsuarioService {
         return
     }
 
-    public async CambiarClaveUsuario(id_usuario: number, clave: string, cm_clave: boolean) {
+    public async Cambiar_Clave_Usuario(id_usuario: number, clave: string, cm_clave: boolean) {
         let _Nueva_Clave: string
         try {
-            const usuario: any = await this._Query_Usuario.BuscarUsuarioID(id_usuario)
+            const usuario: any = await this._Query_Usuario.Buscar_Usuario_ID(id_usuario)
 
             //SI SE VA A ENVIAR LA CLAVE DEL USUARIO POR CORREO
             if (cm_clave) {
@@ -350,7 +350,7 @@ export default class UsuarioService {
                     _Nueva_Clave = hash
                 }
 
-                const res = await this._Query_Usuario.CambiarClaveUsuario(id_usuario, _Nueva_Clave, cm_clave)
+                const res = await this._Query_Usuario.Cambiar_Clave_Usuario(id_usuario, _Nueva_Clave, cm_clave)
                 if (!res?.rowCount) {
                     return { error: true, message: 'Error al cambiar la clave del usuario' } //!ERROR
                 }
@@ -376,7 +376,7 @@ export default class UsuarioService {
                 console.error(hash) //!ERROR
             }
 
-            const res = await this._Query_Usuario.CambiarClaveUsuario(id_usuario, hash, cm_clave)
+            const res = await this._Query_Usuario.Cambiar_Clave_Usuario(id_usuario, hash, cm_clave)
             if (!res?.rowCount) {
                 return { error: true, message: 'Error al restablecer la clave del usuario' } //!ERROR
             }

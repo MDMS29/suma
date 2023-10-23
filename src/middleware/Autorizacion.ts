@@ -4,7 +4,7 @@ import UsuarioService  from '../services/Usuario.service';
 
 export const _Autorizacion = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const ServiceUsuario = new UsuarioService()
+        const service_usuario = new UsuarioService()
         if (!process.env.JWT_SECRET) {
             throw new Error('La variable de entorno JWT_SECRET no está configurada');
         }
@@ -16,7 +16,7 @@ export const _Autorizacion = async (req: Request, res: Response, next: NextFunct
 
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: number };
-            const usuario = await ServiceUsuario.BuscarUsuario(decoded.id, '');
+            const usuario = await service_usuario.Buscar_Usuario(decoded.id, '');
             if (usuario === undefined) {
                 return res.json({ error: true, message: 'Usuario no encontrado' });
             }

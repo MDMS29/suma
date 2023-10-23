@@ -3,8 +3,8 @@ import ModuloService from "../services/Modulo.service";
 import { ModulosSchema } from "../validations/ValidacionesZod";
 import { EstadosTablas } from "../validations/utils";
 
-export class _ModuloController {
-    public async ObtenerModulos(req: Request, res: Response) {
+export default class _ModuloController {
+    public async Obtener_Modulos(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -16,7 +16,7 @@ export class _ModuloController {
 
         try {
             const _ModuloService = new ModuloService()
-            const respuesta = await _ModuloService.ObtenerModulos(+estado)
+            const respuesta = await _ModuloService.Obtener_Modulos(+estado)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -28,7 +28,7 @@ export class _ModuloController {
         }
     }
 
-    public async InsertarModulo(req: Request, res: Response) {
+    public async Insertar_Modulo(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { cod_modulo, nombre_modulo, icono, roles } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -59,7 +59,7 @@ export class _ModuloController {
         try {
             const _ModuloService = new ModuloService()
             console.log('61 - controller', req.body)
-            const respuesta = await _ModuloService.InsertarModulo(cod_modulo, nombre_modulo, icono, usuario?.usuario, roles)
+            const respuesta = await _ModuloService.Insertar_Modulo(cod_modulo, nombre_modulo, icono, usuario?.usuario, roles)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -71,7 +71,7 @@ export class _ModuloController {
         }
     }
 
-    public async BuscarModulo(req: Request, res: Response) {
+    public async Buscar_Modulo(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_modulo } = req.params //EXTRAER LA INFORMACION DEL MODULO A CREAR
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -83,7 +83,7 @@ export class _ModuloController {
 
         try {
             const _ModuloService = new ModuloService()
-            const modulo = await _ModuloService.BuscarModulo(+id_modulo)
+            const modulo = await _ModuloService.Buscar_Modulo(+id_modulo)
             if (modulo?.error) {
                 return res.status(404).json({ error: true, message: modulo.message }) //!ERROR
             }
@@ -95,7 +95,7 @@ export class _ModuloController {
         }
     }
 
-    public async EditarModulo(req: Request, res: Response) {
+    public async Editar_Modulo(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_modulo } = req.params
         const { cod_modulo, nombre_modulo, icono, roles } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
@@ -131,13 +131,13 @@ export class _ModuloController {
 
         try {
             const _ModuloService = new ModuloService()
-            const modulo = await _ModuloService.EditarModulo(+id_modulo, req.body, usuario.usuario, roles)
+            const modulo = await _ModuloService.Editar_Modulo(+id_modulo, req.body, usuario.usuario, roles)
 
             if (modulo?.error) {
                 return res.status(404).json({ error: true, message: modulo.message }) //!ERROR
             }
 
-            const moduloEditado = await _ModuloService.BuscarModulo(+id_modulo)
+            const moduloEditado = await _ModuloService.Buscar_Modulo(+id_modulo)
             if (moduloEditado.error) {
                 return res.status(404).json({ error: true, message: 'No se ha podido encontrar el modulo' }) //!ERROR             
             }
@@ -148,7 +148,7 @@ export class _ModuloController {
         }
     }
 
-    public async CambiarEstadoModulo(req: Request, res: Response) {
+    public async Cambiar_Estado_Modulo(req: Request, res: Response) {
         const { id_modulo } = req.params
         const { usuario } = req
         const { estado } = req.query as { estado: string }
@@ -166,12 +166,12 @@ export class _ModuloController {
         try {
             const _ModuloService = new ModuloService()
 
-            const respuesta = await _ModuloService.CambiarEstadoModulo(+id_modulo, +estado)
+            const respuesta = await _ModuloService.Cambiar_Estado_Modulo(+id_modulo, +estado)
             if (respuesta.error) {
                 return res.status(404).json({ error: true, message: respuesta.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el modulo' : 'Se ha desactivado el modulo' }) //*SUCCESSFUL
+            return res.status(200).json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el modulo' : 'Se ha desactivado el modulo' }) //*SUCCESSFUL
 
         } catch (error) {
             console.log(error)

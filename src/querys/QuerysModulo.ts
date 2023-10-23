@@ -8,7 +8,7 @@ import {
 import { ModulosUsuario } from "../validations/Types"
 
 export default class QueryModulo {
-    public async ObtenerModulos(estado: number): Promise<any> {
+    public async Obtener_Modulos(estado: number): Promise<any> {
         try {
             const result = await client.query(_ObtenerModulos, [estado])
             return result.rows
@@ -18,7 +18,7 @@ export default class QueryModulo {
         }
     }
 
-    public async BuscarModuloNombre(nombre_modulo: string): Promise<any> {
+    public async Buscar_Modulo_Nombre(nombre_modulo: string): Promise<any> {
         try {
             const result = await client.query(_BuscarModuloNombre, [nombre_modulo])
             return result.rows[0]
@@ -28,7 +28,7 @@ export default class QueryModulo {
         }
     }
 
-    public async BuscarCodigoModulo(codigo: string): Promise<any> {
+    public async Buscar_Codigo_Modulo(codigo: string): Promise<any> {
         try {
             const result = await client.query(_BuscarCodigoModulo, [codigo])
             return result.rows[0]
@@ -38,7 +38,7 @@ export default class QueryModulo {
         }
     }
 
-    public async BuscarModuloID(id_modulo: number): Promise<any> {
+    public async Buscar_Modulo_ID(id_modulo: number): Promise<any> {
         try {
             const result = await client.query(_BuscarModuloID, [id_modulo])
             return result.rows[0]
@@ -48,7 +48,7 @@ export default class QueryModulo {
         }
     }
 
-    public async ObtenerRolesModulo(id_modulo: number): Promise<any> {
+    public async Obtener_Roles_Modulo(id_modulo: number): Promise<any> {
         try {
             const result = await client.query(_ObtenerRolesModulo, [id_modulo])
             return result.rows
@@ -58,7 +58,7 @@ export default class QueryModulo {
         }
     }
 
-    public async BuscarIconoModulo(id_modulo: number): Promise<any> {
+    public async Buscar_Icono_Modulo(id_modulo: number): Promise<any> {
         try {
             const result = await client.query(_BuscarIconoModulo, [id_modulo])
             return result.rows[0]
@@ -68,7 +68,7 @@ export default class QueryModulo {
         }
     }
 
-    public async InsertarModulo(nombre_modulo: string, usuario_creador: string, codigo: string, icono: string): Promise<any> {
+    public async Insertar_Modulo(nombre_modulo: string, usuario_creador: string, codigo: string, icono: string): Promise<any> {
         try {
             const result = await client.query(_InsertarModulo, [codigo, nombre_modulo, icono, usuario_creador])
             return result.rows[0]
@@ -78,7 +78,7 @@ export default class QueryModulo {
         }
     }
 
-    public async InsertarRolesModulo(id_rol: number, id_modulo: number, usuario_creador: string): Promise<any> {
+    public async Insertar_Roles_Modulo(id_rol: number, id_modulo: number, usuario_creador: string): Promise<any> {
         try {
             let ultimo_id: any = await client.query(_ObtenerUltimoID)
 
@@ -92,7 +92,7 @@ export default class QueryModulo {
         }
     }
 
-    public async EditarModulo(id_modulo: number, nuevoModulo: Partial<ModulosUsuario>, usuario_modi: string) {
+    public async Editar_Modulo(id_modulo: number, nuevoModulo: Partial<ModulosUsuario>, usuario_modi: string) {
         try {
             const result = await client.query(_EditarModulo, [id_modulo, nuevoModulo.cod_modulo, nuevoModulo.nombre_modulo, nuevoModulo.icono, usuario_modi])
             return result
@@ -102,7 +102,7 @@ export default class QueryModulo {
         }
     }
 
-    public async CambiarEstadoModulo(id_modulo: number, estado: number) {
+    public async Cambiar_Estado_Modulo(id_modulo: number, estado: number) {
         try {
             const result = await client.query(_CambiarEstadoModulo, [id_modulo, estado]);
             return result
@@ -112,7 +112,7 @@ export default class QueryModulo {
         }
     }
 
-    public async BuscarRolModulo(id_modulo: number, rol: number) {
+    public async Buscar_Rol_Modulo(id_modulo: number, rol: number) {
         try {
             const result = await client.query(_BuscarRolModulo, [id_modulo, rol]);
             return result.rows
@@ -121,7 +121,8 @@ export default class QueryModulo {
             return
         }
     }
-    public async EditarRolModulo(rol_modulo: number, estado: number) {
+
+    public async Editar_Rol_Modulo(rol_modulo: number, estado: number) {
         try {
             const result = await client.query(_EditarRolModulo, [rol_modulo, estado]);
             return result.rowCount

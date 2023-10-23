@@ -10,10 +10,10 @@ const RolController = new _RolController()
 
 
 _RolesRouter.route('/')
-    .get(_Autorizacion, RolController.ObtenerRoles) //OBTENER TODOS LOS ROLES
-    .post(_Autorizacion, RolController.InsertarRol) //INSERTAR ROL
+    .get(_Autorizacion, RolController.Obtener_Roles) //OBTENER TODOS LOS ROLES
+    .post(_Autorizacion, RolController.Insertar_Rol) //INSERTAR ROL
 
 _RolesRouter.route('/:id_rol')
-    .get(_Autorizacion, RolController.BuscarRol) //BUSCAR EL ROL SEGUN SU ID
-    .patch(_Autorizacion, RolController.EditarRol) //EDITAR ROL SEGUN SU ID
-    .delete(_Autorizacion, RolController.CambiarEstadoRol) //CAMBIAR ESTADO DEL ROL POR ID
+    .get(_Autorizacion, RolController.Buscar_Rol) //BUSCAR EL ROL SEGUN SU ID
+    .patch(_Autorizacion, RolController.Editar_Rol) //EDITAR ROL SEGUN SU ID
+    .delete(_Autorizacion, RolController.Cambiar_Estado_Rol) //CAMBIAR ESTADO DEL ROL POR ID

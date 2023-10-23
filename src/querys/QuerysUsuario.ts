@@ -17,7 +17,7 @@ let bcrypt = require('bcrypt')
 
 export default class QueryUsuario {
 
-    public async AutenticarUsuario({ usuario, clave }: Omit<UsuarioLogin, 'captcha'>) {
+    public async Autenticar_Usuario({ usuario, clave }: Omit<UsuarioLogin, 'captcha'>) {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
             const result = await _DB.func(_FALoginUsuario, [usuario])
@@ -35,7 +35,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async ModulosUsuario(id_usuario: number): Promise<undefined | ModulosUsuario[]> {
+    public async Modulos_Usuario(id_usuario: number): Promise<undefined | ModulosUsuario[]> {
         try {
             //FUNCTIÓN ALMACENADA PARA BUSCAR LOS MODULOS DEL USUARIO POR EL ID DEL USUARIO
             const result = await _DB.func(_FAModulosUsuario, [id_usuario, 1])
@@ -46,7 +46,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async MenuModulos(id_usuario: number, id_modulo: number): Promise<[] | MenusModulos[]> {
+    public async Menu_Modulos(id_usuario: number, id_modulo: number): Promise<[] | MenusModulos[]> {
         try {
             //FUNCIÓN ALMACENADA PARA TOMAR LOS MENUS DE CADA UNO DE LOS MODULOS DEL USUARIO
             const result = await _DB.func(_FAMenusModulos, [id_usuario, id_modulo])
@@ -57,7 +57,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async PermisosModulo(id_modulo: number, id_usuario: number): Promise<[] | PermisosModulos[]> {
+    public async Permisos_Modulo(id_modulo: number, id_usuario: number): Promise<[] | PermisosModulos[]> {
         try {
             //FUNCIÓN ALMACENADA PARA TOMAR LOS ACCIONES PERMITIDAS PARA CADA UNO DE LOS MODULOS DEL USUARIO
             const result = await _DB.func(_FAAccionesModulos, [id_modulo, id_usuario])
@@ -68,7 +68,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async ObtenerUsuarios(estado: string) {
+    public async Obtener_Usuarios(estado: string) {
         try {
             //FUNCIÓN ALMACENADA PARA TOMAR LOS USUARIOS SEGUN UN ESTADO
             const result = await _DB.func(_FAObtenerUsuario, [+estado])
@@ -79,7 +79,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async BuscarUsuarioID(id: number) {
+    public async Buscar_Usuario_ID(id: number) {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU ID
             let result = await _DB.func(_FABuscarUsuarioID, [id])
@@ -92,7 +92,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async BuscarUsuarioCorreo(usuario = '', correo = '') {
+    public async Buscar_Usuario_Correo(usuario = '', correo = '') {
         try {
             if (usuario !== '' && correo !== '') {
                 //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU USUARIO Y CORREO
@@ -113,7 +113,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async InsertarUsuario(RequestUsuario: any, UsuarioCreador: string): Promise<number | undefined> {
+    public async Insertar_Usuario(RequestUsuario: any, UsuarioCreador: string): Promise<number | undefined> {
         const { nombre_completo, usuario, clave, correo } = RequestUsuario
 
         try {
@@ -129,7 +129,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async InsertarPerfilUsuario(id_usuario: number, perfil: any) {
+    public async Insertar_Perfil_Usuario(id_usuario: number, perfil: any) {
         try {
             //PROCESO ALMACENADO PARA INSERTAR LOS PERFILES DEL USUARIO 
             await _DB.proc(_PAInsertarPerfilUsuario, [id_usuario, perfil.id_perfil]);
@@ -140,7 +140,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async InsertarRolModulo(id_usuario: number, rol: any) {
+    public async Insertar_Rol_Modulo(id_usuario: number, rol: any) {
         try {
             //PROCESO ALMACENADO PARA INSERTAR LOS ROLES DEL USUARIO 
             await _DB.proc(_PAInsertarRolModuloUsuario, [id_usuario, rol.id_rol]);
@@ -151,7 +151,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async EditarUsuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }: any, UsuarioModificador: string) {
+    public async Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }: any, UsuarioModificador: string) {
         try {
             const result = await client.query(_EditarUsuario, [id_usuario, Nombre_Editado, Usuario_Editado, Clave_Editada, UsuarioModificador, Correo_Editado])
             return result
@@ -161,7 +161,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async BuscarPerfilUsuario(id_perfil: number, usuario: number) {
+    public async Buscar_Perfil_Usuario(id_perfil: number, usuario: number) {
         try {
             const result = await client.query(_BuscarPerfilUsuario, [usuario, id_perfil]);
             return result.rows
@@ -171,7 +171,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async EditarPerfilUsuario(id_perfil: number, id_estado: number, usuario: number) {
+    public async Editar_Perfil_Usuario(id_perfil: number, id_estado: number, usuario: number) {
         try {
             const result = await client.query(_EditarPerfilUsuario, [usuario, id_perfil, id_estado]);
             return result.rows
@@ -181,7 +181,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async BuscarRolUsuario(id_rol: number , usuario: number) {
+    public async Buscar_Rol_Usuario(id_rol: number , usuario: number) {
         try {
             const result = await client.query(_BuscarRolUsuario, [usuario, id_rol]);
             return result.rows
@@ -191,7 +191,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async EditarRolUsuario(id_rol: number, id_estado: string, usuario: number) {
+    public async Editar_Rol_Usuario(id_rol: number, id_estado: string, usuario: number) {
         try {
             const result = await client.query(_EditarRolUsuario, [usuario, id_rol, id_estado]);
             return result.rowCount
@@ -201,7 +201,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async CambiarEstadoUsuario(usuario: number, estado: string) {
+    public async Cambiar_Estado_Usuario(usuario: number, estado: string) {
         try {
             const result = await client.query(_CambiarEstadoUsuario, [usuario, estado]);
             return result
@@ -210,7 +210,7 @@ export default class QueryUsuario {
             return
         }
     }
-    public async CambiarClaveUsuario(id_usuario: number, clave: string, cm_clave: boolean) {
+    public async Cambiar_Clave_Usuario(id_usuario: number, clave: string, cm_clave: boolean) {
         try {
             const result = await client.query(_CambiarClaveUsuario, [id_usuario, clave, cm_clave]);
             return result

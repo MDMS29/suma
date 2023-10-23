@@ -5,7 +5,7 @@ import { EstadosTablas } from "../validations/utils";
 
 export class _PerfilController {
 
-    public async ObtenerPerfiles(req: Request, res: Response) {
+    public async Obtener_Perfiles(req: Request, res: Response) {
 
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
@@ -18,7 +18,7 @@ export class _PerfilController {
 
         try {
             const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.ObtenerPerfiles(+estado)
+            const respuesta = await _PerfilService.Obtener_Perfiles(+estado)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -30,7 +30,7 @@ export class _PerfilController {
         }
     }
 
-    public async ObtenerModulosPerfiles(req: Request, res: Response) {
+    public async Obtener_Modulos_Perfiles(req: Request, res: Response) {
         // const { perfiles } = req.body
         const { usuario } = req
         // const { perfiles } = req.body
@@ -45,7 +45,7 @@ export class _PerfilController {
         try {
             const Perfil_Service = new PerfilService();
             //OBTENER LOS MODULOS DE LOS PERFILES
-            const respuesta = await Perfil_Service.ObtenerModulosPerfil(req.body)
+            const respuesta = await Perfil_Service.Obtener_Modulos_Perfil(req.body)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -58,7 +58,7 @@ export class _PerfilController {
 
     }
 
-    public async InsertarPerfil(req: Request, res: Response) {
+    public async Insertar_Perfil(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { nombre_perfil, modulos } = req.body
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -73,7 +73,7 @@ export class _PerfilController {
 
         try {
             const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.InsertarPerfil(nombre_perfil, usuario.usuario, modulos)
+            const respuesta = await _PerfilService.Insertar_Perfil(nombre_perfil, usuario.usuario, modulos)
 
             if (respuesta?.error) {
                 return res.status(404).json(respuesta)
@@ -86,7 +86,7 @@ export class _PerfilController {
         }
     }
 
-    public async EditarPerfil(req: Request, res: Response) {
+    public async Editar_Perfil(req: Request, res: Response) {
         const { usuario } = req
         const { id_perfil } = req.params
         const { nombre_perfil, modulos } = req.body
@@ -111,17 +111,17 @@ export class _PerfilController {
         try {
             const _PerfilService = new PerfilService()
 
-            const respuesta = await _PerfilService.EditarPerfil(+id_perfil, nombre_perfil, usuario.usuario)
+            const respuesta = await _PerfilService.Editar_Perfil(+id_perfil, nombre_perfil, usuario.usuario)
             if (respuesta.error) {
                 return res.status(404).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const modulosEditado = await _PerfilService.EditarModulosPerfil(+id_perfil, modulos)
+            const modulosEditado = await _PerfilService.Editar_Modulos_Perfil(+id_perfil, modulos)
             if (modulosEditado.error) {
                 return res.status(404).json({ error: modulosEditado.error, message: modulosEditado.message })
             }
             
-            const perfil = await _PerfilService.BuscarPerfil(+id_perfil)
+            const perfil = await _PerfilService.Buscar_Perfil(+id_perfil)
             return res.status(200).json(perfil) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
@@ -129,7 +129,7 @@ export class _PerfilController {
         }
     }
 
-    public async CambiarEstadoPerfil(req: Request, res: Response) {
+    public async Cambiar_Estado_Perfil(req: Request, res: Response) {
         const { usuario } = req
         const { id_perfil } = req.params
         const { estado } = req.query as { estado: string }
@@ -145,12 +145,12 @@ export class _PerfilController {
 
         try {
             const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.CambiarEstadoPerfil(+id_perfil, +estado)
+            const respuesta = await _PerfilService.Cambiar_Estado_Perfil(+id_perfil, +estado)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
 
-            return res.json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el perfil' : 'Se ha desactivado el perfil' }) //*SUCCESSFUL
+            return res.json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el perfil' : 'Se ha desactivado el perfil' }) //*SUCCESSFUL
 
         } catch (error) {
             console.log(error)
@@ -158,7 +158,7 @@ export class _PerfilController {
         }
     }
 
-    public async BuscarPerfil(req: Request, res: Response) {
+    public async Buscar_Perfil(req: Request, res: Response) {
         const { id_perfil } = req.params
         const { usuario } = req
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -170,7 +170,7 @@ export class _PerfilController {
         try {
             const _PerfilService = new PerfilService()
 
-            const respuesta = await _PerfilService.BuscarPerfil(+id_perfil)
+            const respuesta = await _PerfilService.Buscar_Perfil(+id_perfil)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }

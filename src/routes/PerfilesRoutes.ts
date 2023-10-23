@@ -10,12 +10,12 @@ const PerfilController = new _PerfilController()
 
 
 _PerfilesRouter.route('/')
-    .get(_Autorizacion, PerfilController.ObtenerPerfiles) //OBTENER TODOS LOS PERFILES
-    .post(_Autorizacion, PerfilController.InsertarPerfil) //INSERTAR PERFIL
+    .get(_Autorizacion, PerfilController.Obtener_Perfiles) //OBTENER TODOS LOS PERFILES
+    .post(_Autorizacion, PerfilController.Insertar_Perfil) //INSERTAR PERFIL
 
-_PerfilesRouter.post('/modulos', _Autorizacion, PerfilController.ObtenerModulosPerfiles)// OBTENER LOS MODULOS DE LOS PERFILES
+_PerfilesRouter.post('/modulos', _Autorizacion, PerfilController.Obtener_Modulos_Perfiles)// OBTENER LOS MODULOS DE LOS PERFILES
 
 _PerfilesRouter.route('/:id_perfil')
-.get(_Autorizacion, PerfilController.BuscarPerfil)
-    .patch (_Autorizacion, PerfilController.EditarPerfil) //EDITAR PERFIL SEGUN SU ID
-    .delete(_Autorizacion, PerfilController.CambiarEstadoPerfil) //CAMBIAR ESTADO DEL PERFIL POR ID
+.get(_Autorizacion, PerfilController.Buscar_Perfil)
+    .patch (_Autorizacion, PerfilController.Editar_Perfil) //EDITAR PERFIL SEGUN SU ID
+    .delete(_Autorizacion, PerfilController.Cambiar_Estado_Perfil) //CAMBIAR ESTADO DEL PERFIL POR ID

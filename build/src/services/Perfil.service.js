@@ -28,18 +28,18 @@ class PerfilService {
         });
         return result;
     }
-    ObtenerPerfiles(estado) {
+    Obtener_Perfiles(estado) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!estado) {
                 return { error: true, message: 'Estado no definido' }; //!ERROR
             }
             try {
-                const respuesta = yield this._Query_Perfil.ObtenerPerfiles(estado);
+                const respuesta = yield this._Query_Perfil.Obtener_Perfiles(estado);
                 if ((respuesta === null || respuesta === void 0 ? void 0 : respuesta.length) <= 0) {
                     return { error: true, message: 'No se han encontrado perfiles' }; //!ERROR
                 }
                 for (let res of respuesta) {
-                    const modulos = yield this._Query_Perfil.ModulosPerfil(res.id_perfil);
+                    const modulos = yield this._Query_Perfil.Modulos_Perfil(res.id_perfil);
                     if (!modulos) {
                         return res.json({ error: true, message: 'No se han podido cargar los modulos del perfil' }); //!ERROR
                     }
@@ -53,13 +53,13 @@ class PerfilService {
             }
         });
     }
-    ObtenerModulosPerfil(perfiles) {
+    Obtener_Modulos_Perfil(perfiles) {
         return __awaiter(this, void 0, void 0, function* () {
             let Modulos = [];
             try {
                 for (let perfil of perfiles) {
                     //INVOCAR LA FUNCION PARA OBTENER LOS MODULOS DE LOS PERFILES
-                    const respuesta = yield this._Query_Perfil.ModulosPerfil(perfil.id_perfil);
+                    const respuesta = yield this._Query_Perfil.Modulos_Perfil(perfil.id_perfil);
                     Modulos.push(respuesta);
                 }
                 const result = Modulos.reduce(this.ReduceModulos, []);
@@ -68,7 +68,7 @@ class PerfilService {
                 }
                 //OBTENER LOS PERMISOS DE LOS MODULOS
                 for (let modulo of result) {
-                    const permisos = yield this._Query_Perfil.PermisosModulosPerfil(modulo.id_modulo);
+                    const permisos = yield this._Query_Perfil.Permisos_Modulos_Perfil(modulo.id_modulo);
                     modulo.permisos = permisos;
                 }
                 return result;
@@ -79,17 +79,17 @@ class PerfilService {
             }
         });
     }
-    InsertarPerfil(nombre_perfil, usuario_creacion, modulos) {
+    Insertar_Perfil(nombre_perfil, usuario_creacion, modulos) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // const Query_Perfil = new QueryPerfil()
                 //VALIDAR SI EL PERFIL EXISTE
-                const Bperfil = yield this._Query_Perfil.BuscarPerfilNombre(nombre_perfil);
+                const Bperfil = yield this._Query_Perfil.Buscar_Perfil_Nombre(nombre_perfil);
                 if ((Bperfil === null || Bperfil === void 0 ? void 0 : Bperfil.length) > 0) {
                     return { error: true, message: 'Ya existe este perfil' }; //!ERROR
                 }
                 //INVOCAR FUNCION PARA INSERTAR PERFIL
-                const respuesta = yield this._Query_Perfil.InsertarPerfil({ nombre_perfil, usuario_creacion });
+                const respuesta = yield this._Query_Perfil.Insertar_Perfil({ nombre_perfil, usuario_creacion });
                 if (!respuesta) {
                     return { error: true, message: 'No se ha podido crear el perfil' }; //!ERROR
                 }
@@ -97,19 +97,19 @@ class PerfilService {
                 const modulosArray = Array.isArray(modulos) ? modulos : [modulos];
                 for (let modulo of modulosArray) {
                     //INVOCAR FUNCION PARA INSERTAR LOS MODULOS DEL PERFIL
-                    const modulos = yield this._Query_Perfil.InsertarModuloPerfil(respuesta[0].id_perfil, modulo.id_modulo);
+                    const modulos = yield this._Query_Perfil.Insertar_Modulo_Perfil(respuesta[0].id_perfil, modulo.id_modulo);
                     if (!modulos) {
                         return { error: true, message: 'Error al insetar los modulos del perfil' }; //!ERROR
                     }
                 }
                 //INVOCAR FUNCION PARA BUSCAR EL PERFIL POR ID
-                const perfil = yield this._Query_Perfil.BuscarPerfilID(respuesta[0].id_perfil);
+                const perfil = yield this._Query_Perfil.Buscar_Perfil_ID(respuesta[0].id_perfil);
                 if (!perfil) {
                     return { error: true, message: 'No se ha encontrado el perfil' }; //!ERROR
                 }
                 //INVOCAR FUNCION PARA BUSCAR LOS MODULOS DEL PERFIL POR ID
-                const modulosPerfil = yield this._Query_Perfil.ModulosPerfil(respuesta[0].id_perfil);
-                perfil.modulos = modulosPerfil;
+                const Modulos_Perfil = yield this._Query_Perfil.Modulos_Perfil(respuesta[0].id_perfil);
+                perfil.modulos = Modulos_Perfil;
                 return perfil;
             }
             catch (error) {
@@ -118,18 +118,19 @@ class PerfilService {
             }
         });
     }
-    EditarPerfil(id_perfil, nombre_perfil, usuario_creacion) {
+    Editar_Perfil(id_perfil, nombre_perfil, usuario_creacion) {
         return __awaiter(this, void 0, void 0, function* () {
             let nombre_editado;
             try {
-                const respuesta = yield this._Query_Perfil.BuscarPerfilID(id_perfil);
+                const respuesta = yield this._Query_Perfil.Buscar_Perfil_ID(id_perfil);
                 if ((respuesta === null || respuesta === void 0 ? void 0 : respuesta.nombre_perfil) === nombre_perfil) {
                     nombre_editado = respuesta.nombre_perfil;
                 }
                 else {
                     nombre_editado = nombre_perfil;
                 }
-                const res = yield this._Query_Perfil.EditarPerfil({ id_perfil, nombre_editado, usuario_creacion });
+                // console.log('126 - service', respuesta)
+                const res = yield this._Query_Perfil.Editar_Perfil({ id_perfil, nombre_editado, usuario_creacion });
                 if ((res === null || res === void 0 ? void 0 : res.rowCount) != 1) {
                     return { error: true, message: 'Error al actualizar el perfil' }; //!ERROR
                 }
@@ -141,39 +142,32 @@ class PerfilService {
             }
         });
     }
-    EditarModulosPerfil(id_perfil, modulos) {
+    Editar_Modulos_Perfil(id_perfil, modulos) {
         return __awaiter(this, void 0, void 0, function* () {
             for (let modulo of modulos) {
-                const B_Modulo = yield this._Query_Perfil.BuscarModuloPerfil(id_perfil, modulo.id_modulo);
+                const B_Modulo = yield this._Query_Perfil.Buscar_Modulo_Perfil(id_perfil, modulo.id_modulo);
                 if (!B_Modulo || (B_Modulo === null || B_Modulo === void 0 ? void 0 : B_Modulo.length) <= 0) {
                     ///INSERTAR
-                    const Modulos_Insertar = yield this._Query_Perfil.InsertarModuloPerfil(id_perfil, modulo.id_modulo);
+                    const Modulos_Insertar = yield this._Query_Perfil.Insertar_Modulo_Perfil(id_perfil, modulo.id_modulo);
                     if (!Modulos_Insertar) {
                         return { error: true, message: 'Error al insertar el nuevo modulo ' }; //!ERROR
                     }
                 }
-                //EDITAR
-                const Modulos_Editar = yield this._Query_Perfil.EditarModuloPerfil(id_perfil, modulo);
-                if (!Modulos_Editar) {
-                    return { error: true, message: 'Error al editar el modulo' }; //!ERROR
-                }
-                const AllModulos = yield this._Query_Perfil.ModulosPerfil(id_perfil);
-                if (AllModulos.length <= 0) {
-                    modulo.id_estado = 11; //CAMBIAR EL ESTADO DEL MODULO A "ACTIVO" PARA NO DEJAR EL PERFIL CON UN SOLO MODULO
-                    const Modulos_Editar = yield this._Query_Perfil.EditarModuloPerfil(id_perfil, modulo);
+                else {
+                    //EDITAR
+                    const Modulos_Editar = yield this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo);
                     if (!Modulos_Editar) {
                         return { error: true, message: 'Error al editar el modulo' }; //!ERROR
                     }
-                    return { error: true, message: 'El perfil debe tener al menos un perfil' }; //!ERROR
                 }
             }
             return { error: false, message: 'Modulos del perfil editados con exito' }; //!ERROR
         });
     }
-    CambiarEstadoPerfil(id_perfil, estado) {
+    Cambiar_Estado_Perfil(id_perfil, estado) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const perfil_editado = yield this._Query_Perfil.CambiarEstadoPerfil(id_perfil, estado);
+                const perfil_editado = yield this._Query_Perfil.Cambiar_Estado_Perfil(id_perfil, estado);
                 if (!(perfil_editado === null || perfil_editado === void 0 ? void 0 : perfil_editado.rowCount)) {
                     return { error: true, message: 'Error al editar el perfil' }; //!ERROR
                 }
@@ -182,6 +176,27 @@ class PerfilService {
             catch (error) {
                 console.log(error);
                 return { error: true, message: 'Error al editar el perfil' }; //!ERROR
+            }
+        });
+    }
+    Buscar_Perfil(id_perfil) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const perfil = yield this._Query_Perfil.Buscar_Perfil_ID(id_perfil);
+                if (!(perfil === null || perfil === void 0 ? void 0 : perfil.id_perfil)) {
+                    return { error: true, message: 'No se ha encontrado este perfil' }; //!ERROR
+                }
+                // CARGAR LOS MODULOS DEL PERFIL
+                const modulos = yield this._Query_Perfil.Modulos_Perfil(id_perfil);
+                if (!modulos) {
+                    return { error: true, message: 'No se han podido cargar los modulos del perfil' }; //!ERROR
+                }
+                perfil.modulos = modulos;
+                return perfil;
+            }
+            catch (error) {
+                console.log(error);
+                return { error: true, message: 'Error al editar el perfil' };
             }
         });
     }

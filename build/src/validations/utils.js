@@ -3,22 +3,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GenerarLlavesSecretas = exports.EstadosTablas = exports.generarJWT = exports._ParseClave = exports._ParseCorreo = void 0;
+exports.Generar_Llaves_Secretas = exports.EstadosTablas = exports.generarJWT = exports._Parse_Clave = exports._Parse_Correo = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const _ParseCorreo = (correo) => {
+const _Parse_Correo = (correo) => {
     if (!EsString(correo)) {
         throw new Error("¡Correo Invalido!");
     }
     return correo;
 };
-exports._ParseCorreo = _ParseCorreo;
-const _ParseClave = (clave) => {
+exports._Parse_Correo = _Parse_Correo;
+const _Parse_Clave = (clave) => {
     if (!EsString(clave)) {
         throw new Error("¡Clave Invalida!");
     }
     return clave;
 };
-exports._ParseClave = _ParseClave;
+exports._Parse_Clave = _Parse_Clave;
 const EsString = (string) => {
     return typeof string === 'string';
 };
@@ -33,11 +33,11 @@ exports.generarJWT = generarJWT;
 // ESTADOS SEGUN LA TABLA DE ESTADO EN LA BASE DE DATOS
 exports.EstadosTablas = {
     ESTADO_ACTIVO: 1,
-    ESTADO_INACTIVO: 1
+    ESTADO_INACTIVO: 2
 };
-const GenerarLlavesSecretas = () => {
+const Generar_Llaves_Secretas = () => {
     const random = Math.random().toString(15).substr(2);
     const fecha = Date.now().toString(15);
     return random + fecha;
 };
-exports.GenerarLlavesSecretas = GenerarLlavesSecretas;
+exports.Generar_Llaves_Secretas = Generar_Llaves_Secretas;

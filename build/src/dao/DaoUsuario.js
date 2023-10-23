@@ -31,12 +31,9 @@ exports._BuscarPerfilUsuario = `
     
 `;
 exports._EditarPerfilUsuario = `
-    UPDATE 
-        seguridad.tbl_perfil_usuario
-    SET 
-        id_estado=$3
-    WHERE 
-        id_usuario=$1 and id_perfil=$2;
+    UPDATE seguridad.tbl_perfil_usuario
+    SET id_estado=$3
+    WHERE id_usuario=$1 AND id_perfil=$2;
 `;
 exports._BuscarRolUsuario = `
     SELECT 
@@ -47,12 +44,9 @@ exports._BuscarRolUsuario = `
         tur.id_usuario = $1 AND tur.id_rol_modulo = $2;
 `;
 exports._EditarRolUsuario = `
-    UPDATE 
-        seguridad.tbl_usuario_roles tur
-    SET 
-        id_estado=$3
-    WHERE 
-        id_usuario=$1 and id_rol_modulo= $2;
+    UPDATE seguridad.tbl_usuario_roles
+    SET id_estado=$3
+    WHERE id_usuario=$1 AND id_rol_modulo=$2;
 `;
 exports._CambiarEstadoUsuario = `
     UPDATE 
@@ -66,7 +60,7 @@ exports._CambiarClaveUsuario = `
     UPDATE 
         seguridad.tbl_usuario
     SET 
-        clave=$2
+        clave=$2, cm_clave=$3
     WHERE 
         id_usuario=$1
 `;
