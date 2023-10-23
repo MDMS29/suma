@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import usePerfiles from "../../hooks/usePerfiles";
 import { MultiSelect } from "primereact/multiselect";
 import ModalAgregarPerfil from "../../components/Perfiles/ModalAgregarPerfil";
-import Confirmar from "../../components/Modales/Confirmar";
 
 import { Link } from "react-router-dom";
 
@@ -19,24 +18,20 @@ import {
   Edit_Icono,
 } from "../../components/Icons/Iconos" ;
 import { InputText } from "primereact/inputtext"
+import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 
 
 const Perfiles = () => {
   const toast = useRef(null);
-
-  const mensajeEliminadoPerfil = () => {
-    toast.current.show({ severity: 'success', detail: 'El registro se ha inactivado correctamente. ', life: 1500 });
-  }
 
   const columns = [
     { field: "id_perfil", header: "ID" },
     { field: "nombre_perfil", header: "Nombre" },
   ];
 
-  const { dataPerfiles, permisosPerfil, setPermisosPerfil, setPerfilState, buscarPerfil } = usePerfiles();
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth()
+  const { dataPerfiles, permisosPerfil, setPermisosPerfil, perfilState, setPerfilState, buscarPerfil, eliminarRestablecerPerfil } = usePerfiles();
+  const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
 
-  const [modalEliminar, setModalEliminar] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataPerfiles);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,8 +39,8 @@ const Perfiles = () => {
 
   const confirmDeletePerfil = (e, perfil) => {
     e.preventDefault();
-    setModalEliminar(true);
     setPerfilState(perfil);
+    setVerEliminarRestaurar(true);
   };
 
   const editarPerfil = async (e, id_perfil) => {
@@ -156,15 +151,8 @@ const Perfiles = () => {
       <div className="w-5/6">
         <Toast ref={toast} />
         {modalVisible && <ModalAgregarPerfil visible={modalVisible} onClose={toggleModal} />}
-        {modalEliminar ? (
-          <Confirmar
-            modalEliminar={modalEliminar}
-            setModalEliminar={setModalEliminar}
-            mensajeEliminadoPerfil={mensajeEliminadoPerfil}
-          />
-        ) : (
-          ""
-        )}
+        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRestablecerPerfil(perfilState.id_perfil, e)} />}
+
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Perfiles</h1>
           <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>

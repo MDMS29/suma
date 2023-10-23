@@ -147,8 +147,7 @@ const UsuariosInactivos = () => {
               ).length > 0 ? (
                 <div className="text-center flex gap-x-3">
                   <PButton
-                    tooltip="Eliminar"
-                    className="p-button-rounded p-button-danger p-mr-2"
+                    tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
                     // eslint-disable-next-line no-unused-vars
                     onClick={e => mostrarModalEliminar(rowData)}

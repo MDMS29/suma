@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -117,6 +117,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
 
   const CheckboxChangeroles = (nombrePermiso, idRolModulo) => {
     console.log("idRolModulo:", idRolModulo);
+
     if (rolesporModulo.find((permiso) => permiso.id_rol == idRolModulo)) {
       if (rolesEdit.find((permiso) => permiso.id_rol == idRolModulo)) {
         const [permiso] = rolesporModulo.filter(
@@ -156,12 +157,25 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
   };
 
+  const footerContent = (
+    <div>
+      <Button
+        className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
+        onClick={handleGuardar}
+      >
+        {rolesEdit.length !== 0 ? "Actualizar" : "Guardar"}
+      </Button>
+    </div>
+  )
+
   return (
     <Dialog
       header={<h1>Agregar Módulo</h1>}
       visible={visible}
       onHide={handleClose}
       className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2"
+      footer={footerContent}
+
     >
       <div>
         <Toast ref={toast} />
@@ -174,9 +188,8 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               <InputText
                 value={ModulosAgg.cod_modulo}
                 name="cod_modulo"
-                className={`border-1 h-10 rounded-md px-3 py-2 ${
-                  errors.cod_modulo ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`border-1 h-10 rounded-md px-3 py-2 ${errors.cod_modulo ? "border-red-500" : "border-gray-300"
+                  }`}
                 onChange={(e) => handleChangeModulos(e, "cod_modulo")}
                 onKeyDown={(e) => handleSpacePrevention(e, "cod_modulo")}
               />
@@ -191,9 +204,8 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               <InputText
                 value={ModulosAgg.icono}
                 name="icono"
-                className={`border-1 h-10 rounded-md px-3 py-2 ${
-                  errors.icono ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`border-1 h-10 rounded-md px-3 py-2 ${errors.icono ? "border-red-500" : "border-gray-300"
+                  }`}
                 onChange={(e) => handleChangeModulos(e)}
               />
               {errors.icono && (
@@ -208,9 +220,8 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             <InputText
               value={ModulosAgg.nombre_modulo}
               name="nombre_modulo"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.nombre_modulo ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre_modulo ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => handleChangeModulos(e)}
             />
             {errors.nombre_modulo && (
@@ -219,15 +230,14 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               </div>
             )}
           </div>
-          <div>
-            <h1 className="py-3">Roles</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md">
+          <div className="pl-2 pt-3 mt-3 border rounded-md">
+            <h1>Roles</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md overflow-auto h-48 mt-2">
               {roles.map((rol) => (
                 <div key={rol.id}>
                   <label
-                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${
-                      fncChkPermiso(rol) ? "bg-primaryYellow" : "bg-gray-300"
-                    }`}
+                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) ? "bg-primaryYellow" : "bg-gray-300"
+                      }`}
                   >
                     <input
                       type="checkbox"
@@ -250,14 +260,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             )}
           </div>
         </div>
-      </div>
-      <div>
-        <Button
-          className="bg-primaryYellow p-2 mx-2 rounded-md mt-3 px-3 hover:bg-yellow-500 font-semibold"
-          onClick={handleGuardar}
-        >
-          {rolesEdit.length !== 0 ? "Actualizar" : "Guardar"}
-        </Button>
       </div>
     </Dialog>
   );

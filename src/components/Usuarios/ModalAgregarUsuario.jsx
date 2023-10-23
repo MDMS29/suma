@@ -175,7 +175,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
 
   const CheckboxChange = (rowData) => {
-    const perfilId = rowData.id_perfil;
+    const perfilId = rowData;
+    console.log(rowData);
 
     if (perfilesSeleccionados.find(perfil => perfil.id_perfil == perfilId)) {
       if (perfilesEdit.find(perfil => perfil.id_perfil == perfilId)) {
@@ -208,6 +209,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   }
 
   const CheckboxChangePermiso = (nombrePermiso, idRolModulo) => {
+    console.log(nombrePermiso);
     if (permisosPorModulo.find(permiso => permiso.id_rol == idRolModulo)) {
       if (permisosEdit.find(permiso => permiso.id_rol == idRolModulo)) {
         const [permiso] = permisosPorModulo.filter(permiso => permiso.id_rol == idRolModulo)
@@ -370,11 +372,32 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
           </div>
         )}
         {step === 2 && (
-          <div>
+          <div className="pl-2 pt-3 mt-3 border rounded-md">
             <h1>Perfiles</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md overflow-auto h-48">
+              {perfilesAgg.map((perfil) => (
+                <div key={perfil.id}>
+                  <label
+                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPerfil(perfil) ? "bg-primaryYellow" : "bg-gray-300"
+                      }`}>
+                    <input
+                      type="checkbox"
+                      checked={fncChkPerfil(perfil)}
+                      className="sr-only peer"
+                      onChange={() =>
+                        CheckboxChange(perfil.id_perfil, perfil.id_perfil)
+                      } />
+                    <span
+                      className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                  </label>
+                  <span className="ml-6">{perfil.nombre_perfil}</span>
+
+                </div>
+              ))}
+            </div>
+
             <div className="p-mx-auto mt-3 p-datatable">
-              <DataTable value={perfilesAgg} className="custom-datatable">
-                {/* <Column field="id_perfil" header="ID" /> */}
+              {/* <DataTable value={perfilesAgg} className="custom-datatable">
                 <Column field="nombre_perfil" header="Nombre" />
                 <Column
                   field="col1"
@@ -388,7 +411,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   )}
                   style={{ width: "3em" }}
                 />
-              </DataTable>
+              </DataTable> */}
               {errors.perfiles && (
                 <Message
                   severity="warn"
@@ -408,7 +431,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
             <div className="p-mx-auto mt-3 p-datatable">
               <DataTable value={modulosAgg} className="custom-datatable">
                 {/* <Column field="id_modulo" header="ID" /> */}
-                <Column field="nombre_modulo" header="Nombre del Módulo" />
+                <Column field="nombre_modulo" />
 
                 {/* Columna para el permiso "Consultar" */}
                 <Column
@@ -418,18 +441,22 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                     rowData.permisos.map((r) => {
                       if (r.nombre === "Consultar") {
                         return (
-                          <input
-                            key={r.id_rol}
-                            type="checkbox"
-                            data-idrolmodulo={r.id_rol_modulo}
-                            checked={fncChkPermiso(r)}
-                            onChange={() =>
-                              CheckboxChangePermiso(
-                                "Consultar",
-                                r.id_rol_modulo
-                              )
-                            }
-                          />
+                          <div key={r.id_rol} className="flex items-center justify-center">
+                            <label
+                              className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(r) ? "bg-primaryYellow" : "bg-gray-300"
+                                }`}>
+                              <input
+                                type="checkbox"
+                                checked={fncChkPermiso(r)}
+                                className="sr-only peer"
+                                onChange={() =>
+                                  CheckboxChangePermiso(r.id_rol_modulo, r.id_rol_modulo)
+                                }
+                              />
+                              <span
+                                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                            </label>
+                          </div>
                         );
                       }
                     })
@@ -444,18 +471,22 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                     rowData.permisos.map((r) => {
                       if (r.nombre === "Crear/Editar") {
                         return (
-                          <input
-                            key={r.id_rol}
-                            type="checkbox"
-                            data-idrolmodulo={r.id_rol_modulo}
-                            checked={fncChkPermiso(r)}
-                            onChange={() =>
-                              CheckboxChangePermiso(
-                                "Crear/Editar",
-                                r.id_rol_modulo
-                              )
-                            }
-                          />
+                          <div key={r.id_rol} className="flex items-center justify-center">
+                            <label
+                              className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(r) ? "bg-primaryYellow" : "bg-gray-300"
+                                }`}>
+                              <input
+                                type="checkbox"
+                                checked={fncChkPermiso(r)}
+                                className="sr-only peer"
+                                onChange={() =>
+                                  CheckboxChangePermiso(r.id_rol_modulo, r.id_rol_modulo)
+                                }
+                              />
+                              <span
+                                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                            </label>
+                          </div>
                         );
                       }
                     })
@@ -470,18 +501,23 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                     rowData.permisos.map((r) => {
                       if (r.nombre === "Borrar") {
                         return (
-                          <input
-                            key={r.id_rol}
-                            type="checkbox"
-                            data-idrolmodulo={r.id_rol_modulo}
-                            checked={fncChkPermiso(r)}
-                            onChange={() =>
-                              CheckboxChangePermiso(
-                                "Borrar",
-                                r.id_rol_modulo
-                              )
-                            }
-                          />
+
+                          <div key={r.id_rol} className="flex items-center justify-center">
+                            <label
+                              className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(r) ? "bg-primaryYellow" : "bg-gray-300"
+                                }`}>
+                              <input
+                                type="checkbox"
+                                checked={fncChkPermiso(r)}
+                                className="sr-only peer"
+                                onChange={() =>
+                                  CheckboxChangePermiso(r.id_rol_modulo, r.id_rol_modulo)
+                                }
+                              />
+                              <span
+                                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                            </label>
+                          </div>
                         );
                       }
                     })
@@ -494,18 +530,22 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                     rowData.permisos.map((r) => {
                       if (r.nombre === "Restaurar") {
                         return (
-                          <input
-                            key={r.id_rol}
-                            type="checkbox"
-                            data-idrolmodulo={r.id_rol_modulo}
-                            checked={fncChkPermiso(r)}
-                            onChange={() =>
-                              CheckboxChangePermiso(
-                                "Restaurar",
-                                r.id_rol_modulo
-                              )
-                            }
-                          />
+                          <div key={r.id_rol} className="flex items-center justify-center">
+                            <label
+                              className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(r) ? "bg-primaryYellow" : "bg-gray-300"
+                                }`}>
+                              <input
+                                type="checkbox"
+                                checked={fncChkPermiso(r)}
+                                className="sr-only peer"
+                                onChange={() =>
+                                  CheckboxChangePermiso(r.id_rol_modulo, r.id_rol_modulo)
+                                }
+                              />
+                              <span
+                                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                            </label>
+                          </div>
                         );
                       }
                     })

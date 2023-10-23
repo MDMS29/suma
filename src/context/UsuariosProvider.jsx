@@ -251,6 +251,7 @@ const UsuariosProvider = ({ children }) => {
 
       const { id_usuario, nombre_completo, usuario, correo, perfiles } = data.usuario
       let permisos = []
+      console.log(data);
       setUsuariosAgg({
         id_usuario,
         nombre: nombre_completo,

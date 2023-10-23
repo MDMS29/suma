@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import usePerfiles from "../../hooks/usePerfiles";
 import { MultiSelect } from "primereact/multiselect";
-import Confirmar from "../../components/Modales/Confirmar";
-
-
 
 import { Toast } from "primereact/toast";
 import Loader from "../../components/Loader";
@@ -12,35 +9,44 @@ import useAuth from "../../hooks/useAuth";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
-import { Restore_Icono } from "../../components/Icons/Iconos" ;
+import { Button as PButton } from "primereact/button";
+
+import { Restore_Icono } from "../../components/Icons/Iconos";
 
 import { InputText } from "primereact/inputtext"
+import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 
 const PerfilesInactivos = () => {
   const toast = useRef(null);
-  const { dataPerfiles, permisosPerfil, setPerfilState } = usePerfiles();
-  const { Permisos_DB } = useAuth()
+  const { dataPerfiles, permisosPerfil, setPerfilState, perfilState, eliminarRestablecerPerfil } = usePerfiles();
+  const { Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar, alerta, setAlerta } = useAuth()
   const redirectToPreviousPage = () => {
     window.history.back();
   };
 
-  const mensajeRestauradoPerfil = () => {
-    toast.current.show({ severity: 'success', detail: 'El registro se ha activado correctamente. ', life: 1500 });
-  }
-
-  const confirmRestaurarPerfil = (e, perfil) => {
-    e.preventDefault();
-    setModalEliminar(true);
+  const confirmRestaurarPerfil = (perfil) => {
+    setVerEliminarRestaurar(true);
     setPerfilState(perfil);
   };
+  
+  useEffect(() => {
+    if (alerta.show) {
+      (() => {
+        toast.current.show({
+          severity: alerta.error ? 'error' : 'success',
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500)
+      })()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta])
 
   const columns = [
     { field: "id_perfil", header: "ID" },
     { field: "nombre_perfil", header: "Nombre" },
   ];
-
-  const [modalEliminar, setModalEliminar] = useState(false);
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataPerfiles);
@@ -60,7 +66,7 @@ const PerfilesInactivos = () => {
 
     const filteredItems = dataPerfiles.filter((item) => {
       return (
-        item.nombre_perfil.toLowerCase().includes(value) 
+        item.nombre_perfil.toLowerCase().includes(value)
       );
     });
     setFilteredData(filteredItems);
@@ -86,7 +92,7 @@ const PerfilesInactivos = () => {
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {modalEliminar ? <Confirmar modalEliminar={modalEliminar} setModalEliminar={setModalEliminar} mensajeRestauradoPerfil={mensajeRestauradoPerfil} /> : ""}
+      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminarRestablecerPerfil(perfilState.id_perfil, e)} />}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Perfiles Inactivos</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
@@ -129,14 +135,14 @@ const PerfilesInactivos = () => {
             body={(rowData) => (
               permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR).length > 0 ? (
                 <div className="text-center flex gap-x-3">
-                  <Button
+                  <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    className="p-button-rounded p-mr-2"
-                    onClick={e => confirmRestaurarPerfil(e, rowData)}
+                    // eslint-disable-next-line no-unused-vars
+                    onClick={e => confirmRestaurarPerfil(rowData)}
                   >
                     {Restore_Icono}
-                  </Button>
+                  </PButton>
                 </div>
               ) : '')}
           />

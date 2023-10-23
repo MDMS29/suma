@@ -1,13 +1,15 @@
 import { createContext, useState, useEffect, useMemo } from "react";
 import conexionCliente from "../config/ConexionCliente";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../hooks/useAuth'
 
 const PerfilesContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const PerfilesProvider = ({ children }) => {
-  const { setAlerta } = useAuth()
+  const navigate = useNavigate()
+
+  const { setAlerta, setVerEliminarRestaurar, setAuthUsuario } = useAuth()
 
   const [dataPerfiles, setDataPerfiles] = useState([]);
   const [perfilState, setPerfilState] = useState({});
@@ -113,75 +115,46 @@ const PerfilesProvider = ({ children }) => {
     }
   }
 
-  const eliminarPerfilProvider = async () => {
-    if (perfilState.id_perfil) {
-      const token = localStorage.getItem("token");
-      let estadoPerfil = 0;
-      if (perfilState.id_estado == 1) {
-        estadoPerfil = 2;
-      } else {
-        estadoPerfil = 1;
-      }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      try {
-        const { data } = await conexionCliente.delete(
-          `/perfiles/${perfilState.id_perfil}?estado=${estadoPerfil}`,
-          config
-        );
-        console.log(data);
-        if (data.error) {
-          console.log(data.message);
-        }
+  const eliminarRestablecerPerfil = async (id) => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setAuthUsuario({})
+      navigate('/auth')
+      return
+    }
 
-        const perfilActualizados = dataPerfiles.filter(
-          (perfil) => perfil.id_perfil !== perfilState.id_perfil
-        );
-        setDataPerfiles(perfilActualizados);
-      } catch (error) {
-        console.log(error);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
     }
-  };
 
-  const restaurarPerfilProvider = async () => {
-    if (perfilState.id_perfil) {
-      const token = localStorage.getItem("token");
-      let estadoPerfil = 0;
-      if (perfilState.id_estado == 2) {
-        estadoPerfil = 1;
-      } else {
-        estadoPerfil = 2;
-      }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      try {
-        const { data } = await conexionCliente.delete(
-          `/perfiles/${perfilState.id_perfil}?estado=${estadoPerfil}`,
-          config
-        );
-        console.log(data);
-        if (data.error) {
-          console.log(data.message);
-        }
+    try {
+      const estado = location.pathname.includes("inactivos") ? 1 : 2;
+      const { data } = await conexionCliente.delete(`/perfiles/${id}?estado=${estado}`, config)
 
-        const perfilActualizados = dataPerfiles.filter(
-          (perfil) => perfil.id_perfil !== perfilState.id_perfil
-        );
-        setDataPerfiles(perfilActualizados);
-      } catch (error) {
-        console.log(error);
+      if (data?.error) {
+        setAlerta({ error: false, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
       }
+
+      const perfilesActualizados = dataPerfiles.filter((perfil) => perfil.id_perfil !== id)
+      setDataPerfiles(perfilesActualizados)
+
+      setAlerta({ error: false, show: true, message: data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      setVerEliminarRestaurar(false)
+      return true
+
+    } catch (error) {
+      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
     }
-  };
+  }
+
 
   const guardarPerfil = async (formData) => {
     const token = localStorage.getItem("token");
@@ -282,8 +255,6 @@ const PerfilesProvider = ({ children }) => {
     setErrors,
     buscarPerfil,
     obtenerModulos,
-    eliminarPerfilProvider,
-    restaurarPerfilProvider,
     guardarPerfil,
     permisosPerfil,
     setPermisosPerfil,
@@ -291,8 +262,8 @@ const PerfilesProvider = ({ children }) => {
     setPerfilesAgg,
     editarPerfil,
     modulosEdit,
-    setModulosEdit
-  }))
+    setModulosEdit,
+    eliminarRestablecerPerfil  }))
 
   return (
     <PerfilesContext.Provider

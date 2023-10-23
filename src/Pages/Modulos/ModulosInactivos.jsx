@@ -5,7 +5,7 @@ import { Toast } from "primereact/toast";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
+import { Button as PButton } from "primereact/button";
 
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
@@ -17,8 +17,8 @@ const ModulosInactivos = () => {
   const toast = useRef(null);
 
   const [modalEliminar, setModalEliminar] = useState(false);
-  const { dataModulos, setModuloState, permisosModulo, setPermisosModulo } = useModulos();
-  const { authPermisos, Permisos_DB } = useAuth();
+  const { dataModulos, setModuloState, permisosModulo } = useModulos();
+  const { Permisos_DB } = useAuth();
 
   const redirectToPreviousPage = () => {
     window.history.back();
@@ -147,14 +147,13 @@ const ModulosInactivos = () => {
                   permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
               ).length > 0 ? (
                 <div className="text-center flex gap-x-3">
-                  <Button
+                  <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    className="p-button-rounded p-mr-2"
                     onClick={(e) => confirmRestaurarModulo(e, rowData)}
                   >
                     {Restore_Icono}
-                  </Button>
+                  </PButton>
                 </div>
               ) : (
                 ""

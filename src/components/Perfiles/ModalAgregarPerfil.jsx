@@ -1,7 +1,5 @@
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import { Message } from "primereact/message";
 
 import { InputText } from "primereact/inputtext";
@@ -24,11 +22,11 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
   const [modulosSeleccionados, setModulosSeleccionados] = useState([]);
 
-  useEffect(()=>{
-    if(PerfilesAgg.id_perfil){
+  useEffect(() => {
+    if (PerfilesAgg.id_perfil) {
       setModulosSeleccionados(modulosEdit)
     }
-  },[modulosEdit])
+  }, [modulosEdit])
 
   const handleChangePerfiles = (e) => {
     setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: e.target.value });
@@ -52,26 +50,23 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       console.log("Este campo es obligatorio");
     }
 
-    if (
-      modulosSeleccionados.length === 0 ||
-      modulosSeleccionados.filter((modulo) => modulo?.id_estado === 1)
-        .length === 0
-    ) {
+    if (modulosSeleccionados.length === 0 || modulosSeleccionados.filter((modulo) => modulo?.id_estado === 1).length === 0) {
       errors.modulos = "Debes seleccionar al menos un modulo";
+      return
     }
 
     try {
       let response;
       if (PerfilesAgg.id_perfil !== 0) {
         response = await editarPerfil(formData);
-        onClose(); 
+        onClose();
       } else {
         response = await guardarPerfil(formData);
-        onClose(); 
+        onClose();
       }
 
       if (response) {
-        onClose(); 
+        onClose();
         setPerfilesAgg({
           id_perfil: 0,
           nombre_perfil: ""
@@ -81,7 +76,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
 
     } catch (error) {
-      console.error("Error al guardar el usuario:", error.response.data.message);
+      console.error("Error al guardar el usuario:", error.response.message);
     }
 
     if (Object.keys(errors).length > 0) {
@@ -105,8 +100,9 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
   }, []);
 
 
-  const CheckboxChange = (rowData) => {
-    const moduloId = rowData.id_modulo;
+  const CheckboxChange = (nombrePefil, idPerfil) => {
+    const moduloId = idPerfil;
+    console.log(idPerfil);
 
     if (modulosSeleccionados.find((modulo) => modulo.id_modulo == moduloId)) {
       if (modulosEdit.find((modulo) => modulo.id_modulo == moduloId)) {
@@ -151,7 +147,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
         onClick={handleGuardar}
         className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
       >
-          {modulosEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
+        {modulosEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
 
       </Button>
     </div>
@@ -183,34 +179,42 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
                 {errors.nombre_perfil}
               </div>
             )}
-            <div className="pt-4">
+
+            <div className="pl-2 pt-3 mt-3 border rounded-md">
               <h1>Modulos</h1>
-              <DataTable value={modulosAgg} className="custom-datatable pt-2">
-                <Column field="nombre_modulo" header="Nombre del Módulo" />
-                <Column
-                  field="col1"
-                  header="Seleccione"
-                  body={(row) => (
-                    <input
-                      type="checkbox"
-                      checked={fncChkModulo(row)}
-                      onChange={() => CheckboxChange(row)}
-                    />
-                  )}
-                  style={{ width: "3em" }}
-                />
-              </DataTable>
-              <br />
-              {errors.modulos && (
-                <Message
-                  severity="warn"
-                  text="Debes seleccionar al menos un modulo"
-                  className="w-full"
-                >
-                  {errors.modulos}
-                </Message>
-              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 mt-2 rounded-md overflow-auto h-48">
+                {modulosAgg.map((modulo) => (
+                  <div key={modulo.id}>
+                    <label
+                      className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkModulo(modulo) ? "bg-primaryYellow" : "bg-gray-300"
+                        }`}>
+                      <input
+                        type="checkbox"
+                        checked={fncChkModulo(modulo)}
+                        className="sr-only peer"
+                        onChange={() =>
+                          CheckboxChange(modulo.id_modulo, modulo.id_modulo)
+                        }
+                      />
+                      <span
+                        className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                    </label>
+                    <span className="ml-6">{modulo.nombre_modulo}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+            <br />
+            {errors.modulos && (
+              <Message
+                severity="warn"
+                text="Debes seleccionar al menos un modulo"
+                className="w-full"
+              >
+                {errors.modulos}
+              </Message>
+            )}
+
           </div>
         </div>
       </div>
