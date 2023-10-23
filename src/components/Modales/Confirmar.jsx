@@ -28,7 +28,9 @@ const Confirmar = ({
   } = useUsuarios();
   const { perfilState, eliminarPerfilProvider, restaurarPerfilProvider } =
     usePerfiles();
-  const { ModuloState, eliminarModuloProvider, restaurarModuloProvider } =
+  const { ModuloState,
+     eliminarModuloProvider, 
+     restaurarModuloProvider } =
     useModulos();
   const { setAlerta } = useAuth();
 
@@ -111,7 +113,7 @@ const Confirmar = ({
       mensajeEliminadoModulo();
     }
     if (variableModal == 7) {
-      restaurarModuloProvider()
+      // restaurarModuloProvider()
       setModalEliminar(false);
       mensajeRestauradoModulo();
     }
