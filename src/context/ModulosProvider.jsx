@@ -12,7 +12,6 @@ const ModulosProvider = ({ children }) => {
   const [dataMenus, setDataMenus] = useState([]);
   const [ModuloState, setModuloState] = useState({});
   const [roles, setRoles] = useState([]);
-  const [menus, setMenus] = useState([]);
 
   const [rolesEdit, setrolesEdit] = useState([]);
 
@@ -134,7 +133,7 @@ const ModulosProvider = ({ children }) => {
     }
   };
 
-  const obtenerMenus = async () => {
+  const obtenerMenus = async (id_modulo) => {
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -144,8 +143,8 @@ const ModulosProvider = ({ children }) => {
     };
     console.log(id_modulo)
     try {
-      const { data } = await conexionCliente(`/menus/modulo/${ModuloState.id_modulo}?estado=1`, config);
-      setMenus(data);
+      const { data } = await conexionCliente(`/menus/modulo/${id_modulo}?estado=1`, config);
+      setDataMenus(data);
       console.log(data);
     } catch (error) {
       console.error("Error al obtener menus:", error);

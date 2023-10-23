@@ -37,6 +37,7 @@ const Modulos = () => {
     guardarModulo,
     setModuloState,
     eliminarRestablecerModulo,
+    obtenerMenus,
   } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
@@ -52,9 +53,10 @@ const Modulos = () => {
   //   setModalAsignarMenuVisible(true);
   // };
 
-  const handleAsignarMenuClick = (e, modulo) => {
+  const handleAsignarMenuClick = (modulo, e) => {
     e.preventDefault();
-    setModuloState(modulo);
+    console.log(modulo)
+    obtenerMenus(modulo);
     setModalAsignarMenuVisible(true);
   };
 
