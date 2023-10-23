@@ -5,6 +5,7 @@ import { _UsuarioRouter } from './src/routes/UsuarioRoutes';
 import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
 import { _ModulosRouter } from './src/routes/ModulosRoutes';
 import { _RolesRouter } from './src/routes/RolesRoutes';
+import { _MenusRouter } from './src/routes/MenuRoutes';
 
 const app = express();
 // DEFINIR TIPOS PARA EL OBJETO REQUEST
@@ -39,6 +40,16 @@ app.use(async (__, _, next: NextFunction) => {
         console.log(error)
     }
 });
+// app.use(async (__, _, next: NextFunction) => {
+//     try {
+//         const data = await fetch('https://github.com/tabler/tabler-icons/blob/master/icons')
+//         const json = await data.json()
+//         console.log(json)
+//         next()
+//     } catch (error) {
+//         console.log(error)
+//     }
+// });
 
 //DEFINIR RUTA DEL USUARIO
 // Crear una instancia del enrutador de usuario
@@ -52,6 +63,8 @@ app.use('/suma/api/modulos', _ModulosRouter)
 
 //DEFINIR RUTA DE LOS ROLES
 app.use('/suma/api/roles', _RolesRouter)
+
+app.use('/suma/api/menus', _MenusRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {

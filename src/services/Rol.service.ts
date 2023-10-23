@@ -70,6 +70,10 @@ export class RolService {
         let nombre_editado: string
         let descripcion_editado: string
         try {
+            const Brol: any = await this._Query_Rol.Buscar_Rol_Nombre(nombre)
+            if (Brol?.length > 0 && Brol[0].nombre !== nombre) {
+                return { error: true, message: 'Ya existe este rol' } //!ERROR
+            }
             const respuesta: any = await this._Query_Rol.Buscar_Rol_ID(id_rol)
             if (respuesta[0]?.nombre === nombre) {
                 nombre_editado = respuesta[0]?.nombre

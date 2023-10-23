@@ -1,22 +1,26 @@
 import { Request, Response } from "express";
-import { RolService } from "../services/Rol.service";
 import { EstadosTablas } from "../validations/utils";
+import { MenuService } from "../services/Menu.service";
 
-export class _RolController {
+export default class _MenuController {
 
-    public async Obtener_Roles(req: Request, res: Response) {
+    public async Obtener_Menus(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { id_modulo } = req.params
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+        }
+        if (!id_modulo) {
+            return res.status(404).json({ error: true, message: 'No se ha definido el modulo a consultar' }) //!ERROR
         }
         if (!estado) {
             return res.status(404).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
         }
 
         try {
-            const _RolService = new RolService()
-            const respuesta = await _RolService.Obtener_Roles(+estado)
+            const menu_service = new MenuService()
+            const respuesta = await menu_service.Obtener_Menus(+estado, +id_modulo)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -24,26 +28,30 @@ export class _RolController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al obtener los roles' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al obtener los menus del modulo' }) //!ERROR
         }
     }
 
-    public async Insertar_Rol(req: Request, res: Response) {
+    public async Insertar_Menu(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { nombre, descripcion } = req.body
+        const { id_modulo } = req.params
+        const { nombre, link_menu } = req.body
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!nombre) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar un nombre al rol' }) //!ERROR
+        if (!id_modulo) {
+            return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
         }
-        if (!descripcion) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }) //!ERROR
+        if (!nombre) {
+            return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
+        }
+        if (!link_menu) {
+            return res.status(400).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
         }
 
         try {
-            const _RolService = new RolService()
-            const respuesta = await _RolService.Insertar_Rol(nombre, descripcion, usuario?.usuario) 
+            const menu_service = new MenuService()
+            const respuesta = await menu_service.Insertar_Menu(nombre, link_menu, id_modulo, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -51,48 +59,48 @@ export class _RolController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al crear el rol' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al crear el menu' }) //!ERROR
         }
     }
 
-    public async Buscar_Rol(req: Request, res: Response) {
-        const { id_rol } = req.params
+    public async Buscar_Menu(req: Request, res: Response) {
+        const { id_menu } = req.params
         const { usuario } = req
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_rol) {
-            return res.json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
+        if (!id_menu) {
+            return res.json({ error: true, message: 'No se ha encontrado el menu' }) //!ERROR
         }
         try {
-            const _RolService = new RolService()
+            const menu_service = new MenuService()
 
-            const respuesta = await _RolService.Buscar_Rol(+id_rol)
+            const respuesta = await menu_service.Buscar_Menu(+id_menu)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
             return res.json(respuesta) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return res.json({ error: true, message: 'Error al encontrar el rol' }) //!ERROR
+            return res.json({ error: true, message: 'Error al encontrar el menu' }) //!ERROR
         }
     }
 
-    public async Editar_Rol(req: Request, res: Response) {
+    public async Editar_Menu(req: Request, res: Response) {
         const { usuario } = req
-        const { id_rol } = req.params
-        const { nombre, descripcion } = req.body
+        const { id_menu } = req.params
+        const { nombre, link_menu } = req.body
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_rol) {
+        if (!id_menu) {
             return res.status(404).json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
         }
         if (!nombre) {
-            return res.status(404).json({ error: true, message: 'Ingrese el nombre del rol' }) //!ERROR
+            return res.status(404).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
         }
-        if (!descripcion) {
-            return res.status(404).json({ error: true, message: 'Ingrese al descripcion del rol' }) //!ERROR
+        if (!link_menu) {
+            return res.status(404).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
         }
 
         // const result = PerfilesSchema.safeParse(req.body)
@@ -101,14 +109,14 @@ export class _RolController {
         // }
 
         try {
-            const _RolService = new RolService()
+            const menu_service = new MenuService()
 
-            const respuesta = await _RolService.Editar_Rol(+id_rol, nombre, descripcion, usuario.usuario)
+            const respuesta = await menu_service.Editar_menu(+id_menu, nombre, link_menu, usuario.usuario)
             if (respuesta.error) {
                 return res.status(404).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await _RolService.Buscar_Rol(+id_rol)
+            const response = await menu_service.Buscar_Menu(+id_menu)
             if (!response) {
                 return res.status(404).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
             }
@@ -119,32 +127,32 @@ export class _RolController {
         }
     }
 
-    public async Cambiar_Estado_Rol(req: Request, res: Response) {
+    public async Cambiar_Estado_Menu(req: Request, res: Response) {
         const { usuario } = req
-        const { id_rol } = req.params
+        const { id_menu } = req.params
         const { estado } = req.query as { estado: string }
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_rol) {
-            return res.json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
+        if (!id_menu) {
+            return res.json({ error: true, message: 'No se ha encontrado el menu' }) //!ERROR
         }
         if (!estado) {
             return res.json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
         }
 
         try {
-            const _RolService = new RolService()
-            const respuesta = await _RolService.Cambiar_Estado_Rol(+id_rol, +estado)
+            const menu_service = new MenuService()
+            const respuesta = await menu_service.Cambiar_Estado_Menu(+id_menu, +estado)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
 
-            return res.json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el rol' : 'Se ha desactivado el rol' }) //*SUCCESSFUL
+            return res.json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }) //*SUCCESSFUL
 
         } catch (error) {
             console.log(error)
-            return res.json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el rol' : 'Error al desactivar el rol' }) //!ERROR
+            return res.json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el menu' : 'Error al desactivar el menu' }) //!ERROR
         }
     }
 
