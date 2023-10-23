@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
+import { Button as PButton } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import useUsuarios from "../../hooks/useUsuarios";
 import { Steps } from "primereact/steps";
 import { Message } from "primereact/message";
+import Button from "../Botones/Button";
 
 // eslint-disable-next-line react/prop-types
 const ModalAgregarUsuarios = ({ visible, onClose }) => {
@@ -75,8 +76,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       perfiles: perfilesSeleccionados,
       roles: permisosPorModulo,
     };
-
-    console.log(formData)
 
     if (permisosPorModulo.length === 0 || permisosPorModulo.filter(permiso => permiso?.id_estado === 1).length === 0) {
       errors.modulos = "Debes seleccionar al menos un modulo";
@@ -241,8 +240,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     <div>
       {step > 1 && (
         <Button
-          className="p-button-text bg-gray-300 p-2 mx-2 rounded-md px-3 hover:bg-gray-400 font-semibold"
-          onClick={handlePrev}
+          tipo={'PRINCIPAL'}
+          funcion={handlePrev}
         >
           Atrás
         </Button>

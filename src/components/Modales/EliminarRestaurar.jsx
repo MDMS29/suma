@@ -14,13 +14,14 @@ const EliminarRestaurar = ({ tipo, funcion }) => {
 
     const tipo_modal = {
         ELIMINAR: '¿Desea inactivar este registro?',
-        RESTAURAR: '¿Desea restaurar este registro?'
+        RESTAURAR: '¿Desea restaurar este registro?',
+        RESTABLECER_CLAVE: '¿Desea restablecer la clave del usuario?'
     }
 
     const footerModal = (
         <React.Fragment>
             <Button tipo="CANCELAR" funcion={e => setVerEliminarRestaurar(false)}>Cancelar</Button>
-            <Button tipo='PRINCIPAL' funcion={e => funcion(e)}>{tipo_modal[tipo] === tipo_modal.ELIMINAR ? 'Eliminar' : 'Restaurar' }</Button>
+            <Button tipo='PRINCIPAL' funcion={e => funcion(e)}>{tipo_modal[tipo] === tipo_modal.ELIMINAR ? 'Eliminar' : tipo_modal[tipo] === tipo_modal.RESTABLECER_CLAVE ? 'Restablecer' : 'Restaurar' }</Button>
         </React.Fragment>
     );
 

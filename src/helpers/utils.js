@@ -3,3 +3,5 @@ export const genLlaveAleatoria = () => {
     const fecha = Date.now().toString(15)
     return random + fecha
 }
+
+
