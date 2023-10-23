@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
 import { MultiSelect } from "primereact/multiselect";
-import { Link } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -10,9 +9,11 @@ import useAuth from "../../hooks/useAuth";
 import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
-import { Button } from "primereact/button";
+import { Button as PButton } from "primereact/button";
 import { Edit_Icono, Trash_Icono } from "../../components/Icons/Iconos";
 import Confirmar from "../../components/Modales/Confirmar";
+import BLink from "../../components/Botones/BLink";
+import Button from "../../components/Botones/Button";
 
 const Modulos = () => {
   const toast = useRef(null);
@@ -26,7 +27,6 @@ const Modulos = () => {
   const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
   const {
     dataModulos,
-    setDataModulos,
     permisosModulo,
     setPermisosModulo,
     buscarModulo,
@@ -125,26 +125,26 @@ const Modulos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <Button
+            <PButton
               tooltip="Editar"
               tooltipOptions={{ position: "top" }}
               className="p-button-rounded p-mr-2"
               onClick={(e) => editarModulo(e, rowData.id_modulo)}
             >
               {Edit_Icono}
-            </Button>
+            </PButton>
           )}
         {permisosModulo.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-            <Button
+            <PButton
               tooltip="Eliminar"
               className="p-button-rounded p-button-danger p-mr-2"
               tooltipOptions={{ position: "top" }}
               onClick={(e) => confirmDeleteModulo(e, rowData)}
             >
               {Trash_Icono}
-            </Button>
+            </PButton>
           )}
       </div>
     );
@@ -165,7 +165,6 @@ const Modulos = () => {
           <Confirmar
             modalEliminar={modalEliminar}
             setModalEliminar={setModalEliminar}
-            mensajeEliminadoModulo={mensajeEliminadoModulo}
             botonModulo={botonModulo}
           />
         ) : (
@@ -180,24 +179,24 @@ const Modulos = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-              <button
-                className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-                onClick={(e) => setModalVisible(true, e)}
+            <Button
+                tipo={'PRINCIPAL'}
+                funcion={(e) => setModalVisible(true, e)}
               >
                 <i className="pi pi-plus mx-2 font-medium"></i>
                 Agregar
-              </button>
+              </Button>
             )}
           {permisosModulo.filter(
             (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
           ).length > 0 && (
               <div className="h-full flex justify-center items-center">
-                <Link
-                  className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-                  to="/configuracion/modulos/inactivos"
+              <BLink
+                  tipo={'INACTIVOS'}
+                  url="/configuracion/modulos/inactivos"
                 >
                   Inactivos
-                </Link>
+                </BLink>
               </div>
             )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">

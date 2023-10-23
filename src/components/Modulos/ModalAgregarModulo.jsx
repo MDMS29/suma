@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
+import Button from "../Botones/Button";
 import { InputText } from "primereact/inputtext";
 import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
@@ -160,17 +160,16 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   const footerContent = (
     <div>
       <Button
-        className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
-        onClick={handleGuardar}
-      >
-        {rolesEdit.length !== 0 ? "Actualizar" : "Guardar"}
+        tipo={'PRINCIPAL'}
+        funcion={handleGuardar}
+      >{rolesEdit.length !== 0 ? "Actualizar" : "Guardar"}
       </Button>
     </div>
   )
 
   return (
     <Dialog
-      header={<h1>Agregar Módulo</h1>}
+      header={rolesEdit.length !== 0 ? <h1>Editar Módulo</h1> : <h1>Agregar Módulo</h1>}
       visible={visible}
       onHide={handleClose}
       className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2"

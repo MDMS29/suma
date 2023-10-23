@@ -1,5 +1,5 @@
 import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
+import Button from "../Botones/Button";
 import { Message } from "primereact/message";
 
 import { InputText } from "primereact/inputtext";
@@ -144,11 +144,9 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
   const footerContent = (
     <div>
       <Button
-        onClick={handleGuardar}
-        className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
-      >
-        {modulosEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
-
+        tipo={'PRINCIPAL'}
+        funcion={handleGuardar}
+      > {modulosEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
       </Button>
     </div>
   );

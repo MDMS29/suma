@@ -11,7 +11,8 @@ import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import useAuth from "../../hooks/useAuth";
 import Confirmar from "../../components/Modales/Confirmar";
-import { Restore_Icono } from "../../components/Icons/Iconos";
+import { Restore_Icono, Return_Icono } from "../../components/Icons/Iconos";
+import Button from "../../components/Botones/Button";
 
 const ModulosInactivos = () => {
   const toast = useRef(null);
@@ -19,10 +20,6 @@ const ModulosInactivos = () => {
   const [modalEliminar, setModalEliminar] = useState(false);
   const { dataModulos, setModuloState, permisosModulo } = useModulos();
   const { Permisos_DB } = useAuth();
-
-  const redirectToPreviousPage = () => {
-    window.history.back();
-  };
 
   const confirmRestaurarModulo = (e, modulo) => {
     e.preventDefault();
@@ -100,13 +97,9 @@ const ModulosInactivos = () => {
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>
-          <button
-            onClick={redirectToPreviousPage}
-            className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-          >
-            <i className="pi pi-replay mx-2 font-medium"></i>
-            Regresar
-          </button>
+          <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+            {Return_Icono} Regresar
+          </Button>
         </div>
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">

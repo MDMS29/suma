@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import usePerfiles from "../../hooks/usePerfiles";
 import { MultiSelect } from "primereact/multiselect";
 import ModalAgregarPerfil from "../../components/Perfiles/ModalAgregarPerfil";
-
-import { Link } from "react-router-dom";
+import BLink from "../../components/Botones/BLink";
 
 import { Toast } from "primereact/toast";
 import Loader from "../../components/Loader";
@@ -12,13 +11,14 @@ import useAuth from "../../hooks/useAuth";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
+import { Button as PButton } from "primereact/button";
 import {
   Trash_Icono,
   Edit_Icono,
-} from "../../components/Icons/Iconos" ;
+} from "../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext"
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
+import Button from "../../components/Botones/Button";
 
 
 const Perfiles = () => {
@@ -94,21 +94,21 @@ const Perfiles = () => {
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
-    //MOSTRAR ALERTA
-    useEffect(() => {
-      if (alerta.show) {
-        const show_alert = () => {
-          toast.current.show({
-            severity: alerta.error ? 'error' : 'success',
-            detail: alerta.message,
-            life: 1500,
-          });
-          setTimeout(() => setAlerta({}), 1500)
-        }
-        show_alert()
+  //MOSTRAR ALERTA
+  useEffect(() => {
+    if (alerta.show) {
+      const show_alert = () => {
+        toast.current.show({
+          severity: alerta.error ? 'error' : 'success',
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500)
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [alerta])
+      show_alert()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta])
 
   const columnAcciones = rowData => {
     return (
@@ -116,7 +116,7 @@ const Perfiles = () => {
         <div className="text-center flex gap-x-3">
           {
             permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <Button
+              <PButton
                 tooltip="Editar"
                 tooltipOptions={{ position: "top" }}
                 className="p-button-rounded p-mr-2"
@@ -124,20 +124,20 @@ const Perfiles = () => {
 
               >
                 {Edit_Icono}
-              </Button>
+              </PButton>
 
             )
           }
           {
             permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR).length > 0 && (
-              <Button
+              <PButton
                 tooltip="Eliminar"
                 className="p-button-rounded p-button-danger p-mr-2"
                 tooltipOptions={{ position: "top" }}
                 onClick={(e) => confirmDeletePerfil(e, rowData)}
               >
                 {Trash_Icono}
-              </Button>
+              </PButton>
             )
           }
 
@@ -161,24 +161,24 @@ const Perfiles = () => {
 
           {
             permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <button
-                className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-                onClick={(e) => setModalVisible(true, e)}
+              <Button
+                tipo={'PRINCIPAL'}
+                funcion={(e) => setModalVisible(true, e)}
               >
                 <i className="pi pi-plus mx-2 font-medium"></i>
                 Agregar
-              </button>
-            ) 
+              </Button>
+            )
           }
           {
             permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
               <div className="h-full flex justify-center items-center">
-                <Link
-                  className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-                  to="/configuracion/perfiles/inactivos"
+              <BLink
+                  tipo={'INACTIVOS'}
+                  url="/configuracion/perfiles/inactivos"
                 >
                   Inactivos
-                </Link>
+                </BLink>
               </div>
             )
           }

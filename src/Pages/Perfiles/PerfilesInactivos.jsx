@@ -11,18 +11,16 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
 
-import { Restore_Icono } from "../../components/Icons/Iconos";
+import { Restore_Icono, Return_Icono } from "../../components/Icons/Iconos";
 
 import { InputText } from "primereact/inputtext"
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
+import Button from "../../components/Botones/Button";
 
 const PerfilesInactivos = () => {
   const toast = useRef(null);
   const { dataPerfiles, permisosPerfil, setPerfilState, perfilState, eliminarRestablecerPerfil } = usePerfiles();
   const { Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar, alerta, setAlerta } = useAuth()
-  const redirectToPreviousPage = () => {
-    window.history.back();
-  };
 
   const confirmRestaurarPerfil = (perfil) => {
     setVerEliminarRestaurar(true);
@@ -99,10 +97,9 @@ const PerfilesInactivos = () => {
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>
-          <button onClick={redirectToPreviousPage} className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500">
-            <i className="pi pi-replay mx-2 font-medium"></i>
-            Regresar
-          </button>
+          <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+          {Return_Icono} Regresar
+        </Button>
         </div>
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto  xl:ml-auto border rounded-md">

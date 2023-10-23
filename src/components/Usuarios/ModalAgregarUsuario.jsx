@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
-import { Button as PButton } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -242,7 +241,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     <div>
       {step > 1 && (
         <Button
-          tipo={'PRINCIPAL'}
+          tipo={'CANCELAR'}
           funcion={handlePrev}
         >
           Atrás
@@ -250,15 +249,15 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       )}
       {step < 3 ? (
         <Button
-          className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
-          onClick={handleNext}
+          tipo={'PRINCIPAL'}
+          funcion={handleNext}
         >
           Siguiente
         </Button>
       ) : (
         <Button
-          className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500 font-semibold"
-          onClick={handleGuardar}
+          tipo={'PRINCIPAL'}
+          funcion={handleGuardar}
         >
           {perfilesEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
         </Button>
