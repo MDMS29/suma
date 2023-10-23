@@ -42,6 +42,8 @@ const UsuariosProvider = ({ children }) => {
 
   const [permisosUsuario, setPermisosUsuario] = useState([])
 
+  const [resClave, setResClave] = useState(false)
+
   const { authUsuario, setAuthUsuario, setAlerta, setVerEliminarRestaurar } = useAuth()
 
   const location = useLocation()
@@ -90,7 +92,7 @@ const UsuariosProvider = ({ children }) => {
       const { data } = await conexionCliente.delete(`/usuarios/${id}?estado=${estado}`, config)
 
       if (data?.error) {
-        setAlerta({ error: false, show: true, message: data.message })
+        setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -110,8 +112,7 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-
-  const restablecerUsuarioProvider = async () => {
+  const restablecerUsuarioProvider = async (id) => {
     const token = localStorage.getItem('token')
     const config = {
       headers: {
@@ -120,15 +121,26 @@ const UsuariosProvider = ({ children }) => {
       }
     }
     try {
-      const { data } = await conexionCliente.patch(`usuarios/cambiar_clave/${usuarioState.id_usuario}`, {}, config)
+      setAlerta({ error: true, show: true, message: 'Enviando correo...' })
+      const { data } = await conexionCliente.patch(`usuarios/cambiar_clave/${id}`, {}, config)
+      setAlerta({ error: false, show: false, message: '' })
+      setResClave(false)
 
-      if (data.error) {
-        console.log(data.message)
+      if (data?.error) {
+        setAlerta({ error: true, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
       }
 
+      setAlerta({ error: false, show: true, message: data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      setVerEliminarRestaurar(false)
+      return true
 
     } catch (error) {
-      console.log(error)
+      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
     }
   }
 
@@ -168,7 +180,13 @@ const UsuariosProvider = ({ children }) => {
       const { data } = await conexionCliente(`/perfiles?estado=1`, config);
       setPerfilesAgg(data);
     } catch (error) {
-      console.error("Error al obtener perfiles:", error);
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
     }
   };
 
@@ -190,7 +208,13 @@ const UsuariosProvider = ({ children }) => {
       );
       setModulosAgg(data);
     } catch (error) {
-      console.error("Error al obtener perfiles:", error);
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
     }
   };
 
@@ -329,7 +353,7 @@ const UsuariosProvider = ({ children }) => {
     setErrors, setUsuarioState, usuarioState, eliminarRestablecerUsuario, restablecerUsuarioProvider,
     restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,
     perfilesEdit, permisosEdit, setPerfilesEdit, setPermisosEdit, editarUsuario,
-    permisosUsuario, setPermisosUsuario
+    permisosUsuario, setPermisosUsuario, resClave, setResClave
   }))
 
   return (

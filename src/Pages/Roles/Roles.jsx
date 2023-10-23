@@ -18,7 +18,7 @@ import Forbidden from "../Errors/forbidden";
 import useRoles from "../../hooks/useRoles";
 import useAuth from "../../hooks/useAuth";
 
-import ModalPrinRoles from "../../components/Modales/ModalPrinRoles";
+import ModalPrinRoles from "../../components/Roles/ModalPrinRoles";
 import Button from "../../components/Botones/Button";
 import BLink from "../../components/Botones/BLink";
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
@@ -56,7 +56,7 @@ const Roles = () => {
     useEffect(() => {
         if (alerta.show) {
             (() => {
-                toast.current.show({ severity: alerta.error ? 'error' : 'success', summary:  alerta.error ? 'Error' : 'Exitoso', detail: alerta.message, life: 1500, });
+                toast.current.show({ severity: alerta.error ? 'error' : 'success', detail: alerta.message, life: 1500, });
                 setTimeout(() => setAlerta({}), 1500)
             })()
         }

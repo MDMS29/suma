@@ -39,22 +39,34 @@ form>input {
 
 /* --------------------------------- Mensajes Toast --------------------------------- */
 
+.p-toast-message-content {
+    display: flex;
+    align-items: center;
+}
+
+.p-toast-detail {
+    margin-top: 0;
+}
+
 .p-toast-message-success {
     background-color: #E9F6F0;
     border: 2px solid #0FAB0B;
     border-radius: 10px;
-    margin: 10px;
-    width: 350px;
-    padding-bottom: 5px;
+    font-weight: 500
+}
+
+.p-toast-message-info {
+    background-color: #c8e7f5;
+    border: 2px solid #00aeff;
+    border-radius: 10px;
+    font-weight: 500;
 }
 
 .p-toast-message-error {
     background-color: #f4cccbac;
     border: 2px solid rgba(255, 0, 0, 0.453);
     border-radius: 10px;
-    margin: 10px;
-    padding-bottom: 5px;
-    width: 350px;
+    font-weight: 500;
 }
 
 /* --------------------------------- Estilos de la Datatable --------------------------------- */
