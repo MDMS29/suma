@@ -1,23 +1,36 @@
 import { createContext, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import conexionCliente from "../config/ConexionCliente";
 import useAuth from "../hooks/useAuth";
+import ModalAsignarMenu from "../components/Modulos/ModalAsignarMenu";
 
 const ModulosContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const ModulosProvider = ({ children }) => {
+  const navigate = useNavigate()
+
   const [dataModulos, setDataModulos] = useState([]);
+  const [dataMenus, setDataMenus] = useState([]);
   const [ModuloState, setModuloState] = useState({});
   const [roles, setRoles] = useState([]);
+  const [menus, setMenus] = useState([]);
+
   const [rolesEdit, setrolesEdit] = useState([]);
-  const { authModulo, setAlerta } = useAuth();
+
+  const { authModulo, setAlerta, setAuthUsuario, setVerEliminarRestaurar } = useAuth();
 
   const [ModulosAgg, setModulosAgg] = useState({
     id_modulo: 0,
     cod_modulo: "",
     nombre_modulo: "",
     roles: [],
+  });
+
+  const [MenusAgg, setMenusAgg] = useState({
+    id_menu: 0,
+    nombre_menu: "",
+    link_menu: "",
   });
 
   const [errors, setErrors] = useState({
@@ -64,75 +77,45 @@ const ModulosProvider = ({ children }) => {
     }
   }, [location.pathname]);
 
-  const eliminarModuloProvider = async () => {
-    if (ModuloState.id_modulo) {
-      const token = localStorage.getItem("token");
-      let estadoModulo = 0;
-      if (ModuloState.id_estado == 1) {
-        estadoModulo = 2;
-      } else {
-        estadoModulo = 1;
-      }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      try {
-        const { data } = await conexionCliente.delete(
-          `/modulos/${ModuloState.id_modulo}?estado=${estadoModulo}`,
-          config
-        );
-        console.log(data);
-        if (data.error) {
-          console.log(data.message);
-        }
+  const eliminarRestablecerModulo = async (id) => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setAuthUsuario({})
+      navigate('/auth')
+      return
+    }
 
-        const moduloActualizados = dataModulos.filter(
-          (modulo) => modulo.id_modulo !== ModuloState.id_modulo
-        );
-        setDataModulos(moduloActualizados);
-      } catch (error) {
-        console.log(error);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
     }
-  };
 
-  const restaurarModuloProvider = async () => {
-    if (ModuloState.id_modulo) {
-      const token = localStorage.getItem("token");
-      let estadoModulo = 0;
-      if (ModuloState.id_estado == 2) {
-        estadoModulo = 1;
-      } else {
-        estadoModulo = 2;
-      }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      try {
-        const { data } = await conexionCliente.delete(
-          `/modulos/${ModuloState.id_modulo}?estado=${estadoModulo}`,
-          config
-        );
-        console.log(data);
-        if (data.error) {
-          console.log(data.message);
-        }
+    try {
+      const estado = location.pathname.includes("inactivos") ? 1 : 2;
+      const { data } = await conexionCliente.delete(`/modulos/${id}?estado=${estado}`, config)
 
-        const moduloActualizados = dataModulos.filter(
-          (modulo) => modulo.id_modulo !== ModuloState.id_modulo
-        );
-        setDataModulos(moduloActualizados);
-      } catch (error) {
-        console.log(error);
+      // console.log(data)
+      if (data?.error) {
+        setAlerta({ error: true, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
       }
+      const moduloActualizados = dataModulos.filter(modulo => modulo.id_modulo !== id)
+      setDataModulos(moduloActualizados)
+
+      setAlerta({ error: false, show: true, message: data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      setVerEliminarRestaurar(false)
+      return true
+
+    } catch (error) {
+      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
     }
-  };
+  }
 
   const obtenerroles = async () => {
     const token = localStorage.getItem("token");
@@ -150,6 +133,24 @@ const ModulosProvider = ({ children }) => {
       // console.log(data);
     } catch (error) {
       console.error("Error al obtener roles:", error);
+    }
+  };
+
+  const obtenerMenus = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    console.log(id_modulo)
+    try {
+      const { data } = await conexionCliente(`/menus/modulo/${ModuloState.id_modulo}?estado=1`, config);
+      setMenus(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Error al obtener menus:", error);
     }
   };
 
@@ -211,17 +212,35 @@ const ModulosProvider = ({ children }) => {
       );
 
       if (data?.id_modulo) {
-        console.log(data);
         // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
         const modulosActualizados = dataModulos.map((modulo) =>
           modulo.id_modulo === data.id_modulo ? data : modulo
         );
         setDataModulos(modulosActualizados);
+        setAlerta({
+          error: false,
+          show: true,
+          message: 'Modulo editado con exito'
+        })
+
+        setTimeout(() => setAlerta({}), 1500)
         return true;
       }
-      return false;
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: data.message
+      })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
+
     } catch (error) {
-      console.error("Error al guardar la información:", error);
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
       throw error; // Puedes lanzar una excepción en caso de error
     }
   };
@@ -277,8 +296,8 @@ const ModulosProvider = ({ children }) => {
     errors,
     setErrors,
     handleChangeModulos,
-    eliminarModuloProvider,
-    restaurarModuloProvider,
+    // eliminarModuloProvider,
+    // restaurarModuloProvider,
     guardarModulos,
     permisosModulo,
     setPermisosModulo,
@@ -288,6 +307,12 @@ const ModulosProvider = ({ children }) => {
     rolesEdit,
     setrolesEdit,
     editarModulo,
+    obtenerMenus,
+    eliminarRestablecerModulo,
+    MenusAgg,
+    setMenusAgg,
+    dataMenus,
+    setDataMenus,
   }));
 
   return (

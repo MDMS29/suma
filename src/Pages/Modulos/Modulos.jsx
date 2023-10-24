@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
@@ -9,11 +10,14 @@ import useAuth from "../../hooks/useAuth";
 import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
+
 import { Button as PButton } from "primereact/button";
-import { Edit_Icono, Trash_Icono } from "../../components/Icons/Iconos";
-import Confirmar from "../../components/Modales/Confirmar";
+import { Edit_Icono, Trash_Icono, menu_Icono } from "../../components/Icons/Iconos";
 import BLink from "../../components/Botones/BLink";
 import Button from "../../components/Botones/Button";
+
+import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
+import ModalAsignarMenu from "../../components/Modulos/ModalAsignarMenu";
 
 const Modulos = () => {
   const toast = useRef(null);
@@ -24,14 +28,18 @@ const Modulos = () => {
     { field: "icono", header: "Icono" },
   ];
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
+
   const {
     dataModulos,
+    setDataModulos,
+    ModuloState,
     permisosModulo,
     setPermisosModulo,
     buscarModulo,
     guardarModulo,
     setModuloState,
+    eliminarRestablecerModulo,
   } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
@@ -39,6 +47,20 @@ const Modulos = () => {
   const [filteredData, setFilteredData] = useState(dataModulos);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+
+
+  const [modalAsignarMenuVisible, setModalAsignarMenuVisible] = useState(false);
+
+  // const handleAsignarMenuClick = () => {
+  //   setModalAsignarMenuVisible(true);
+  // };
+
+  const handleAsignarMenuClick = (e, modulo) => {
+    e.preventDefault();
+    setModuloState(modulo);
+    setModalAsignarMenuVisible(true);
+  };
+
 
   useEffect(() => {
     setFilteredData(dataModulos);
@@ -73,11 +95,10 @@ const Modulos = () => {
     await buscarModulo(id_modulo);
   };
 
-  const confirmDeleteModulo = (e, modulo) => {
+  const modalEliminarModulo = (e, modulo) => {
     e.preventDefault();
-    setModalEliminar(true);
     setModuloState(modulo);
-    setBotonModulo(1);
+    setVerEliminarRestaurar(true);
   };
 
 
@@ -141,11 +162,19 @@ const Modulos = () => {
               tooltip="Eliminar"
               className="p-button-rounded p-button-danger p-mr-2"
               tooltipOptions={{ position: "top" }}
-              onClick={(e) => confirmDeleteModulo(e, rowData)}
+              onClick={(e) => modalEliminarModulo(e, rowData)}
             >
               {Trash_Icono}
             </PButton>
           )}
+           <Button
+              tooltip="Asignar Menú"
+              className="p-button-rounded p-mr-2"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => handleAsignarMenuClick(rowData.id_modulo, e)}
+            >
+              {menu_Icono}
+            </Button>
       </div>
     );
   };
@@ -154,22 +183,15 @@ const Modulos = () => {
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && (
-          <ModalAgregarModulo
-            visible={modalVisible}
-            onClose={toggleModal}
-            guardarModulo={guardarModulo}
-          />
-        )}
-        {modalEliminar ? (
-          <Confirmar
-            modalEliminar={modalEliminar}
-            setModalEliminar={setModalEliminar}
-            botonModulo={botonModulo}
-          />
-        ) : (
-          ""
-        )}
+        
+        {modalVisible && <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />}
+        {modalAsignarMenuVisible && (
+        <ModalAsignarMenu
+          visible={modalAsignarMenuVisible}
+          onClose={() => setModalAsignarMenuVisible(false)}
+        />
+      )}
+        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRestablecerModulo(ModuloState.id_modulo, e)} />}
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Modulos</h1>
           <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>

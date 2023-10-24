@@ -135,7 +135,7 @@ const PerfilesProvider = ({ children }) => {
       const { data } = await conexionCliente.delete(`/perfiles/${id}?estado=${estado}`, config)
 
       if (data?.error) {
-        setAlerta({ error: false, show: true, message: data.message })
+        setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -154,7 +154,6 @@ const PerfilesProvider = ({ children }) => {
       return false
     }
   }
-
 
   const guardarPerfil = async (formData) => {
     const token = localStorage.getItem("token");

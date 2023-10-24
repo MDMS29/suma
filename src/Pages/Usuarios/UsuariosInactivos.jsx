@@ -23,7 +23,7 @@ const UsuariosInactivos = () => {
   const { dataUsuarios, setUsuarioState, permisosUsuario, eliminarRestablecerUsuario, usuarioState } = useUsuarios();
   const { alerta, setAlerta, Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
-  const mostrarModalEliminar = (usuario) => {
+  const mostrarModalRestaurar = (usuario) => {
     setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
   };
@@ -150,7 +150,7 @@ const UsuariosInactivos = () => {
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
                     // eslint-disable-next-line no-unused-vars
-                    onClick={e => mostrarModalEliminar(rowData)}
+                    onClick={e => mostrarModalRestaurar(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>

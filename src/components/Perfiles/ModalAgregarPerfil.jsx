@@ -40,15 +40,16 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     };
     const regex = /^[a-zA-Z0-9\s]*$/;
     const errors = {};
-
+    
     if (!regex.test(PerfilesAgg.nombre_perfil)) {
       errors.nombre_perfil = "No se permiten caracteres especiales";
     }
-
+    
     if ([PerfilesAgg.nombre_perfil].includes(" ")) {
       errors.nombre_perfil = "Este campo es obligatorio";
       console.log("Este campo es obligatorio");
     }
+    console.log("entro a guardar");
 
     if (modulosSeleccionados.length === 0 || modulosSeleccionados.filter((modulo) => modulo?.id_estado === 1).length === 0) {
       errors.modulos = "Debes seleccionar al menos un modulo";
@@ -83,6 +84,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       setErrors(errors);
       return;
     }
+
     setErrors({});
   };
 
@@ -173,7 +175,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
               onChange={(e) => handleChangePerfiles(e)}
             />
             {errors.nombre_perfil && (
-              <div className="text-red-600 text-xs ">
+              <div className="text-red-600 text-xs">
                 {errors.nombre_perfil}
               </div>
             )}

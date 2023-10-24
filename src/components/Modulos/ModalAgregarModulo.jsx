@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import Button from "../Botones/Button";
@@ -5,6 +6,7 @@ import { InputText } from "primereact/inputtext";
 import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
 
+// eslint-disable-next-line react/prop-types
 const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   const {
     ModulosAgg,
@@ -108,7 +110,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
           icono: "",
         });
         setrolesporModulo([]);
-        mensajeGuardado();
       }
     } catch (error) {
       console.error("Error al guardar el módulo:", error);
@@ -234,23 +235,47 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md overflow-auto h-48 mt-2">
               {roles.map((rol) => (
                 <div key={rol.id}>
-                  <label
-                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) ? "bg-primaryYellow" : "bg-gray-300"
-                      }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={fncChkPermiso(rol)}
-                      className="sr-only peer"
-                      onChange={() =>
-                        CheckboxChangeroles(rol.id_rol, rol.id_rol)
-                      }
-                    />
-                    <span
-                      className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
-                    ></span>
-                  </label>
-                  <span className="ml-6">{rol.nombre}</span>
+                  {rol.id_rol == 1
+                    ?
+                    <>
+                      <label
+                        className="p-checkbox w-10 h-5 cursor-pointer relative rounded-full bg-primaryYellow">
+                        <input
+                          type="checkbox"
+                          disabled
+                          checked
+                          className="sr-only peer"
+                         
+                        />
+                        <span
+                          className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
+                        ></span>
+                      </label>
+                      <span className="ml-6">{rol.nombre}</span>
+
+                    </>
+                    :
+
+                    <>
+                      <label
+                        className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) ? "bg-primaryYellow" : "bg-gray-300"
+                          }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={fncChkPermiso(rol)}
+                          className="sr-only peer"
+                          onChange={() =>
+                            CheckboxChangeroles(rol.id_rol, rol.id_rol)
+                          }
+                        />
+                        <span
+                          className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
+                        ></span>
+                      </label>
+                      <span className="ml-6">{rol.nombre}</span>
+                    </>
+                  }
                 </div>
               ))}
             </div>

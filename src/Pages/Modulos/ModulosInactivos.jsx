@@ -10,20 +10,30 @@ import { Button as PButton } from "primereact/button";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import useAuth from "../../hooks/useAuth";
-import Confirmar from "../../components/Modales/Confirmar";
 import { Restore_Icono, Return_Icono } from "../../components/Icons/Iconos";
 import Button from "../../components/Botones/Button";
+import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 
 const ModulosInactivos = () => {
   const toast = useRef(null);
 
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const { dataModulos, setModuloState, permisosModulo } = useModulos();
-  const { Permisos_DB } = useAuth();
+  const {
+    dataModulos,
+    setModuloState,
+    permisosModulo,
+    eliminarRestablecerModulo,
+    ModuloState,
+  } = useModulos();
+  const {
+    Permisos_DB,
+    verEliminarRestaurar,
+    setVerEliminarRestaurar,
+    setAlerta,
+    alerta,
+  } = useAuth();
 
-  const confirmRestaurarModulo = (e, modulo) => {
-    e.preventDefault();
-    setModalEliminar(true);
+  const mostrarModalEliminar = (modulo) => {
+    setVerEliminarRestaurar(true);
     setModuloState(modulo);
   };
 
@@ -60,6 +70,20 @@ const ModulosInactivos = () => {
     setFilteredData(dataModulos);
   }, [dataModulos]);
 
+  useEffect(() => {
+    if (alerta.show) {
+      (() => {
+        toast.current.show({
+          severity: alerta.error ? 'error' : 'success',
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500)
+      })()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta])
+
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -71,25 +95,14 @@ const ModulosInactivos = () => {
     />
   );
 
-  const mensajeRestauradoModulo = () => {
-    toast.current.show({
-      severity: "success",
-      detail: "El registro se ha activado correctamente. ",
-      life: 1500,
-    });
-  };
-
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {modalEliminar ? (
-        <Confirmar
-          modalEliminar={modalEliminar}
-          setModalEliminar={setModalEliminar}
-          mensajeRestauradoModulo={mensajeRestauradoModulo}
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"RESTAURAR"}
+          funcion={(e) => eliminarRestablecerModulo(ModuloState.id_modulo, e)}
         />
-      ) : (
-        ""
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Modulos Inactivos</h1>
@@ -143,7 +156,7 @@ const ModulosInactivos = () => {
                   <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    onClick={(e) => confirmRestaurarModulo(e, rowData)}
+                    onClick={(e) => mostrarModalEliminar(e, rowData)}
                   >
                     {Restore_Icono}
                   </PButton>
@@ -163,8 +176,8 @@ const ModulosInactivos = () => {
       {permisosModulo.length === 0 ? (
         <Loader />
       ) : permisosModulo.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

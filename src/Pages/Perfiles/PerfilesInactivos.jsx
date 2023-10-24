@@ -22,7 +22,7 @@ const PerfilesInactivos = () => {
   const { dataPerfiles, permisosPerfil, setPerfilState, perfilState, eliminarRestablecerPerfil } = usePerfiles();
   const { Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar, alerta, setAlerta } = useAuth()
 
-  const confirmRestaurarPerfil = (perfil) => {
+  const mostrarModalRestaurar = (perfil) => {
     setVerEliminarRestaurar(true);
     setPerfilState(perfil);
   };
@@ -136,7 +136,7 @@ const PerfilesInactivos = () => {
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
                     // eslint-disable-next-line no-unused-vars
-                    onClick={e => confirmRestaurarPerfil(rowData)}
+                    onClick={e => mostrarModalRestaurar(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>
