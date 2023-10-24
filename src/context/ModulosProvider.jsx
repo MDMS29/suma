@@ -17,7 +17,7 @@ const ModulosProvider = ({ children }) => {
 
   const [rolesEdit, setrolesEdit] = useState([]);
 
-  const { authModulo, setAlerta, setAuthUsuario, setVerEliminarRestaurar } = useAuth();
+  const { setAlerta, setAuthUsuario, setVerEliminarRestaurar } = useAuth();
 
   const [ModulosAgg, setModulosAgg] = useState({
     id_modulo: 0,

@@ -12,6 +12,8 @@ import useAuth from "../../hooks/useAuth";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
+// import { Dropdown } from 'primereact/dropdown';
+
 import {
   Trash_Icono,
   Edit_Icono,
@@ -173,7 +175,7 @@ const Perfiles = () => {
           {
             permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
               <div className="h-full flex justify-center items-center">
-              <BLink
+                <BLink
                   tipo={'INACTIVOS'}
                   url="/configuracion/perfiles/inactivos"
                 >

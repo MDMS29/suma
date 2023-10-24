@@ -40,19 +40,25 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     };
     const regex = /^[a-zA-Z0-9\s]*$/;
     const errors = {};
-    
+
     if (!regex.test(PerfilesAgg.nombre_perfil)) {
       errors.nombre_perfil = "No se permiten caracteres especiales";
+      console.log("No se permiten caracteres especiales");
+      setErrors(errors);
+      return
     }
-    
-    if ([PerfilesAgg.nombre_perfil].includes(" ")) {
+
+    if (!PerfilesAgg.nombre_perfil || [PerfilesAgg.nombre_perfil].includes(" ")) {
       errors.nombre_perfil = "Este campo es obligatorio";
+      setErrors(errors);
       console.log("Este campo es obligatorio");
+      return
     }
-    console.log("entro a guardar");
 
     if (modulosSeleccionados.length === 0 || modulosSeleccionados.filter((modulo) => modulo?.id_estado === 1).length === 0) {
       errors.modulos = "Debes seleccionar al menos un modulo";
+      setErrors(errors);
+      console.log("Debes seleccionar al menos un modulo");
       return
     }
 
@@ -68,29 +74,20 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
       if (response) {
         onClose();
-        setPerfilesAgg({
-          id_perfil: 0,
-          nombre_perfil: ""
-        });
-        setModulosSeleccionados([]);
+        setErrors({});
+        setModulosEdit([])
       }
-
 
     } catch (error) {
       console.error("Error al guardar el usuario:", error.response.message);
     }
-
-    if (Object.keys(errors).length > 0) {
-      setErrors(errors);
-      return;
-    }
-
     setErrors({});
   };
 
   const handleClose = () => {
     onClose();
     setPerfilesAgg({
+    id_perfil: 0,
       nombre_perfil: "",
     });
     setErrors({});
@@ -148,13 +145,13 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       <Button
         tipo={'PRINCIPAL'}
         funcion={handleGuardar}
-      > {modulosEdit.length !== 0 ? 'Actualizar' : 'Guardar'}
+      > {PerfilesAgg.id_perfil !== 0 ? 'Actualizar' : 'Guardar'}
       </Button>
     </div>
   );
   return (
     <Dialog
-      header={modulosEdit.length !== 0 ? <h1>Editar Perfil</h1> : <h1>Agregar Perfil</h1>}
+      header={PerfilesAgg.id_perfil !== 0 ? <h1>Editar Perfil</h1> : <h1>Agregar Perfil</h1>}
       visible={visible}
       onHide={handleClose}
       className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"

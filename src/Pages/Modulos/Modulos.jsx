@@ -198,7 +198,7 @@ const Modulos = () => {
           <h1 className="text-3xl">Modulos</h1>
           <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
         </div>
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex">
+        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           {permisosModulo.filter(
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR

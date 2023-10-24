@@ -172,16 +172,21 @@ const PerfilesProvider = ({ children }) => {
         config
       );
 
-        console.log("Información guardada con éxito:", response);
-        setDataPerfiles([...dataPerfiles, response.data]);
-        setAlerta({
-          error: false,
-          show: true,
-          message: 'Perfil creado con exito'
-        })
+      console.log("Información guardada con éxito:", response);
+      setDataPerfiles([...dataPerfiles, response.data]);
+      setAlerta({
+        error: false,
+        show: true,
+        message: 'Perfil creado con exito'
+      })
 
-        setTimeout(() => setAlerta({}), 1500)
-        
+      setPerfilesAgg({
+        id_perfil: 0,
+        nombre_perfil: ""
+      });
+
+      setTimeout(() => setAlerta({}), 1500)
+
     } catch (error) {
       console.error("Error al guardar la información:", error);
 
@@ -212,18 +217,22 @@ const PerfilesProvider = ({ children }) => {
       console.log(data);
 
 
-        const perfilesActualizados = dataPerfiles.map((perfil) =>
-          perfil.id_perfil === data.id_perfil ? {id_perfil: data.id_perfil, nombre_perfil: data.nombre_perfil} : perfil
-        );
-        setDataPerfiles(perfilesActualizados);
+      const perfilesActualizados = dataPerfiles.map((perfil) =>
+        perfil.id_perfil === data.id_perfil ? { id_perfil: data.id_perfil, nombre_perfil: data.nombre_perfil } : perfil
+      );
+      setDataPerfiles(perfilesActualizados);
 
-        setAlerta({
-          error: false,
-          show: true,
-          message: 'Perfil editado con exito'
-        })
+      setAlerta({
+        error: false,
+        show: true,
+        message: 'Perfil editado con exito'
+      })
 
-        setTimeout(() => setAlerta({}), 1500)
+      setTimeout(() => setAlerta({}), 1500)
+      setPerfilesAgg({
+        id_perfil: 0,
+        nombre_perfil: ""
+      });
 
 
     } catch (error) {
@@ -262,7 +271,8 @@ const PerfilesProvider = ({ children }) => {
     editarPerfil,
     modulosEdit,
     setModulosEdit,
-    eliminarRestablecerPerfil  }))
+    eliminarRestablecerPerfil
+  }))
 
   return (
     <PerfilesContext.Provider

@@ -33,6 +33,7 @@ const ModulosInactivos = () => {
   } = useAuth();
 
   const mostrarModalEliminar = (modulo) => {
+    console.log(modulo);
     setVerEliminarRestaurar(true);
     setModuloState(modulo);
   };
@@ -156,7 +157,7 @@ const ModulosInactivos = () => {
                   <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    onClick={(e) => mostrarModalEliminar(e, rowData)}
+                    onClick={(e) => mostrarModalEliminar(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>

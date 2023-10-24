@@ -5,6 +5,7 @@ import Button from "../Botones/Button";
 import { InputText } from "primereact/inputtext";
 import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
+import { Dropdown } from "primereact/dropdown";
 
 // eslint-disable-next-line react/prop-types
 const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
@@ -21,7 +22,49 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     guardarModulos,
   } = useModulos();
 
-  const [rolesporModulo, setrolesporModulo] = useState([]);
+  const [rolesporModulo, setrolesporModulo] = useState([{id_rol:1, id_estado:1}]);
+
+
+  const [iconos, setIconos] = useState([]);
+  // const [iconoSelect, setIconoSelect] = useState({});
+
+
+  console.log(ModulosAgg);
+
+  useEffect(() => {
+    const selectIcons = async () => {
+      const result = await fetch("/dataIcons.json");
+      const json = await result.json();
+      setIconos(json.icons);
+    }
+    selectIcons()
+  }, [])
+
+  // // las imagenes cuando esta selccionado la opcion
+  //  const selectedCountryTemplate = (option, props) => {
+  //    if (option) {
+  //      return (
+  //        <div className="flex align-items-center">
+  //          <img alt={option.name} src="https://gluc.mx/u/fotografias/m/2020/6/1/f638x638-28017_86184_5050.jpg" className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
+  //          <div>{option.name}</div>
+  //        </div>
+  //      );
+  //    }
+
+  //   return <span>{props}</span>;
+  // //   // 
+  //  };
+
+  // // // las imagenes cuando se despliega el select
+  //  const countryOptionTemplate = (option) => {
+  //    return (
+  //      <div className="flex align-items-center">
+  //        <img alt={option.name} src="https://gluc.mx/u/fotografias/m/2020/6/1/f638x638-28017_86184_5050.jpg" className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
+  //        <div>{option.name}</div>
+  //      </div>
+  // //     
+  //    );
+  //  };
 
   const toast = useRef(null);
 
@@ -163,14 +206,14 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
       <Button
         tipo={'PRINCIPAL'}
         funcion={handleGuardar}
-      >{rolesEdit.length !== 0 ? "Actualizar" : "Guardar"}
+      >{ModulosAgg.id_modulo !== 0 ? "Actualizar" : "Guardar"}
       </Button>
     </div>
   )
 
   return (
     <Dialog
-      header={rolesEdit.length !== 0 ? <h1>Editar Módulo</h1> : <h1>Agregar Módulo</h1>}
+      header={ModulosAgg.id_modulo !== 0 ? <h1>Editar Módulo</h1> : <h1>Agregar Módulo</h1>}
       visible={visible}
       onHide={handleClose}
       className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2"
@@ -199,15 +242,35 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             </div>
             <div className="flex flex-col">
               <label className="text-gray-600 pb-2 font-semibold">
-                Icono de Modulo
+                Icono Modulo / Preview
               </label>
-              <InputText
-                value={ModulosAgg.icono}
-                name="icono"
-                className={`border-1 h-10 rounded-md px-3 py-2 ${errors.icono ? "border-red-500" : "border-gray-300"
-                  }`}
-                onChange={(e) => handleChangeModulos(e)}
-              />
+
+              <div className="flex items-center gap-2">
+
+                <div className="card flex justify-content-center w-full">
+                  <Dropdown
+                    value={ModulosAgg.icono}
+                    onChange={(e) => handleChangeModulos(e)}
+                    options={
+                      Array.isArray(iconos) && iconos.length > 0
+                        ? iconos.map((e) => ({
+                          label: e.description,
+                          value: e.name,
+                        }))
+                        : [{ label: "No hay datos disponibles", value: "" }]
+                    }
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccione un icono"
+                    filter
+                    name="icono"
+                    className="w-full md:w-14rem h-10 rounded-lg"
+                  />
+                </div>
+
+                <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
+              </div>
+
               {errors.icono && (
                 <div className="text-red-600 text-xs">{errors.icono}</div>
               )}
@@ -235,35 +298,19 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md overflow-auto h-48 mt-2">
               {roles.map((rol) => (
                 <div key={rol.id}>
-                  {rol.id_rol == 1
-                    ?
                     <>
                       <label
-                        className="p-checkbox w-10 h-5 cursor-pointer relative rounded-full bg-primaryYellow">
-                        <input
-                          type="checkbox"
-                          disabled
-                          checked
-                          className="sr-only peer"
-                         
-                        />
-                        <span
-                          className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
-                        ></span>
-                      </label>
-                      <span className="ml-6">{rol.nombre}</span>
-
-                    </>
-                    :
-
-                    <>
-                      <label
-                        className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) ? "bg-primaryYellow" : "bg-gray-300"
+                        className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) || rol.id_rol == 1 ? "bg-primaryYellow" : "bg-gray-300"
                           }`}
                       >
                         <input
                           type="checkbox"
-                          checked={fncChkPermiso(rol)}
+                          checked={rol.id_rol == 1
+                          ?
+                          true
+                          :
+                            fncChkPermiso(rol)}
+
                           className="sr-only peer"
                           onChange={() =>
                             CheckboxChangeroles(rol.id_rol, rol.id_rol)
@@ -275,7 +322,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                       </label>
                       <span className="ml-6">{rol.nombre}</span>
                     </>
-                  }
+                  
                 </div>
               ))}
             </div>

@@ -28,7 +28,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permisosEdit, perfilesEdit])
 
-  // const msgs = useRef(null);
 
   const handleClose = () => {
     // Cierra el Dialog y reinicia el estado
