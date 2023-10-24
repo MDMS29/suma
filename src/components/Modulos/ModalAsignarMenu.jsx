@@ -11,22 +11,11 @@ import { MultiSelect } from "primereact/multiselect";
 const ModalAsignarMenu = ({ visible, onClose }) => {
 
   const {
-    dataModulos,
+    menus,
     dataMenus,
-    setDataModulos,
-    ModuloState,
-    permisosModulo,
-    setPermisosModulo,
-    buscarModulo,
-    guardarModulo,
-    setModuloState,
-    eliminarRestablecerModulo,
-    obtenerMenus,
-    MenusAgg,
-    setMenusAgg,
   } = useModulos();
 
-  const [filteredData, setFilteredData] = useState(dataMenus);
+  const [filteredData, setFilteredData] = useState(menus);
   const columns = [
     { field: "id_menu", header: "ID" },
     { field: "nombre_menu", header: "Nombre de Menu" },
@@ -40,6 +29,11 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     );
     setVisibleColumns(orderedSelectedColumns);
   };
+
+  useEffect(() => {
+    setFilteredData(dataMenus);
+    console.log(dataMenus)
+  }, [dataMenus]);
   
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const header = (
@@ -73,13 +67,6 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
               tooltipOptions={{ position: "top" }}
             >
               {Trash_Icono}
-            </Button>
-           <Button
-              tooltip="Asignar Menú"
-              className="p-button-rounded p-mr-2"
-              tooltipOptions={{ position: "top" }}
-            >
-              {menu_Icono}
             </Button>
       </div>
     );
