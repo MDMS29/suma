@@ -28,7 +28,14 @@ const Modulos = () => {
     { field: "icono", header: "Icono" },
   ];
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
+  const {
+    authPermisos,
+    Permisos_DB,
+    alerta,
+    setAlerta,
+    verEliminarRestaurar,
+    setVerEliminarRestaurar,
+  } = useAuth();
 
   const {
     dataModulos,
@@ -41,6 +48,8 @@ const Modulos = () => {
     setModuloState,
     eliminarRestablecerModulo,
     obtenerMenus,
+    eliminarRestablecerMenu,
+    MenuState
   } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
@@ -48,7 +57,6 @@ const Modulos = () => {
   const [filteredData, setFilteredData] = useState(dataModulos);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-
 
   const [modalAsignarMenuVisible, setModalAsignarMenuVisible] = useState(false);
 
@@ -58,11 +66,10 @@ const Modulos = () => {
 
   const handleAsignarMenuClick = (modulo, e) => {
     e.preventDefault();
-    console.log(modulo)
+    setModuloState(modulo);
     obtenerMenus(modulo);
     setModalAsignarMenuVisible(true);
   };
-
 
   useEffect(() => {
     setFilteredData(dataModulos);
@@ -102,7 +109,6 @@ const Modulos = () => {
     setModuloState(modulo);
     setVerEliminarRestaurar(true);
   };
-
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
@@ -185,15 +191,23 @@ const Modulos = () => {
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        
-        {modalVisible && <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />}
+
+        {modalVisible && (
+          <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />
+        )}
         {modalAsignarMenuVisible && (
-        <ModalAsignarMenu
-          visible={modalAsignarMenuVisible}
-          onClose={() => setModalAsignarMenuVisible(false)}
-        />
-      )}
-        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRestablecerModulo(ModuloState.id_modulo, e)} />}
+          <ModalAsignarMenu
+            visible={modalAsignarMenuVisible}
+            onClose={() => setModalAsignarMenuVisible(false)}
+          />
+        )}
+        {verEliminarRestaurar && (
+          <EliminarRestaurar
+            tipo={"ELIMINAR"}
+            funcion={(e) => MenuState?.id_menu ? eliminarRestablecerMenu(MenuState.id_menu, e) : eliminarRestablecerModulo(ModuloState.id_modulo, e)}
+          />
+        )}
+
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Modulos</h1>
           <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
@@ -268,8 +282,8 @@ const Modulos = () => {
       {permisosModulo.length === 0 ? (
         <Loader />
       ) : permisosModulo.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

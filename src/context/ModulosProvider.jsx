@@ -2,7 +2,6 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import conexionCliente from "../config/ConexionCliente";
 import useAuth from "../hooks/useAuth";
-import ModalAsignarMenu from "../components/Modulos/ModalAsignarMenu";
 
 const ModulosContext = createContext();
 
@@ -13,6 +12,7 @@ const ModulosProvider = ({ children }) => {
   const [dataModulos, setDataModulos] = useState([]);
   const [dataMenus, setDataMenus] = useState([]);
   const [ModuloState, setModuloState] = useState({});
+  const [MenuState, setMenuState] = useState({});
   const [roles, setRoles] = useState([]);
 
   const [rolesEdit, setrolesEdit] = useState([]);
@@ -38,6 +38,7 @@ const ModulosProvider = ({ children }) => {
   });
 
   const [permisosModulo, setPermisosModulo] = useState([]);
+  const [permisosMenu, setMenuModulo] = useState([]);
 
   const location = useLocation();
 
@@ -45,6 +46,14 @@ const ModulosProvider = ({ children }) => {
     const { name, value } = e.target;
     setModulosAgg((prevModulosAgg) => ({
       ...prevModulosAgg,
+      [name]: value,
+    }));
+  };
+
+  const handleChangeMenu = (e) => {
+    const { name, value } = e.target;
+    setMenusAgg((prevMenuAgg) => ({
+      ...prevMenuAgg,
       [name]: value,
     }));
   };
@@ -110,7 +119,49 @@ const ModulosProvider = ({ children }) => {
       return true
 
     } catch (error) {
-      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setAlerta({ error: true, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
+    }
+  }
+
+  const eliminarRestablecerMenu = async (id_menu) => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setAuthUsuario({})
+      navigate('/auth')
+      return
+    }
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    }
+    
+    // console.log(id_menu)
+    try {
+      const estado = location.pathname.includes("inactivos") ? 1 : 2;
+      const { data } = await conexionCliente.delete(`/menus/${id_menu}?estado=${estado}`, config)
+
+      
+      if (data?.error) {
+        setAlerta({ error: true, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
+      }
+
+      const menusActualizados = dataMenus.filter(menu => menu.id_menu !== id_menu)
+      setDataMenus(menusActualizados)
+
+      setAlerta({ error: false, show: true, message: data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      setVerEliminarRestaurar(false)
+      return true
+
+    } catch (error) {
+      setAlerta({ error: true, show: true, message: error.response?.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
@@ -143,7 +194,6 @@ const ModulosProvider = ({ children }) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log(id_modulo)
     try {
       const { data } = await conexionCliente(`/menus/modulo/${id_modulo}?estado=1`, config);
       setDataMenus(data);
@@ -165,10 +215,8 @@ const ModulosProvider = ({ children }) => {
 
     try {
       const { data } = await conexionCliente.post("/modulos", formData, config);
-      // console.log("Información guardada con éxito:", response);
       if (!data?.error) {
         setDataModulos([...dataModulos, data]);
-        // setDataUsuarios([...dataUsuarios, data])
 
         setAlerta({
           error: false,
@@ -182,7 +230,6 @@ const ModulosProvider = ({ children }) => {
       }
       return false;
     } catch (error) {
-      // console.log(error);
       setAlerta({
         error: true,
         show: true,
@@ -191,6 +238,44 @@ const ModulosProvider = ({ children }) => {
       setTimeout(() => setAlerta({}), 1500);
     }
   };
+
+  const guardarMenu = async (id_modulo, formData) => {
+    const token = localStorage.getItem("token");
+  
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      // console.log(id_modulo)
+      const { data } = await conexionCliente.post(`/menus/modulo/${id_modulo}`, formData, config);
+      
+      if (!data?.error) {
+        //lista de menús en el estado
+        setDataMenus([...dataMenus, data]);
+  
+        setAlerta({
+          error: false,
+          show: true,
+          message: "Menú creado con éxito",
+          });
+        setTimeout(() => setAlerta({}), 1500);
+  
+        return true;
+      }
+      return false;
+    } catch (error) {
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response,
+      });
+      setTimeout(() => setAlerta({}), 1500);
+    }
+  };
+  
 
   const editarModulo = async (formData) => {
     const token = localStorage.getItem("token");
@@ -240,6 +325,41 @@ const ModulosProvider = ({ children }) => {
         show: true,
         message: error.response.data.message
       })
+      throw error; // Puedes lanzar una excepción en caso de error
+    }
+  };
+  const editarMenu = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      // Realiza la solicitud PATCH API para editar la información del modulo
+      const { data } = await conexionCliente.patch(
+        `/menus/${formData.id_menu}`,
+        formData,
+        config
+      );
+
+      if (data?.id_menu) {
+        // Actualiza la lista de menús con el menú editado
+        const menusActualizados = dataMenus.map((menu) =>
+          menu.id_menu === data.id_menu ? data : menu
+        );
+        setDataMenus(menusActualizados);
+  
+        console.log(data); // Opcional: muestra los datos editados en la consola
+  
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
       throw error; // Puedes lanzar una excepción en caso de error
     }
   };
@@ -308,10 +428,18 @@ const ModulosProvider = ({ children }) => {
     editarModulo,
     obtenerMenus,
     eliminarRestablecerModulo,
+    eliminarRestablecerMenu,
     MenusAgg,
     setMenusAgg,
     dataMenus,
     setDataMenus,
+    guardarMenu,
+    editarMenu,
+    MenuState,
+    setMenuState,
+    permisosMenu,
+    setMenuModulo,
+    handleChangeMenu,
   }));
 
   return (
