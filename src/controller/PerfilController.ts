@@ -64,7 +64,7 @@ export class _PerfilController {
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!nombre_perfil) {
+        if (!nombre_perfil || nombre_perfil === "") {
             return res.status(404).json({ error: true, message: 'Debe ingresar un nombre al perfil' }) //!ERROR
         }
         if (modulos.length <= 0) {
@@ -96,8 +96,8 @@ export class _PerfilController {
         if (!id_perfil) {
             return res.status(404).json({ error: true, message: 'No se ha encontrado el perfil' }) //!ERROR
         }
-        if (!nombre_perfil) {
-            return res.status(404).json({ error: true, message: 'Ingrese el nombre del perfil' }) //!ERROR
+        if (!nombre_perfil || nombre_perfil === "") {
+            return res.status(404).json({ error: true, message: 'Debe ingresar un nombre al perfil' }) //!ERROR
         }
         if (modulos.length <= 0) {
             return res.status(404).json({ error: true, message: 'El perfil debe tener al menos un modulo' }) //!ERROR

@@ -64,6 +64,7 @@ app.use('/suma/api/modulos', _ModulosRouter)
 //DEFINIR RUTA DE LOS ROLES
 app.use('/suma/api/roles', _RolesRouter)
 
+//DEFINIR RUTA DE LOS MENUS
 app.use('/suma/api/menus', _MenusRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA

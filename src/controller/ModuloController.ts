@@ -31,39 +31,40 @@ export default class _ModuloController {
     public async Insertar_Modulo(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { cod_modulo, nombre_modulo, icono, roles } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
+
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!nombre_modulo) {
+        if (!nombre_modulo || nombre_modulo === "") {
             return res.status(404).json({ error: true, message: 'Debe ingresar un nombre para el modulo' }) //!ERROR
         }
-        if (!cod_modulo) {
+        if (!cod_modulo || cod_modulo === "") {
             return res.status(404).json({ error: true, message: 'Debe ingresar un codigo para el modulo' }) //!ERROR
         }
-        if (!icono) {
+        if (!icono || icono === "") {
             return res.status(404).json({ error: true, message: 'Debe ingresar un icono para el modulo' }) //!ERROR
         }
         if (roles.length <= 0) {
             return res.status(404).json({ error: true, message: 'El modulo debe tener por lo menos un rol' }) //!ERROR
         }
-        const rol  = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
-        if(rol?.length <= 0){
+        const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
+        if (rol?.length <= 0) {
             return res.status(404).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
         }
 
-        const result = ModulosSchema.safeParse(req.body)
-        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-            return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
-        }
+        // const result = ModulosSchema.safeParse(req.body)
+        // if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+        //     return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
+        // }
 
         try {
             const _ModuloService = new ModuloService()
-            console.log('61 - controller', req.body)
             const respuesta = await _ModuloService.Insertar_Modulo(cod_modulo, nombre_modulo, icono, usuario?.usuario, roles)
+            console.log('66 - controller', respuesta)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
-            
+
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
@@ -99,27 +100,27 @@ export default class _ModuloController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_modulo } = req.params
         const { cod_modulo, nombre_modulo, icono, roles } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
-        
+
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_modulo) {
             return res.status(404).json({ error: true, message: 'No se ha encontrado el modulo' }) //!ERROR
         }
-        if (!cod_modulo) {
+        if (!cod_modulo || cod_modulo === "") {
             return res.status(404).json({ error: true, message: 'No se ha definido el codigo del modulo' }) //!ERROR
         }
-        if (!nombre_modulo) {
+        if (!nombre_modulo || nombre_modulo === "") {
             return res.status(404).json({ error: true, message: 'No se ha definido el nombre del modulo' }) //!ERROR
         }
-        if (!icono) {
+        if (!icono || icono === "") {
             return res.status(404).json({ error: true, message: 'No se ha definido el icono del modulo' }) //!ERROR
         }
         if (roles.length <= 0) {
             return res.status(404).json({ error: true, message: 'El modulo debe tener por lo menos un rol' }) //!ERROR
         }
-        const rol  = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
-        if(rol?.length <= 0){
+        const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
+        if (rol?.length <= 0) {
             return res.status(404).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
         }
 

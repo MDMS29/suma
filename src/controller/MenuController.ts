@@ -35,23 +35,26 @@ export default class _MenuController {
     public async Insertar_Menu(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_modulo } = req.params
-        const { nombre, link_menu } = req.body
+        const { nombre_menu, link_menu } = req.body
+
+        console.log('40 - controller menu', req.body)
+
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_modulo) {
-            return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
+            return res.status(404).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
         }
-        if (!nombre) {
-            return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
+        if (!nombre_menu || nombre_menu === "") {
+            return res.status(404).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
         }
-        if (!link_menu) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
+        if (!link_menu || link_menu === "") {
+            return res.status(404).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
         }
 
         try {
             const menu_service = new MenuService()
-            const respuesta = await menu_service.Insertar_Menu(nombre, link_menu, id_modulo, usuario?.usuario)
+            const respuesta = await menu_service.Insertar_Menu(nombre_menu, link_menu, id_modulo, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -89,17 +92,17 @@ export default class _MenuController {
     public async Editar_Menu(req: Request, res: Response) {
         const { usuario } = req
         const { id_menu } = req.params
-        const { nombre, link_menu } = req.body
+        const { nombre_menu, link_menu } = req.body
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_menu) {
             return res.status(404).json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
         }
-        if (!nombre) {
+        if (!nombre_menu || nombre_menu === "") {
             return res.status(404).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
         }
-        if (!link_menu) {
+        if (!link_menu || link_menu === "") {
             return res.status(404).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
         }
 
@@ -111,7 +114,7 @@ export default class _MenuController {
         try {
             const menu_service = new MenuService()
 
-            const respuesta = await menu_service.Editar_menu(+id_menu, nombre, link_menu, usuario.usuario)
+            const respuesta = await menu_service.Editar_menu(+id_menu, nombre_menu, link_menu, usuario.usuario)
             if (respuesta.error) {
                 return res.status(404).json({ error: respuesta.error, message: respuesta.message })
             }
@@ -145,14 +148,14 @@ export default class _MenuController {
             const menu_service = new MenuService()
             const respuesta = await menu_service.Cambiar_Estado_Menu(+id_menu, +estado)
             if (respuesta.error) {
-                return res.json({ error: true, message: respuesta.message }) //!ERROR
+                return res.status(404).json({ error: true, message: respuesta.message }) //!ERROR
             }
 
-            return res.json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }) //*SUCCESSFUL
+            return res.status(200).json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }) //*SUCCESSFUL
 
         } catch (error) {
             console.log(error)
-            return res.json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el menu' : 'Error al desactivar el menu' }) //!ERROR
+            return res.status(500).json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el menu' : 'Error al desactivar el menu' }) //!ERROR
         }
     }
 

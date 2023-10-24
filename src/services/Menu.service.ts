@@ -36,6 +36,7 @@ export class MenuService {
 
             //INVOCAR FUNCION PARA INSERTAR MENU
             const respuesta = await this._Query_Menu.Insertar_Menu(nombre, link_menu, id_modulo, usuario_creacion)
+
             if (!respuesta) {
                 return { error: true, message: 'No se ha podido crear el menu' } //!ERROR
             }

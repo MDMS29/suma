@@ -34,10 +34,10 @@ export class _RolController {
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!nombre) {
+        if (!nombre || nombre === "") {
             return res.status(400).json({ error: true, message: 'Debe ingresar un nombre al rol' }) //!ERROR
         }
-        if (!descripcion) {
+        if (!descripcion || descripcion === "") {
             return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }) //!ERROR
         }
 
@@ -88,11 +88,11 @@ export class _RolController {
         if (!id_rol) {
             return res.status(404).json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
         }
-        if (!nombre) {
-            return res.status(404).json({ error: true, message: 'Ingrese el nombre del rol' }) //!ERROR
+        if (!nombre || nombre === "") {
+            return res.status(400).json({ error: true, message: 'Debe ingresar un nombre al rol' }) //!ERROR
         }
-        if (!descripcion) {
-            return res.status(404).json({ error: true, message: 'Ingrese al descripcion del rol' }) //!ERROR
+        if (!descripcion || descripcion === "") {
+            return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }) //!ERROR
         }
 
         // const result = PerfilesSchema.safeParse(req.body)
