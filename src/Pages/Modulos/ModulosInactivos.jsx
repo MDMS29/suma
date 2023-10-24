@@ -40,7 +40,7 @@ const ModulosInactivos = () => {
 
   const redirectToPreviousPage = () => {
     window.history.back();
-  };x
+  };
 
   const columns = [
     { field: "id_modulo", header: "ID" },

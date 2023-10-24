@@ -11,7 +11,11 @@ import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import { Button } from "primereact/button";
-import { Edit_Icono, Trash_Icono, menu_Icono } from "../../components/Icons/Iconos";
+import {
+  Edit_Icono,
+  Trash_Icono,
+  menu_Icono,
+} from "../../components/Icons/Iconos";
 import Confirmar from "../../components/Modales/Confirmar";
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 import ModalAsignarMenu from "../../components/Modulos/ModalAsignarMenu";
@@ -25,7 +29,14 @@ const Modulos = () => {
     { field: "icono", header: "Icono" },
   ];
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
+  const {
+    authPermisos,
+    Permisos_DB,
+    alerta,
+    setAlerta,
+    verEliminarRestaurar,
+    setVerEliminarRestaurar,
+  } = useAuth();
 
   const {
     dataModulos,
@@ -38,6 +49,8 @@ const Modulos = () => {
     setModuloState,
     eliminarRestablecerModulo,
     obtenerMenus,
+    eliminarRestablecerMenu,
+    MenuState
   } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
@@ -45,7 +58,6 @@ const Modulos = () => {
   const [filteredData, setFilteredData] = useState(dataModulos);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-
 
   const [modalAsignarMenuVisible, setModalAsignarMenuVisible] = useState(false);
 
@@ -55,11 +67,10 @@ const Modulos = () => {
 
   const handleAsignarMenuClick = (modulo, e) => {
     e.preventDefault();
-    console.log(modulo)
+    setModuloState(modulo);
     obtenerMenus(modulo);
     setModalAsignarMenuVisible(true);
   };
-
 
   useEffect(() => {
     setFilteredData(dataModulos);
@@ -99,7 +110,6 @@ const Modulos = () => {
     setModuloState(modulo);
     setVerEliminarRestaurar(true);
   };
-
 
   const onColumnToggle = (event) => {
     let selectedColumns = event.value;
@@ -145,35 +155,35 @@ const Modulos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <Button
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={(e) => editarModulo(e, rowData.id_modulo)}
-            >
-              {Edit_Icono}
-            </Button>
-          )}
+          <Button
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editarModulo(e, rowData.id_modulo)}
+          >
+            {Edit_Icono}
+          </Button>
+        )}
         {permisosModulo.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-            <Button
-              tooltip="Eliminar"
-              className="p-button-rounded p-button-danger p-mr-2"
-              tooltipOptions={{ position: "top" }}
-              onClick={(e) => modalEliminarModulo(e, rowData)}
-            >
-              {Trash_Icono}
-            </Button>
-          )}
-           <Button
-              tooltip="Asignar Menú"
-              className="p-button-rounded p-mr-2"
-              tooltipOptions={{ position: "top" }}
-              onClick={(e) => handleAsignarMenuClick(rowData.id_modulo, e)}
-            >
-              {menu_Icono}
-            </Button>
+          <Button
+            tooltip="Eliminar"
+            className="p-button-rounded p-button-danger p-mr-2"
+            tooltipOptions={{ position: "top" }}
+            onClick={(e) => modalEliminarModulo(e, rowData)}
+          >
+            {Trash_Icono}
+          </Button>
+        )}
+        <Button
+          tooltip="Asignar Menú"
+          className="p-button-rounded p-mr-2"
+          tooltipOptions={{ position: "top" }}
+          onClick={(e) => handleAsignarMenuClick(rowData.id_modulo, e)}
+        >
+          {menu_Icono}
+        </Button>
       </div>
     );
   };
@@ -182,15 +192,23 @@ const Modulos = () => {
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        
-        {modalVisible && <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />}
+
+        {modalVisible && (
+          <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />
+        )}
         {modalAsignarMenuVisible && (
-        <ModalAsignarMenu
-          visible={modalAsignarMenuVisible}
-          onClose={() => setModalAsignarMenuVisible(false)}
-        />
-      )}
-        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRestablecerModulo(ModuloState.id_modulo, e)} />}
+          <ModalAsignarMenu
+            visible={modalAsignarMenuVisible}
+            onClose={() => setModalAsignarMenuVisible(false)}
+          />
+        )}
+        {verEliminarRestaurar && (
+          <EliminarRestaurar
+            tipo={"ELIMINAR"}
+            funcion={(e) => MenuState?.id_menu ? eliminarRestablecerMenu(MenuState.id_menu, e) : eliminarRestablecerModulo(ModuloState.id_modulo, e)}
+          />
+        )}
+
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Modulos</h1>
           <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
@@ -200,26 +218,26 @@ const Modulos = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-              <button
-                className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
-                onClick={(e) => setModalVisible(true, e)}
-              >
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </button>
-            )}
+            <button
+              className="bg-primaryYellow p-2 mx-2 rounded-md px-3 hover:bg-yellow-500"
+              onClick={(e) => setModalVisible(true, e)}
+            >
+              <i className="pi pi-plus mx-2 font-medium"></i>
+              Agregar
+            </button>
+          )}
           {permisosModulo.filter(
             (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
           ).length > 0 && (
-              <div className="h-full flex justify-center items-center">
-                <Link
-                  className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
-                  to="/configuracion/modulos/inactivos"
-                >
-                  Inactivos
-                </Link>
-              </div>
-            )}
+            <div className="h-full flex justify-center items-center">
+              <Link
+                className="px-4 p-2 mx-2 rounded-md text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white transition duration-300 ease-in-out"
+                to="/configuracion/modulos/inactivos"
+              >
+                Inactivos
+              </Link>
+            </div>
+          )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
             <InputText
@@ -265,8 +283,8 @@ const Modulos = () => {
       {permisosModulo.length === 0 ? (
         <Loader />
       ) : permisosModulo.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />
