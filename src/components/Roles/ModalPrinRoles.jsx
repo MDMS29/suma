@@ -17,15 +17,17 @@ const ModalPrinRoles = ({ visible, onClose }) => {
     onClose()
   };
 
-  const handleChangeRol = e => setRolAgg({ ...rolAgg, [e.target.name]: e.target.value });
-
+  const handleChangeRol = (e) => {
+    const value = e.target.value;
+    setRolAgg({ ...rolAgg, [e.target.name]: e.target.name == "nombre" ? value.replace(/\d/g, '') : value});
+}
   const handleGuardar = async () => {
 
-    if (rolAgg.nombre === '') {
+    if (rolAgg.nombre.trim() === '') {
       setErrors({ ...errors, nombre: 'Debe ingresar un nombre' })
       return
     }
-    if (rolAgg.descripcion === '') {
+    if (rolAgg.descripcion.trim() === '') {
       setErrors({ ...errors, descripcion: 'Debe ingresar una descripcion' })
       return
     }

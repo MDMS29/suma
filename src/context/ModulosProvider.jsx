@@ -44,10 +44,7 @@ const ModulosProvider = ({ children }) => {
 
   const handleChangeModulos = (e) => {
     const { name, value } = e.target;
-    setModulosAgg((prevModulosAgg) => ({
-      ...prevModulosAgg,
-      [name]: value,
-    }));
+    setModulosAgg((prevModulosAgg) => ({ ...prevModulosAgg, [name]: name == "nombre_modulo" ? value.replace(/\d/g, '') : value }));
   };
 
   const handleChangeMenu = (e) => {
@@ -139,13 +136,13 @@ const ModulosProvider = ({ children }) => {
         Authorization: `Bearer ${token}`
       }
     }
-    
+
     // console.log(id_menu)
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
       const { data } = await conexionCliente.delete(`/menus/${id_menu}?estado=${estado}`, config)
 
-      
+
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
@@ -241,7 +238,7 @@ const ModulosProvider = ({ children }) => {
 
   const guardarMenu = async (id_modulo, formData) => {
     const token = localStorage.getItem("token");
-  
+
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -251,18 +248,18 @@ const ModulosProvider = ({ children }) => {
     try {
       // console.log(id_modulo)
       const { data } = await conexionCliente.post(`/menus/modulo/${id_modulo}`, formData, config);
-      
+
       if (!data?.error) {
         //lista de menús en el estado
         setDataMenus([...dataMenus, data]);
-  
+
         setAlerta({
           error: false,
           show: true,
           message: "Menú creado con éxito",
-          });
+        });
         setTimeout(() => setAlerta({}), 1500);
-  
+
         return true;
       }
       return false;
@@ -275,7 +272,7 @@ const ModulosProvider = ({ children }) => {
       setTimeout(() => setAlerta({}), 1500);
     }
   };
-  
+
 
   const editarModulo = async (formData) => {
     const token = localStorage.getItem("token");
@@ -352,9 +349,9 @@ const ModulosProvider = ({ children }) => {
           menu.id_menu === data.id_menu ? data : menu
         );
         setDataMenus(menusActualizados);
-  
+
         console.log(data); // Opcional: muestra los datos editados en la consola
-  
+
         return true;
       }
       return false;

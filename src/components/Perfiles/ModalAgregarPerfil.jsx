@@ -1,3 +1,4 @@
+
 import { Dialog } from "primereact/dialog";
 import Button from "../Botones/Button";
 import { Message } from "primereact/message";
@@ -29,7 +30,8 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
   }, [modulosEdit])
 
   const handleChangePerfiles = (e) => {
-    setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: e.target.value });
+    const value = e.target.value;
+    setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: value.replace(/\d/g, '')});
   };
 
   const handleGuardar = async () => {
@@ -40,25 +42,22 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     };
     const regex = /^[a-zA-Z0-9\s]*$/;
     const errors = {};
-
-    if (!regex.test(PerfilesAgg.nombre_perfil)) {
-      errors.nombre_perfil = "No se permiten caracteres especiales";
-      console.log("No se permiten caracteres especiales");
+    
+    if (PerfilesAgg.nombre_perfil.trim() === '') {
+      errors.nombre_perfil = "Este campo es obligatorio"
       setErrors(errors);
       return
     }
-
-    if (!PerfilesAgg.nombre_perfil || [PerfilesAgg.nombre_perfil].includes(" ")) {
-      errors.nombre_perfil = "Este campo es obligatorio";
+    
+    if (!regex.test(PerfilesAgg.nombre_perfil)) {
+      errors.nombre_perfil = "No se permiten caracteres especiales";
       setErrors(errors);
-      console.log("Este campo es obligatorio");
       return
     }
 
     if (modulosSeleccionados.length === 0 || modulosSeleccionados.filter((modulo) => modulo?.id_estado === 1).length === 0) {
       errors.modulos = "Debes seleccionar al menos un modulo";
       setErrors(errors);
-      console.log("Debes seleccionar al menos un modulo");
       return
     }
 
@@ -87,7 +86,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
   const handleClose = () => {
     onClose();
     setPerfilesAgg({
-    id_perfil: 0,
+      id_perfil: 0,
       nombre_perfil: "",
     });
     setErrors({});
@@ -140,6 +139,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       return false;
     }
   };
+
   const footerContent = (
     <div>
       <Button
@@ -149,6 +149,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       </Button>
     </div>
   );
+
   return (
     <Dialog
       header={PerfilesAgg.id_perfil !== 0 ? <h1>Editar Perfil</h1> : <h1>Agregar Perfil</h1>}
@@ -217,6 +218,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
       </div>
     </Dialog>
   );
+
 };
 
 export default ModalAgregarPerfil;

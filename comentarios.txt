@@ -35,3 +35,19 @@ diseño modal
                   )}
                 </select>
               </div> */}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+<div className="flex">
+                  <div>icon</div>
+                  <select filter className="border-1 h-10 rounded-md px-2 py-2 border-gray-300">
+                    <option disabled>-- Selecione un icono --</option>
+                    {Array.isArray(iconos) && iconos.length > 0 ? (
+                      iconos.map((e) => (
+                        <option key={e.name} >
+                          {e.description}, {e.link}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">No hay datos disponibles</option>
+                    )}
+                  </select>
+                </div>

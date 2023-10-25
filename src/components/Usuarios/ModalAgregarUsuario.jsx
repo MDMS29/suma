@@ -58,10 +58,9 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   };
 
   const handleChangeUsuario = e => {
-    setUsuariosAgg({
-      ...UsuariosAgg,
-      [e.target.name]: e.target.value
-    });
+    const value = e.target.value;
+
+    setUsuariosAgg({ ...UsuariosAgg, [e.target.name]: e.target.name == "nombre" ? value.replace(/\d/g, '') : value });
   };
 
   const handleGuardar = async () => {
@@ -79,7 +78,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       errors.modulos = "Debes seleccionar al menos un modulo";
       return
     }
-
 
     try {
       let response
@@ -120,6 +118,10 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       if (UsuariosAgg.nombre.length < 10 || UsuariosAgg.nombre.length > 30) {
         errors.nombre =
           "El nombre completo debe tener entre 10 y 30 caracteres";
+      }
+
+      if (UsuariosAgg.nombre.trim() === '') {
+        errors.nombre = "Este campo es obligatorio"
       }
 
       if (UsuariosAgg.usuario.length < 5 || UsuariosAgg.usuario.length > 15) {

@@ -1,3 +1,6 @@
+/* select awesome */
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css");
+
 /* estilos PrimeReact */
 @import 'primereact/resources/themes/saga-blue/theme.css';
 @import 'primereact/resources/primereact.min.css';
@@ -149,4 +152,9 @@ form>input {
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* ------ Select ------ */
+select {
+    font-family: 'FontAwesome', Verdana
 }

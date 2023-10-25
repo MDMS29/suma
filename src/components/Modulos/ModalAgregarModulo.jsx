@@ -22,14 +22,13 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     guardarModulos,
   } = useModulos();
 
-  const [rolesporModulo, setrolesporModulo] = useState([{id_rol:1, id_estado:1}]);
+  const [rolesporModulo, setrolesporModulo] = useState([{ id_rol: 1, id_estado: 1 }]);
 
 
   const [iconos, setIconos] = useState([]);
   // const [iconoSelect, setIconoSelect] = useState({});
-
-
-  console.log(ModulosAgg);
+  
+  // console.log(JSON.parse({link: iconos[0].link}));
 
   useEffect(() => {
     const selectIcons = async () => {
@@ -39,7 +38,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
     selectIcons()
   }, [])
-
+  
   // // las imagenes cuando esta selccionado la opcion
   //  const selectedCountryTemplate = (option, props) => {
   //    if (option) {
@@ -246,7 +245,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               </label>
 
               <div className="flex items-center gap-2">
-
                 <div className="card flex justify-content-center w-full">
                   <Dropdown
                     value={ModulosAgg.icono}
@@ -267,7 +265,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                     className="w-full md:w-14rem h-10 rounded-lg"
                   />
                 </div>
-
                 <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
               </div>
 
@@ -276,6 +273,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               )}
             </div>
           </div>
+          
           <div className="flex flex-col mt-2">
             <label className="text-gray-600 pb-2 font-semibold">
               Nombre del Módulo
@@ -298,31 +296,31 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md overflow-auto h-48 mt-2">
               {roles.map((rol) => (
                 <div key={rol.id}>
-                    <>
-                      <label
-                        className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) || rol.id_rol == 1 ? "bg-primaryYellow" : "bg-gray-300"
-                          }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={rol.id_rol == 1
+                  <>
+                    <label
+                      className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) || rol.id_rol == 1 ? "bg-primaryYellow" : "bg-gray-300"
+                        } ${rol.id_rol == 1 && "cursor-not-allowed"} `}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={rol.id_rol == 1
                           ?
                           true
                           :
-                            fncChkPermiso(rol)}
+                          fncChkPermiso(rol)}
 
-                          className="sr-only peer"
-                          onChange={() =>
-                            CheckboxChangeroles(rol.id_rol, rol.id_rol)
-                          }
-                        />
-                        <span
-                          className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
-                        ></span>
-                      </label>
-                      <span className="ml-6">{rol.nombre}</span>
-                    </>
-                  
+                        className="sr-only peer"
+                        onChange={() =>
+                          CheckboxChangeroles(rol.id_rol, rol.id_rol)
+                        }
+                      />
+                      <span
+                        className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
+                      ></span>
+                    </label>
+                    <span className="ml-6">{rol.nombre}</span>
+                  </>
+
                 </div>
               ))}
             </div>

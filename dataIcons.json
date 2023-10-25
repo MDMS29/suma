@@ -2,59 +2,73 @@
     "icons": [
         {
             "name": "pi-align-center",
-            "description": "Tres lineas centro"
+            "description": "Tres lineas centro",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-align-justify",
-            "description": "Tres lineas alineadas"
+            "description": "Tres lineas alineadas",
+            "link": "&#xf043;"
         },
         {
             "name": "pi-align-left",
-            "description": "Tres lineas izquierda"
+            "description": "Tres lineas izquierda",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-align-right",
-            "description": "Tres lineas derecha"
+            "description": "Tres lineas derecha",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-amazon",
-            "description": "Amazon"
+            "description": "Amazon",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-android",
-            "description": "Android"
+            "description": "Android",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-angle-double-down",
-            "description": "Doble angulo abajo"
+            "description": "Doble angulo abajo",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-angle-double-left",
-            "description": "Doble angulo izquierda"
+            "description": "Doble angulo izquierda",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-angle-double-right",
-            "description": "Doble angulo derecho"
+            "description": "Doble angulo derecho",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-angle-double-up",
-            "description": "Doble angulo arriba"
+            "description": "Doble angulo arriba",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-angle-down",
-            "description": "Angulo abajo"
+            "description": "Angulo abajo",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-angle-left",
-            "description": "Angulo izquierda"
+            "description": "Angulo izquierda",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-box",
-            "description": "Caja"
+            "description": "Caja",
+            "link": "&#xf042;"
         },
         {
             "name": "pi-angle-right",
-            "description": "Angulo derecha"
+            "description": "Angulo derecha",
+            "link": "&#xf042;"
         }
     ]
 }
