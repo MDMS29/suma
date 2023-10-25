@@ -231,6 +231,7 @@ const UsuariosProvider = ({ children }) => {
     try {
       // Realiza la solicitud POST a la API para guardar la información del usuario
       const { data } = await conexionCliente.post("/usuarios", formData, config);
+      // console.log(data);
       if (!data?.error) {
         setDataUsuarios([...dataUsuarios, data])
 
@@ -244,12 +245,19 @@ const UsuariosProvider = ({ children }) => {
 
         return true
       }
+      setAlerta({
+        error: true,
+        show: true,
+        message: data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
       return false;
     } catch (error) {
       setAlerta({
         error: true,
         show: true,
-        message: error.response.data.message
+        message: error.response?.data.message
       })
 
       setTimeout(() => setAlerta({}), 1500)

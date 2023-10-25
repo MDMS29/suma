@@ -12,7 +12,7 @@ import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 
 import { Button as PButton } from "primereact/button";
-import { Edit_Icono, Trash_Icono, menu_Icono } from "../../components/Icons/Iconos";
+import { Edit_Icono, Trash_Icono, Menu_Icono } from "../../components/Icons/Iconos";
 import BLink from "../../components/Botones/BLink";
 import Button from "../../components/Botones/Button";
 
@@ -175,14 +175,14 @@ const Modulos = () => {
               {Trash_Icono}
             </PButton>
           )}
-           <Button
+           <PButton
               tooltip="Asignar Menú"
               className="p-button-rounded p-mr-2"
               tooltipOptions={{ position: "top" }}
               onClick={(e) => handleAsignarMenuClick(rowData.id_modulo, e)}
             >
-              {menu_Icono}
-            </Button>
+              {Menu_Icono}
+            </PButton>
       </div>
     );
   };
