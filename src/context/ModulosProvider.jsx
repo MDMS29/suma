@@ -101,7 +101,6 @@ const ModulosProvider = ({ children }) => {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
       const { data } = await conexionCliente.delete(`/modulos/${id}?estado=${estado}`, config)
 
-      // console.log(data)
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)

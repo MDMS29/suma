@@ -8,8 +8,6 @@ import useAuth from "../../hooks/useAuth";
 
 // eslint-disable-next-line react/prop-types
 const EliminarRestaurar = ({ tipo, funcion }) => {
-    // console.log(funcion)
-
     const { verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
 
     const tipo_modal = {

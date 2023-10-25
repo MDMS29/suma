@@ -73,7 +73,6 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
   }, [authPermisos]);
 
   useEffect(() => {
-    console.log(ModuloState);
     // Busca el nombre del módulo en dataMenus
     const moduloEncontrado = dataModulos.find((modulo) => modulo.id_modulo === ModuloState);
     if (moduloEncontrado) {

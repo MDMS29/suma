@@ -33,7 +33,6 @@ const ModulosInactivos = () => {
   } = useAuth();
 
   const mostrarModalEliminar = (modulo) => {
-    console.log(modulo);
     setVerEliminarRestaurar(true);
     setModuloState(modulo);
   };

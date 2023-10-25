@@ -175,7 +175,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   const CheckboxChange = (rowData) => {
     const perfilId = rowData;
-    console.log(rowData);
 
     if (perfilesSeleccionados.find(perfil => perfil.id_perfil == perfilId)) {
       if (perfilesEdit.find(perfil => perfil.id_perfil == perfilId)) {
@@ -199,7 +198,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   const fncChkPerfil = (row) => {
     const perfil = perfilesSeleccionados.filter((perfil) => perfil.id_perfil === row.id_perfil)
-    // console.log(perfil)
     if (perfil) {
       return perfil[0]?.estado_perfil === 1
     } else {
@@ -208,7 +206,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   }
 
   const CheckboxChangePermiso = (nombrePermiso, idRolModulo) => {
-    console.log(nombrePermiso);
     if (permisosPorModulo.find(permiso => permiso.id_rol == idRolModulo)) {
       if (permisosEdit.find(permiso => permiso.id_rol == idRolModulo)) {
         const [permiso] = permisosPorModulo.filter(permiso => permiso.id_rol == idRolModulo)

@@ -100,7 +100,6 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
   const CheckboxChange = (nombrePefil, idPerfil) => {
     const moduloId = idPerfil;
-    console.log(idPerfil);
 
     if (modulosSeleccionados.find((modulo) => modulo.id_modulo == moduloId)) {
       if (modulosEdit.find((modulo) => modulo.id_modulo == moduloId)) {
@@ -132,7 +131,6 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
   const fncChkModulo = (row) => {
     const modulo = modulosSeleccionados.filter((modulo) => modulo.id_modulo === row.id_modulo);
-    // console.log(perfil)
     if (modulo) {
       return modulo[0]?.id_estado === 1;
     } else {

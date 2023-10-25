@@ -45,12 +45,7 @@ const RolesProvider = ({ children }) => {
 
           setDataRoles(data);
         } catch (error) {
-          setAlerta({
-            error: true,
-            show: true,
-            message: error.response.data.message
-          })
-          setDataRoles([]);
+          return setDataRoles([]);
         }
       })()
     }

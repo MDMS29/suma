@@ -48,10 +48,9 @@ const Login = () => {
                 navigate("/home")
 
             } catch (error) {
-                console.log(error)
                 setError({ error: true, message: error.response.data.message })
-                    setTimeout(() => { setError({ error: false, message: "" }) }, 1500)
-                    return
+                setTimeout(() => { setError({ error: false, message: "" }) }, 1500)
+                return
             }
         }
     }
@@ -73,7 +72,7 @@ const Login = () => {
                             <div className="p-inputgroup flex-1">
                                 <InputText type={eye ? "text" : "password"} id="contrasena" placeholder="Contraseña" onChange={(e) => setClave(e.target.value)} value={clave} className=' focus:outline-none focus:ring-2 focus:ring-yellow-200 border rounded-l-lg px-3 py-2' />
                                 <span className="p-inputgroup-addon rounded-r-lg">
-                                <i onClick={e => setEye(!eye, e)} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
+                                    <i onClick={e => setEye(!eye, e)} className={eye ? "pi pi-eye" : "pi pi-eye-slash"}></i>
                                 </span>
                             </div>
 
@@ -84,7 +83,7 @@ const Login = () => {
                                 />
                             </div>
 
-                            <input type="submit" value="Ingresar" className="w-full px-4 py-2 border-2 border-primaryYellow rounded-lg bg-secundaryYellow hover:bg-primaryYellow font-bold"/>
+                            <input type="submit" value="Ingresar" className="w-full px-4 py-2 border-2 border-primaryYellow rounded-lg bg-secundaryYellow hover:bg-primaryYellow font-bold" />
                         </form>
                     </div>
                     <div className=' rounded-r-lg w-full  md:w-1/2 lg:w-1/2 xl:w-1/2 hidden md:block'>

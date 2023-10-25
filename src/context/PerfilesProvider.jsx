@@ -172,7 +172,6 @@ const PerfilesProvider = ({ children }) => {
         config
       );
 
-      console.log("Información guardada con éxito:", response);
       setDataPerfiles([...dataPerfiles, response.data]);
       setAlerta({
         error: false,
@@ -214,9 +213,6 @@ const PerfilesProvider = ({ children }) => {
     try {
 
       const { data } = await conexionCliente.patch(`/perfiles/${formData.id_perfil}`, formData, config);
-      console.log(data);
-
-
       const perfilesActualizados = dataPerfiles.map((perfil) =>
         perfil.id_perfil === data.id_perfil ? { id_perfil: data.id_perfil, nombre_perfil: data.nombre_perfil } : perfil
       );

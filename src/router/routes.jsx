@@ -2,6 +2,7 @@ import Home from "../Pages/Home";
 import ErrorRoutes from "./ErrorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import AuthRoutes from "./AuthRoutes";
+import ComercialRoutes from "./Comercial";
 
 const rutas_usuario = [
   {
@@ -10,8 +11,9 @@ const rutas_usuario = [
     component: <Home />,
     key: 8
   },
-  ...AdminRoutes,
   ...AuthRoutes,
+  ...AdminRoutes,
+  ...ComercialRoutes,
   ...ErrorRoutes
 ];
 

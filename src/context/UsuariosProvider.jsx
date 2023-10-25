@@ -231,7 +231,6 @@ const UsuariosProvider = ({ children }) => {
     try {
       // Realiza la solicitud POST a la API para guardar la información del usuario
       const { data } = await conexionCliente.post("/usuarios", formData, config);
-      // console.log(data);
       if (!data?.error) {
         setDataUsuarios([...dataUsuarios, data])
 
@@ -283,7 +282,6 @@ const UsuariosProvider = ({ children }) => {
 
       const { id_usuario, nombre_completo, usuario, correo, perfiles } = data.usuario
       let permisos = []
-      console.log(data);
       setUsuariosAgg({
         id_usuario,
         nombre: nombre_completo,

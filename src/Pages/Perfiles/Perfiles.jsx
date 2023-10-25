@@ -46,7 +46,6 @@ const Perfiles = () => {
   };
 
   const editarPerfil = async (e, id_perfil) => {
-    console.log(id_perfil);
     e.preventDefault()
     setModalVisible(true)
     await buscarPerfil(id_perfil)

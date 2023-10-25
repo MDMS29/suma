@@ -26,10 +26,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
 
 
   const [iconos, setIconos] = useState([]);
-  // const [iconoSelect, setIconoSelect] = useState({});
-
-
-  console.log(ModulosAgg);
 
   useEffect(() => {
     const selectIcons = async () => {
@@ -134,7 +130,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   };
 
   const CheckboxChangeroles = (nombrePermiso, idRolModulo) => {
-    console.log("idRolModulo:", idRolModulo);
 
     if (rolesporModulo.find((permiso) => permiso.id_rol == idRolModulo)) {
       if (rolesEdit.find((permiso) => permiso.id_rol == idRolModulo)) {

@@ -42,7 +42,6 @@ const AuthProvider = ({ children }) => {
         const { data } = await conexionCliente('/usuarios/perfil', config)
         setAuthUsuario(data)
         if (data.cm_clave) {
-          console.log("data")
           navigate('/auth/resetear')
         }
         setAuthModulos(JSON.parse(localStorage.getItem('modulos')));

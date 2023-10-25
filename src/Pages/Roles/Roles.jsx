@@ -115,7 +115,6 @@ const Roles = () => {
                                 tooltipOptions={{ position: "top" }}
                                 className="p-button-rounded p-mr-2"
                                 onClick={() => {
-                                    console.log('first')
                                     setModalVisible(true)
                                     buscarRol(rowData.id_rol)
                                 }}

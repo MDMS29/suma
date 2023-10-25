@@ -55,7 +55,7 @@ const Sidebar = () => {
               {open && <span className="ml-2">SALIR</span>}
             </div>
           </div>
-          <ul className="">
+          <ul >
             {authModulos.map((modulo, index) => (
               <div key={index}>
                 <li
@@ -99,9 +99,9 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
-      <div className="m-3">
+      <div>
         <button
-          className=" sm:hidden md:hidden lg:hidden xl:hidden z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-lg drop-shadow-lg flex justify-center items-center  text-4xl hover:bg-amber-500 duration-300"
+          className="m-2 sm:hidden md:hidden lg:hidden xl:hidden z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-lg drop-shadow-lg flex justify-center items-center text-4xl hover:bg-amber-500 duration-300"
           onClick={toggleSidebarAbierto}
         >
           <span className="pi pi-bars"></span>
