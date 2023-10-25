@@ -37,8 +37,6 @@ export default class _MenuController {
         const { id_modulo } = req.params
         const { nombre_menu, link_menu } = req.body
 
-        console.log('40 - controller menu', req.body)
-
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }

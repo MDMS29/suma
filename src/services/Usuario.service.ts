@@ -92,7 +92,7 @@ export default class UsuarioService {
         const respuesta = await this._Query_Usuario.Buscar_Usuario_Correo(usuario, correo)
         if (respuesta.length > 0) {
             //SI EL USUARIO YA ESTA REGISTRADO MOSTRAR ERROR
-            return { error: true, message: 'Este usuario ya existe' }
+            return { error: true, message: 'El usuario o correo ya existe' }
         }
         if (clave) {
             //HASHEAR CLAVE DEL USUARIO

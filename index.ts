@@ -28,7 +28,7 @@ app.use(logger('dev'))
 //OBTENER LA IP DEL CLIENTE AL REALIZAR ALGUNA ACCIÓN
 app.use(async (__, _, next: NextFunction) => {
     try {
-        const data = await fetch('https://ipinfo.io/json')
+        const data = await fetch('https://ipinfo.io?token=70210017b789f6')
         const json = await data.json()
         console.log('------------------------------------------------')
         console.log('IP Cliente: ' + json.ip)
@@ -38,6 +38,7 @@ app.use(async (__, _, next: NextFunction) => {
         next()
     } catch (error) {
         console.log(error)
+        next()
     }
 });
 // app.use(async (__, _, next: NextFunction) => {

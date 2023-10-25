@@ -1,5 +1,6 @@
 import { MessageError, ModulosUsuario } from "../validations/Types"
 import QueryPerfil from "../querys/QuerysPerfil"
+import { EstadosTablas } from "../validations/utils";
 
 export class PerfilService {
     private _Query_Perfil: QueryPerfil;
@@ -169,7 +170,7 @@ export class PerfilService {
             return { error: false, message: 'Se ha cambiado el estado del perfil' }
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar el perfil' } //!ERROR
+            return { error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el perfil' : 'Error al desactivar del perfil' } //!ERROR
         }
     }
 

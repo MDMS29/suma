@@ -35,7 +35,7 @@ export class MenuService {
             }
 
             //INVOCAR FUNCION PARA INSERTAR MENU
-            const respuesta = await this._Query_Menu.Insertar_Menu(nombre, link_menu, id_modulo, usuario_creacion)
+            const respuesta = await this._Query_Menu.Insertar_Menu(nombre, link_menu.toLowerCase(), id_modulo, usuario_creacion)
 
             if (!respuesta) {
                 return { error: true, message: 'No se ha podido crear el menu' } //!ERROR
@@ -88,7 +88,7 @@ export class MenuService {
                 link_menu_editado = link_menu
             }
 
-            const res = await this._Query_Menu.Editar_Menu(id_menu, nombre_editado, link_menu_editado, usuario_modificacion)
+            const res = await this._Query_Menu.Editar_Menu(id_menu, nombre_editado, link_menu_editado.toLowerCase(), usuario_modificacion)
             if (res?.rowCount != 1) {
                 return { error: true, message: 'Error al actualizar el menu' } //!ERROR
             }
