@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -7,14 +7,15 @@ import { Button as PButton } from "primereact/button";
 
 import {
   Edit_Icono,
-  Trash_Icono,
-  menu_Icono,
-  nuevo_menu,
+  Trash_Icono
 } from "../Icons/Iconos";
 import useModulos from "../../hooks/useModulos";
 import { MultiSelect } from "primereact/multiselect";
 import useAuth from "../../hooks/useAuth";
 import EliminarRestaurar from "../Modales/EliminarRestaurar";
+import Loader from "../Loader";
+import Forbidden from "../../Pages/Errors/forbidden";
+import Button from "../Botones/Button";
 
 const ModalAsignarMenu = ({ visible, onClose }) => {
   const {
@@ -32,6 +33,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     eliminarRestablecerMenu,
     handleChangeMenu,
     dataModulos,
+    obtenerMenus,
   } = useModulos();
 
   const { setVerEliminarRestaurar, verEliminarRestaurar, Permisos_DB, authPermisos } = useAuth();
@@ -77,7 +79,8 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     if (moduloEncontrado) {
       setModuloNombre(moduloEncontrado.nombre_modulo);
     }
-    setEnlace(`${moduloEncontrado?.nombre_modulo}/${MenusAgg.nombre_menu}`);
+    let enlace = `${moduloEncontrado?.nombre_modulo}/${MenusAgg.nombre_menu}`.split(' ').join('-')
+    setEnlace(enlace.toLowerCase());
 
     
     setMenusAgg({...MenusAgg, link_menu: enlace})
@@ -112,6 +115,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
       icono: "",
     });
 
+    obtenerMenus({});
   };
 
   const handleGuardarMenu = async () => {
@@ -231,12 +235,14 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
           </div>
         </div>
         <div className="flex flex-col items-end mt-3">
-          <button
-            className="bg-primaryYellow p-2 rounded-md px-3 hover:bg-yellow-500"
-            onClick={isEditing ? handleActualizarMenu : handleGuardarMenu}
+          <Button
+          tipo={'PRINCIPAL'}
+          funcion={isEditing ? handleActualizarMenu : handleGuardarMenu}
+            // className="bg-primaryYellow p-2 rounded-md px-3 hover:bg-yellow-500"
+            // onClick={isEditing ? handleActualizarMenu : handleGuardarMenu}
           >
             {isEditing ? "Actualizar" : "Agregar"}
-          </button>
+          </Button>
         </div>
         <div className="card mt-3">
           <DataTable

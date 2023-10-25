@@ -25,7 +25,7 @@ const Usuarios = () => {
     { field: "nombre_completo", header: "Nombre" },
     { field: "usuario", header: "Usuario" },
     { field: "correo", header: "Correo" },
-    { field: "estado_usuario", header: "Estado" },
+    // { field: "estado_usuario", header: "Estado" },
   ];
 
   const { dataUsuarios, usuarioState, setUsuarioState, buscarUsuario, setPerfilesEdit, restablecerUsuarioProvider,
@@ -97,15 +97,16 @@ const Usuarios = () => {
     setVerEliminarRestaurar(true);
     setResClave(false)
   };
-
+  
   const confirmRestablecer = (e, usuario) => {
     e.preventDefault();
     setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
     setResClave(true)
   };
-
+  
   const toggleModal = () => {
+    setResClave(false)
     setPerfilesEdit([]);
     setPermisosEdit([]);
     setModalVisible(!modalVisible);

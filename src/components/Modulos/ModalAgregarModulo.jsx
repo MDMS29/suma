@@ -22,14 +22,10 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     guardarModulos,
   } = useModulos();
 
-  const [rolesporModulo, setrolesporModulo] = useState([{id_rol:1, id_estado:1}]);
+  const [rolesporModulo, setrolesporModulo] = useState([{ id_rol: 1, id_estado: 1 }]);
 
 
   const [iconos, setIconos] = useState([]);
-  // const [iconoSelect, setIconoSelect] = useState({});
-
-
-  console.log(ModulosAgg);
 
   useEffect(() => {
     const selectIcons = async () => {
@@ -39,32 +35,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
     selectIcons()
   }, [])
-
-  // // las imagenes cuando esta selccionado la opcion
-  //  const selectedCountryTemplate = (option, props) => {
-  //    if (option) {
-  //      return (
-  //        <div className="flex align-items-center">
-  //          <img alt={option.name} src="https://gluc.mx/u/fotografias/m/2020/6/1/f638x638-28017_86184_5050.jpg" className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
-  //          <div>{option.name}</div>
-  //        </div>
-  //      );
-  //    }
-
-  //   return <span>{props}</span>;
-  // //   // 
-  //  };
-
-  // // // las imagenes cuando se despliega el select
-  //  const countryOptionTemplate = (option) => {
-  //    return (
-  //      <div className="flex align-items-center">
-  //        <img alt={option.name} src="https://gluc.mx/u/fotografias/m/2020/6/1/f638x638-28017_86184_5050.jpg" className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
-  //        <div>{option.name}</div>
-  //      </div>
-  // //     
-  //    );
-  //  };
 
   const toast = useRef(null);
 
@@ -112,7 +82,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
         "El nombre del módulo no puede contener números ni caracteres especiales";
     }
 
-    if (!ModulosAgg.icono || !ModulosAgg.icono.startsWith("pi-")) {
+    if (!ModulosAgg?.icono || !ModulosAgg?.icono.startsWith("pi-")) {
       errors.icono = "El icono del módulo es obligario y comenzar con 'pi-'";
     }
 
@@ -229,6 +199,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                 Código del Módulo
               </label>
               <InputText
+                type="number"
                 value={ModulosAgg.cod_modulo}
                 name="cod_modulo"
                 className={`border-1 h-10 rounded-md px-3 py-2 ${errors.cod_modulo ? "border-red-500" : "border-gray-300"
@@ -298,31 +269,31 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md overflow-auto h-48 mt-2">
               {roles.map((rol) => (
                 <div key={rol.id}>
-                    <>
-                      <label
-                        className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) || rol.id_rol == 1 ? "bg-primaryYellow" : "bg-gray-300"
-                          }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={rol.id_rol == 1
+                  <>
+                    <label
+                      className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) || rol.id_rol == 1 ? "bg-primaryYellow" : "bg-gray-300"
+                        }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={rol.id_rol == 1
                           ?
                           true
                           :
-                            fncChkPermiso(rol)}
+                          fncChkPermiso(rol)}
 
-                          className="sr-only peer"
-                          onChange={() =>
-                            CheckboxChangeroles(rol.id_rol, rol.id_rol)
-                          }
-                        />
-                        <span
-                          className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
-                        ></span>
-                      </label>
-                      <span className="ml-6">{rol.nombre}</span>
-                    </>
-                  
+                        className="sr-only peer"
+                        onChange={() =>
+                          CheckboxChangeroles(rol.id_rol, rol.id_rol)
+                        }
+                      />
+                      <span
+                        className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}
+                      ></span>
+                    </label>
+                    <span className="ml-6">{rol.nombre}</span>
+                  </>
+
                 </div>
               ))}
             </div>
