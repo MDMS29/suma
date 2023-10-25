@@ -30,6 +30,7 @@ const Roles = () => {
     const columns = [
         { field: "id_rol", header: "ID" },
         { field: "nombre", header: "Nombre" },
+        { field: "descripcion", header: "Descripcion" },
         { field: "id_estado", header: "Estado" },
     ];
 
