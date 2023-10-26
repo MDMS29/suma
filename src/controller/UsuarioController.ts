@@ -92,17 +92,12 @@ export default class UsuarioController {
     }
 
     public async Crear_Usuario(req: Request, res: Response) {
-        const { roles } = req.body
+        // const { roles } = req.body
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!ERROR
         }
 
-        console.log(roles)
-
-        // const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
-        // if (rol?.length <= 0) {
-        //     return res.status(404).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
-        // }
+        
         const result = UsusarioSchema.safeParse(req.body) //VALIDACION DE LOS DATOS CON LA LIBRERIA ZOD
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
             return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
@@ -152,10 +147,10 @@ export default class UsuarioController {
             return res.status(400).json({ error: true, message: "Debe asignarle permisos al usuario" }) //!ERROR
         }
 
-        const result = UsusarioSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
-        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-            return res.json({ error: true, message: result.error.issues }) //!ERROR
-        }
+        // const result = UsusarioSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        // if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+        //     return res.json({ error: true, message: result.error.issues }) //!ERROR
+        // }
 
         try {
             const usuario_service = new UsuarioService()

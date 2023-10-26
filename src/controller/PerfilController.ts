@@ -71,10 +71,10 @@ export class _PerfilController {
             return res.status(404).json({ error: true, message: 'El perfil debe tener al menos un modulo' }) //!ERROR
         }
 
-        const zod_validacion = PerfilesSchema.safeParse(req.body)
-        if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-            return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
-        }
+        // const zod_validacion = PerfilesSchema.safeParse(req.body)
+        // if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+        //     return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
+        // }
 
         try {
             const _PerfilService = new PerfilService()
@@ -108,10 +108,10 @@ export class _PerfilController {
             return res.status(404).json({ error: true, message: 'El perfil debe tener al menos un modulo' }) //!ERROR
         }
 
-        const result = PerfilesSchema.safeParse(req.body)
-        if (!result.success) {
-            return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
-        }
+        // const result = PerfilesSchema.safeParse(req.body)
+        // if (!result.success) {
+        //     return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
+        // }
 
         try {
             const _PerfilService = new PerfilService()
