@@ -74,7 +74,14 @@ export class RolService {
             if (Brol?.length > 0 && Brol[0].nombre !== nombre) {
                 return { error: true, message: 'Ya existe este rol' } //!ERROR
             }
+            
+            // COMPROBAR SI ESTE ROL EXISTE
             const respuesta: any = await this._Query_Rol.Buscar_Rol_ID(id_rol)
+            if(respuesta.length === 0){
+                return { error: true, message: 'No existe este rol' } //!ERROR
+            }
+
+            // ACTUALIZAR
             if (respuesta[0]?.nombre === nombre) {
                 nombre_editado = respuesta[0]?.nombre
             } else {

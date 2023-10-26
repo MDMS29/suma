@@ -24,7 +24,7 @@ export default class UsuarioController {
 
             //SERVICIO PARA LA AUTENTICACIÓN
             const val = await usuario_service.Autenticar_Usuario(usuario_login)
-            // console.log(val)
+
             //VERFICICARIÓN DE DATOS RETORNADOS
             if (!val) {
                 //RESPUESTA AL CLIENTE
@@ -108,8 +108,6 @@ export default class UsuarioController {
             return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
         }
 
-
-
         try {
             const usuario_service = new UsuarioService()
             const respuesta = await usuario_service.Insertar_Usuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA INSERTAR EL USUARIO
@@ -136,7 +134,6 @@ export default class UsuarioController {
     public async Editar_Usuario(req: Request, res: Response) {
         const { perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO POR PARAMETROS
-        console.log(req.body)
         //VALIDACION DE DATOS
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(400).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!Error

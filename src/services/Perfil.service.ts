@@ -124,7 +124,6 @@ export class PerfilService {
             } else {
                 nombre_editado = nombre_perfil
             }
-            // console.log('126 - service', respuesta)
 
             const res = await this._Query_Perfil.Editar_Perfil({ id_perfil, nombre_editado, usuario_creacion })
             if (res?.rowCount != 1) {
@@ -148,10 +147,20 @@ export class PerfilService {
                     return { error: true, message: 'Error al insertar el nuevo modulo ' } //!ERROR
                 }
             } else {
-                //EDITAR
+                //EDITAR MODULOS
                 const Modulos_Editar = await this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo)
                 if (!Modulos_Editar) {
                     return { error: true, message: 'Error al editar el modulo' } //!ERROR
+                }
+                
+                // PREVENIR QUE EL PERFIL QUEDE SIN MODULOS
+                const modulos = await this._Query_Perfil.Modulos_Perfil(id_perfil)
+                if (modulos.length == 0) {
+                    modulo.id_estado = 1
+                    const Modulos_Editar = await this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo)
+                    if (!Modulos_Editar) {
+                        return { error: true, message: 'Error al editar el modulo' } //!ERROR
+                    }
                 }
             }
         }

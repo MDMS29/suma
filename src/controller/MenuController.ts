@@ -12,17 +12,17 @@ export default class _MenuController {
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_modulo) {
-            return res.status(404).json({ error: true, message: 'No se ha definido el modulo a consultar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'No se ha definido el modulo a consultar' }) //!ERROR
         }
         if (!estado) {
-            return res.status(404).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
         }
 
         try {
             const menu_service = new MenuService()
             const respuesta = await menu_service.Obtener_Menus(+estado, +id_modulo)
             if (respuesta?.error) {
-                return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
+                return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
 
             return res.status(200).json(respuesta)
@@ -41,13 +41,13 @@ export default class _MenuController {
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_modulo) {
-            return res.status(404).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
         }
         if (!nombre_menu || nombre_menu === "") {
-            return res.status(404).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
         }
         if (!link_menu || link_menu === "") {
-            return res.status(404).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
         }
 
         try {
@@ -95,18 +95,18 @@ export default class _MenuController {
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_menu) {
-            return res.status(404).json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
         }
         if (!nombre_menu || nombre_menu === "") {
-            return res.status(404).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
         }
         if (!link_menu || link_menu === "") {
-            return res.status(404).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
         }
 
         // const result = PerfilesSchema.safeParse(req.body)
         // if (!result.success) {
-        //     return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
+        //     return res.status(400).json({ error: true, message: result.error.issues }) //!ERROR
         // }
 
         try {
@@ -114,12 +114,12 @@ export default class _MenuController {
 
             const respuesta = await menu_service.Editar_menu(+id_menu, nombre_menu, link_menu, usuario.usuario)
             if (respuesta.error) {
-                return res.status(404).json({ error: respuesta.error, message: respuesta.message })
+                return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
             const response = await menu_service.Buscar_Menu(+id_menu)
             if (!response) {
-                return res.status(404).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
+                return res.status(400).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
             }
             return res.status(200).json(response) //*SUCCESSFUL
         } catch (error) {
@@ -146,7 +146,7 @@ export default class _MenuController {
             const menu_service = new MenuService()
             const respuesta = await menu_service.Cambiar_Estado_Menu(+id_menu, +estado)
             if (respuesta.error) {
-                return res.status(404).json({ error: true, message: respuesta.message }) //!ERROR
+                return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }
 
             return res.status(200).json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }) //*SUCCESSFUL

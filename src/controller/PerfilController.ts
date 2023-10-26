@@ -71,6 +71,11 @@ export class _PerfilController {
             return res.status(404).json({ error: true, message: 'El perfil debe tener al menos un modulo' }) //!ERROR
         }
 
+        const zod_validacion = PerfilesSchema.safeParse(req.body)
+        if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
+        }
+
         try {
             const _PerfilService = new PerfilService()
             const respuesta = await _PerfilService.Insertar_Perfil(nombre_perfil, usuario.usuario, modulos)
@@ -120,7 +125,7 @@ export class _PerfilController {
             if (modulosEditado.error) {
                 return res.status(404).json({ error: modulosEditado.error, message: modulosEditado.message })
             }
-            
+
             const perfil = await _PerfilService.Buscar_Perfil(+id_perfil)
             return res.status(200).json(perfil) //*SUCCESSFUL
         } catch (error) {

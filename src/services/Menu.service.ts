@@ -16,7 +16,7 @@ export class MenuService {
             const respuesta = await this._Query_Menu.Obtener_Menus(estado, id_modulo)
 
             if (respuesta?.length <= 0) {
-                return { error: true, message: 'No se han encontrado menus' } //!ERROR
+                return { error: false, message: 'No se han encontrado menus' } //!ERROR
             }
 
             return respuesta

@@ -16,7 +16,6 @@ export default class UsuarioService {
         //----OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO----
         // Promise<UsuarioLogeado | undefined>
         const respuesta = await this._Query_Usuario.Autenticar_Usuario({ usuario, clave })
-        // console.log('service', respuesta)
         if (respuesta) {
             for (const res of respuesta) {
                 res.perfiles = {
@@ -265,7 +264,6 @@ export default class UsuarioService {
     }
 
     public async Editar_Perfiles_Usuario(perfiles: any, usuario: number) {
-        // console.log(perfiles)
         try {
             for (let perfil of perfiles) {
                 const perfilExistente: any = await this._Query_Usuario.Buscar_Perfil_Usuario(perfil.id_perfil, usuario) //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO

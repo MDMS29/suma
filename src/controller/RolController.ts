@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { RolService } from "../services/Rol.service";
 import { EstadosTablas } from "../validations/utils";
+import { RolesSchema } from "../validations/ValidacionesZod";
 
 export class _RolController {
 
@@ -39,6 +40,11 @@ export class _RolController {
         }
         if (!descripcion || descripcion === "") {
             return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }) //!ERROR
+        }
+
+        const zod_validacion = RolesSchema.safeParse(req.body)
+        if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
         }
 
         try {
@@ -95,22 +101,23 @@ export class _RolController {
             return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }) //!ERROR
         }
 
-        // const result = PerfilesSchema.safeParse(req.body)
-        // if (!result.success) {
-        //     return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
-        // }
+        const zod_validacion = RolesSchema.safeParse(req.body)
+        if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
+        }
+
 
         try {
             const _RolService = new RolService()
 
             const respuesta = await _RolService.Editar_Rol(+id_rol, nombre, descripcion, usuario.usuario)
             if (respuesta.error) {
-                return res.status(404).json({ error: respuesta.error, message: respuesta.message })
+                return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
             const response = await _RolService.Buscar_Rol(+id_rol)
             if (!response) {
-                return res.status(404).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
+                return res.status(400).json({ error: true, message: response.message }) //!ERROR
             }
             return res.status(200).json(response) //*SUCCESSFUL
         } catch (error) {
