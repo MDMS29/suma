@@ -7,7 +7,7 @@ const ModulosContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const ModulosProvider = ({ children }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [dataModulos, setDataModulos] = useState([]);
   const [dataMenus, setDataMenus] = useState([]);
@@ -16,6 +16,7 @@ const ModulosProvider = ({ children }) => {
   const [roles, setRoles] = useState([]);
 
   const [rolesEdit, setrolesEdit] = useState([]);
+  const [textoBotonIcon, setTextoBotonIcon] = useState("Seleccione un icono");
 
   const { setAlerta, setAuthUsuario, setVerEliminarRestaurar } = useAuth();
 
@@ -23,6 +24,7 @@ const ModulosProvider = ({ children }) => {
     id_modulo: 0,
     cod_modulo: "",
     nombre_modulo: "",
+    icono: "",
     roles: [],
   });
 
@@ -43,9 +45,12 @@ const ModulosProvider = ({ children }) => {
   const location = useLocation();
 
   const handleChangeModulos = (e) => {
-    const { name, value } = e.target;
-    setModulosAgg((prevModulosAgg) => ({ ...prevModulosAgg, [name]: name == "nombre_modulo" ? value.replace(/\d/g, '') : value }));
+    console.log(e.target.name)
+    console.log(e.target.value)
+    // const { name, value } = e.target;
+    setModulosAgg((prevModulosAgg) => ({ ...prevModulosAgg, [e.target.name]: e.target.name == "nombre_modulo" ? e.target.value.replace(/\d/g, '') : e.target.value }));
   };
+  console.log(ModulosAgg);
 
   const handleChangeMenu = (e) => {
     const { name, value } = e.target;
@@ -83,85 +88,99 @@ const ModulosProvider = ({ children }) => {
   }, [location.pathname]);
 
   const eliminarRestablecerModulo = async (id) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     if (!token) {
-      setAuthUsuario({})
-      navigate('/auth')
-      return
+      setAuthUsuario({});
+      navigate("/auth");
+      return;
     }
 
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
-      const { data } = await conexionCliente.delete(`/modulos/${id}?estado=${estado}`, config)
+      const { data } = await conexionCliente.delete(
+        `/modulos/${id}?estado=${estado}`,
+        config
+      );
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message })
-        setTimeout(() => setAlerta({}), 1500)
-        return false
+        setAlerta({ error: true, show: true, message: data.message });
+        setTimeout(() => setAlerta({}), 1500);
+        return false;
       }
-      const moduloActualizados = dataModulos.filter(modulo => modulo.id_modulo !== id)
-      setDataModulos(moduloActualizados)
+      const moduloActualizados = dataModulos.filter(
+        (modulo) => modulo.id_modulo !== id
+      );
+      setDataModulos(moduloActualizados);
 
-      setAlerta({ error: false, show: true, message: data.message })
-      setTimeout(() => setAlerta({}), 1500)
-      setVerEliminarRestaurar(false)
-      return true
-
+      setAlerta({ error: false, show: true, message: data.message });
+      setTimeout(() => setAlerta({}), 1500);
+      setVerEliminarRestaurar(false);
+      return true;
     } catch (error) {
-      setAlerta({ error: true, show: true, message: error.response.data.message })
-      setTimeout(() => setAlerta({}), 1500)
-      return false
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message,
+      });
+      setTimeout(() => setAlerta({}), 1500);
+      return false;
     }
-  }
+  };
 
   const eliminarRestablecerMenu = async (id_menu) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     if (!token) {
-      setAuthUsuario({})
-      navigate('/auth')
-      return
+      setAuthUsuario({});
+      navigate("/auth");
+      return;
     }
 
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    // console.log(id_menu)
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
-      const { data } = await conexionCliente.delete(`/menus/${id_menu}?estado=${estado}`, config)
-
+      const { data } = await conexionCliente.delete(
+        `/menus/${id_menu}?estado=${estado}`,
+        config
+      );
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message })
-        setTimeout(() => setAlerta({}), 1500)
-        return false
+        setAlerta({ error: true, show: true, message: data.message });
+        setTimeout(() => setAlerta({}), 1500);
+        return false;
       }
 
-      const menusActualizados = dataMenus.filter(menu => menu.id_menu !== id_menu)
-      setDataMenus(menusActualizados)
+      const menusActualizados = dataMenus.filter(
+        (menu) => menu.id_menu !== id_menu
+      );
+      setDataMenus(menusActualizados);
 
-      setAlerta({ error: false, show: true, message: data.message })
-      setTimeout(() => setAlerta({}), 1500)
-      setVerEliminarRestaurar(false)
-      return true
-
+      setAlerta({ error: false, show: true, message: data.message });
+      setTimeout(() => setAlerta({}), 1500);
+      setVerEliminarRestaurar(false);
+      return true;
     } catch (error) {
-      setAlerta({ error: true, show: true, message: error.response?.data.message })
-      setTimeout(() => setAlerta({}), 1500)
-      return false
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response?.data.message,
+      });
+      setTimeout(() => setAlerta({}), 1500);
+      return false;
     }
-  }
+  };
 
   const obtenerroles = async () => {
     const token = localStorage.getItem("token");
@@ -176,7 +195,6 @@ const ModulosProvider = ({ children }) => {
     try {
       const { data } = await conexionCliente(`/roles?estado=1`, config);
       setRoles(data);
-      // console.log(data);
     } catch (error) {
       console.error("Error al obtener roles:", error);
     }
@@ -191,7 +209,10 @@ const ModulosProvider = ({ children }) => {
       },
     };
     try {
-      const { data } = await conexionCliente(`/menus/modulo/${id_modulo}?estado=1`, config);
+      const { data } = await conexionCliente(
+        `/menus/modulo/${id_modulo}?estado=1`,
+        config
+      );
       setDataMenus(data);
       console.log(data);
     } catch (error) {
@@ -211,6 +232,7 @@ const ModulosProvider = ({ children }) => {
 
     try {
       const { data } = await conexionCliente.post("/modulos", formData, config);
+      console.log('data back', data)
       if (!data?.error) {
         setDataModulos([...dataModulos, data]);
 
@@ -219,11 +241,18 @@ const ModulosProvider = ({ children }) => {
           show: true,
           message: "Modulo creado con exito",
         });
-
+        
         setTimeout(() => setAlerta({}), 1500);
-
         return true;
-      }
+      }  
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: data.message,
+      });
+      setTimeout(() => setAlerta({}), 1500);
+
       return false;
     } catch (error) {
       setAlerta({
@@ -246,7 +275,11 @@ const ModulosProvider = ({ children }) => {
     };
     try {
       // console.log(id_modulo)
-      const { data } = await conexionCliente.post(`/menus/modulo/${id_modulo}`, formData, config);
+      const { data } = await conexionCliente.post(
+        `/menus/modulo/${id_modulo}`,
+        formData,
+        config
+      );
 
       if (!data?.error) {
         //lista de menús en el estado
@@ -271,7 +304,6 @@ const ModulosProvider = ({ children }) => {
       setTimeout(() => setAlerta({}), 1500);
     }
   };
-
 
   const editarModulo = async (formData) => {
     const token = localStorage.getItem("token");
@@ -300,27 +332,26 @@ const ModulosProvider = ({ children }) => {
         setAlerta({
           error: false,
           show: true,
-          message: 'Modulo editado con exito'
-        })
+          message: "Modulo editado con exito",
+        });
 
-        setTimeout(() => setAlerta({}), 1500)
+        setTimeout(() => setAlerta({}), 1500);
         return true;
       }
 
       setAlerta({
         error: true,
         show: true,
-        message: data.message
-      })
-      setTimeout(() => setAlerta({}), 1500)
-      return false
-
+        message: data.message,
+      });
+      setTimeout(() => setAlerta({}), 1500);
+      return false;
     } catch (error) {
       setAlerta({
         error: true,
         show: true,
-        message: error.response.data.message
-      })
+        message: error.response.data.message,
+      });
       throw error; // Puedes lanzar una excepción en caso de error
     }
   };
@@ -375,7 +406,7 @@ const ModulosProvider = ({ children }) => {
       if (data?.error) {
         return { error: true, message: data.message };
       }
-
+      console.log(data);
       const { id_modulo, cod_modulo, nombre_modulo, icono } = data;
 
       let rolesModulo = [];
@@ -394,7 +425,6 @@ const ModulosProvider = ({ children }) => {
       });
 
       setrolesEdit(rolesModulo);
-      // console.log(rolesModulo);
     } catch (error) {
       console.error(error);
       throw error;
@@ -411,8 +441,6 @@ const ModulosProvider = ({ children }) => {
     errors,
     setErrors,
     handleChangeModulos,
-    // eliminarModuloProvider,
-    // restaurarModuloProvider,
     guardarModulos,
     permisosModulo,
     setPermisosModulo,
@@ -436,6 +464,8 @@ const ModulosProvider = ({ children }) => {
     permisosMenu,
     setMenuModulo,
     handleChangeMenu,
+    textoBotonIcon,
+    setTextoBotonIcon,
   }));
 
   return (

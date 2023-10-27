@@ -549,15 +549,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   style={{ width: "5em" }}
                 />
               </DataTable>
-              {errors.modulos || permisosPorModulo.filter(permiso => permiso?.id_estado === 1).length === 0 && (
-                <Message
-                  severity="warn"
-                  text="Debes seleccionar al menos un permiso"
-                  className="w-full"
-                >
-                  {errors.modulos}
-                </Message>
-              )}
             </div>
           </div>
         )}

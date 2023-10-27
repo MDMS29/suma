@@ -51,3 +51,28 @@ diseño modal
                     )}
                   </select>
                 </div>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+{/* <div className="flex items-center gap-2">
+                <div className="card flex justify-content-center w-full">
+                  <Dropdown
+                    value={ModulosAgg.icono}
+                    onChange={(e) => handleChangeModulos(e)}
+                    options={
+                      Array.isArray(iconos) && iconos.length > 0
+                        ? iconos.map((e) => ({
+                          label: e.description,
+                          value: e.name,
+                        }))
+                        : [{ label: "No hay datos disponibles", value: "" }]
+                    }
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccione un icono"
+                    filter
+                    name="icono"
+                    className="w-full md:w-14rem h-10 rounded-lg"
+                  />
+                </div>
+                <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
+              </div> */}

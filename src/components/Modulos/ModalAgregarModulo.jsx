@@ -20,10 +20,17 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     rolesEdit,
     editarModulo,
     guardarModulos,
+    textoBotonIcon,
+    setTextoBotonIcon,
   } = useModulos();
 
-  const [rolesporModulo, setrolesporModulo] = useState([{ id_rol: 1, id_estado: 1 }]);
+  const [rolesporModulo, setrolesporModulo] = useState([
+    { id_rol: 1, id_estado: 1 },
+  ]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [ventanaIcon, setVentanaIcon] = useState();
 
   const [iconos, setIconos] = useState([]);
 
@@ -32,9 +39,17 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
       const result = await fetch("/dataIcons.json");
       const json = await result.json();
       setIconos(json.icons);
-    }
-    selectIcons()
-  }, [])
+    };
+    selectIcons();
+  }, []);
+
+  const filteredData = iconos.filter((item) =>
+    item.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   const toast = useRef(null);
 
@@ -83,7 +98,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
 
     if (!ModulosAgg?.icono || !ModulosAgg?.icono.startsWith("pi-")) {
-      errors.icono = "El icono del módulo es obligario y comenzar con 'pi-'";
+      errors.icono = "El icono del módulo es obligario";
     }
 
     if (rolesporModulo.length === 0) {
@@ -130,7 +145,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   };
 
   const CheckboxChangeroles = (nombrePermiso, idRolModulo) => {
-
     if (rolesporModulo.find((permiso) => permiso.id_rol == idRolModulo)) {
       if (rolesEdit.find((permiso) => permiso.id_rol == idRolModulo)) {
         const [permiso] = rolesporModulo.filter(
@@ -172,22 +186,30 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
 
   const footerContent = (
     <div>
-      <Button
-        tipo={'PRINCIPAL'}
-        funcion={handleGuardar}
-      >{ModulosAgg.id_modulo !== 0 ? "Actualizar" : "Guardar"}
+      <Button tipo={"PRINCIPAL"} funcion={handleGuardar}>
+        {ModulosAgg.id_modulo !== 0 ? "Actualizar" : "Guardar"}
       </Button>
     </div>
-  )
+  );
+
+  const selccionarIcono = () => {
+    setVentanaIcon(true);
+    setTextoBotonIcon("Cambiar");
+  };
 
   return (
     <Dialog
-      header={ModulosAgg.id_modulo !== 0 ? <h1>Editar Módulo</h1> : <h1>Agregar Módulo</h1>}
+      header={
+        ModulosAgg.id_modulo !== 0 ? (
+          <h1>Editar Módulo</h1>
+        ) : (
+          <h1>Agregar Módulo</h1>
+        )
+      }
       visible={visible}
       onHide={handleClose}
       className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2"
       footer={footerContent}
-
     >
       <div>
         <Toast ref={toast} />
@@ -201,8 +223,9 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                 type="number"
                 value={ModulosAgg.cod_modulo}
                 name="cod_modulo"
-                className={`border-1 h-10 rounded-md px-3 py-2 ${errors.cod_modulo ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`border-1 h-10 rounded-md px-3 py-2 ${
+                  errors.cod_modulo ? "border-red-500" : "border-gray-300"
+                }`}
                 onChange={(e) => handleChangeModulos(e, "cod_modulo")}
                 onKeyDown={(e) => handleSpacePrevention(e, "cod_modulo")}
               />
@@ -216,35 +239,57 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               </label>
 
               <div className="flex items-center gap-2">
-                <div className="card flex justify-content-center w-full">
-                  <Dropdown
-                    value={ModulosAgg.icono}
-                    onChange={(e) => handleChangeModulos(e)}
-                    options={
-                      Array.isArray(iconos) && iconos.length > 0
-                        ? iconos.map((e) => ({
-                          label: e.description,
-                          value: e.name,
-                        }))
-                        : [{ label: "No hay datos disponibles", value: "" }]
-                    }
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Seleccione un icono"
-                    filter
-                    name="icono"
-                    className="w-full md:w-14rem h-10 rounded-lg"
-                  />
-                </div>
+                <Button tipo={"CANCELAR"} funcion={selccionarIcono}>
+                  {textoBotonIcon}
+                </Button>
                 <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
               </div>
+              <br />
+              {ventanaIcon && (
+                <div className="flex flex-col bg-white shadow-xl border rounded-md z-auto mt-20 mr-2 absolute h-36">
+                  <input
+                    type="text"
+                    placeholder="Busca"
+                    className="p-2 focus:outline-none rounded-md"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  <hr />
+                  <div
+                    className={` ${
+                      filteredData.length > 0
+                        ? "grid grid-cols-3 sm:grid-cols-7 gap-3"
+                        : "flex h-auto"
+                    } p-2 overflow-auto`}
+                  >
+                    {Array.isArray(filteredData) && filteredData.length > 0 ? (
+                      filteredData.map((icono) => (
+                        <button
+                          value={icono.name}
+                          className={`pi ${
+                            icono.name
+                          } hover:bg-gray-100 border-2 w-8 h-8 rounded-md ${
+                            icono.name == ModulosAgg.icono &&
+                            "border-blue-400 bg-gray-200"
+                          }`}
+                          onClick={(e) => handleChangeModulos(e)}
+                          name="icono"
+                          key={icono.name}
+                        ></button>
+                      ))
+                    ) : (
+                      <p className="w-full">No hay iconos disponibles</p>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {errors.icono && (
                 <div className="text-red-600 text-xs">{errors.icono}</div>
               )}
             </div>
           </div>
-          
+
           <div className="flex flex-col mt-2">
             <label className="text-gray-600 pb-2 font-semibold">
               Nombre del Módulo
@@ -252,8 +297,9 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             <InputText
               value={ModulosAgg.nombre_modulo}
               name="nombre_modulo"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre_modulo ? "border-red-500" : "border-gray-300"
-                }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${
+                errors.nombre_modulo ? "border-red-500" : "border-gray-300"
+              }`}
               onChange={(e) => handleChangeModulos(e)}
             />
             {errors.nombre_modulo && (
@@ -264,22 +310,20 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
           </div>
           <div className="pl-2 pt-3 mt-3 border rounded-md">
             <h1>Roles</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 rounded-md overflow-auto h-48 mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 overflow-auto h-48 mt-2">
               {roles.map((rol) => (
                 <div key={rol.id}>
-                    <>
-                      <label
-                        className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkPermiso(rol) || rol.id_rol == 1 ? "bg-primaryYellow" : "bg-gray-300"
-                          }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={rol.id_rol == 1
-                          ?
-                          true
-                          :
-                          fncChkPermiso(rol)}
-
+                  <>
+                    <label
+                      className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${
+                        fncChkPermiso(rol) || rol.id_rol == 1
+                          ? "bg-primaryYellow"
+                          : "bg-gray-300"
+                      } ${rol.id_rol == 1 && "cursor-not-allowed"} `}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={rol.id_rol == 1 ? true : fncChkPermiso(rol)}
                         className="sr-only peer"
                         onChange={() =>
                           CheckboxChangeroles(rol.id_rol, rol.id_rol)
@@ -291,7 +335,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                     </label>
                     <span className="ml-6">{rol.nombre}</span>
                   </>
-
                 </div>
               ))}
             </div>

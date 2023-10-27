@@ -49,7 +49,8 @@ const Modulos = () => {
     eliminarRestablecerModulo,
     obtenerMenus,
     eliminarRestablecerMenu,
-    MenuState
+    MenuState,
+    setTextoBotonIcon
   } = useModulos();
   const [modalEliminar, setModalEliminar] = useState(false);
   const [botonModulo, setBotonModulo] = useState();
@@ -101,6 +102,7 @@ const Modulos = () => {
   const editarModulo = async (e, id_modulo) => {
     e.preventDefault();
     setModalVisible(true);
+    setTextoBotonIcon("Cambiar")
     await buscarModulo(id_modulo);
   };
 
@@ -134,6 +136,7 @@ const Modulos = () => {
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
+    setTextoBotonIcon("Seleccione un icono")
   };
 
   const header = (

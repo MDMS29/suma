@@ -69,6 +69,11 @@
             "name": "pi-angle-right",
             "description": "Angulo derecha",
             "link": "&#xf042;"
+        },
+        {
+            "name": "pi-heart-fill",
+            "description": "Corazon",
+            "link": "&#xf042;"
         }
     ]
 }
