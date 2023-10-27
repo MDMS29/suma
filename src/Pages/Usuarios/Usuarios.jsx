@@ -28,8 +28,20 @@ const Usuarios = () => {
     // { field: "estado_usuario", header: "Estado" },
   ];
 
-  const { dataUsuarios, usuarioState, setUsuarioState, buscarUsuario, setPerfilesEdit, restablecer_usuario_provider,
-    setPermisosEdit, permisosUsuario, setPermisosUsuario, eliminar_restablecer_usuario, resClave, setResClave } = useUsuarios();
+  const {
+    dataUsuarios,
+    usuarioState,
+    setUsuarioState,
+    buscar_usuario,
+    setPerfilesEdit,
+    restablecer_usuario_provider,
+    setPermisosEdit,
+    permisosUsuario,
+    setPermisosUsuario,
+    eliminar_restablecer_usuario,
+    resClave,
+    setResClave
+  } = useUsuarios();
 
   const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
@@ -97,14 +109,14 @@ const Usuarios = () => {
     setVerEliminarRestaurar(true);
     setResClave(false)
   };
-  
+
   const confirmRestablecer = (e, usuario) => {
     e.preventDefault();
     setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
     setResClave(true)
   };
-  
+
   const toggleModal = () => {
     setResClave(false)
     setPerfilesEdit([]);
@@ -112,10 +124,10 @@ const Usuarios = () => {
     setModalVisible(!modalVisible);
   };
 
-  const editarUsuario = async (e, id_usuario) => {
+  const editar_usuario = async (e, id_usuario) => {
     e.preventDefault();
     setModalVisible(true);
-    await buscarUsuario(id_usuario);
+    await buscar_usuario(id_usuario);
   };
 
   const header = (
@@ -140,7 +152,7 @@ const Usuarios = () => {
               tooltip="Editar"
               tooltipOptions={{ position: "top" }}
               className="p-button-rounded p-mr-2"
-              onClick={(e) => editarUsuario(e, rowData.id_usuario)}
+              onClick={(e) => editar_usuario(e, rowData.id_usuario)}
             >
               {Edit_Icono}
             </PButton>

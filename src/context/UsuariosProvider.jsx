@@ -29,7 +29,7 @@ const UsuariosProvider = ({ children }) => {
     usuario: "",
     correo: "",
     clave: "",
-    claverepetida: "",
+    clave_repetida: "",
   });
 
   const [errors, setErrors] = useState({
@@ -37,7 +37,7 @@ const UsuariosProvider = ({ children }) => {
     usuario: '',
     correo: '',
     clave: '',
-    claverepetida: '',
+    clave_repetida: '',
   });
 
   const [permisosUsuario, setPermisosUsuario] = useState([])
@@ -166,7 +166,7 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-  const obtenerPerfiles = async () => {
+  const obtener_perfiles = async () => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -190,7 +190,7 @@ const UsuariosProvider = ({ children }) => {
     }
   };
 
-  const obtenerModulos = async (perfiles) => {
+  const obtener_modulos = async (perfiles) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -218,7 +218,7 @@ const UsuariosProvider = ({ children }) => {
     }
   };
 
-  const guardarUsuario = async (formData) => {
+  const guardar_usuario = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -264,7 +264,7 @@ const UsuariosProvider = ({ children }) => {
     }
   };
 
-  const buscarUsuario = async (id) => {
+  const buscar_usuario = async (id) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -288,7 +288,7 @@ const UsuariosProvider = ({ children }) => {
         usuario: usuario,
         correo: correo,
         clave: "",
-        claverepetida: "",
+        clave_repetida: "",
       })
       await data?.modulos.map((modulo) => {
         modulo?.permisos.map((permiso) => {
@@ -305,7 +305,7 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-  const editarUsuario = async (formData) => {
+  const editar_usuario = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -355,12 +355,35 @@ const UsuariosProvider = ({ children }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const obj = useMemo(() => ({
-    dataUsuarios, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
-    obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
-    setErrors, setUsuarioState, usuarioState, eliminar_restablecer_usuario, restablecer_usuario_provider,
-    restablecer_contraseña_provider, contraseña, setConstraseña, buscarUsuario,
-    perfilesEdit, permisosEdit, setPerfilesEdit, setPermisosEdit, editarUsuario,
-    permisosUsuario, setPermisosUsuario, resClave, setResClave
+    dataUsuarios, 
+    UsuariosAgg, 
+    setUsuariosAgg, 
+    obtener_perfiles, 
+    perfilesAgg,
+    obtener_modulos, 
+    modulosAgg, 
+    setModulosAgg, 
+    permisosAgg, 
+    guardar_usuario, 
+    errors,
+    setErrors, 
+    setUsuarioState, 
+    usuarioState, 
+    eliminar_restablecer_usuario, 
+    restablecer_usuario_provider,
+    restablecer_contraseña_provider, 
+    contraseña, 
+    setConstraseña, 
+    buscar_usuario,
+    perfilesEdit, 
+    permisosEdit, 
+    setPerfilesEdit, 
+    setPermisosEdit, 
+    editar_usuario,
+    permisosUsuario, 
+    setPermisosUsuario, 
+    resClave, 
+    setResClave
   }))
 
   return (
