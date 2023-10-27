@@ -28,8 +28,8 @@ const Usuarios = () => {
     // { field: "estado_usuario", header: "Estado" },
   ];
 
-  const { dataUsuarios, usuarioState, setUsuarioState, buscarUsuario, setPerfilesEdit, restablecerUsuarioProvider,
-    setPermisosEdit, permisosUsuario, setPermisosUsuario, eliminarRestablecerUsuario, resClave, setResClave } = useUsuarios();
+  const { dataUsuarios, usuarioState, setUsuarioState, buscarUsuario, setPerfilesEdit, restablecer_usuario_provider,
+    setPermisosEdit, permisosUsuario, setPermisosUsuario, eliminar_restablecer_usuario, resClave, setResClave } = useUsuarios();
 
   const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
@@ -179,7 +179,7 @@ const Usuarios = () => {
         <Toast ref={toast} />
 
         {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />}
-        {verEliminarRestaurar && <EliminarRestaurar tipo={resClave ? 'RESTABLECER_CLAVE' : 'ELIMINAR'} funcion={e => resClave ? restablecerUsuarioProvider(usuarioState.id_usuario, e) : eliminarRestablecerUsuario(usuarioState.id_usuario, e)} />}
+        {verEliminarRestaurar && <EliminarRestaurar tipo={resClave ? 'RESTABLECER_CLAVE' : 'ELIMINAR'} funcion={e => resClave ? restablecer_usuario_provider(usuarioState.id_usuario, e) : eliminar_restablecer_usuario(usuarioState.id_usuario, e)} />}
 
 
         <div className="flex justify-center gap-x-4 m-2 p-3">

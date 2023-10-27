@@ -34,7 +34,7 @@ const Roles = () => {
         { field: "id_estado", header: "Estado" },
     ];
 
-    const { dataRoles, permisosRoles, setPermisosRoles, buscarRol, eliminarRol, rolAgg, setRolAgg } = useRoles();
+    const { dataRoles, permisosRoles, setPermisosRoles, buscar_rol, eliminar_rol, rolAgg, setRolAgg } = useRoles();
 
     const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
 
@@ -63,7 +63,7 @@ const Roles = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alerta])
-    const onColumnToggle = (event) => {
+    const filtrar_columnas = (event) => {
         let selectedColumns = event.value;
         let orderedSelectedColumns = columns.filter((col) =>
             selectedColumns.some((sCol) => sCol.field === col.field)
@@ -98,7 +98,7 @@ const Roles = () => {
             value={visibleColumns}
             options={columns}
             optionLabel="header"
-            onChange={onColumnToggle}
+            onChange={filtrar_columnas}
             className="w-full sm:w-20rem"
             display="chip"
         />
@@ -116,7 +116,7 @@ const Roles = () => {
                                 className="p-button-rounded p-mr-2"
                                 onClick={() => {
                                     setModalVisible(true)
-                                    buscarRol(rowData.id_rol)
+                                    buscar_rol(rowData.id_rol)
                                 }}
                             >
                                 {Edit_Icono}
@@ -147,7 +147,7 @@ const Roles = () => {
             <div className="w-5/6">
                 <Toast ref={toast} />
                 {modalVisible && <ModalPrinRoles visible={modalVisible} onClose={toggleModal} />}
-                {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRol(rolAgg.id_rol, e)} />}
+                {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminar_rol(rolAgg.id_rol, e)} />}
 
                 <div className="flex justify-center items-center gap-x-4 m-2 p-3">
                     <h1 className="text-3xl">Roles</h1>

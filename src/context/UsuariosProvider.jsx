@@ -1,5 +1,5 @@
 import { useEffect, useState, createContext, useMemo } from "react";
-import conexionCliente from "../config/ConexionCliente";
+import conexion_cliente from "../config/ConexionCliente";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../hooks/useAuth'
 
@@ -50,7 +50,7 @@ const UsuariosProvider = ({ children }) => {
 
   useEffect(() => {
     if (location.pathname.includes('usuarios')) {
-      const obtenerUsuarios = async () => {
+      const obtener_usuarios = async () => {
         const token = localStorage.getItem('token')
 
         const config = {
@@ -62,17 +62,17 @@ const UsuariosProvider = ({ children }) => {
         const estado = location.pathname.includes('inactivos') ? 2 : 1
 
         try {
-          const { data } = await conexionCliente(`/usuarios?estado=${estado}`, config)
+          const { data } = await conexion_cliente(`/usuarios?estado=${estado}`, config)
           setDataUsuarios(data)
         } catch (error) {
           setDataUsuarios([])
         }
       }
-      obtenerUsuarios()
+      obtener_usuarios()
     }
   }, [location.pathname])
 
-  const eliminarRestablecerUsuario = async (id) => {
+  const eliminar_restablecer_usuario = async (id) => {
     const token = localStorage.getItem('token')
     if (!token) {
       setAuthUsuario({})
@@ -89,7 +89,7 @@ const UsuariosProvider = ({ children }) => {
 
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
-      const { data } = await conexionCliente.delete(`/usuarios/${id}?estado=${estado}`, config)
+      const { data } = await conexion_cliente.delete(`/usuarios/${id}?estado=${estado}`, config)
 
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
@@ -97,8 +97,8 @@ const UsuariosProvider = ({ children }) => {
         return false
       }
 
-      const usuariosActualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== id)
-      setDataUsuarios(usuariosActualizados)
+      const usuarios_actualizados = dataUsuarios.filter(usuario => usuario.id_usuario !== id)
+      setDataUsuarios(usuarios_actualizados)
 
       setAlerta({ error: false, show: true, message: data.message })
       setTimeout(() => setAlerta({}), 1500)
@@ -112,7 +112,7 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-  const restablecerUsuarioProvider = async (id) => {
+  const restablecer_usuario_provider = async (id) => {
     const token = localStorage.getItem('token')
     const config = {
       headers: {
@@ -122,7 +122,7 @@ const UsuariosProvider = ({ children }) => {
     }
     try {
       setAlerta({ error: true, show: true, message: 'Enviando correo...' })
-      const { data } = await conexionCliente.patch(`usuarios/cambiar_clave/${id}`, {}, config)
+      const { data } = await conexion_cliente.patch(`usuarios/cambiar_clave/${id}`, {}, config)
       setAlerta({ error: false, show: false, message: '' })
       setResClave(false)
 
@@ -144,7 +144,7 @@ const UsuariosProvider = ({ children }) => {
     }
   }
 
-  const restablecerContraseñaProvider = async () => {
+  const restablecer_contraseña_provider = async () => {
     const token = localStorage.getItem('token')
     const config = {
       headers: {
@@ -156,7 +156,7 @@ const UsuariosProvider = ({ children }) => {
       "clave": `${contraseña}`
     }
     try {
-      const { data } = await conexionCliente.patch(`usuarios/restablecer_clave/${authUsuario.id_usuario}`, body, config)
+      const { data } = await conexion_cliente.patch(`usuarios/restablecer_clave/${authUsuario.id_usuario}`, body, config)
       if (data.error) {
         return console.log(data.message)
       }
@@ -177,7 +177,7 @@ const UsuariosProvider = ({ children }) => {
     };
 
     try {
-      const { data } = await conexionCliente(`/perfiles?estado=1`, config);
+      const { data } = await conexion_cliente(`/perfiles?estado=1`, config);
       setPerfilesAgg(data);
     } catch (error) {
       setAlerta({
@@ -201,7 +201,7 @@ const UsuariosProvider = ({ children }) => {
     };
 
     try {
-      const { data } = await conexionCliente.post(
+      const { data } = await conexion_cliente.post(
         `/perfiles/modulos`,
         perfiles,
         config
@@ -230,7 +230,7 @@ const UsuariosProvider = ({ children }) => {
 
     try {
       // Realiza la solicitud POST a la API para guardar la información del usuario
-      const { data } = await conexionCliente.post("/usuarios", formData, config);
+      const { data } = await conexion_cliente.post("/usuarios", formData, config);
       if (!data?.error) {
         setDataUsuarios([...dataUsuarios, data])
 
@@ -275,7 +275,7 @@ const UsuariosProvider = ({ children }) => {
     };
 
     try {
-      const { data } = await conexionCliente(`/usuarios/${id}`, config);
+      const { data } = await conexion_cliente(`/usuarios/${id}`, config);
       if (data?.error) {
         return { error: true, message: data.message }
       }
@@ -317,12 +317,12 @@ const UsuariosProvider = ({ children }) => {
 
     try {
       // Realiza la solicitud PATCH API para editar la información del usuario
-      const { data } = await conexionCliente.patch(`/usuarios/${formData.id_usuario}`, formData, config);
+      const { data } = await conexion_cliente.patch(`/usuarios/${formData.id_usuario}`, formData, config);
 
       if (data?.usuario) {
         // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
-        const usuariosActualizados = dataUsuarios.map(usuario => usuario.id_usuario === data.usuario.id_usuario ? data.usuario : usuario)
-        setDataUsuarios(usuariosActualizados)
+        const usuarios_actualizados = dataUsuarios.map(usuario => usuario.id_usuario === data.usuario.id_usuario ? data.usuario : usuario)
+        setDataUsuarios(usuarios_actualizados)
 
         setAlerta({
           error: false,
@@ -357,8 +357,8 @@ const UsuariosProvider = ({ children }) => {
   const obj = useMemo(() => ({
     dataUsuarios, UsuariosAgg, setUsuariosAgg, obtenerPerfiles, perfilesAgg,
     obtenerModulos, modulosAgg, setModulosAgg, permisosAgg, guardarUsuario, errors,
-    setErrors, setUsuarioState, usuarioState, eliminarRestablecerUsuario, restablecerUsuarioProvider,
-    restablecerContraseñaProvider, contraseña, setConstraseña, buscarUsuario,
+    setErrors, setUsuarioState, usuarioState, eliminar_restablecer_usuario, restablecer_usuario_provider,
+    restablecer_contraseña_provider, contraseña, setConstraseña, buscarUsuario,
     perfilesEdit, permisosEdit, setPerfilesEdit, setPermisosEdit, editarUsuario,
     permisosUsuario, setPermisosUsuario, resClave, setResClave
   }))

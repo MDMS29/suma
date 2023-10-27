@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
   const [verEliminarRestaurar, setVerEliminarRestaurar] = useState(false)
 
   useEffect(() => {
-    const autenticarUsuario = async () => {
+    const autenticar_usuario = async () => {
       const token = localStorage.getItem('token')
       if (!token) {
         setAuthUsuario({})
@@ -52,7 +52,7 @@ const AuthProvider = ({ children }) => {
         navigate('/auth')
       }
     }
-    autenticarUsuario()
+    autenticar_usuario()
   }, [])
 
   //CARGAR LOS PERMISOS SEGUN EL MODULO

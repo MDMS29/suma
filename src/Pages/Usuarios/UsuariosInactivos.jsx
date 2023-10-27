@@ -20,7 +20,7 @@ const UsuariosInactivos = () => {
 
   // const [modalEliminar, setModalEliminar] = useState(false);
 
-  const { dataUsuarios, setUsuarioState, permisosUsuario, eliminarRestablecerUsuario, usuarioState } = useUsuarios();
+  const { dataUsuarios, setUsuarioState, permisosUsuario, eliminar_restablecer_usuario, usuarioState } = useUsuarios();
   const { alerta, setAlerta, Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
   const mostrarModalRestaurar = (usuario) => {
@@ -97,7 +97,7 @@ const UsuariosInactivos = () => {
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminarRestablecerUsuario(usuarioState.id_usuario, e)} />}
+      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminar_restablecer_usuario(usuarioState.id_usuario, e)} />}
 
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Usuarios Inactivos</h1>

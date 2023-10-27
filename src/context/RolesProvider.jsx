@@ -1,6 +1,6 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import conexionCliente from "../config/ConexionCliente";
+import conexion_cliente from "../config/ConexionCliente";
 import useAuth from "../hooks/useAuth";
 
 const RolesContext = createContext();
@@ -34,7 +34,7 @@ const RolesProvider = ({ children }) => {
         };
         const estado = location.pathname.includes("inactivos") ? 2 : 1;
         try {
-          const { data } = await conexionCliente(`/roles?estado=${estado}`, config);
+          const { data } = await conexion_cliente(`/roles?estado=${estado}`, config);
           if (data.error) {
             setAlerta({
               error: true,
@@ -53,7 +53,7 @@ const RolesProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
 
-  const guardarRol = async (formData) => {
+  const guardar_rol = async (formData) => {
 
     const token = localStorage.getItem('token')
     if (!token) {
@@ -70,7 +70,7 @@ const RolesProvider = ({ children }) => {
     }
 
     try {
-      const { data } = await conexionCliente.post('/roles', formData, config)
+      const { data } = await conexion_cliente.post('/roles', formData, config)
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
@@ -89,7 +89,7 @@ const RolesProvider = ({ children }) => {
     }
   }
 
-  const buscarRol = async (id) => {
+  const buscar_rol = async (id) => {
 
     const token = localStorage.getItem('token')
     if (!token) {
@@ -106,7 +106,7 @@ const RolesProvider = ({ children }) => {
     }
 
     try {
-      const { data } = await conexionCliente(`roles/${id}`, config)
+      const { data } = await conexion_cliente(`roles/${id}`, config)
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
@@ -123,7 +123,7 @@ const RolesProvider = ({ children }) => {
     }
   }
 
-  const editarRol = async (formData) => {
+  const editar_rol = async (formData) => {
     const token = localStorage.getItem('token')
     if (!token) {
       setAuthUsuario({})
@@ -139,15 +139,15 @@ const RolesProvider = ({ children }) => {
     }
 
     try {
-      const { data } = await conexionCliente.patch(`/roles/${formData.id_rol}`, formData, config)
+      const { data } = await conexion_cliente.patch(`/roles/${formData.id_rol}`, formData, config)
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
 
-      const rolesActualizados = dataRoles.map(rol => rol.id_rol === data.id_rol ? data : rol)
-      setDataRoles(rolesActualizados)
+      const Roles_Actualizados = dataRoles.map(rol => rol.id_rol === data.id_rol ? data : rol)
+      setDataRoles(Roles_Actualizados)
 
       setAlerta({ error: false, show: true, message: 'Rol editado con exito' })
       setTimeout(() => setAlerta({}), 1500)
@@ -160,7 +160,7 @@ const RolesProvider = ({ children }) => {
     }
   }
 
-  const eliminarRol = async (id) => {
+  const eliminar_rol = async (id) => {
     const token = localStorage.getItem('token')
     if (!token) {
       setAuthUsuario({})
@@ -177,7 +177,7 @@ const RolesProvider = ({ children }) => {
 
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
-      const { data } = await conexionCliente.delete(`/roles/${id}?estado=${estado}`, config)
+      const { data } = await conexion_cliente.delete(`/roles/${id}?estado=${estado}`, config)
 
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
@@ -203,7 +203,7 @@ const RolesProvider = ({ children }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const obj = useMemo(() => ({
     dataRoles, permisosRoles, setPermisosRoles, errors, setErrors,
-    rolAgg, setRolAgg, guardarRol, buscarRol, editarRol, eliminarRol
+    rolAgg, setRolAgg, guardar_rol, buscar_rol, editar_rol, eliminar_rol
   }))
 
   return (
