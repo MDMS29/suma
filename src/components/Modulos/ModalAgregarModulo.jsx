@@ -251,7 +251,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               </div>
               <br />
               {ventanaIcon && (
-                <div className="flex flex-col bg-white shadow-xl border rounded-md z-auto mt-20 mr-2 absolute h-36">
+                <div className="flex flex-col bg-white shadow-xl border rounded-md z-10 mt-20 mr-2 absolute h-48">
                   <input
                     type="text"
                     placeholder="Busca"
@@ -263,7 +263,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                   <div
                     className={` ${
                       filteredData.length > 0
-                        ? "grid grid-cols-3 sm:grid-cols-7 gap-3"
+                        ? "grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-3"
                         : "flex h-auto"
                     } p-2 overflow-auto`}
                   >
@@ -320,11 +320,10 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                 <div key={rol.id}>
                   <>
                     <label
-                      className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${
+                      className={`p-checkbox w-10 h-5 relative rounded-full ${
                         fncChkPermiso(rol) || rol.id_rol == 1
                           ? "bg-primaryYellow"
-                          : "bg-gray-300"
-                      } ${rol.id_rol == 1 && "cursor-not-allowed"} `}
+                          : "bg-gray-300"} ${rol.id_rol == 1 && "cursor-not-allowed"} `}
                     >
                       <input
                         type="checkbox"

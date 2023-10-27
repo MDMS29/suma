@@ -16,7 +16,7 @@ const ModulosProvider = ({ children }) => {
   const [roles, setRoles] = useState([]);
 
   const [rolesEdit, setrolesEdit] = useState([]);
-  const [textoBotonIcon, setTextoBotonIcon] = useState("Seleccione un icono");
+  const [textoBotonIcon, setTextoBotonIcon] = useState("Seleccionar");
 
   const { setAlerta, setAuthUsuario, setVerEliminarRestaurar } = useAuth();
 
@@ -213,8 +213,12 @@ const ModulosProvider = ({ children }) => {
         `/menus/modulo/${id_modulo}?estado=1`,
         config
       );
+      if (data.message) {
+        setDataMenus([]);
+        return
+      }
       setDataMenus(data);
-      console.log(data);
+      return
     } catch (error) {
       console.error("Error al obtener menus:", error);
     }
@@ -241,10 +245,10 @@ const ModulosProvider = ({ children }) => {
           show: true,
           message: "Modulo creado con exito",
         });
-        
+
         setTimeout(() => setAlerta({}), 1500);
         return true;
-      }  
+      }
 
       setAlerta({
         error: true,

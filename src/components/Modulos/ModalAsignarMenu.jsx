@@ -19,7 +19,6 @@ import Button from "../Botones/Button";
 
 const ModalAsignarMenu = ({ visible, onClose }) => {
   const {
-    menus,
     dataMenus,
     guardarMenu,
     MenusAgg,
@@ -38,7 +37,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
 
   const { setVerEliminarRestaurar, verEliminarRestaurar, Permisos_DB, authPermisos } = useAuth();
 
-  const [filteredData, setFilteredData] = useState(menus);
+  const [filteredData, setFilteredData] = useState(dataMenus);
 
   const [isEditing, setIsEditing] = useState(false);
   const [enlace, setEnlace] = useState('');

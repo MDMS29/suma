@@ -136,7 +136,7 @@ const Modulos = () => {
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
-    setTextoBotonIcon("Seleccione un icono")
+    setTextoBotonIcon("Seleccionar")
   };
 
   const header = (

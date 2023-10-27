@@ -187,6 +187,838 @@
         {
             "name": "pi-calendar-times",
             "description": "Calendario x"
+        },
+        {
+            "name": "pi-car",
+            "description": "Auto"
+        },
+        {
+            "name": "pi-caret-down",
+            "description": "Flecha abajo"
+        },
+        {
+            "name": "pi-caret-left",
+            "description": "Flecha izquierda"
+        },
+        {
+            "name": "pi-caret-right",
+            "description": "Flecha derecha"
+        },
+        {
+            "name": "pi-caret-up",
+            "description": "Flecha arriba"
+        },
+        {
+            "name": "pi-cart-plus",
+            "description": "Carrito con signo más"
+        },
+        {
+            "name": "pi-chart-bar",
+            "description": "Gráfico de barras"
+        },
+        {
+            "name": "pi-chart-line",
+            "description": "Gráfico de línea"
+        },
+        {
+            "name": "pi-chart-pie",
+            "description": "Gráfico de torta"
+        },
+        {
+            "name": "pi-check",
+            "description": "Marca de verificación"
+        },
+        {
+            "name": "pi-check-circle",
+            "description": "Círculo con marca de verificación"
+        },
+        {
+            "name": "pi-check-square",
+            "description": "Cuadrado con marca de verificación"
+        },
+        {
+            "name": "pi-chevron-circle-down",
+            "description": "Flecha círculo abajo"
+        },
+        {
+            "name": "pi-chevron-circle-left",
+            "description": "Flecha círculo izquierda"
+        },
+        {
+            "name": "pi-chevron-circle-right",
+            "description": "Flecha círculo derecha"
+        },
+        {
+            "name": "pi-chevron-circle-up",
+            "description": "Flecha círculo arriba"
+        },
+        {
+            "name": "pi-chevron-down",
+            "description": "Flecha abajo"
+        },
+        {
+            "name": "pi-chevron-left",
+            "description": "Flecha izquierda"
+        },
+        {
+            "name": "pi-chevron-right",
+            "description": "Flecha derecha"
+        },
+        {
+            "name": "pi-chevron-up",
+            "description": "Flecha arriba"
+        },
+        {
+            "name": "pi-circle",
+            "description": "Círculo"
+        },
+        {
+            "name": "pi-circle-fill",
+            "description": "Círculo lleno"
+        },
+        {
+            "name": "pi-clock",
+            "description": "Reloj"
+        },
+        {
+            "name": "pi-clone",
+            "description": "Clonar"
+        },
+        {
+            "name": "pi-cloud",
+            "description": "Nube"
+        },
+        {
+            "name": "pi-cloud-download",
+            "description": "Descarga desde la nube"
+        },
+        {
+            "name": "pi-cloud-upload",
+            "description": "Carga a la nube"
+        },
+        {
+            "name": "pi-code",
+            "description": "Código"
+        },
+        {
+            "name": "pi-cog",
+            "description": "Engranaje"
+        },
+        {
+            "name": "pi-comment",
+            "description": "Comentario"
+        },
+        {
+            "name": "pi-comments",
+            "description": "Comentarios"
+        },
+        {
+            "name": "pi-compass",
+            "description": "Brújula"
+        },
+        {
+            "name": "pi-copy",
+            "description": "Copiar"
+        },
+        {
+            "name": "pi-credit-card",
+            "description": "Tarjeta de crédito"
+        },
+        {
+            "name": "pi-database",
+            "description": "Base de datos"
+        },
+        {
+            "name": "pi-delete-left",
+            "description": "Eliminar izquierda"
+        },
+        {
+            "name": "pi-desktop",
+            "description": "Escritorio"
+        },
+        {
+            "name": "pi-directions",
+            "description": "Direcciones"
+        },
+        {
+            "name": "pi-directions-alt",
+            "description": "Direcciones alternas"
+        },
+        {
+            "name": "pi-discord",
+            "description": "Discord"
+        },
+        {
+            "name": "pi-dollar",
+            "description": "Dólar"
+        },
+        {
+            "name": "pi-download",
+            "description": "Descargar"
+        },
+        {
+            "name": "pi-eject",
+            "description": "Expulsar"
+        },
+        {
+            "name": "pi-ellipsis-h",
+            "description": "Puntos suspensivos horizontales"
+        },
+        {
+            "name": "pi-ellipsis-v",
+            "description": "Puntos suspensivos verticales"
+        },
+        {
+            "name": "pi-envelope",
+            "description": "Sobre"
+        },
+        {
+            "name": "pi-eraser",
+            "description": "Borrador"
+        },
+        {
+            "name": "pi-euro",
+            "description": "Euro"
+        },
+        {
+            "name": "pi-exclamation-circle",
+            "description": "Círculo de exclamación"
+        },
+        {
+            "name": "pi-exclamation-triangle",
+            "description": "Triángulo de exclamación"
+        },
+        {
+            "name": "pi-external-link",
+            "description": "Enlace externo"
+        },
+        {
+            "name": "pi-eye",
+            "description": "Ojo"
+        },
+        {
+            "name": "pi-eye-slash",
+            "description": "Ojo tachado"
+        },
+        {
+            "name": "pi-facebook",
+            "description": "Facebook"
+        },
+        {
+            "name": "pi-fast-backward",
+            "description": "Retroceder rápido"
+        },
+        {
+            "name": "pi-fast-forward",
+            "description": "Avanzar rápido"
+        },
+        {
+            "name": "pi-file",
+            "description": "Archivo"
+        },
+        {
+            "name": "pi-file-edit",
+            "description": "Editar archivo"
+        },
+        {
+            "name": "pi-file-excel",
+            "description": "Archivo de Excel"
+        },
+        {
+            "name": "pi-file-export",
+            "description": "Exportar archivo"
+        },
+        {
+            "name": "pi-file-import",
+            "description": "Importar archivo"
+        },
+        {
+            "name": "pi-file-pdf",
+            "description": "Archivo PDF"
+        },
+        {
+            "name": "pi-file-word",
+            "description": "Archivo de Word"
+        },
+        {
+            "name": "pi-filter",
+            "description": "Filtrar"
+        },
+        {
+            "name": "pi-filter-fill",
+            "description": "Filtrar lleno"
+        },
+        {
+            "name": "pi-filter-slash",
+            "description": "Filtrar tachado"
+        },
+        {
+            "name": "pi-flag",
+            "description": "Bandera"
+        },
+        {
+            "name": "pi-flag-fill",
+            "description": "Bandera llena"
+        },
+        {
+            "name": "pi-folder",
+            "description": "Carpeta"
+        },
+        {
+            "name": "pi-folder-open",
+            "description": "Carpeta abierta"
+        },
+        {
+            "name": "pi-forward",
+            "description": "Avanzar"
+        },
+        {
+            "name": "pi-gift",
+            "description": "Regalo"
+        },
+        {
+            "name": "pi-github",
+            "description": "GitHub"
+        },
+        {
+            "name": "pi-globe",
+            "description": "Globo terráqueo"
+        },
+        {
+            "name": "pi-google",
+            "description": "Google"
+        },
+        {
+            "name": "pi-hashtag",
+            "description": "Hashtag"
+        },
+        {
+            "name": "pi-heart",
+            "description": "Corazón"
+        },
+        {
+            "name": "pi-heart-fill",
+            "description": "Corazón lleno"
+        },
+        {
+            "name": "pi-history",
+            "description": "Historial"
+        },
+        {
+            "name": "pi-home",
+            "description": "Casa"
+        },
+        {
+            "name": "pi-hourglass",
+            "description": "Reloj de arena"
+        },
+        {
+            "name": "pi-id-card",
+            "description": "Tarjeta de identificación"
+        },
+        {
+            "name": "pi-image",
+            "description": "Imagen"
+        },
+        {
+            "name": "pi-images",
+            "description": "Imágenes"
+        },
+        {
+            "name": "pi-inbox",
+            "description": "Bandeja de entrada"
+        },
+        {
+            "name": "pi-info",
+            "description": "Información"
+        },
+        {
+            "name": "pi-info-circle",
+            "description": "Círculo de información"
+        },
+        {
+            "name": "pi-instagram",
+            "description": "Instagram"
+        },
+        {
+            "name": "pi-key",
+            "description": "Llave"
+        },
+        {
+            "name": "pi-language",
+            "description": "Idioma"
+        },
+        {
+            "name": "pi-link",
+            "description": "Enlace"
+        },
+        {
+            "name": "pi-linkedin",
+            "description": "LinkedIn"
+        },
+        {
+            "name": "pi-list",
+            "description": "Lista"
+        },
+        {
+            "name": "pi-lock",
+            "description": "Candado cerrado"
+        },
+        {
+            "name": "pi-lock-open",
+            "description": "Candado abierto"
+        },
+        {
+            "name": "pi-map",
+            "description": "Mapa"
+        },
+        {
+            "name": "pi-map-marker",
+            "description": "Marcador de mapa"
+        },
+        {
+            "name": "pi-megaphone",
+            "description": "Megáfono"
+        },
+        {
+            "name": "pi-microphone",
+            "description": "Micrófono"
+        },
+        {
+            "name": "pi-microsoft",
+            "description": "Microsoft"
+        },
+        {
+            "name": "pi-minus",
+            "description": "Menos"
+        },
+        {
+            "name": "pi-minus-circle",
+            "description": "Círculo de menos"
+        },
+        {
+            "name": "pi-mobile",
+            "description": "Teléfono móvil"
+        },
+        {
+            "name": "pi-money-bill",
+            "description": "Billete de dinero"
+        },
+        {
+            "name": "pi-moon",
+            "description": "Luna"
+        },
+        {
+            "name": "pi-palette",
+            "description": "Paleta de colores"
+        },
+        {
+            "name": "pi-paperclip",
+            "description": "Clip de papel"
+        },
+        {
+            "name": "pi-pause",
+            "description": "Pausa"
+        },
+        {
+            "name": "pi-paypal",
+            "description": "PayPal"
+        },
+        {
+            "name": "pi-pencil",
+            "description": "Lápiz"
+        },
+        {
+            "name": "pi-percentage",
+            "description": "Porcentaje"
+        },
+        {
+            "name": "pi-phone",
+            "description": "Teléfono"
+        },
+        {
+            "name": "pi-play",
+            "description": "Reproducir"
+        },
+        {
+            "name": "pi-plus",
+            "description": "Más"
+        },
+        {
+            "name": "pi-plus-circle",
+            "description": "Círculo de más"
+        },
+        {
+            "name": "pi-pound",
+            "description": "Libra esterlina"
+        },
+        {
+            "name": "pi-power-off",
+            "description": "Apagar"
+        },
+        {
+            "name": "pi-prime",
+            "description": "Prime"
+        },
+        {
+            "name": "pi-print",
+            "description": "Imprimir"
+        },
+        {
+            "name": "pi-qrcode",
+            "description": "Código QR"
+        },
+        {
+            "name": "pi-question",
+            "description": "Pregunta"
+        },
+        {
+            "name": "pi-question-circle",
+            "description": "Círculo de pregunta"
+        },
+        {
+            "name": "pi-reddit",
+            "description": "Reddit"
+        },
+        {
+            "name": "pi-refresh",
+            "description": "Actualizar"
+        },
+        {
+            "name": "pi-replay",
+            "description": "Repetir"
+        },
+        {
+            "name": "pi-reply",
+            "description": "Responder"
+        },
+        {
+            "name": "pi-save",
+            "description": "Guardar"
+        },
+        {
+            "name": "pi-search",
+            "description": "Buscar"
+        },
+        {
+            "name": "pi-search-minus",
+            "description": "Buscar menos"
+        },
+        {
+            "name": "pi-search-plus",
+            "description": "Buscar más"
+        },
+        {
+            "name": "pi-send",
+            "description": "Enviar"
+        },
+        {
+            "name": "pi-server",
+            "description": "Servidor"
+        },
+        {
+            "name": "pi-share-alt",
+            "description": "Compartir alternativo"
+        },
+        {
+            "name": "pi-shield",
+            "description": "Escudo"
+        },
+        {
+            "name": "pi-shopping-bag",
+            "description": "Bolsa de compras"
+        },
+        {
+            "name": "pi-shopping-cart",
+            "description": "Carrito de compras"
+        },
+        {
+            "name": "pi-sign-in",
+            "description": "Iniciar sesión"
+        },
+        {
+            "name": "pi-sign-out",
+            "description": "Cerrar sesión"
+        },
+        {
+            "name": "pi-sitemap",
+            "description": "Mapa del sitio"
+        },
+        {
+            "name": "pi-slack",
+            "description": "Slack"
+        },
+        {
+            "name": "pi-sliders-h",
+            "description": "Controles deslizantes horizontales"
+        },
+        {
+            "name": "pi-sliders-v",
+            "description": "Controles deslizantes verticales"
+        },
+        {
+            "name": "pi-sort",
+            "description": "Ordenar"
+        },
+        {
+            "name": "pi-sort-alpha-down",
+            "description": "Ordenar alfabéticamente descendente"
+        },
+        {
+            "name": "pi-sort-alpha-down-alt",
+            "description": "Ordenar alfabéticamente descendente alternativo"
+        },
+        {
+            "name": "pi-sort-alpha-up",
+            "description": "Ordenar alfabéticamente ascendente"
+        },
+        {
+            "name": "pi-sort-alpha-up-alt",
+            "description": "Ordenar alfabéticamente ascendente alternativo"
+        },
+        {
+            "name": "pi-sort-alt",
+            "description": "Ordenar alternativo"
+        },
+        {
+            "name": "pi-sort-alt-slash",
+            "description": "Ordenar alternativo barra inclinada"
+        },
+        {
+            "name": "pi-sort-amount-down",
+            "description": "Ordenar por cantidad descendente"
+        },
+        {
+            "name": "pi-sort-amount-down-alt",
+            "description": "Ordenar por cantidad descendente alternativo"
+        },
+        {
+            "name": "pi-sort-amount-up",
+            "description": "Ordenar por cantidad ascendente"
+        },
+        {
+            "name": "pi-sort-amount-up-alt",
+            "description": "Ordenar por cantidad ascendente alternativo"
+        },
+        {
+            "name": "pi-sort-down",
+            "description": "Ordenar hacia abajo"
+        },
+        {
+            "name": "pi-sort-numeric-down",
+            "description": "Ordenar numéricamente descendente"
+        },
+        {
+            "name": "pi-sort-numeric-down-alt",
+            "description": "Ordenar numéricamente descendente alternativo"
+        },
+        {
+            "name": "pi-sort-numeric-up",
+            "description": "Ordenar numéricamente ascendente"
+        },
+        {
+            "name": "pi-sort-numeric-up-alt",
+            "description": "Ordenar numéricamente ascendente alternativo"
+        },
+        {
+            "name": "pi-sort-up",
+            "description": "Ordenar hacia arriba"
+        },
+        {
+            "name": "pi-spinner",
+            "description": "Girador"
+        },
+        {
+            "name": "pi-star",
+            "description": "Estrella"
+        },
+        {
+            "name": "pi-star-fill",
+            "description": "Estrella llena"
+        },
+        {
+            "name": "pi-step-backward",
+            "description": "Retroceder paso"
+        },
+        {
+            "name": "pi-step-backward-alt",
+            "description": "Retroceder paso alternativo"
+        },
+        {
+            "name": "pi-step-forward",
+            "description": "Avanzar paso"
+        },
+        {
+            "name": "pi-step-forward-alt",
+            "description": "Avanzar paso alternativo"
+        },
+        {
+            "name": "pi-stop",
+            "description": "Detener"
+        },
+        {
+            "name": "pi-stop-circle",
+            "description": "Círculo de detención"
+        },
+        {
+            "name": "pi-stopwatch",
+            "description": "Cronómetro"
+        },
+        {
+            "name": "pi-sun",
+            "description": "Sol"
+        },
+        {
+            "name": "pi-sync",
+            "description": "Sincronizar"
+        },
+        {
+            "name": "pi-table",
+            "description": "Tabla"
+        },
+        {
+            "name": "pi-tablet",
+            "description": "Tableta"
+        },
+        {
+            "name": "pi-tag",
+            "description": "Etiqueta"
+        },
+        {
+            "name": "pi-tags",
+            "description": "Etiquetas"
+        },
+        {
+            "name": "pi-telegram",
+            "description": "Telegram"
+        },
+        {
+            "name": "pi-th-large",
+            "description": "Grande"
+        },
+        {
+            "name": "pi-thumbs-down",
+            "description": "Pulgar abajo"
+        },
+        {
+            "name": "pi-thumbs-down-fill",
+            "description": "Pulgar abajo lleno"
+        },
+        {
+            "name": "pi-thumbs-up",
+            "description": "Pulgar arriba"
+        },
+        {
+            "name": "pi-thumbs-up-fill",
+            "description": "Pulgar arriba lleno"
+        },
+        {
+            "name": "pi-ticket",
+            "description": "Boleto"
+        },
+        {
+            "name": "pi-times",
+            "description": "X"
+        },
+        {
+            "name": "pi-times-circle",
+            "description": "Círculo de X"
+        },
+        {
+            "name": "pi-trash",
+            "description": "Basura"
+        },
+        {
+            "name": "pi-truck",
+            "description": "Camión"
+        },
+        {
+            "name": "pi-twitter",
+            "description": "Twitter"
+        },
+        {
+            "name": "pi-undo",
+            "description": "Deshacer"
+        },
+        {
+            "name": "pi-unlock",
+            "description": "Desbloquear"
+        },
+        {
+            "name": "pi-upload",
+            "description": "Cargar"
+        },
+        {
+            "name": "pi-user",
+            "description": "Usuario"
+        },
+        {
+            "name": "pi-user-edit",
+            "description": "Editar usuario"
+        },
+        {
+            "name": "pi-user-minus",
+            "description": "Eliminar usuario"
+        },
+        {
+            "name": "pi-user-plus",
+            "description": "Agregar usuario"
+        },
+        {
+            "name": "pi-users",
+            "description": "Usuarios"
+        },
+        {
+            "name": "pi-verified",
+            "description": "Verificado"
+        },
+        {
+            "name": "pi-video",
+            "description": "Video"
+        },
+        {
+            "name": "pi-vimeo",
+            "description": "Vimeo"
+        },
+        {
+            "name": "pi-volume-down",
+            "description": "Volumen abajo"
+        },
+        {
+            "name": "pi-volume-off",
+            "description": "Volumen apagado"
+        },
+        {
+            "name": "pi-volume-up",
+            "description": "Volumen arriba"
+        },
+        {
+            "name": "pi-wallet",
+            "description": "Billetera"
+        },
+        {
+            "name": "pi-whatsapp",
+            "description": "WhatsApp"
+        },
+        {
+            "name": "pi-wifi",
+            "description": "WiFi"
+        },
+        {
+            "name": "pi-window-maximize",
+            "description": "Maximizar ventana"
+        },
+        {
+            "name": "pi-window-minimize",
+            "description": "Minimizar ventana"
+        },
+        {
+            "name": "pi-wrench",
+            "description": "Llave inglesa"
+        },
+        {
+            "name": "pi-youtube",
+            "description": "YouTube"
         }
     ]
 }
