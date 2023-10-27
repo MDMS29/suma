@@ -39,7 +39,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   }, [permisosEdit, perfilesEdit])
 
 
-  const handleClose = () => {
+  const cerrar_modal = () => {
     // Cierra el Dialog y reinicia el estado
     onClose();
 
@@ -278,7 +278,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     <Dialog
       header={perfilesEdit.length !== 0 ? <h1>Editar Usuario</h1> : <h1>Agregar Usuario</h1>}
       visible={visible}
-      onHide={handleClose}
+      onHide={cerrar_modal}
       className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
       footer={footerContent}
     >

@@ -23,7 +23,7 @@ const UsuariosInactivos = () => {
   const { dataUsuarios, setUsuarioState, permisosUsuario, eliminar_restablecer_usuario, usuarioState } = useUsuarios();
   const { alerta, setAlerta, Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
-  const mostrarModalRestaurar = (usuario) => {
+  const modal_restaurar_usuario = (usuario) => {
     setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
   };
@@ -50,11 +50,11 @@ const UsuariosInactivos = () => {
 
   // -------------Buscador-------------
   const [searchTerm, setSearchTerm] = useState("");
-  const handleSearch = (e) => {
+  const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    const filteredItems = dataUsuarios.filter((item) => {
+    const items_filtrados = dataUsuarios.filter((item) => {
       return (
         item.nombre_completo.toLowerCase().includes(value) ||
         item.usuario.toLowerCase().includes(value) ||
@@ -62,7 +62,7 @@ const UsuariosInactivos = () => {
         item.estado_usuario.toLowerCase().includes(value)
       );
     });
-    setFilteredData(filteredItems);
+    setFilteredData(items_filtrados);
   };
   useEffect(() => {
     if (alerta.show) {
@@ -113,7 +113,7 @@ const UsuariosInactivos = () => {
           <InputText
             className="h-10 pl-8 w-auto rounded-md"
             placeholder="Buscar"
-            onChange={(e) => handleSearch(e)}
+            onChange={(e) => buscador(e)}
             value={searchTerm}
           />
         </span>
@@ -150,7 +150,7 @@ const UsuariosInactivos = () => {
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
                     // eslint-disable-next-line no-unused-vars
-                    onClick={e => mostrarModalRestaurar(rowData)}
+                    onClick={e => modal_restaurar_usuario(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>
