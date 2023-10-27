@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PerfilService } from "../services/Perfil.service";
-import { PerfilesSchema } from "../validations/ValidacionesZod";
+// import { PerfilesSchema } from "../validations/ValidacionesZod";
 import { EstadosTablas } from "../validations/utils";
 
 export class _PerfilController {

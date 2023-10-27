@@ -43,7 +43,7 @@ export default class UsuarioService {
             }
 
             //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0]
+            const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa } = respuesta[0]
             respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
             //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS
             return {
@@ -56,6 +56,8 @@ export default class UsuarioService {
                     correo,
                     id_estado,
                     cm_clave,
+                    id_empresa,
+                    nombre_empresa,
                     token: respuesta.token,
                     perfiles: perfilLogin
                 },
@@ -157,7 +159,7 @@ export default class UsuarioService {
                 }
 
                 //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, estado_usuario } = respuesta[0]
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, estado_usuario, id_empresa, nombre_empresa } = respuesta[0]
                 // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
                     usuario:
@@ -170,6 +172,8 @@ export default class UsuarioService {
                         id_estado,
                         cm_clave,
                         estado_usuario,
+                        id_empresa,
+                        nombre_empresa,
                         perfiles: perfilLogin
                     },
                     modulos: respuesta.modulos
@@ -191,7 +195,7 @@ export default class UsuarioService {
                 let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
                 respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
                 respuesta.perfiles = perfilLogin
-                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0]
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa } = respuesta[0]
                 // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
                     id_usuario,
@@ -201,6 +205,8 @@ export default class UsuarioService {
                     correo,
                     id_estado,
                     cm_clave,
+                    id_empresa,
+                    nombre_empresa,
                     perfiles: perfilLogin
                 }
             }
