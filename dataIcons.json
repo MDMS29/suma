@@ -2,78 +2,191 @@
     "icons": [
         {
             "name": "pi-align-center",
-            "description": "Tres lineas centro",
-            "link": "&#xf042;"
+            "description": "Tres lineas centro"
         },
         {
             "name": "pi-align-justify",
-            "description": "Tres lineas alineadas",
-            "link": "&#xf043;"
+            "description": "Tres lineas alineadas"
         },
         {
             "name": "pi-align-left",
-            "description": "Tres lineas izquierda",
-            "link": "&#xf042;"
+            "description": "Tres lineas izquierda"
         },
         {
             "name": "pi-align-right",
-            "description": "Tres lineas derecha",
-            "link": "&#xf042;"
+            "description": "Tres lineas derecha"
         },
         {
             "name": "pi-amazon",
-            "description": "Amazon",
-            "link": "&#xf042;"
+            "description": "Amazon"
         },
         {
             "name": "pi-android",
-            "description": "Android",
-            "link": "&#xf042;"
+            "description": "Android"
         },
         {
             "name": "pi-angle-double-down",
-            "description": "Doble angulo abajo",
-            "link": "&#xf042;"
+            "description": "Doble angulo abajo"
         },
         {
             "name": "pi-angle-double-left",
-            "description": "Doble angulo izquierda",
-            "link": "&#xf042;"
+            "description": "Doble angulo izquierda"
         },
         {
             "name": "pi-angle-double-right",
-            "description": "Doble angulo derecho",
-            "link": "&#xf042;"
+            "description": "Doble angulo derecho"
         },
         {
             "name": "pi-angle-double-up",
-            "description": "Doble angulo arriba",
-            "link": "&#xf042;"
+            "description": "Doble angulo arriba"
         },
         {
             "name": "pi-angle-down",
-            "description": "Angulo abajo",
-            "link": "&#xf042;"
+            "description": "Angulo abajo"
         },
         {
             "name": "pi-angle-left",
-            "description": "Angulo izquierda",
-            "link": "&#xf042;"
+            "description": "Angulo izquierda"
+        },
+        {
+            "name": "pi-angle-up",
+            "description": "Angulo derecha"
+        },
+        {
+            "name": "pi-apple",
+            "description": "Apple"
+        },
+        {
+            "name": "pi-arrow-circle-down",
+            "description": "Flecha circulo abajo"
+        },
+        {
+            "name": "pi-arrow-circle-left",
+            "description": "Flecha circulo izquierda"
+        },
+        {
+            "name": "pi-arrow-circle-right",
+            "description": "Flecha circulo arriba"
+        },
+        {
+            "name": "pi-arrow-down",
+            "description": "Flecha abajo"
+        },
+        {
+            "name": "pi-arrow-down-left",
+            "description": "Flecha abajo izquierda"
+        },
+        {
+            "name": "pi-arrow-down-right",
+            "description": "Flecha abajo derecha"
+        },
+        {
+            "name": "pi-arrow-left",
+            "description": "Flecha izquierda"
+        },
+        {
+            "name": "pi-arrow-right",
+            "description": "Flecha derecha"
+        },
+        {
+            "name": "pi-arrow-right-arrow-left",
+            "description": "flecha derecha flecha izquierda"
+        },
+        {
+            "name": "pi-arrow-up",
+            "description": "Flecha arriba"
+        },
+        {
+            "name": "pi-arrow-up-left",
+            "description": "Flecha arriba izquierda"
+        },
+        {
+            "name": "pi-arrow-up-right",
+            "description": "Flecha arriba derecha"
+        },
+        {
+            "name": "pi-arrows-alt",
+            "description": "Flechas alt"
+        },
+        {
+            "name": "pi-arrows-h",
+            "description": "Flechas h"
+        },
+        {
+            "name": "pi-arrows-v",
+            "description": "Flechas V"
+        },
+        {
+            "name": "pi-at",
+            "description": "Arroba"
+        },
+        {
+            "name": "pi-backward",
+            "description": "Hacia atrás"
+        },
+        {
+            "name": "pi-ban",
+            "description": "Prohibido"
+        },
+        {
+            "name": "pi-bars",
+            "description": "Barras"
+        },
+        {
+            "name": "pi-bell",
+            "description": "Campana"
+        },
+        {
+            "name": "pi-bitcoin",
+            "description": "Bitcoin"
+        },
+        {
+            "name": "pi-bolt",
+            "description": "Rayo"
+        },
+        {
+            "name": "pi-book",
+            "description": "Libro"
+        },
+        {
+            "name": "pi-bookmark",
+            "description": "Marcador libro"
+        },
+        {
+            "name": "pi-bookmark-fill",
+            "description": "Marcador libro fill"
         },
         {
             "name": "pi-box",
-            "description": "Caja",
-            "link": "&#xf042;"
+            "description": "Caja"
         },
         {
-            "name": "pi-angle-right",
-            "description": "Angulo derecha",
-            "link": "&#xf042;"
+            "name": "pi-briefcase",
+            "description": "Maletin"
         },
         {
-            "name": "pi-heart-fill",
-            "description": "Corazon",
-            "link": "&#xf042;"
+            "name": "pi-building",
+            "description": "Edificio"
+        },
+        {
+            "name": "pi-calculator",
+            "description": "Calculadora"
+        },
+        {
+            "name": "pi-calendar",
+            "description": "Calendario"
+        },
+        {
+            "name": "pi-calendar-minus",
+            "description": "Mini calendario"
+        },
+        {
+            "name": "pi-calendar-plus",
+            "description": "Calendario mas"
+        },
+        {
+            "name": "pi-calendar-times",
+            "description": "Calendario x"
         }
     ]
 }

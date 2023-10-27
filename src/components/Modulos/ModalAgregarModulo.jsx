@@ -197,6 +197,11 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     setTextoBotonIcon("Cambiar");
   };
 
+  const handleOpcionModulos =(e)=>{
+    handleChangeModulos(e)
+    setVentanaIcon(false)
+  }
+
   return (
     <Dialog
       header={
@@ -272,7 +277,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                             icono.name == ModulosAgg.icono &&
                             "border-blue-400 bg-gray-200"
                           }`}
-                          onClick={(e) => handleChangeModulos(e)}
+                          onClick={handleOpcionModulos}
                           name="icono"
                           key={icono.name}
                         ></button>
