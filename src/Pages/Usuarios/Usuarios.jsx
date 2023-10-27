@@ -80,19 +80,19 @@ const Usuarios = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
 
-  const onColumnToggle = (event) => {
-    let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) =>
-      selectedColumns.some((sCol) => sCol.field === col.field)
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+      columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
-    setVisibleColumns(orderedSelectedColumns);
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
-  const handleSearch = (e) => {
+  const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    const filteredItems = dataUsuarios.filter((item) => {
+    const items_filtrados = dataUsuarios.filter((item) => {
       return (
         item.nombre_completo.toLowerCase().includes(value) ||
         item.usuario.toLowerCase().includes(value) ||
@@ -100,24 +100,24 @@ const Usuarios = () => {
         item.estado_usuario.toLowerCase().includes(value)
       );
     });
-    setFilteredData(filteredItems);
+    setFilteredData(items_filtrados);
   };
 
-  const modalEliminarUsuario = (e, usuario) => {
+  const modal_eliminar_usuario = (e, usuario) => {
     e.preventDefault();
     setUsuarioState(usuario);
     setVerEliminarRestaurar(true);
     setResClave(false)
   };
 
-  const confirmRestablecer = (e, usuario) => {
+  const btn_restablecer = (e, usuario) => {
     e.preventDefault();
     setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
     setResClave(true)
   };
 
-  const toggleModal = () => {
+  const cambiar_visibilidad_modal = () => {
     setResClave(false)
     setPerfilesEdit([]);
     setPermisosEdit([]);
@@ -135,13 +135,13 @@ const Usuarios = () => {
       value={visibleColumns}
       options={columns}
       optionLabel="header"
-      onChange={onColumnToggle}
+      onChange={filtrar_columnas}
       className="w-full sm:w-20rem"
       display="chip"
     />
   );
 
-  const columnAcciones = (rowData) => {
+  const columna_acciones = (rowData) => {
     return (
       <div className="text-center flex gap-x-3">
         {permisosUsuario.filter(
@@ -164,7 +164,7 @@ const Usuarios = () => {
               tooltip="Eliminar"
               className="p-button-rounded p-button-danger p-mr-2"
               tooltipOptions={{ position: "top" }}
-              onClick={(e) => modalEliminarUsuario(e, rowData)}
+              onClick={(e) => modal_eliminar_usuario(e, rowData)}
             >
               {Trash_Icono}
             </PButton>
@@ -176,7 +176,7 @@ const Usuarios = () => {
               tooltip="Restablecer"
               className="p-button-rounded p-button-info"
               tooltipOptions={{ position: "top" }}
-              onClick={(e) => confirmRestablecer(e, rowData)}
+              onClick={(e) => btn_restablecer(e, rowData)}
             >
               {Key_Icono}
             </PButton>
@@ -190,7 +190,7 @@ const Usuarios = () => {
       <div className="w-5/6">
         <Toast ref={toast} />
 
-        {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={toggleModal} />}
+        {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
         {verEliminarRestaurar && <EliminarRestaurar tipo={resClave ? 'RESTABLECER_CLAVE' : 'ELIMINAR'} funcion={e => resClave ? restablecer_usuario_provider(usuarioState.id_usuario, e) : eliminar_restablecer_usuario(usuarioState.id_usuario, e)} />}
 
 
@@ -228,7 +228,7 @@ const Usuarios = () => {
             <InputText
               className="h-10 pl-8 rounded-md"
               placeholder="Buscar"
-              onChange={(e) => handleSearch(e)}
+              onChange={(e) => buscador(e)}
               value={searchTerm}
             />
           </span>
@@ -255,7 +255,7 @@ const Usuarios = () => {
             <Column
               key="actions"
               style={{ width: "10%" }}
-              body={(rowData) => columnAcciones(rowData)}
+              body={(rowData) => columna_acciones(rowData)}
             />
           </DataTable>
         </div>
