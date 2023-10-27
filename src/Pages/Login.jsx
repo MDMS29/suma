@@ -10,14 +10,12 @@ import { InputText } from 'primereact/inputtext';
 
 
 const Login = () => {
+    
     const { setAuthUsuario, setAuthModulos } = useAuth()
-
     const captcha = useRef(null)
-
     const [usuario, setUsuario] = useState("")
     const [clave, setClave] = useState("")
     const [error, setError] = useState({ error: false, message: '' })
-
     const [eye, setEye] = useState(false)
 
     const navigate = useNavigate()
