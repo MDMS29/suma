@@ -2,26 +2,25 @@
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-
 import useRoles from "../../hooks/useRoles";
 import Button from "../Botones/Button";
 
 // eslint-disable-next-line react/prop-types
 const ModalPrinRoles = ({ visible, onClose }) => {
 
-  const { errors, setErrors, rolAgg, setRolAgg, guardarRol, editarRol } = useRoles();
+  const { errors, setErrors, rolAgg, setRolAgg, guardar_rol, editar_rol } = useRoles();
 
-  const handleClose = () => {
+  const cerrar_modal = () => {
     setRolAgg({ id_rol: 0, nombre: '', descripcion: '' })
     setErrors({ nombre: '', descripcion: '' })
     onClose()
   };
 
-  const handleChangeRol = (e) => {
+  const btn_cambio_rol = (e) => {
     const value = e.target.value;
     setRolAgg({ ...rolAgg, [e.target.name]: e.target.name == "nombre" ? value.replace(/\d/g, '') : value});
 }
-  const handleGuardar = async () => {
+  const btn_guardar = async () => {
 
     if (rolAgg.nombre.trim() === '') {
       setErrors({ ...errors, nombre: 'Debe ingresar un nombre' })
@@ -36,9 +35,9 @@ const ModalPrinRoles = ({ visible, onClose }) => {
     let response
     try {
       if (rolAgg.id_rol !== 0) {
-        response = await editarRol(rolAgg)
+        response = await editar_rol(rolAgg)
       } else {
-        response = await guardarRol(rolAgg)
+        response = await guardar_rol(rolAgg)
       }
 
       if (response) {
@@ -56,19 +55,18 @@ const ModalPrinRoles = ({ visible, onClose }) => {
     <div>
       <Button
         tipo="PRINCIPAL"
-        funcion={handleGuardar}
+        funcion={btn_guardar}
       >
         {rolAgg.id_rol !== 0 ? 'Actualizar' : 'Guardar'}
       </Button>
     </div>
   );
 
-
   return (
     <Dialog
       header={<h1>{rolAgg.id_rol !== 0 ? 'Editar Rol' : 'Guardar Rol'}</h1>}
       visible={visible}
-      onHide={handleClose}
+      onHide={cerrar_modal}
       className="max-sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
       footer={footerContent}
     >
@@ -80,7 +78,7 @@ const ModalPrinRoles = ({ visible, onClose }) => {
             type="text"
             name="nombre"
             className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre ? "border-red-500" : "border-gray-300"}`}
-            onChange={(e) => handleChangeRol(e)}
+            onChange={(e) => btn_cambio_rol(e)}
           />
           {errors.nombre && (
             <div className="text-red-600 text-xs w-44">
@@ -88,8 +86,6 @@ const ModalPrinRoles = ({ visible, onClose }) => {
             </div>
           )}
         </div>
-
-
         <div className="flex flex-col flex-grow">
           <label className="text-gray-600 pb-2 font-semibold">Descripcion <span className="font-bold text-red-900">*</span></label>
           <InputTextarea
@@ -98,7 +94,7 @@ const ModalPrinRoles = ({ visible, onClose }) => {
             name="descripcion"
             className={`border-1 p-1 rounded-md h-10 px-3 py-2 ${errors.descripcion ? "border-red-500" : "border-gray-300"}`}
             rows={5} cols={30}
-            onChange={(e) => handleChangeRol(e)}
+            onChange={(e) => btn_cambio_rol(e)}
           />
           {errors.descripcion && (
             <div className="text-red-600 text-xs w-44">

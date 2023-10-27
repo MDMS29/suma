@@ -1,23 +1,19 @@
 /* eslint-disable no-unused-vars */
 import { useState, useRef, useEffect } from "react";
-
 import { Toast } from "primereact/toast";
-
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
 import {
-    Rol_Icono, Restore_Icono, Return_Icono
+    Rol_Icono, 
+    Restore_Icono, 
+    Return_Icono
 } from "../../components/Icons/Iconos";
-
 import { Button as PButton } from "primereact/button";
-
 import Forbidden from "../Errors/forbidden";
-
 import useRoles from "../../hooks/useRoles";
 import useAuth from "../../hooks/useAuth";
-
 import Button from "../../components/Botones/Button";
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 import Loader from "../../components/Loader";
@@ -31,7 +27,7 @@ const RolesInactivos = () => {
         { field: "id_estado", header: "Estado" },
     ];
 
-    const { dataRoles, permisosRoles, setPermisosRoles, eliminarRol, rolAgg, setRolAgg } = useRoles();
+    const { dataRoles, permisosRoles, setPermisosRoles, eliminar_rol, rolAgg, setRolAgg } = useRoles();
 
     const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
 
@@ -64,23 +60,21 @@ const RolesInactivos = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alerta])
-    const onColumnToggle = (event) => {
-        let selectedColumns = event.value;
-        let orderedSelectedColumns = columns.filter((col) =>
-            selectedColumns.some((sCol) => sCol.field === col.field)
+    const filtrar_columnas = (event) => {
+        let columnas_seleccionadas = event.value;
+        let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+        columnas_seleccionadas.some((sCol) => sCol.field === col.field)
         );
-        setVisibleColumns(orderedSelectedColumns);
+        setVisibleColumns(columnas_ordenadas_seleccionadas);
     };
-    const handleSearch = (e) => {
+    const buscador = (e) => {
         const value = e.target.value.toLowerCase();
         setSearchTerm(value);
 
         const filteredItems = dataRoles.filter((item) => {
             return (
-                item.nombre_completo.toLowerCase().includes(value) ||
-                item.usuario.toLowerCase().includes(value) ||
-                item.correo.toLowerCase().includes(value) ||
-                item.estado_usuario.toLowerCase().includes(value)
+                item.nombre.toLowerCase().includes(value) ||
+                item.descripcion.toLowerCase().includes(value) 
             );
         });
         setFilteredData(filteredItems);
@@ -88,7 +82,7 @@ const RolesInactivos = () => {
 
     const estadoTexto = (numero) => +numero === 1 ? "ACTIVO" : "INACTIVO";
 
-    const mostrarModalEliminar = (row) => {
+    const mostrar_modal_eliminar = (row) => {
         setVerEliminarRestaurar(true)
         setRolAgg(row)
     }
@@ -98,13 +92,13 @@ const RolesInactivos = () => {
             value={visibleColumns}
             options={columns}
             optionLabel="header"
-            onChange={onColumnToggle}
+            onChange={filtrar_columnas}
             className="w-full sm:w-20rem"
             display="chip"
         />
     );
 
-    const columnAcciones = rowData => {
+    const columna_acciones = rowData => {
         return (
             (
                 <div className="text-center flex gap-x-3">
@@ -115,7 +109,7 @@ const RolesInactivos = () => {
                                 className="p-button-rounded p-button-danger p-mr-2"
                                 tooltipOptions={{ position: "top" }}
                                 // eslint-disable-next-line no-unused-vars
-                                onClick={e => mostrarModalEliminar(rowData)}
+                                onClick={e => mostrar_modal_eliminar(rowData)}
                             >
                                 {Restore_Icono}
                             </PButton>
@@ -130,7 +124,7 @@ const RolesInactivos = () => {
         <>
             <div className="w-5/6">
                 <Toast ref={toast} />
-                {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminarRol(rolAgg.id_rol, e)} />}
+                {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminar_rol(rolAgg.id_rol, e)} />}
 
                 <div className="flex justify-center items-center gap-x-4 m-2 p-3">
                     <h1 className="text-3xl">Roles Inactivos</h1>
@@ -143,7 +137,7 @@ const RolesInactivos = () => {
 
                     <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
                         <i className="pi pi-search" />
-                        <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => handleSearch(e)} value={searchTerm} />
+                        <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
                     </span>
                 </div>
 
@@ -175,7 +169,7 @@ const RolesInactivos = () => {
                         <Column
                             key="actions"
                             style={{ width: "10%" }}
-                            body={(rowData) => columnAcciones(rowData)}
+                            body={(rowData) => columna_acciones(rowData)}
                         />
                     </DataTable>
                 </div>

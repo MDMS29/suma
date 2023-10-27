@@ -70,19 +70,19 @@ const Roles = () => {
         const value = e.target.value.toLowerCase();
         setSearchTerm(value);
 
-        const items_filtradods = dataRoles.filter((item) => {
+        const items_filtrados = dataRoles.filter((item) => {
             return (
                 item.nombre.toLowerCase().includes(value) ||
                 item.descripcion.toLowerCase().includes(value) 
             );
         });
-        setFilteredData(items_filtradods);
+        setFilteredData(items_filtrados);
     };
     const cambiar_visibilidad_modal = () => { setModalVisible(!modalVisible) };
     const estadoTexto = (numero) => +numero === 1 ? "ACTIVO" : "INACTIVO";
 
 
-    const mostrarModalEliminar = (row) => {
+    const mostrar_modal_eliminar = (row) => {
         setVerEliminarRestaurar(true)
         setRolAgg(row)
     }
@@ -98,7 +98,7 @@ const Roles = () => {
         />
     );
     
-    const columnAcciones = rowData => {
+    const columna_acciones = rowData => {
         return (
             (
                 <div className="text-center flex gap-x-3">
@@ -125,7 +125,7 @@ const Roles = () => {
                                 className="p-button-rounded p-button-danger p-mr-2"
                                 tooltipOptions={{ position: "top" }}
                                 // eslint-disable-next-line no-unused-vars
-                                onClick={e => mostrarModalEliminar(rowData)}
+                                onClick={e => mostrar_modal_eliminar(rowData)}
                             >
                                 {Trash_Icono}
                             </PButton>
@@ -202,7 +202,7 @@ const Roles = () => {
                         <Column
                             key="actions"
                             style={{ width: "10%" }}
-                            body={(rowData) => columnAcciones(rowData)}
+                            body={(rowData) => columna_acciones(rowData)}
                         />
                     </DataTable>
                 </div>
