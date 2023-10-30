@@ -1,9 +1,9 @@
 import Marcas from '../Pages/Basicos/Marcas/Marcas'
-import Roles from '../Pages/Configuracion/Roles/Roles'
-import Usuario from '../Pages/Configuracion/Usuarios/Usuarios'
 import Centros from '../Pages/Centros/Centros'
 import Procesos from '../Pages/Procesos/Procesos'
 import Unidades from '../Pages/Unidades/Unidades'
+import FamiliaProd from '../Pages/Basicos/FamiliaProd/FamiliaProd'
+import TipoProd from '../Pages/Basicos/TipoProd/TipoProd'
 
 const BasicasRoutes =[
     {
@@ -31,15 +31,15 @@ const BasicasRoutes =[
         key: 17
     },
     {
-        name: "Familias",
-        route: "/basicas/familias",
-        component: <Roles />,
+        name: "Familias de Productos",
+        route: "/basicas/familias-productos",
+        component: <FamiliaProd />,
         key: 18
     },
     {
         name: "Tipos de Productos",
         route: "/basicas/tipos-productos",
-        component: <Usuario />,
+        component: <TipoProd />,
         key: 19
     }
 ]
