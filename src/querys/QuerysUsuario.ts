@@ -68,10 +68,10 @@ export default class QueryUsuario {
         }
     }
 
-    public async Obtener_Usuarios(estado: string) {
+    public async Obtener_Usuarios(estado: string, empresa: number) {
         try {
             //FUNCIÓN ALMACENADA PARA TOMAR LOS USUARIOS SEGUN UN ESTADO
-            const result = await _DB.func(_FAObtenerUsuario, [+estado])
+            const result = await _DB.func(_FAObtenerUsuario, [estado, empresa])
             return result
         } catch (error) {
             console.log(error)
@@ -181,7 +181,7 @@ export default class QueryUsuario {
         }
     }
 
-    public async Buscar_Rol_Usuario(id_rol: number , usuario: number) {
+    public async Buscar_Rol_Usuario(id_rol: number, usuario: number) {
         try {
             const result = await client.query(_BuscarRolUsuario, [usuario, id_rol]);
             return result.rows

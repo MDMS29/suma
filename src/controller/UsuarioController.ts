@@ -42,16 +42,24 @@ export default class UsuarioController {
 
     public async Obtener_Usuarios(req: Request, res: Response) {
         const { usuario } = req//TOMAR LA INFORMACION DEL MIDDLEWARE
+        // console.log(req.query)
         // const { estado } = req.body
-        const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' })
+        }
+
+        if (!estado) {
+            return res.status(403).json({ error: true, message: 'No se ha encontrado el estado' })
+        }
+        if (+empresa < 0) {
+            return res.status(403).json({ error: true, message: 'No se ha encontrado la empresa' })
         }
 
         try {
             const usuario_service = new UsuarioService()
             //SERVICIO PARA OBTENER LOS USUARIOS
-            const respuesta = await usuario_service.Obtener_Usuarios(estado)
+            const respuesta = await usuario_service.Obtener_Usuarios(estado, +empresa)
             if (!respuesta) {
                 return res.status(200).json({ error: true, message: 'No se han encontrado usuarios activos' }) //!ERROR
             }
@@ -97,7 +105,7 @@ export default class UsuarioController {
             return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!ERROR
         }
 
-        
+
         const result = UsusarioSchema.safeParse(req.body) //VALIDACION DE LOS DATOS CON LA LIBRERIA ZOD
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
             return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR

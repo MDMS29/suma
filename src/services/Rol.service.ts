@@ -62,7 +62,7 @@ export class RolService {
             return rol[0]
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar el rol' }
+            return { error: true, message: 'Error al encontrar el rol' }
         }
     }
 

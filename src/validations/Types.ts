@@ -56,3 +56,12 @@ export type MessageError = {
     error: boolean
     message: string
 }
+
+export interface Empresa {
+    id_empresa?: number
+    nit: string
+    razon_social: string
+    direccion: string
+    telefono: string
+    correo: string
+}

@@ -67,14 +67,14 @@ export default class UsuarioService {
         return undefined
     }
 
-    public async Obtener_Usuarios(estado: string) {
+    public async Obtener_Usuarios(estado: string, empresa: number) {
         //VERIFICACIÓN DEL TIPO DE LA VARIABLE
         if (typeof estado === 'number') {
             throw new Error('Error al obtener el estado del usuario') //!ERROR
         }
 
         try {
-            const respuesta = await this._Query_Usuario.Obtener_Usuarios(estado) //INVOCAR FUNCION PARA OBTENER LOS USUARIOS
+            const respuesta = await this._Query_Usuario.Obtener_Usuarios(estado,empresa) //INVOCAR FUNCION PARA OBTENER LOS USUARIOS
             if (respuesta) { //VALIDACION SI HAY ALGUNA RESPUESTA
                 return respuesta //RETORNAR LA RESPUESTA
             }
