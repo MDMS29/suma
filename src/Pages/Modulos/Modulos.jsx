@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
@@ -10,12 +9,10 @@ import useAuth from "../../hooks/useAuth";
 import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
-
 import { Button as PButton } from "primereact/button";
 import { Edit_Icono, Trash_Icono, Menu_Icono } from "../../components/Icons/Iconos";
 import BLink from "../../components/Botones/BLink";
 import Button from "../../components/Botones/Button";
-
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 import ModalAsignarMenu from "../../components/Modulos/ModalAsignarMenu";
 
@@ -39,36 +36,28 @@ const Modulos = () => {
 
   const {
     dataModulos,
-    setDataModulos,
     ModuloState,
     permisosModulo,
     setPermisosModulo,
-    buscarModulo,
-    guardarModulo,
+    buscar_modulo,
     setModuloState,
-    eliminarRestablecerModulo,
-    obtenerMenus,
-    eliminarRestablecerMenu,
+    eliminar_restablecer_modulo,
+    obtener_menus,
+    eliminar_restablecer_menu,
     MenuState,
     setTextoBotonIcon
   } = useModulos();
-  const [modalEliminar, setModalEliminar] = useState(false);
-  const [botonModulo, setBotonModulo] = useState();
+
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataModulos);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-
   const [modalAsignarMenuVisible, setModalAsignarMenuVisible] = useState(false);
 
-  // const handleAsignarMenuClick = () => {
-  //   setModalAsignarMenuVisible(true);
-  // };
-
-  const handleAsignarMenuClick = (modulo, e) => {
+  const modal_asignar_menu = (modulo, e) => {
     e.preventDefault();
     setModuloState(modulo);
-    obtenerMenus(modulo);
+    obtener_menus(modulo);
     setModalAsignarMenuVisible(true);
   };
 
@@ -96,31 +85,30 @@ const Modulos = () => {
       };
       show_alert();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
 
-  const editarModulo = async (e, id_modulo) => {
+  const editar_modulo = async (e, id_modulo) => {
     e.preventDefault();
     setModalVisible(true);
     setTextoBotonIcon("Cambiar")
-    await buscarModulo(id_modulo);
+    await buscar_modulo(id_modulo);
   };
 
-  const modalEliminarModulo = (e, modulo) => {
+  const mostrar_modal_eliminar = (e, modulo) => {
     e.preventDefault();
     setModuloState(modulo);
     setVerEliminarRestaurar(true);
   };
 
-  const onColumnToggle = (event) => {
-    let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) =>
-      selectedColumns.some((sCol) => sCol.field === col.field)
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
-    setVisibleColumns(orderedSelectedColumns);
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
-  const handleSearch = (e) => {
+  const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
@@ -144,13 +132,13 @@ const Modulos = () => {
       value={visibleColumns}
       options={columns}
       optionLabel="header"
-      onChange={onColumnToggle}
+      onChange={filtrar_columnas}
       className="w-full sm:w-20rem"
       display="chip"
     />
   );
 
-  const columnAcciones = (rowData) => {
+  const columna_acciones = (rowData) => {
     return (
       <div className="text-center flex gap-x-3">
         {permisosModulo.filter(
@@ -161,7 +149,7 @@ const Modulos = () => {
               tooltip="Editar"
               tooltipOptions={{ position: "top" }}
               className="p-button-rounded p-mr-2"
-              onClick={(e) => editarModulo(e, rowData.id_modulo)}
+              onClick={(e) => editar_modulo(e, rowData.id_modulo)}
             >
               {Edit_Icono}
             </PButton>
@@ -173,7 +161,7 @@ const Modulos = () => {
               tooltip="Eliminar"
               className="p-button-rounded p-button-danger p-mr-2"
               tooltipOptions={{ position: "top" }}
-              onClick={(e) => modalEliminarModulo(e, rowData)}
+              onClick={(e) => mostrar_modal_eliminar(e, rowData)}
             >
               {Trash_Icono}
             </PButton>
@@ -182,7 +170,7 @@ const Modulos = () => {
               tooltip="Asignar Menú"
               className="p-button-rounded p-mr-2"
               tooltipOptions={{ position: "top" }}
-              onClick={(e) => handleAsignarMenuClick(rowData.id_modulo, e)}
+              onClick={(e) => modal_asignar_menu(rowData.id_modulo, e)}
             >
               {Menu_Icono}
             </PButton>
@@ -207,7 +195,7 @@ const Modulos = () => {
         {verEliminarRestaurar && (
           <EliminarRestaurar
             tipo={"ELIMINAR"}
-            funcion={(e) => MenuState?.id_menu ? eliminarRestablecerMenu(MenuState.id_menu, e) : eliminarRestablecerModulo(ModuloState.id_modulo, e)}
+            funcion={(e) => MenuState?.id_menu ? eliminar_restablecer_menu(MenuState.id_menu, e) : eliminar_restablecer_modulo(ModuloState.id_modulo, e)}
           />
         )}
 
@@ -245,7 +233,7 @@ const Modulos = () => {
             <InputText
               className="h-10 pl-8 rounded-md"
               placeholder="Buscar"
-              onChange={(e) => handleSearch(e)}
+              onChange={(e) => buscador(e)}
               value={searchTerm}
             />
           </span>
@@ -272,7 +260,7 @@ const Modulos = () => {
             <Column
               key="actions"
               style={{ width: "10%" }}
-              body={(rowData) => columnAcciones(rowData)}
+              body={(rowData) => columna_acciones(rowData)}
             />
           </DataTable>
         </div>

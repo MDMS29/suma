@@ -10,13 +10,9 @@ const RolesProvider = ({ children }) => {
   const location = useLocation()
 
   const { setAlerta, setAuthUsuario, setVerEliminarRestaurar } = useAuth()
-
-
   const [dataRoles, setDataRoles] = useState([])
   const [permisosRoles, setPermisosRoles] = useState([])
-
   const [rolAgg, setRolAgg] = useState({ id_rol: 0, nombre: '', descripcion: '' })
-
   const [errors, setErrors] = useState({ nombre: '', descripcion: '' });
 
   const navigate = useNavigate()
@@ -49,8 +45,6 @@ const RolesProvider = ({ children }) => {
         }
       })()
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
 
   const guardar_rol = async (formData) => {

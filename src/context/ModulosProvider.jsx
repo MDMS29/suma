@@ -5,7 +5,6 @@ import useAuth from "../hooks/useAuth";
 
 const ModulosContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 const ModulosProvider = ({ children }) => {
   const navigate = useNavigate();
 
@@ -14,10 +13,8 @@ const ModulosProvider = ({ children }) => {
   const [ModuloState, setModuloState] = useState({});
   const [MenuState, setMenuState] = useState({});
   const [roles, setRoles] = useState([]);
-
   const [rolesEdit, setrolesEdit] = useState([]);
   const [textoBotonIcon, setTextoBotonIcon] = useState("Seleccionar");
-
   const { setAlerta, setAuthUsuario, setVerEliminarRestaurar } = useAuth();
 
   const [ModulosAgg, setModulosAgg] = useState({
@@ -44,15 +41,19 @@ const ModulosProvider = ({ children }) => {
 
   const location = useLocation();
 
-  const handleChangeModulos = (e) => {
-    console.log(e.target.name)
-    console.log(e.target.value)
-    // const { name, value } = e.target;
-    setModulosAgg((prevModulosAgg) => ({ ...prevModulosAgg, [e.target.name]: e.target.name == "nombre_modulo" ? e.target.value.replace(/\d/g, '') : e.target.value }));
+  const cambiar_modulos = (e) => {
+    console.log(e.target.name);
+    console.log(e.target.value);
+    setModulosAgg((prevModulosAgg) => ({
+      ...prevModulosAgg,
+      [e.target.name]:
+        e.target.name == "nombre_modulo"
+          ? e.target.value.replace(/\d/g, "")
+          : e.target.value,
+    }));
   };
-  console.log(ModulosAgg);
 
-  const handleChangeMenu = (e) => {
+  const cambiar_menu = (e) => {
     const { name, value } = e.target;
     setMenusAgg((prevMenuAgg) => ({
       ...prevMenuAgg,
@@ -87,7 +88,7 @@ const ModulosProvider = ({ children }) => {
     }
   }, [location.pathname]);
 
-  const eliminarRestablecerModulo = async (id) => {
+  const eliminar_restablecer_modulo = async (id) => {
     const token = localStorage.getItem("token");
     if (!token) {
       setAuthUsuario({});
@@ -129,12 +130,13 @@ const ModulosProvider = ({ children }) => {
         show: true,
         message: error.response.data.message,
       });
+
       setTimeout(() => setAlerta({}), 1500);
       return false;
     }
   };
 
-  const eliminarRestablecerMenu = async (id_menu) => {
+  const eliminar_restablecer_menu = async (id_menu) => {
     const token = localStorage.getItem("token");
     if (!token) {
       setAuthUsuario({});
@@ -178,11 +180,12 @@ const ModulosProvider = ({ children }) => {
         message: error.response?.data.message,
       });
       setTimeout(() => setAlerta({}), 1500);
+
       return false;
     }
   };
 
-  const obtenerroles = async () => {
+  const obtener_roles = async () => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -200,7 +203,7 @@ const ModulosProvider = ({ children }) => {
     }
   };
 
-  const obtenerMenus = async (id_modulo) => {
+  const obtener_menus = async (id_modulo) => {
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -215,16 +218,16 @@ const ModulosProvider = ({ children }) => {
       );
       if (data.message) {
         setDataMenus([]);
-        return
+        return;
       }
       setDataMenus(data);
-      return
+      return;
     } catch (error) {
       console.error("Error al obtener menus:", error);
     }
   };
 
-  const guardarModulos = async (formData) => {
+  const guardar_modulos = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -236,7 +239,7 @@ const ModulosProvider = ({ children }) => {
 
     try {
       const { data } = await conexionCliente.post("/modulos", formData, config);
-      console.log('data back', data)
+      console.log("data back", data);
       if (!data?.error) {
         setDataModulos([...dataModulos, data]);
 
@@ -268,7 +271,7 @@ const ModulosProvider = ({ children }) => {
     }
   };
 
-  const guardarMenu = async (id_modulo, formData) => {
+  const guardar_menu = async (id_modulo, formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -278,7 +281,6 @@ const ModulosProvider = ({ children }) => {
       },
     };
     try {
-      // console.log(id_modulo)
       const { data } = await conexionCliente.post(
         `/menus/modulo/${id_modulo}`,
         formData,
@@ -309,7 +311,7 @@ const ModulosProvider = ({ children }) => {
     }
   };
 
-  const editarModulo = async (formData) => {
+  const editar_modulo = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -350,16 +352,18 @@ const ModulosProvider = ({ children }) => {
       });
       setTimeout(() => setAlerta({}), 1500);
       return false;
+
     } catch (error) {
+     
       setAlerta({
         error: true,
         show: true,
         message: error.response.data.message,
       });
-      throw error; // Puedes lanzar una excepción en caso de error
+      throw error;
     }
   };
-  const editarMenu = async (formData) => {
+  const editar_menu = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -370,7 +374,6 @@ const ModulosProvider = ({ children }) => {
     };
 
     try {
-      // Realiza la solicitud PATCH API para editar la información del modulo
       const { data } = await conexionCliente.patch(
         `/menus/${formData.id_menu}`,
         formData,
@@ -383,19 +386,16 @@ const ModulosProvider = ({ children }) => {
           menu.id_menu === data.id_menu ? data : menu
         );
         setDataMenus(menusActualizados);
-
-        console.log(data); // Opcional: muestra los datos editados en la consola
-
         return true;
       }
       return false;
     } catch (error) {
       console.error("Error al guardar la información:", error);
-      throw error; // Puedes lanzar una excepción en caso de error
+      throw error;
     }
   };
 
-  const buscarModulo = async (id) => {
+  const buscar_modulo = async (id) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -410,10 +410,10 @@ const ModulosProvider = ({ children }) => {
       if (data?.error) {
         return { error: true, message: data.message };
       }
-      console.log(data);
       const { id_modulo, cod_modulo, nombre_modulo, icono } = data;
 
       let rolesModulo = [];
+
       setModulosAgg({
         id_modulo,
         cod_modulo: cod_modulo,
@@ -444,36 +444,40 @@ const ModulosProvider = ({ children }) => {
     setModulosAgg,
     errors,
     setErrors,
-    handleChangeModulos,
-    guardarModulos,
+    cambiar_modulos,
+    guardar_modulos,
     permisosModulo,
     setPermisosModulo,
-    buscarModulo,
+    buscar_modulo,
     roles,
-    obtenerroles,
+    obtener_roles,
     rolesEdit,
     setrolesEdit,
-    editarModulo,
-    obtenerMenus,
-    eliminarRestablecerModulo,
-    eliminarRestablecerMenu,
+    editar_modulo,
+    obtener_menus,
+    eliminar_restablecer_modulo,
+    eliminar_restablecer_menu,
     MenusAgg,
     setMenusAgg,
     dataMenus,
     setDataMenus,
-    guardarMenu,
-    editarMenu,
+    guardar_menu,
+    editar_menu,
     MenuState,
     setMenuState,
     permisosMenu,
     setMenuModulo,
-    handleChangeMenu,
+    cambiar_menu,
     textoBotonIcon,
     setTextoBotonIcon,
   }));
 
   return (
-    <ModulosContext.Provider value={obj}>{children}</ModulosContext.Provider>
+    <ModulosContext.Provider 
+      value={obj}
+    >
+      {children}
+    </ModulosContext.Provider>
   );
 };
 

@@ -30,12 +30,24 @@ const Roles = () => {
         { field: "id_estado", header: "Estado" },
     ];
 
-    const { dataRoles, permisosRoles, setPermisosRoles, buscar_rol, eliminar_rol, rolAgg, setRolAgg } = useRoles();
+    const { dataRoles, 
+        permisosRoles, 
+        setPermisosRoles,
+        buscar_rol, 
+        eliminar_rol, 
+        rolAgg, 
+        setRolAgg 
+    } = useRoles();
 
-    const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
+    const { authPermisos, 
+        Permisos_DB, 
+        alerta, 
+        setAlerta,
+        verEliminarRestaurar, 
+        setVerEliminarRestaurar
+    } = useAuth()
 
     const [modalVisible, setModalVisible] = useState(false);
-
     const [visibleColumns, setVisibleColumns] = useState(columns);
     const [filteredData, setFilteredData] = useState(dataRoles);
     const [searchTerm, setSearchTerm] = useState("");
@@ -47,7 +59,6 @@ const Roles = () => {
         setTimeout(() => {
             if (authPermisos !== undefined) return setPermisosRoles(authPermisos)
         }, 10)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authPermisos])
     //MOSTRAR ALERTA
     useEffect(() => {
@@ -59,6 +70,7 @@ const Roles = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alerta])
+
     const filtrar_columnas = (event) => {
         let columnas_seleccionadas = event.value;
         let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -66,6 +78,7 @@ const Roles = () => {
         );
         setVisibleColumns(columnas_ordenadas_seleccionadas);
     };
+
     const buscador = (e) => {
         const value = e.target.value.toLowerCase();
         setSearchTerm(value);
@@ -78,10 +91,10 @@ const Roles = () => {
         });
         setFilteredData(items_filtrados);
     };
+
     const cambiar_visibilidad_modal = () => { setModalVisible(!modalVisible) };
     const estadoTexto = (numero) => +numero === 1 ? "ACTIVO" : "INACTIVO";
-
-
+    
     const mostrar_modal_eliminar = (row) => {
         setVerEliminarRestaurar(true)
         setRolAgg(row)
