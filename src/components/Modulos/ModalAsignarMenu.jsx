@@ -22,7 +22,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     guardar_menu,
     MenusAgg,
     setMenusAgg,
-    editarMenu,
+    editar_menu,
     ModuloState,
     setMenuState,
     MenuState,
@@ -31,37 +31,39 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     eliminarRestablecerMenu,
     cambiar_menu,
     dataModulos,
-    obtenerMenus,
+    obtener_menus,
   } = useModulos();
-
-  const { setVerEliminarRestaurar, verEliminarRestaurar, Permisos_DB, authPermisos } = useAuth();
-
+  
+  const { setVerEliminarRestaurar, 
+    verEliminarRestaurar, 
+    Permisos_DB, 
+    authPermisos 
+  } = useAuth();
+  
   const [filteredData, setFilteredData] = useState(dataMenus);
-
   const [isEditing, setIsEditing] = useState(false);
   const [enlace, setEnlace] = useState('');
-
   const [moduloNombre, setModuloNombre] = useState('');
-
-
+  
+  
   const columns = [
     { field: "id_menu", header: "ID" },
     { field: "nombre_menu", header: "Nombre" },
     { field: "link_menu", header: "Enlace" },
   ];
-
-  const onColumnToggle = (event) => {
-    let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) =>
-      selectedColumns.some((sCol) => sCol.field === col.field)
+  
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
-    setVisibleColumns(orderedSelectedColumns);
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
-
+  
   useEffect(() => {
     setFilteredData(dataMenus);
   }, [dataMenus]);
-
+  
   useEffect(() => {
     setTimeout(() => {
       if (authPermisos !== undefined) {
@@ -69,7 +71,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
       }
     }, 10);
   }, [authPermisos]);
-
+  
   useEffect(() => {
     // Busca el nombre del módulo en dataMenus
     const moduloEncontrado = dataModulos.find((modulo) => modulo.id_modulo === ModuloState);
@@ -78,32 +80,32 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     }
     let enlace = `${moduloEncontrado?.nombre_modulo}/${MenusAgg.nombre_menu}`.split(' ').join('-')
     setEnlace(enlace.toLowerCase());
-
+    
     
     setMenusAgg({...MenusAgg, link_menu: enlace})
   }, [ModuloState, MenusAgg.nombre_menu, dataMenus, enlace]);
   
-
-  const modalEliminarMenu = (e, menu) => {
+  const [visibleColumns, setVisibleColumns] = useState(columns);
+  
+  const modal_eliminar_menu = (e, menu) => {
     e.preventDefault();
     setMenuState(menu);
     setVerEliminarRestaurar(true);
   };
-
-  const [visibleColumns, setVisibleColumns] = useState(columns);
+  
   const header = (
     <MultiSelect
-      options={columns}
-      value={visibleColumns}
-      optionLabel="header"
-      onChange={onColumnToggle}
-      className="w-full sm:w-20rem"
-      display="chip"
+    options={columns}
+    value={visibleColumns}
+    optionLabel="header"
+    onChange={filtrar_columnas}
+    className="w-full sm:w-20rem"
+    display="chip"
     />
-  );
-
-  const handleClose = () => {
-    onClose();
+    );
+    
+    const cerrar_modal = () => {
+      onClose();
 
     setMenusAgg({
       id_modulo: 0,
@@ -112,7 +114,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
       icono: "",
     });
 
-    obtenerMenus({});
+    obtener_menus({});
   };
 
   const menu_guardar = async () => {
@@ -138,10 +140,9 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     }
   };
 
-  const handleEditarMenu = (rowData) => {
+  const modal_editar_menu = (rowData) => {
     setIsEditing(true);
 
-    // Actualiza los campos del formulario con los valores de rowData
     setMenusAgg({
       id_menu: rowData.id_menu,
       nombre_menu: rowData.nombre_menu,
@@ -149,9 +150,9 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     });
   };
 
-  const handleActualizarMenu = async () => {
+  const actualizar_menu = async () => {
     try {
-      const response = await editarMenu(MenusAgg);
+      const response = await editar_menu(MenusAgg);
   
       if (response) {
   
@@ -177,7 +178,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
           tooltip="Editar"
           tooltipOptions={{ position: "top" }}
           className="p-button-rounded p-mr-2"
-          onClick={() => handleEditarMenu(rowData)}
+          onClick={() => modal_editar_menu(rowData)}
         >
           {Edit_Icono}
         </PButton>
@@ -185,7 +186,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
           tooltip="Eliminar"
           className="p-button-rounded p-button-danger p-mr-2"
           tooltipOptions={{ position: "top" }}
-          onClick={(e) => modalEliminarMenu(e, rowData)}
+          onClick={(e) => modal_eliminar_menu(e, rowData)}
         >
           {Trash_Icono}
         </PButton>
@@ -198,7 +199,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     <Dialog
       header={<h1>Asignar Menú</h1>}
       visible={visible}
-      onHide={handleClose}
+      onHide={cerrar_modal}
       value={dataMenus}
     >
       <div>
@@ -234,9 +235,9 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
         <div className="flex flex-col items-end mt-3">
           <Button
           tipo={'PRINCIPAL'}
-          funcion={isEditing ? handleActualizarMenu : menu_guardar}
+          funcion={isEditing ? actualizar_menu : menu_guardar}
             // className="bg-primaryYellow p-2 rounded-md px-3 hover:bg-yellow-500"
-            // onClick={isEditing ? handleActualizarMenu : menu_guardar}
+            // onClick={isEditing ? actualizar_menu : menu_guardar}
           >
             {isEditing ? "Actualizar" : "Agregar"}
           </Button>
