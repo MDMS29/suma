@@ -36,7 +36,7 @@ const BasicasRoutes =[
     },
     {
         name: "Tipos de Productos",
-        route: "/basicas/tipos-de-productos",
+        route: "/basicas/tipos-productos",
         component: <Usuario />,
         key: 19
     }
