@@ -1,5 +1,5 @@
 import Login from "../Pages/Login";
-import ResetearContraseñaUsuario from "../Pages/Usuarios/ResetearContraseñaUsuario";
+import ResetearContraseñaUsuario from "../Pages/Configuracion/Usuarios/ResetearContraseñaUsuario";
 
 const AuthRoutes = [
     {

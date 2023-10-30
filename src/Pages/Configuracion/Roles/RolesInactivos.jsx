@@ -9,14 +9,14 @@ import {
     Rol_Icono, 
     Restore_Icono, 
     Return_Icono
-} from "../../components/Icons/Iconos";
+} from "../../../components/Icons/Iconos";
 import { Button as PButton } from "primereact/button";
-import Forbidden from "../Errors/forbidden";
-import useRoles from "../../hooks/useRoles";
-import useAuth from "../../hooks/useAuth";
-import Button from "../../components/Botones/Button";
-import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
-import Loader from "../../components/Loader";
+import Forbidden from "../../Errors/forbidden";
+import useRoles from "../../../hooks/Configuracion/useRoles";
+import useAuth from "../../../hooks/useAuth";
+import Button from "../../../components/Botones/Button";
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import Loader from "../../../components/Loader";
 
 const RolesInactivos = () => {
     const toast = useRef(null);

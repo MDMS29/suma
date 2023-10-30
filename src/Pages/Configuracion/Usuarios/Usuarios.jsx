@@ -3,19 +3,19 @@ import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import { Key_Icono, Trash_Icono, Edit_Icono } from "../../components/Icons/Iconos";
+import { Key_Icono, Trash_Icono, Edit_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 
 // import { Link } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
-import useUsuarios from "../../hooks/useUsuarios";
-import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
-import useAuth from "../../hooks/useAuth";
-import Forbidden from "../Errors/forbidden";
-import Loader from "../../components/Loader";
-import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
-import Button from "../../components/Botones/Button";
-import BLink from "../../components/Botones/BLink";
+import useUsuarios from "../../../hooks/Configuracion/useUsuarios";
+import ModalAgregarUsuario from "../../../components/Usuarios/ModalAgregarUsuario";
+import useAuth from "../../../hooks/useAuth";
+import Forbidden from "../../Errors/Forbidden";
+import Loader from "../../../components/Loader";
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import Button from "../../../components/Botones/Button";
+import BLink from "../../../components/Botones/BLink";
 
 const Usuarios = () => {
   const toast = useRef(null);

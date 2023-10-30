@@ -1,7 +1,7 @@
-import Perfiles from '../Pages/Perfiles/Perfiles'
-import Roles from '../Pages/Roles/Roles'
-import ResetearContraseñaUsuario from '../Pages/Usuarios/ResetearContraseñaUsuario'
-import Usuario from '../Pages/Usuarios/Usuarios'
+import Marcas from '../Pages/Basicos/Marcas/Marcas'
+import Roles from '../Pages/Configuracion/Roles/Roles'
+import ResetearContraseñaUsuario from '../Pages/Configuracion/Usuarios/ResetearContraseñaUsuario'
+import Usuario from '../Pages/Configuracion/Usuarios/Usuarios'
 
 const BasicasRoutes =[
     {
@@ -24,8 +24,8 @@ const BasicasRoutes =[
     },
     {
         name: "Marcas",
-        route: "/basicas/marcas",
-        component: <Perfiles />,
+        route: "/basicas/marcas-productos",
+        component: <Marcas />,
         key: 17
     },
     {

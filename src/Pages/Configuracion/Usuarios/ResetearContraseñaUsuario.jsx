@@ -1,5 +1,5 @@
-import useUsuarios from '../../hooks/useUsuarios'
-import useAuth from '../../hooks/useAuth'
+import useUsuarios from '../../../hooks/Configuracion/useUsuarios'
+import useAuth from '../../../hooks/useAuth'
 import { useRef, useState } from "react";
 import { Toast } from 'primereact/toast';
 

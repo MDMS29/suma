@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useMemo } from "react";
-import conexion_cliente from "../config/ConexionCliente";
+import conexion_cliente from "../../config/ConexionCliente";
 import { useLocation, useNavigate } from "react-router-dom";
-import useAuth from '../hooks/useAuth'
+import useAuth from '../../hooks/useAuth'
 
 const PerfilesContext = createContext();
 

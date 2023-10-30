@@ -1,7 +1,7 @@
-import Perfiles from "../Pages/Perfiles/Perfiles";
-import ResetearContraseñaUsuario from "../Pages/Usuarios/ResetearContraseñaUsuario";
-import Usuario from "../Pages/Usuarios/Usuarios";
-import UsuarioInactivos from "../Pages/Usuarios/UsuariosInactivos";
+import Perfiles from "../Pages/Configuracion/Perfiles/Perfiles";
+import ResetearContraseñaUsuario from "../Pages/Configuracion/Usuarios/ResetearContraseñaUsuario";
+import Usuario from "../Pages/Configuracion/Usuarios/Usuarios";
+import UsuarioInactivos from "../Pages/Configuracion/Usuarios/UsuariosInactivos";
 
 const ComercialRoutes = [
     {

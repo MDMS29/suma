@@ -1,26 +1,26 @@
 import { useState, useEffect, useRef } from "react";
-import usePerfiles from "../../hooks/usePerfiles";
-import { MultiSelect } from "primereact/multiselect";
-import ModalAgregarPerfil from "../../components/Perfiles/ModalAgregarPerfil";
-import BLink from "../../components/Botones/BLink";
-
 import { Toast } from "primereact/toast";
-import Loader from "../../components/Loader";
-import Forbidden from "../Errors/forbidden";
-import useAuth from "../../hooks/useAuth";
-
+import { MultiSelect } from "primereact/multiselect";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-// import { Dropdown } from 'primereact/dropdown';
-
 import {
   Trash_Icono,
   Edit_Icono,
-} from "../../components/Icons/Iconos";
+} from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext"
-import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
-import Button from "../../components/Botones/Button";
+import usePerfiles from "../../../hooks/Configuracion/usePerfiles";
+import ModalAgregarPerfil from "../../../components/Perfiles/ModalAgregarPerfil";
+import BLink from "../../../components/Botones/BLink";
+
+import Loader from "../../../components/Loader";
+import Forbidden from "../../Errors/Forbidden";
+import useAuth from "../../../hooks/useAuth";
+
+// import { Dropdown } from 'primereact/dropdown';
+
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import Button from "../../../components/Botones/Button";
 
 
 const Perfiles = () => {

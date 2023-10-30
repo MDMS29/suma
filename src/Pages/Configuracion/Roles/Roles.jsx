@@ -5,20 +5,20 @@ import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
 import { Button as PButton } from "primereact/button";
-import Forbidden from "../Errors/forbidden";
-import useRoles from "../../hooks/useRoles";
-import useAuth from "../../hooks/useAuth";
-import ModalPrinRoles from "../../components/Roles/ModalPrinRoles";
-import Button from "../../components/Botones/Button";
-import BLink from "../../components/Botones/BLink";
-import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
-import Loader from "../../components/Loader";
+import Forbidden from "../../Errors/Forbidden";
+import useRoles from "../../../hooks/Configuracion/useRoles";
+import useAuth from "../../../hooks/useAuth";
+import ModalPrinRoles from "../../../components/Roles/ModalPrinRoles";
+import Button from "../../../components/Botones/Button";
+import BLink from "../../../components/Botones/BLink";
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import Loader from "../../../components/Loader";
 import {
     Trash_Icono, 
     Edit_Icono,
     Add_Icono, 
     Rol_Icono
-} from "../../components/Icons/Iconos";
+} from "../../../components/Icons/Iconos";
 
 const Roles = () => {
     const toast = useRef(null);

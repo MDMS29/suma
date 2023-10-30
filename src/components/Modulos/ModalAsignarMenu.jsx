@@ -8,7 +8,7 @@ import {
   Edit_Icono,
   Trash_Icono
 } from "../Icons/Iconos";
-import useModulos from "../../hooks/useModulos";
+import useModulos from "../../hooks/Configuracion/useModulos";
 import { MultiSelect } from "primereact/multiselect";
 import useAuth from "../../hooks/useAuth";
 import EliminarRestaurar from "../Modales/EliminarRestaurar";

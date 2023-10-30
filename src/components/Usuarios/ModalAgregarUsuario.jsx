@@ -3,7 +3,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
-import useUsuarios from "../../hooks/useUsuarios";
+import useUsuarios from "../../hooks/Configuracion/useUsuarios";
 import { Steps } from "primereact/steps";
 import { Message } from "primereact/message";
 import Button from "../Botones/Button";

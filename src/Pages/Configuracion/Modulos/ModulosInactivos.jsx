@@ -1,69 +1,73 @@
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import { useEffect, useRef, useState } from "react";
-import { InputText } from "primereact/inputtext";
+import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
 import { MultiSelect } from "primereact/multiselect";
 import { Toast } from "primereact/toast";
-
-import useUsuarios from '../../hooks/useUsuarios'
-import { Restore_Icono, Return_Icono } from "../../components/Icons/Iconos";
-
-import Loader from "../../components/Loader";
-import Forbidden from "../Errors/forbidden";
-import useAuth from "../../hooks/useAuth";
-import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
+import { InputText } from "primereact/inputtext";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import Button from "../../components/Botones/Button";
+import useModulos from "../../../hooks/Configuracion/useModulos";
+import Loader from "../../../components/Loader";
+import Forbidden from "../../Errors/forbidden";
+import useAuth from "../../../hooks/useAuth";
+import Button from "../../../components/Botones/Button";
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
-const UsuariosInactivos = () => {
+const ModulosInactivos = () => {
   const toast = useRef(null);
 
-  // const [modalEliminar, setModalEliminar] = useState(false);
-
-  const { dataUsuarios, setUsuarioState, permisosUsuario, eliminar_restablecer_usuario, usuarioState } = useUsuarios();
-  const { alerta, setAlerta, Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
-
-  const modal_restaurar_usuario = (usuario) => {
+  const {
+    dataModulos,
+    setModuloState,
+    permisosModulo,
+    eliminar_restablecer_modulo,
+    ModuloState,
+  } = useModulos();
+  const {
+    Permisos_DB,
+    verEliminarRestaurar,
+    setVerEliminarRestaurar,
+    setAlerta,
+    alerta,
+  } = useAuth();
+  
+  const mostrar_modal_eliminar = (modulo) => {
     setVerEliminarRestaurar(true);
-    setUsuarioState(usuario);
+    setModuloState(modulo);
   };
-
+  
   const columns = [
-    { field: "id_usuario", header: "ID" },
-    { field: "nombre_completo", header: "Nombre" },
-    { field: "usuario", header: "Usuario" },
-    { field: "correo", header: "Correo" },
-    { field: "estado_usuario", header: "Estado" },
+    { field: "id_modulo", header: "ID" },
+    { field: "nombre_modulo", header: "Nombre" },
+    { field: "icono", header: "Icono" },
   ];
-
+  
   const [visibleColumns, setVisibleColumns] = useState(columns);
-  const [filteredData, setFilteredData] = useState(dataUsuarios);
-  // -------------Filtro-------------
+  const [filteredData, setFilteredData] = useState(dataModulos);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
     columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
-
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
-  // -------------Buscador-------------
-  const [searchTerm, setSearchTerm] = useState("");
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    const items_filtrados = dataUsuarios.filter((item) => {
-      return (
-        item.nombre_completo.toLowerCase().includes(value) ||
-        item.usuario.toLowerCase().includes(value) ||
-        item.correo.toLowerCase().includes(value) ||
-        item.estado_usuario.toLowerCase().includes(value)
-      );
+    const items_filtrados = dataModulos.filter((item) => {
+      return item.nombre_modulo.toLowerCase().includes(value);
     });
     setFilteredData(items_filtrados);
   };
+
+  useEffect(() => {
+    setFilteredData(dataModulos);
+  }, [dataModulos]);
+
   useEffect(() => {
     if (alerta.show) {
       (() => {
@@ -75,12 +79,7 @@ const UsuariosInactivos = () => {
         setTimeout(() => setAlerta({}), 1500)
       })()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta])
-
-  useEffect(() => {
-    setFilteredData(dataUsuarios);
-  }, [dataUsuarios]);
 
   const header = (
     <MultiSelect
@@ -93,20 +92,25 @@ const UsuariosInactivos = () => {
     />
   );
 
-
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminar_restablecer_usuario(usuarioState.id_usuario, e)} />}
-
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"RESTAURAR"}
+          funcion={(e) => eliminar_restablecer_modulo(ModuloState.id_modulo, e)}
+        />
+      )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
-        <h1 className="text-3xl">Usuarios Inactivos</h1>
-        <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+        <h1 className="text-3xl">Modulos Inactivos</h1>
+        <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-        <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
-          {Return_Icono} Regresar
-        </Button>
+        <div>
+          <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+            {Return_Icono} Regresar
+          </Button>
+        </div>
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
@@ -141,7 +145,7 @@ const UsuariosInactivos = () => {
             key="actions"
             style={{ width: "10%" }}
             body={(rowData) =>
-              permisosUsuario.filter(
+              permisosModulo.filter(
                 (permiso) =>
                   permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
               ).length > 0 ? (
@@ -149,8 +153,7 @@ const UsuariosInactivos = () => {
                   <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    // eslint-disable-next-line no-unused-vars
-                    onClick={e => modal_restaurar_usuario(rowData)}
+                    onClick={(e) => mostrar_modal_eliminar(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>
@@ -164,13 +167,14 @@ const UsuariosInactivos = () => {
       </div>
     </div>
   );
+
   return (
     <>
-      {permisosUsuario.length === 0 ? (
+      {permisosModulo.length === 0 ? (
         <Loader />
-      ) : permisosUsuario.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+      ) : permisosModulo.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />
@@ -179,4 +183,4 @@ const UsuariosInactivos = () => {
   );
 };
 
-export default UsuariosInactivos;
+export default ModulosInactivos;

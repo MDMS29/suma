@@ -1,12 +1,12 @@
-import Modulos from "../Pages/Modulos/Modulos";
-import ModulosInactivos from "../Pages/Modulos/ModulosInactivos";
-import Perfiles from "../Pages/Perfiles/Perfiles";
-import PerfilesInactivos from "../Pages/Perfiles/PerfilesInactivos";
-import Roles from "../Pages/Roles/Roles";
-import RolesInactivos from "../Pages/Roles/RolesInactivos";
-import ResetearContraseñaUsuario from "../Pages/Usuarios/ResetearContraseñaUsuario";
-import Usuario from "../Pages/Usuarios/Usuarios";
-import UsuarioInactivos from "../Pages/Usuarios/UsuariosInactivos";
+import Modulos from "../Pages/Configuracion/Modulos/Modulos";
+import ModulosInactivos from "../Pages/Configuracion/Modulos/ModulosInactivos";
+import Perfiles from "../Pages/Configuracion/Perfiles/Perfiles";
+import PerfilesInactivos from "../Pages/Configuracion/Perfiles/PerfilesInactivos";
+import Roles from "../Pages/Configuracion/Roles/Roles";
+import RolesInactivos from "../Pages/Configuracion/Roles/RolesInactivos";
+import ResetearContraseñaUsuario from "../Pages/Configuracion/Usuarios/ResetearContraseñaUsuario";
+import Usuario from "../Pages/Configuracion/Usuarios/Usuarios";
+import UsuarioInactivos from "../Pages/Configuracion/Usuarios/UsuariosInactivos";
 
 const AdminRoutes = [
     {

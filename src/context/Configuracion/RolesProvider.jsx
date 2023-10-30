@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import conexion_cliente from "../config/ConexionCliente";
-import useAuth from "../hooks/useAuth";
+import conexion_cliente from "../../config/ConexionCliente";
+import useAuth from "../../hooks/useAuth";
 
 const RolesContext = createContext();
 

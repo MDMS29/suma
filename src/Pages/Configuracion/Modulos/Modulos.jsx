@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import useModulos from "../../hooks/useModulos";
 import { Toast } from "primereact/toast";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import useAuth from "../../hooks/useAuth";
-import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo";
-import Loader from "../../components/Loader";
-import Forbidden from "../Errors/forbidden";
 import { Button as PButton } from "primereact/button";
-import { Edit_Icono, Trash_Icono, Menu_Icono } from "../../components/Icons/Iconos";
-import BLink from "../../components/Botones/BLink";
-import Button from "../../components/Botones/Button";
-import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
-import ModalAsignarMenu from "../../components/Modulos/ModalAsignarMenu";
+import { Edit_Icono, Trash_Icono, Menu_Icono } from "../../../components/Icons/Iconos";
+import useModulos from "../../../hooks/Configuracion/useModulos";
+import useAuth from "../../../hooks/useAuth";
+import ModalAgregarModulo from "../../../components/Modulos/ModalAgregarModulo";
+import Loader from "../../../components/Loader";
+import Forbidden from "../../Errors/forbidden";
+import BLink from "../../../components/Botones/BLink";
+import Button from "../../../components/Botones/Button";
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import ModalAsignarMenu from "../../../components/Modulos/ModalAsignarMenu";
 
 const Modulos = () => {
   const toast = useRef(null);

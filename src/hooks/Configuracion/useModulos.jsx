@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import ModulosContext from "../context/ModulosProvider"
+import ModulosContext from "../../context/Configuracion/ModulosProvider"
 
 
 const useModulos = () => {

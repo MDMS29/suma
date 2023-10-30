@@ -2,7 +2,7 @@
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import useRoles from "../../hooks/useRoles";
+import useRoles from "../../hooks/Configuracion/useRoles";
 import Button from "../Botones/Button";
 
 // eslint-disable-next-line react/prop-types

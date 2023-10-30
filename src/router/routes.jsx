@@ -2,7 +2,7 @@ import Home from "../Pages/Home";
 import ErrorRoutes from "./ErrorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import AuthRoutes from "./AuthRoutes";
-import ComercialRoutes from "./Comercial";
+import ComercialRoutes from "./ComercialRoutes";
 import BasicasRoutes from "./BasicasRoutes";
 
 const rutas_usuario = [

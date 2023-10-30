@@ -4,29 +4,32 @@ import { PrimeReactProvider } from "primereact/api";
 import "primeicons/primeicons.css";
 
 import { AuthProvider } from "./context/AuthProvider.jsx";
-import { UsuariosProvider } from "./context/UsuariosProvider.jsx";
-import { PerfilesProvider } from "./context/PerfilesProvider.jsx";
-import { ModulosProvider } from "./context/ModulosProvider.jsx";
+import { UsuariosProvider } from "./context/Configuracion/UsuariosProvider.jsx";
+import { PerfilesProvider } from "./context/Configuracion/PerfilesProvider.jsx";
+import { ModulosProvider } from "./context/Configuracion/ModulosProvider.jsx";
+import { MarcasProvider } from "./context/Basicos/MarcasProvider.jsx";
 
 import AppMain from "./router/AppMain.jsx";
-import { RolesProvider } from "./context/RolesProvider.jsx";
+import { RolesProvider } from "./context/Configuracion/RolesProvider.jsx";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <PrimeReactProvider>
+      <PrimeReactProvider>
+        <AuthProvider>
           <UsuariosProvider>
             <PerfilesProvider>
               <ModulosProvider>
                 <RolesProvider>
-                  <AppMain />
+                  <MarcasProvider>
+                    <AppMain />
+                  </MarcasProvider>
                 </RolesProvider>
               </ModulosProvider>
             </PerfilesProvider>
           </UsuariosProvider>
-        </PrimeReactProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </PrimeReactProvider>
     </BrowserRouter>
   );
 };
