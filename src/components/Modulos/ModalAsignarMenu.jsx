@@ -4,7 +4,6 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-
 import {
   Edit_Icono,
   Trash_Icono
@@ -20,7 +19,7 @@ import Button from "../Botones/Button";
 const ModalAsignarMenu = ({ visible, onClose }) => {
   const {
     dataMenus,
-    guardarMenu,
+    guardar_menu,
     MenusAgg,
     setMenusAgg,
     editarMenu,
@@ -30,7 +29,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     setMenuModulo,
     permisosModulo,
     eliminarRestablecerMenu,
-    handleChangeMenu,
+    cambiar_menu,
     dataModulos,
     obtenerMenus,
   } = useModulos();
@@ -116,7 +115,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     obtenerMenus({});
   };
 
-  const handleGuardarMenu = async () => {
+  const menu_guardar = async () => {
     try {
       const formData = {
         id_menu: MenusAgg.id_menu,
@@ -125,7 +124,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
         id_modulo: ModuloState.id_modulo,
         nombre_modulo: ModuloState.nombre_modulo,
       };
-      const response = await guardarMenu(ModuloState, formData);
+      const response = await guardar_menu(ModuloState, formData);
 
       if (response) {
         setMenusAgg({
@@ -217,7 +216,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
                 className="border-1 h-10 rounded-md px-3 py-2  border-gray-300"
                 value={MenusAgg.nombre_menu}
                 name="nombre_menu"
-                onChange={(e) => handleChangeMenu(e)}
+                onChange={(e) => cambiar_menu(e)}
               />
             </div>
             <div className="flex flex-col">
@@ -227,7 +226,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
                 value={enlace}
                 disabled
                 name="link_menu"
-                onChange={(e) => handleChangeMenu(e)}
+                onChange={(e) => cambiar_menu(e)}
               />
             </div>
           </div>
@@ -235,9 +234,9 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
         <div className="flex flex-col items-end mt-3">
           <Button
           tipo={'PRINCIPAL'}
-          funcion={isEditing ? handleActualizarMenu : handleGuardarMenu}
+          funcion={isEditing ? handleActualizarMenu : menu_guardar}
             // className="bg-primaryYellow p-2 rounded-md px-3 hover:bg-yellow-500"
-            // onClick={isEditing ? handleActualizarMenu : handleGuardarMenu}
+            // onClick={isEditing ? handleActualizarMenu : menu_guardar}
           >
             {isEditing ? "Actualizar" : "Agregar"}
           </Button>

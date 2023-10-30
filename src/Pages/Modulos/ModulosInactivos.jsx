@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import useModulos from "../../hooks/useModulos";
+import { Restore_Icono, Return_Icono } from "../../components/Icons/Iconos";
 import { MultiSelect } from "primereact/multiselect";
 import { Toast } from "primereact/toast";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-
+import useModulos from "../../hooks/useModulos";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import useAuth from "../../hooks/useAuth";
-import { Restore_Icono, Return_Icono } from "../../components/Icons/Iconos";
 import Button from "../../components/Botones/Button";
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
 
@@ -21,7 +20,7 @@ const ModulosInactivos = () => {
     dataModulos,
     setModuloState,
     permisosModulo,
-    eliminarRestablecerModulo,
+    eliminar_restablecer_modulo,
     ModuloState,
   } = useModulos();
   const {
@@ -31,39 +30,38 @@ const ModulosInactivos = () => {
     setAlerta,
     alerta,
   } = useAuth();
-
-  const mostrarModalEliminar = (modulo) => {
+  
+  const mostrar_modal_eliminar = (modulo) => {
     setVerEliminarRestaurar(true);
     setModuloState(modulo);
   };
-
+  
   const columns = [
     { field: "id_modulo", header: "ID" },
     { field: "nombre_modulo", header: "Nombre" },
     { field: "icono", header: "Icono" },
   ];
-
+  
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataModulos);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const onColumnToggle = (event) => {
-    let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) =>
-      selectedColumns.some((sCol) => sCol.field === col.field)
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
-
-    setVisibleColumns(orderedSelectedColumns);
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const handleSearch = (e) => {
+  const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    const filteredItems = dataModulos.filter((item) => {
+    const items_filtrados = dataModulos.filter((item) => {
       return item.nombre_modulo.toLowerCase().includes(value);
     });
-    setFilteredData(filteredItems);
+    setFilteredData(items_filtrados);
   };
 
   useEffect(() => {
@@ -81,7 +79,6 @@ const ModulosInactivos = () => {
         setTimeout(() => setAlerta({}), 1500)
       })()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta])
 
   const header = (
@@ -89,7 +86,7 @@ const ModulosInactivos = () => {
       value={visibleColumns}
       options={columns}
       optionLabel="header"
-      onChange={onColumnToggle}
+      onChange={filtrar_columnas}
       className="w-full sm:w-20rem"
       display="chip"
     />
@@ -101,7 +98,7 @@ const ModulosInactivos = () => {
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"RESTAURAR"}
-          funcion={(e) => eliminarRestablecerModulo(ModuloState.id_modulo, e)}
+          funcion={(e) => eliminar_restablecer_modulo(ModuloState.id_modulo, e)}
         />
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
@@ -120,7 +117,7 @@ const ModulosInactivos = () => {
           <InputText
             className="h-10 pl-8 w-auto rounded-md"
             placeholder="Buscar"
-            onChange={(e) => handleSearch(e)}
+            onChange={(e) => buscador(e)}
             value={searchTerm}
           />
         </span>
@@ -156,7 +153,7 @@ const ModulosInactivos = () => {
                   <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    onClick={(e) => mostrarModalEliminar(rowData)}
+                    onClick={(e) => mostrar_modal_eliminar(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>

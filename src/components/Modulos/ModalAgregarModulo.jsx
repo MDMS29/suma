@@ -13,13 +13,13 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     ModulosAgg,
     roles,
     errors,
-    handleChangeModulos,
+    cambiar_modulos,
     setModulosAgg,
     setErrors,
-    obtenerroles,
+    obtener_roles,
     rolesEdit,
-    editarModulo,
-    guardarModulos,
+    editar_modulo,
+    guardar_modulos,
     textoBotonIcon,
     setTextoBotonIcon,
   } = useModulos();
@@ -68,7 +68,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   };
 
   useEffect(() => {
-    obtenerroles();
+    obtener_roles();
     if (ModulosAgg.id_modulo) {
       setrolesporModulo(rolesEdit);
     }
@@ -124,9 +124,9 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
       let response;
 
       if (ModulosAgg.id_modulo !== 0) {
-        response = await editarModulo(formData);
+        response = await editar_modulo(formData);
       } else {
-        response = await guardarModulos(formData);
+        response = await guardar_modulos(formData);
       }
 
       if (response) {
@@ -198,7 +198,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   };
 
   const handleOpcionModulos =(e)=>{
-    handleChangeModulos(e)
+    cambiar_modulos(e)
     setVentanaIcon(false)
   }
 
@@ -231,7 +231,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                 className={`border-1 h-10 rounded-md px-3 py-2 ${
                   errors.cod_modulo ? "border-red-500" : "border-gray-300"
                 }`}
-                onChange={(e) => handleChangeModulos(e, "cod_modulo")}
+                onChange={(e) => cambiar_modulos(e, "cod_modulo")}
                 onKeyDown={(e) => handleSpacePrevention(e, "cod_modulo")}
               />
               {errors.cod_modulo && (
@@ -305,7 +305,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               className={`border-1 h-10 rounded-md px-3 py-2 ${
                 errors.nombre_modulo ? "border-red-500" : "border-gray-300"
               }`}
-              onChange={(e) => handleChangeModulos(e)}
+              onChange={(e) => cambiar_modulos(e)}
             />
             {errors.nombre_modulo && (
               <div className="text-red-600 text-xs ">
