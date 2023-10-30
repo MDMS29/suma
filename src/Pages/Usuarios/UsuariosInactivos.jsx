@@ -39,13 +39,13 @@ const UsuariosInactivos = () => {
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataUsuarios);
   // -------------Filtro-------------
-  const onColumnToggle = (event) => {
-    let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) =>
-      selectedColumns.some((sCol) => sCol.field === col.field)
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
 
-    setVisibleColumns(orderedSelectedColumns);
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
   // -------------Buscador-------------
@@ -87,7 +87,7 @@ const UsuariosInactivos = () => {
       value={visibleColumns}
       options={columns}
       optionLabel="header"
-      onChange={onColumnToggle}
+      onChange={filtrar_columnas}
       className="w-full sm:w-20rem"
       display="chip"
     />

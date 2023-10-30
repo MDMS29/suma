@@ -153,9 +153,7 @@ const Usuarios = () => {
               tooltipOptions={{ position: "top" }}
               className="p-button-rounded p-mr-2"
               onClick={(e) => editar_usuario(e, rowData.id_usuario)}
-            >
-              {Edit_Icono}
-            </PButton>
+            >{Edit_Icono}</PButton>
           )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR

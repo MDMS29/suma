@@ -19,14 +19,14 @@ import Button from "../../components/Botones/Button";
 
 const PerfilesInactivos = () => {
   const toast = useRef(null);
-  const { dataPerfiles, permisosPerfil, setPerfilState, perfilState, eliminarRestablecerPerfil } = usePerfiles();
+  const { dataPerfiles, permisosPerfil, setPerfilState, perfilState, eliminar_restablecer_perfil } = usePerfiles();
   const { Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar, alerta, setAlerta } = useAuth()
 
-  const mostrarModalRestaurar = (perfil) => {
+  const modal_restaurar_perfil = (perfil) => {
     setVerEliminarRestaurar(true);
     setPerfilState(perfil);
   };
-  
+
   useEffect(() => {
     if (alerta.show) {
       (() => {
@@ -49,48 +49,46 @@ const PerfilesInactivos = () => {
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataPerfiles);
   // -------------Filtro-------------
-  const onColumnToggle = (event) => {
-    let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) => selectedColumns.some((sCol) => sCol.field === col.field));
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) => columnas_seleccionadas.some((sCol) => sCol.field === col.field));
 
-    setVisibleColumns(orderedSelectedColumns);
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
   // -------------Buscador-------------
   const [searchTerm, setSearchTerm] = useState('');
-  const handleSearch = (e) => {
+  const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    const filteredItems = dataPerfiles.filter((item) => {
+    const items_filtrados = dataPerfiles.filter((item) => {
       return (
         item.nombre_perfil.toLowerCase().includes(value)
       );
     });
-    setFilteredData(filteredItems);
+    setFilteredData(items_filtrados);
   };
+
+  useEffect(() => {
+    setFilteredData(dataPerfiles);
+  }, [dataPerfiles]);
 
   const header = (
     <MultiSelect
       value={visibleColumns}
       options={columns}
       optionLabel="header"
-      onChange={onColumnToggle}
+      onChange={filtrar_columnas}
       className="w-full sm:w-20rem"
       display="chip"
     />
   );
 
-
-  useEffect(() => {
-    setFilteredData(dataPerfiles);
-  }, [dataPerfiles]);
-
-
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminarRestablecerPerfil(perfilState.id_perfil, e)} />}
+      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminar_restablecer_perfil(perfilState.id_perfil, e)} />}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Perfiles Inactivos</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
@@ -98,13 +96,13 @@ const PerfilesInactivos = () => {
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>
           <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
-          {Return_Icono} Regresar
-        </Button>
+            {Return_Icono} Regresar
+          </Button>
         </div>
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
-          <InputText className="h-10 pl-8 w-auto rounded-md" placeholder="Buscar" onChange={e => handleSearch(e)} value={searchTerm} />
+          <InputText className="h-10 pl-8 w-auto rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
         </span>
       </div>
 
@@ -136,7 +134,7 @@ const PerfilesInactivos = () => {
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
                     // eslint-disable-next-line no-unused-vars
-                    onClick={e => mostrarModalRestaurar(rowData)}
+                    onClick={e => modal_restaurar_perfil(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>

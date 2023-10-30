@@ -184,11 +184,11 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
 
   const chk_perfil = (rowData) => {
-    const perfilId = rowData;
+    const perfil_id = rowData;
 
-    if (perfilesSeleccionados.find(perfil => perfil.id_perfil == perfilId)) {
-      if (perfilesEdit.find(perfil => perfil.id_perfil == perfilId)) {
-        const [perfil] = perfilesSeleccionados.filter(perfil => perfil.id_perfil == perfilId)
+    if (perfilesSeleccionados.find(perfil => perfil.id_perfil == perfil_id)) {
+      if (perfilesEdit.find(perfil => perfil.id_perfil == perfil_id)) {
+        const [perfil] = perfilesSeleccionados.filter(perfil => perfil.id_perfil == perfil_id)
         if (perfil.estado_perfil == 1) {
           perfil.estado_perfil = 2
 
@@ -198,11 +198,11 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
         const perfilesActualizados = perfilesSeleccionados.map(perfilState => perfilState.id_perfil == perfil.id_perfil ? perfil : perfilState)
         setPerfilesSeleccionados(perfilesActualizados)
       } else {
-        const perfiles = perfilesSeleccionados.filter(perfil => perfil.id_perfil !== perfilId)
+        const perfiles = perfilesSeleccionados.filter(perfil => perfil.id_perfil !== perfil_id)
         setPerfilesSeleccionados(perfiles)
       }
     } else {
-      setPerfilesSeleccionados([...perfilesSeleccionados, { id_perfil: perfilId, estado_perfil: 1 }])
+      setPerfilesSeleccionados([...perfilesSeleccionados, { id_perfil: perfil_id, estado_perfil: 1 }])
     }
   };
 
@@ -244,7 +244,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     }
   }
 
-  // Botones de Atrás, Siguiente y Guardar del Modal
   const footerContent = (
     <div>
       {step > 1 && (

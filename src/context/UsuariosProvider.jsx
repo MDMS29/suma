@@ -60,12 +60,14 @@ const UsuariosProvider = ({ children }) => {
           }
         }
         const estado = location.pathname.includes('inactivos') ? 2 : 1
-
-        try {
-          const { data } = await conexion_cliente(`/usuarios?estado=${estado}`, config)
-          setDataUsuarios(data)
-        } catch (error) {
-          setDataUsuarios([])
+        if (authUsuario.id_empresa) {
+          try {
+            const { data } = await conexion_cliente(`/usuarios?estado=${estado}&empresa=${authUsuario.id_empresa}`, config)
+            console.log(data);
+            setDataUsuarios(data)
+          } catch (error) {
+            setDataUsuarios([])
+          }
         }
       }
       obtener_usuarios()
@@ -355,34 +357,34 @@ const UsuariosProvider = ({ children }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const obj = useMemo(() => ({
-    dataUsuarios, 
-    UsuariosAgg, 
-    setUsuariosAgg, 
-    obtener_perfiles, 
+    dataUsuarios,
+    UsuariosAgg,
+    setUsuariosAgg,
+    obtener_perfiles,
     perfilesAgg,
-    obtener_modulos, 
-    modulosAgg, 
-    setModulosAgg, 
-    permisosAgg, 
-    guardar_usuario, 
+    obtener_modulos,
+    modulosAgg,
+    setModulosAgg,
+    permisosAgg,
+    guardar_usuario,
     errors,
-    setErrors, 
-    setUsuarioState, 
-    usuarioState, 
-    eliminar_restablecer_usuario, 
+    setErrors,
+    setUsuarioState,
+    usuarioState,
+    eliminar_restablecer_usuario,
     restablecer_usuario_provider,
-    restablecer_contraseña_provider, 
-    contraseña, 
-    setConstraseña, 
+    restablecer_contraseña_provider,
+    contraseña,
+    setConstraseña,
     buscar_usuario,
-    perfilesEdit, 
-    permisosEdit, 
-    setPerfilesEdit, 
-    setPermisosEdit, 
+    perfilesEdit,
+    permisosEdit,
+    setPerfilesEdit,
+    setPermisosEdit,
     editar_usuario,
-    permisosUsuario, 
-    setPermisosUsuario, 
-    resClave, 
+    permisosUsuario,
+    setPermisosUsuario,
+    resClave,
     setResClave
   }))
 

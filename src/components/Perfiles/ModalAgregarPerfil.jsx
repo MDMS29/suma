@@ -14,11 +14,11 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     errors,
     setErrors,
     modulosAgg,
-    obtenerModulos,
-    editarPerfil,
+    obtener_modulos,
+    editar_perfil,
     modulosEdit,
     setModulosEdit,
-    guardarPerfil
+    guardar_perfil
   } = usePerfiles();
 
   const [modulosSeleccionados, setModulosSeleccionados] = useState([]);
@@ -29,12 +29,12 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     }
   }, [modulosEdit])
 
-  const handleChangePerfiles = (e) => {
+  const btn_cambio_perfil = (e) => {
     const value = e.target.value;
     setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: value.replace(/\d/g, '')});
   };
 
-  const handleGuardar = async () => {
+  const btn_guardar = async () => {
     const formData = {
       id_perfil: PerfilesAgg.id_perfil,
       nombre_perfil: PerfilesAgg.nombre_perfil,
@@ -64,10 +64,10 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     try {
       let response;
       if (PerfilesAgg.id_perfil !== 0) {
-        response = await editarPerfil(formData);
+        response = await editar_perfil(formData);
         onClose();
       } else {
-        response = await guardarPerfil(formData);
+        response = await guardar_perfil(formData);
         onClose();
       }
 
@@ -83,7 +83,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     setErrors({});
   };
 
-  const handleClose = () => {
+  const cerrar_modal = () => {
     onClose();
     setPerfilesAgg({
       id_perfil: 0,
@@ -94,17 +94,17 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
   };
 
   useEffect(() => {
-    obtenerModulos(modulosSeleccionados);
+    obtener_modulos(modulosSeleccionados);
   }, []);
 
 
-  const CheckboxChange = (nombrePefil, idPerfil) => {
-    const moduloId = idPerfil;
+  const chk_modulo = (nombrePefil, idPerfil) => {
+    const modulo_id = idPerfil;
 
-    if (modulosSeleccionados.find((modulo) => modulo.id_modulo == moduloId)) {
-      if (modulosEdit.find((modulo) => modulo.id_modulo == moduloId)) {
+    if (modulosSeleccionados.find((modulo) => modulo.id_modulo == modulo_id)) {
+      if (modulosEdit.find((modulo) => modulo.id_modulo == modulo_id)) {
         const [modulo] = modulosSeleccionados.filter(
-          (modulo) => modulo.id_modulo == moduloId
+          (modulo) => modulo.id_modulo == modulo_id
         );
         if (modulo.id_estado == 1) {
           modulo.id_estado = 2;
@@ -117,19 +117,19 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
         setModulosSeleccionados(modulosActualizados);
       } else {
         const modulos = modulosSeleccionados.filter(
-          (modulo) => modulo.id_modulo !== moduloId
+          (modulo) => modulo.id_modulo !== modulo_id
         );
         setModulosSeleccionados(modulos);
       }
     } else {
       setModulosSeleccionados([
         ...modulosSeleccionados,
-        { id_modulo: moduloId, id_estado: 1 },
+        { id_modulo: modulo_id, id_estado: 1 },
       ]);
     }
   };
 
-  const fncChkModulo = (row) => {
+  const chk_modulo_seleccionado = (row) => {
     const modulo = modulosSeleccionados.filter((modulo) => modulo.id_modulo === row.id_modulo);
     if (modulo) {
       return modulo[0]?.id_estado === 1;
@@ -142,7 +142,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     <div>
       <Button
         tipo={'PRINCIPAL'}
-        funcion={handleGuardar}
+        funcion={btn_guardar}
       > {PerfilesAgg.id_perfil !== 0 ? 'Actualizar' : 'Guardar'}
       </Button>
     </div>
@@ -152,7 +152,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     <Dialog
       header={PerfilesAgg.id_perfil !== 0 ? <h1>Editar Perfil</h1> : <h1>Agregar Perfil</h1>}
       visible={visible}
-      onHide={handleClose}
+      onHide={cerrar_modal}
       className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
       footer={footerContent}
     >
@@ -168,7 +168,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
               name="nombre_perfil"
               className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre_perfil ? "border-red-500" : "border-gray-300"
                 }`}
-              onChange={(e) => handleChangePerfiles(e)}
+              onChange={(e) => btn_cambio_perfil(e)}
             />
             {errors.nombre_perfil && (
               <div className="text-red-600 text-xs">
@@ -182,14 +182,14 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
                 {modulosAgg.map((modulo) => (
                   <div key={modulo.id}>
                     <label
-                      className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${fncChkModulo(modulo) ? "bg-primaryYellow" : "bg-gray-300"
+                      className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${chk_modulo_seleccionado(modulo) ? "bg-primaryYellow" : "bg-gray-300"
                         }`}>
                       <input
                         type="checkbox"
-                        checked={fncChkModulo(modulo)}
+                        checked={chk_modulo_seleccionado(modulo)}
                         className="sr-only peer"
                         onChange={() =>
-                          CheckboxChange(modulo.id_modulo, modulo.id_modulo)
+                          chk_modulo(modulo.id_modulo, modulo.id_modulo)
                         }
                       />
                       <span

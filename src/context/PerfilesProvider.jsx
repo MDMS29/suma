@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useMemo } from "react";
-import conexionCliente from "../config/ConexionCliente";
+import conexion_cliente from "../config/ConexionCliente";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../hooks/useAuth'
 
@@ -34,7 +34,7 @@ const PerfilesProvider = ({ children }) => {
   useEffect(() => {
     if (location.pathname.includes('perfiles')) {
 
-      const ObtenerPerfiles = async () => {
+      const obtener_perfiles = async () => {
         const token = localStorage.getItem("token");
 
         const config = {
@@ -45,7 +45,7 @@ const PerfilesProvider = ({ children }) => {
         };
         const estado = location.pathname.includes("inactivos") ? 2 : 1;
         try {
-          const { data } = await conexionCliente(
+          const { data } = await conexion_cliente(
             `/perfiles?estado=${estado}`,
             config
           );
@@ -54,12 +54,12 @@ const PerfilesProvider = ({ children }) => {
           setDataPerfiles([]);
         }
       };
-      ObtenerPerfiles();
+      obtener_perfiles();
     }
   }, [location.pathname]);
 
 
-  const obtenerModulos = async () => {
+  const obtener_modulos = async () => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -70,14 +70,14 @@ const PerfilesProvider = ({ children }) => {
     };
 
     try {
-      const { data } = await conexionCliente(`/modulos?estado=1`, config);
+      const { data } = await conexion_cliente(`/modulos?estado=1`, config);
       setModulosAgg(data);
     } catch (error) {
       console.error("Error al obtener modulos:", error);
     }
   };
 
-  const buscarPerfil = async (id) => {
+  const buscar_perfil = async (id) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -88,14 +88,14 @@ const PerfilesProvider = ({ children }) => {
     };
 
     try {
-      const { data } = await conexionCliente(`/perfiles/${id}`, config);
+      const { data } = await conexion_cliente(`/perfiles/${id}`, config);
 
       if (data?.error) {
         return { error: true, message: data.message }
       }
 
       const { id_perfil, nombre_perfil } = data
-      let moduloCheck = []
+      let modulo_check = []
 
       setPerfilesAgg({
         id_perfil,
@@ -103,11 +103,9 @@ const PerfilesProvider = ({ children }) => {
       })
 
       await data?.modulos.map((modulo) => {
-        moduloCheck.push({ id_modulo: +modulo?.id_modulo, id_estado: +modulo?.id_estado })
+        modulo_check.push({ id_modulo: +modulo?.id_modulo, id_estado: +modulo?.id_estado })
       })
-
-      setModulosEdit(moduloCheck)
-
+      setModulosEdit(modulo_check)
 
     } catch (error) {
       console.error(error);
@@ -115,7 +113,7 @@ const PerfilesProvider = ({ children }) => {
     }
   }
 
-  const eliminarRestablecerPerfil = async (id) => {
+  const eliminar_restablecer_perfil = async (id) => {
     const token = localStorage.getItem('token')
     if (!token) {
       setAuthUsuario({})
@@ -132,7 +130,7 @@ const PerfilesProvider = ({ children }) => {
 
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
-      const { data } = await conexionCliente.delete(`/perfiles/${id}?estado=${estado}`, config)
+      const { data } = await conexion_cliente.delete(`/perfiles/${id}?estado=${estado}`, config)
 
       if (data?.error) {
         setAlerta({ error: true, show: true, message: data.message })
@@ -140,8 +138,8 @@ const PerfilesProvider = ({ children }) => {
         return false
       }
 
-      const perfilesActualizados = dataPerfiles.filter((perfil) => perfil.id_perfil !== id)
-      setDataPerfiles(perfilesActualizados)
+      const perfiles_actualizados = dataPerfiles.filter((perfil) => perfil.id_perfil !== id)
+      setDataPerfiles(perfiles_actualizados)
 
       setAlerta({ error: false, show: true, message: data.message })
       setTimeout(() => setAlerta({}), 1500)
@@ -155,7 +153,7 @@ const PerfilesProvider = ({ children }) => {
     }
   }
 
-  const guardarPerfil = async (formData) => {
+  const guardar_perfil = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -166,7 +164,7 @@ const PerfilesProvider = ({ children }) => {
     };
 
     try {
-      const response = await conexionCliente.post(
+      const response = await conexion_cliente.post(
         "/perfiles",
         formData,
         config
@@ -200,7 +198,7 @@ const PerfilesProvider = ({ children }) => {
     }
   };
 
-  const editarPerfil = async (formData) => {
+  const editar_perfil = async (formData) => {
     const token = localStorage.getItem("token");
 
     const config = {
@@ -211,12 +209,11 @@ const PerfilesProvider = ({ children }) => {
     };
 
     try {
-
-      const { data } = await conexionCliente.patch(`/perfiles/${formData.id_perfil}`, formData, config);
-      const perfilesActualizados = dataPerfiles.map((perfil) =>
+      const { data } = await conexion_cliente.patch(`/perfiles/${formData.id_perfil}`, formData, config);
+      const perfiles_actualizados = dataPerfiles.map((perfil) =>
         perfil.id_perfil === data.id_perfil ? { id_perfil: data.id_perfil, nombre_perfil: data.nombre_perfil } : perfil
       );
-      setDataPerfiles(perfilesActualizados);
+      setDataPerfiles(perfiles_actualizados);
 
       setAlerta({
         error: false,
@@ -242,8 +239,6 @@ const PerfilesProvider = ({ children }) => {
 
       setTimeout(() => setAlerta({}), 1500)
       throw error; // Puedes lanzar una excepción en caso de error
-
-
     }
   }
 
@@ -257,17 +252,17 @@ const PerfilesProvider = ({ children }) => {
     setModulosAgg,
     errors,
     setErrors,
-    buscarPerfil,
-    obtenerModulos,
-    guardarPerfil,
+    buscar_perfil,
+    obtener_modulos,
+    guardar_perfil,
     permisosPerfil,
     setPermisosPerfil,
     PerfilesAgg,
     setPerfilesAgg,
-    editarPerfil,
+    editar_perfil,
     modulosEdit,
     setModulosEdit,
-    eliminarRestablecerPerfil
+    eliminar_restablecer_perfil
   }))
 
   return (

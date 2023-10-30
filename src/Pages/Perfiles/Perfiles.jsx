@@ -31,7 +31,7 @@ const Perfiles = () => {
     { field: "nombre_perfil", header: "Nombre" },
   ];
 
-  const { dataPerfiles, permisosPerfil, setPermisosPerfil, perfilState, setPerfilState, buscarPerfil, eliminarRestablecerPerfil } = usePerfiles();
+  const { dataPerfiles, permisosPerfil, setPermisosPerfil, perfilState, setPerfilState, buscar_perfil, eliminar_restablecer_perfil } = usePerfiles();
   const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -39,45 +39,34 @@ const Perfiles = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
-  const confirmDeletePerfil = (e, perfil) => {
+  const modal_eliminar_perfil = (e, perfil) => {
     e.preventDefault();
     setPerfilState(perfil);
     setVerEliminarRestaurar(true);
   };
 
-  const editarPerfil = async (e, id_perfil) => {
+  const editar_perfil = async (e, id_perfil) => {
     e.preventDefault()
     setModalVisible(true)
-    await buscarPerfil(id_perfil)
+    await buscar_perfil(id_perfil)
   }
 
-  const onColumnToggle = (event) => {
-    let selectedColumns = event.value;
-    let orderedSelectedColumns = columns.filter((col) =>
-      selectedColumns.some((sCol) => sCol.field === col.field)
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
-    setVisibleColumns(orderedSelectedColumns);
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
-  const header = (
-    <MultiSelect
-      value={visibleColumns}
-      options={columns}
-      optionLabel="header"
-      onChange={onColumnToggle}
-      className="w-full sm:w-20rem"
-      display="chip"
-    />
-  );
 
-
-  const handleSearch = (e) => {
+  const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    const filteredItems = dataPerfiles.filter((item) => {
+    const items_filtrados = dataPerfiles.filter((item) => {
       return item.nombre_perfil.toLowerCase().includes(value);
     });
-    setFilteredData(filteredItems);
+    setFilteredData(items_filtrados);
   };
 
   useEffect(() => {
@@ -92,7 +81,7 @@ const Perfiles = () => {
     }, 10)
   }, [authPermisos])
 
-  const toggleModal = () => {
+  const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
   };
   //MOSTRAR ALERTA
@@ -111,7 +100,18 @@ const Perfiles = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta])
 
-  const columnAcciones = rowData => {
+  const header = (
+    <MultiSelect
+      value={visibleColumns}
+      options={columns}
+      optionLabel="header"
+      onChange={filtrar_columnas}
+      className="w-full sm:w-20rem"
+      display="chip"
+    />
+  );
+
+  const columna_acciones = rowData => {
     return (
       (
         <div className="text-center flex gap-x-3">
@@ -121,38 +121,31 @@ const Perfiles = () => {
                 tooltip="Editar"
                 tooltipOptions={{ position: "top" }}
                 className="p-button-rounded p-mr-2"
-                onClick={e => editarPerfil(e, rowData.id_perfil)}
-
-              >
-                {Edit_Icono}
-              </PButton>
-
-            )
-          }
-          {
-            permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR).length > 0 && (
-              <PButton
-                tooltip="Eliminar"
-                className="p-button-rounded p-button-danger p-mr-2"
-                tooltipOptions={{ position: "top" }}
-                onClick={(e) => confirmDeletePerfil(e, rowData)}
-              >
-                {Trash_Icono}
-              </PButton>
-            )
+                onClick={e => editar_perfil(e, rowData.id_perfil)}
+              >{Edit_Icono}</PButton>
+            )}
+          {permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR).length > 0 && (
+            <PButton
+              tooltip="Eliminar"
+              className="p-button-rounded p-button-danger p-mr-2"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => modal_eliminar_perfil(e, rowData)}
+            >
+              {Trash_Icono}
+            </PButton>
+          )
           }
 
         </div>
-      )
-    )
+      ))
   }
 
   const main = () => (
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && <ModalAgregarPerfil visible={modalVisible} onClose={toggleModal} />}
-        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminarRestablecerPerfil(perfilState.id_perfil, e)} />}
+        {modalVisible && <ModalAgregarPerfil visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+        {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminar_restablecer_perfil(perfilState.id_perfil, e)} />}
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Perfiles</h1>
@@ -185,7 +178,7 @@ const Perfiles = () => {
           }
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => handleSearch(e)} value={searchTerm} />
+            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
           </span>
         </div>
 
@@ -210,7 +203,7 @@ const Perfiles = () => {
             <Column
               key="actions"
               style={{ width: "10%" }}
-              body={(rowData) => columnAcciones(rowData)}
+              body={(rowData) => columna_acciones(rowData)}
             />
           </DataTable>
         </div>
