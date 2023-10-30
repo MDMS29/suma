@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import useAuth from "../../hooks/useAuth";
-import ModalAgregarModulo from "../../components/Modulos/ModalAgregarModulo";
+import ModalAgregarModulo from "../../components/Modales/Configuracion/Modulos/ModalAgregarModulo";
 import Loader from "../../components/Loader";
 import Forbidden from "../Errors/forbidden";
 import { Button as PButton } from "primereact/button";
@@ -14,7 +14,7 @@ import { Edit_Icono, Trash_Icono, Menu_Icono } from "../../components/Icons/Icon
 import BLink from "../../components/Botones/BLink";
 import Button from "../../components/Botones/Button";
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
-import ModalAsignarMenu from "../../components/Modulos/ModalAsignarMenu";
+import ModalAsignarMenu from "../../components/Modales/Configuracion/Modulos/ModalAsignarMenu";
 
 const Modulos = () => {
   const toast = useRef(null);

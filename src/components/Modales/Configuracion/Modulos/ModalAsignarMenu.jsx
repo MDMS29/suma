@@ -7,14 +7,14 @@ import { Button as PButton } from "primereact/button";
 import {
   Edit_Icono,
   Trash_Icono
-} from "../Icons/Iconos";
-import useModulos from "../../hooks/useModulos";
+} from "../../../Icons/Iconos";
+import useModulos from "../../../../hooks/useModulos";
 import { MultiSelect } from "primereact/multiselect";
-import useAuth from "../../hooks/useAuth";
-import EliminarRestaurar from "../Modales/EliminarRestaurar";
-import Loader from "../Loader";
-import Forbidden from "../../Pages/Errors/forbidden";
-import Button from "../Botones/Button";
+import useAuth from "../../../../hooks/useAuth";
+import EliminarRestaurar from "../../EliminarRestaurar";
+import Loader from "../../../Loader";
+import Forbidden from "../../../../Pages/Errors/forbidden";
+import Button from "../../../Botones/Button";
 
 const ModalAsignarMenu = ({ visible, onClose }) => {
   const {

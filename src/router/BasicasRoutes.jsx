@@ -1,25 +1,27 @@
+import Centros from '../Pages/Centros/Centros'
 import Perfiles from '../Pages/Perfiles/Perfiles'
+import Procesos from '../Pages/Procesos/Procesos'
 import Roles from '../Pages/Roles/Roles'
-import ResetearContraseñaUsuario from '../Pages/Usuarios/ResetearContraseñaUsuario'
+import Unidades from '../Pages/Unidades/Unidades'
 import Usuario from '../Pages/Usuarios/Usuarios'
 
 const BasicasRoutes =[
     {
         name: "Centros",
         route: "/basicas/centros",
-        component: <Usuario />,
+        component: <Centros/>,
         key: 14
     },
     {
         name: "Procesos",
         route: "/basicas/procesos",
-        component: <Usuario />,
+        component: <Procesos />,
         key: 15
     },
     {
         name: "Unidades",
-        route: "/basicas/unidades",
-        component: <ResetearContraseñaUsuario />,
+        route: "/basicas/unidades-de-medida",
+        component: <Unidades />,
         key: 16
     },
     {

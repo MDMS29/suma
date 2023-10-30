@@ -2,8 +2,8 @@
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import useRoles from "../../hooks/useRoles";
-import Button from "../Botones/Button";
+import useRoles from "../../../../hooks/useRoles";
+import Button from "../../../Botones/Button";
 
 // eslint-disable-next-line react/prop-types
 const ModalPrinRoles = ({ visible, onClose }) => {

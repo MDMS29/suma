@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import usePerfiles from "../../hooks/usePerfiles";
 import { MultiSelect } from "primereact/multiselect";
-import ModalAgregarPerfil from "../../components/Perfiles/ModalAgregarPerfil";
+import ModalAgregarPerfil from "../../components/Modales/Configuracion/Perfiles/ModalAgregarPerfil";
 import BLink from "../../components/Botones/BLink";
 
 import { Toast } from "primereact/toast";

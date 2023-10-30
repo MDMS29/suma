@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
-import Button from "../Botones/Button";
+import Button from "../../../Botones/Button";
 import { InputText } from "primereact/inputtext";
-import useModulos from "../../hooks/useModulos";
+import useModulos from "../../../../hooks/useModulos";
 import { Toast } from "primereact/toast";
 import { Dropdown } from "primereact/dropdown";
 
@@ -29,9 +29,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
-
   const [ventanaIcon, setVentanaIcon] = useState();
-
   const [iconos, setIconos] = useState([]);
 
   useEffect(() => {

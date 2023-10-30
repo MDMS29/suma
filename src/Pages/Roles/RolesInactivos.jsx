@@ -27,9 +27,21 @@ const RolesInactivos = () => {
         { field: "id_estado", header: "Estado" },
     ];
 
-    const { dataRoles, permisosRoles, setPermisosRoles, eliminar_rol, rolAgg, setRolAgg } = useRoles();
+    const { dataRoles, 
+        permisosRoles, 
+        setPermisosRoles, 
+        eliminar_rol, 
+        rolAgg, 
+        setRolAgg 
+    } = useRoles();
 
-    const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
+    const { authPermisos, 
+        Permisos_DB, 
+        alerta, 
+        setAlerta, 
+        verEliminarRestaurar, 
+        setVerEliminarRestaurar 
+    } = useAuth()
 
     const [visibleColumns, setVisibleColumns] = useState(columns);
     const [filteredData, setFilteredData] = useState(dataRoles);

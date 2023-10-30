@@ -1,10 +1,10 @@
 
 import { Dialog } from "primereact/dialog";
-import Button from "../Botones/Button";
+import Button from "../../../Botones/Button";
 import { Message } from "primereact/message";
 
 import { InputText } from "primereact/inputtext";
-import usePerfiles from "../../hooks/usePerfiles";
+import usePerfiles from "../../../../hooks/usePerfiles";
 import { useState, useEffect } from "react";
 
 const ModalAgregarPerfil = ({ visible, onClose }) => {

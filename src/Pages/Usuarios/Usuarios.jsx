@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 // import { Link } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
 import useUsuarios from "../../hooks/useUsuarios";
-import ModalAgregarUsuario from "../../components/Usuarios/ModalAgregarUsuario";
+import ModalAgregarUsuario from "../../components/Modales/Configuracion/Usuarios/ModalAgregarUsuario";
 import useAuth from "../../hooks/useAuth";
 import Forbidden from "../Errors/forbidden";
 import Loader from "../../components/Loader";

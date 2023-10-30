@@ -8,7 +8,7 @@ import { Button as PButton } from "primereact/button";
 import Forbidden from "../Errors/forbidden";
 import useRoles from "../../hooks/useRoles";
 import useAuth from "../../hooks/useAuth";
-import ModalPrinRoles from "../../components/Roles/ModalPrinRoles";
+import ModalPrinRoles from "../../components/Modales/Configuracion/Roles/ModalPrinRoles";
 import Button from "../../components/Botones/Button";
 import BLink from "../../components/Botones/BLink";
 import EliminarRestaurar from "../../components/Modales/EliminarRestaurar";
