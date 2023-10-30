@@ -3,6 +3,7 @@ import ErrorRoutes from "./ErrorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import AuthRoutes from "./AuthRoutes";
 import ComercialRoutes from "./Comercial";
+import BasicasRoutes from "./BasicasRoutes";
 
 const rutas_usuario = [
   {
@@ -14,6 +15,7 @@ const rutas_usuario = [
   ...AuthRoutes,
   ...AdminRoutes,
   ...ComercialRoutes,
+  ...BasicasRoutes,
   ...ErrorRoutes
 ];
 

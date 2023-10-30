@@ -63,7 +63,6 @@ const UsuariosProvider = ({ children }) => {
         if (authUsuario.id_empresa) {
           try {
             const { data } = await conexion_cliente(`/usuarios?estado=${estado}&empresa=${authUsuario.id_empresa}`, config)
-            console.log(data);
             setDataUsuarios(data)
           } catch (error) {
             setDataUsuarios([])
