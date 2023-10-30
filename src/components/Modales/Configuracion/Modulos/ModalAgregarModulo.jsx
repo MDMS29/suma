@@ -1,11 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
-import Button from "../Botones/Button";
 import { InputText } from "primereact/inputtext";
-import useModulos from "../../hooks/Configuracion/useModulos";
 import { Toast } from "primereact/toast";
-import { Dropdown } from "primereact/dropdown";
+import Button from "../../../Botones/Button";
+import useModulos from "../../../../hooks/Configuracion/useUsuarios";
 
 // eslint-disable-next-line react/prop-types
 const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
@@ -29,9 +28,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
-
   const [ventanaIcon, setVentanaIcon] = useState();
-
   const [iconos, setIconos] = useState([]);
 
   useEffect(() => {

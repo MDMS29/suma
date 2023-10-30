@@ -8,11 +8,11 @@ import { Button as PButton } from "primereact/button";
 import Forbidden from "../../Errors/Forbidden";
 import useRoles from "../../../hooks/Configuracion/useRoles";
 import useAuth from "../../../hooks/useAuth";
-import ModalPrinRoles from "../../../components/Roles/ModalPrinRoles";
 import Button from "../../../components/Botones/Button";
 import BLink from "../../../components/Botones/BLink";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Loader from "../../../components/Loader";
+import ModalPrinRoles from "../../../components/Modales/Configuracion/Roles/ModalPrinRoles";
 import {
     Trash_Icono, 
     Edit_Icono,

@@ -8,13 +8,13 @@ import { Button as PButton } from "primereact/button";
 import { Edit_Icono, Trash_Icono, Menu_Icono } from "../../../components/Icons/Iconos";
 import useModulos from "../../../hooks/Configuracion/useModulos";
 import useAuth from "../../../hooks/useAuth";
-import ModalAgregarModulo from "../../../components/Modulos/ModalAgregarModulo";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
 import BLink from "../../../components/Botones/BLink";
 import Button from "../../../components/Botones/Button";
+import ModalAgregarModulo from "../../../components/Modales/Configuracion/Modulos/ModalAgregarModulo";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
-import ModalAsignarMenu from "../../../components/Modulos/ModalAsignarMenu";
+import ModalAsignarMenu from "../../../components/Modales/Configuracion/Modulos/ModalAsignarMenu";
 
 const Modulos = () => {
   const toast = useRef(null);

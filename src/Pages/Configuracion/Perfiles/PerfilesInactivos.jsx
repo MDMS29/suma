@@ -6,6 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
 import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
+
 import { InputText } from "primereact/inputtext"
 
 import Loader from "../../../components/Loader";
@@ -17,8 +18,18 @@ import Button from "../../../components/Botones/Button";
 
 const PerfilesInactivos = () => {
   const toast = useRef(null);
-  const { dataPerfiles, permisosPerfil, setPerfilState, perfilState, eliminar_restablecer_perfil } = usePerfiles();
-  const { Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar, alerta, setAlerta } = useAuth()
+  const { dataPerfiles, 
+    permisosPerfil, 
+    setPerfilState, 
+    perfilState, 
+    eliminar_restablecer_perfil 
+  } = usePerfiles();
+  const { Permisos_DB, 
+    verEliminarRestaurar, 
+    setVerEliminarRestaurar, 
+    alerta, 
+    setAlerta 
+  } = useAuth()
 
   const modal_restaurar_perfil = (perfil) => {
     setVerEliminarRestaurar(true);

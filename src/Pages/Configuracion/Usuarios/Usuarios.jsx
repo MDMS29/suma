@@ -9,13 +9,13 @@ import { InputText } from "primereact/inputtext";
 // import { Link } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
 import useUsuarios from "../../../hooks/Configuracion/useUsuarios";
-import ModalAgregarUsuario from "../../../components/Usuarios/ModalAgregarUsuario";
 import useAuth from "../../../hooks/useAuth";
-import Forbidden from "../../Errors/Forbidden";
+import Forbidden from "../../Errors/forbidden";
 import Loader from "../../../components/Loader";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Button from "../../../components/Botones/Button";
 import BLink from "../../../components/Botones/BLink";
+import ModalAgregarUsuario from "../../../components/Modales/Configuracion/Usuarios/ModalAgregarUsuario";
 
 const Usuarios = () => {
   const toast = useRef(null);

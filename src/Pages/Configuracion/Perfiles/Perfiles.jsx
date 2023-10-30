@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { Toast } from "primereact/toast";
 import { MultiSelect } from "primereact/multiselect";
-import { DataTable } from "primereact/datatable";
+
+import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
 import {
@@ -9,8 +9,9 @@ import {
   Edit_Icono,
 } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext"
+
+import ModalAgregarPerfil from "../../../components/Modales/Configuracion/Perfiles/ModalAgregarPerfil";
 import usePerfiles from "../../../hooks/Configuracion/usePerfiles";
-import ModalAgregarPerfil from "../../../components/Perfiles/ModalAgregarPerfil";
 import BLink from "../../../components/Botones/BLink";
 
 import Loader from "../../../components/Loader";
@@ -18,9 +19,9 @@ import Forbidden from "../../Errors/Forbidden";
 import useAuth from "../../../hooks/useAuth";
 
 // import { Dropdown } from 'primereact/dropdown';
-
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Button from "../../../components/Botones/Button";
+import { DataTable } from "primereact/datatable";
 
 
 const Perfiles = () => {
@@ -54,7 +55,7 @@ const Perfiles = () => {
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
-    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
+      columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };

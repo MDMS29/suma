@@ -4,17 +4,17 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
+import { MultiSelect } from "primereact/multiselect";
 import {
   Edit_Icono,
   Trash_Icono
-} from "../Icons/Iconos";
-import useModulos from "../../hooks/Configuracion/useModulos";
-import { MultiSelect } from "primereact/multiselect";
-import useAuth from "../../hooks/useAuth";
-import EliminarRestaurar from "../Modales/EliminarRestaurar";
-import Loader from "../Loader";
-import Forbidden from "../../Pages/Errors/forbidden";
-import Button from "../Botones/Button";
+} from "../../../Icons/Iconos";
+import useModulos from "../../../../hooks/Configuracion/useModulos";
+import useAuth from "../../../../hooks/useAuth";
+import EliminarRestaurar from "../../../Modales/EliminarRestaurar";
+import Loader from "../../../Loader";
+import Forbidden from "../../../../Pages/Errors/forbidden";
+import Button from "../../../Botones/Button";
 
 const ModalAsignarMenu = ({ visible, onClose }) => {
   const {
