@@ -34,7 +34,6 @@ class UsuarioController {
                 const usuario_service = new Usuario_service_1.default();
                 //SERVICIO PARA LA AUTENTICACIÓN
                 const val = yield usuario_service.Autenticar_Usuario(usuario_login);
-                // console.log(val)
                 //VERFICICARIÓN DE DATOS RETORNADOS
                 if (!val) {
                     //RESPUESTA AL CLIENTE
@@ -104,18 +103,19 @@ class UsuarioController {
     Crear_Usuario(req, res) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
+            // const { roles } = req.body
             if (!((_a = req.usuario) === null || _a === void 0 ? void 0 : _a.id_usuario)) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
                 return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }); //!ERROR
             }
             const result = ValidacionesZod_1.UsusarioSchema.safeParse(req.body); //VALIDACION DE LOS DATOS CON LA LIBRERIA ZOD
             if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-                return res.status(400).json({ error: true, message: result.error.issues }); //!ERROR
+                return res.status(404).json({ error: true, message: result.error.issues }); //!ERROR
             }
             try {
                 const usuario_service = new Usuario_service_1.default();
                 const respuesta = yield usuario_service.Insertar_Usuario(result.data, (_b = req.usuario) === null || _b === void 0 ? void 0 : _b.usuario); //INVOCAR FUNCION PARA INSERTAR EL USUARIO
                 if (respuesta.error) { //SI LA RESPUESTA LLEGA CORRECTAMENTE
-                    return res.status(400).json(respuesta); //!ERROR
+                    return res.status(404).json(respuesta); //!ERROR
                 }
                 //TOMAR LA INFORMACION PERSONALIZADA PARA ENVIARLA HACIA EL CLIENTE
                 const { id_usuario, nombre_completo, usuario, id_estado, correo, estado_usuario } = respuesta;
@@ -138,7 +138,6 @@ class UsuarioController {
         return __awaiter(this, void 0, void 0, function* () {
             const { perfiles, roles } = req.body; //OBTENER LA INFORMACION ENVIADA
             const { id_usuario } = req.params; //OBTENER EL ID DEL USUARIO POR PARAMETROS
-            console.log(req.body);
             //VALIDACION DE DATOS
             if (!((_a = req.usuario) === null || _a === void 0 ? void 0 : _a.id_usuario)) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
                 return res.status(400).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }); //!Error
@@ -149,13 +148,17 @@ class UsuarioController {
             if ((perfiles === null || perfiles === void 0 ? void 0 : perfiles.length) <= 0) { //VALIDAR QUE SI SE ESTEN AGREGANDO PERFILES
                 return res.status(400).json({ error: true, message: "Debe asignarle al menos un perfil al usuario" }); //!ERROR
             }
+            // const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
+            // if (rol?.length <= 0) {
+            //     return res.status(404).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
+            // }
             if ((roles === null || roles === void 0 ? void 0 : roles.length) <= 0) { //VALIDAR QUE SI SE ESTEN AGREGANDO ROLES
                 return res.status(400).json({ error: true, message: "Debe asignarle permisos al usuario" }); //!ERROR
             }
-            const result = ValidacionesZod_1.UsusarioSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
-            if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-                return res.json({ error: true, message: result.error.issues }); //!ERROR
-            }
+            // const result = UsusarioSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+            // if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            //     return res.json({ error: true, message: result.error.issues }) //!ERROR
+            // }
             try {
                 const usuario_service = new Usuario_service_1.default();
                 const respuesta = yield usuario_service.Editar_Usuario(req.body, (_b = req.usuario) === null || _b === void 0 ? void 0 : _b.usuario); //INVOCAR FUNCION PARA EDITAR EL USUARIO

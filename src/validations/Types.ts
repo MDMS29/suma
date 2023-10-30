@@ -47,9 +47,6 @@ export interface UsuarioLogueado extends UsuarioLogin {
     nombre_perfil: string
     perfiles?: PerfilUsuario
     modulos?: ModulosUsuario[]
-    // fecha_modificacion: null;
-    // usuario_creacion: string;
-    // usuario_modificacion: null;
 }
 
 export type MessageError = {
@@ -64,4 +61,11 @@ export interface Empresa {
     direccion: string
     telefono: string
     correo: string
+}
+
+export interface Unidad_Medida {
+    id_unidad?: number
+    id_empresa: number
+    unidad: string
+
 }

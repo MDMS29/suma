@@ -15,5 +15,5 @@ _EmpresasRouter.route('/')
     _EmpresasRouter.route('/:id_empresa')
     .get(_Autorizacion, EmpresaController.Buscar_Empresa) //BUSCAR UNA EMPRESA SEGUN SU ID
     .patch(_Autorizacion, EmpresaController.Editar_Empresa) //EDITAR SEGUN SU ID
-    // .delete(_Autorizacion, MenuController.Cambiar_Estado_Menu) //CAMBIAR ESTADO DEL PERFIL POR ID
+    .delete(_Autorizacion, EmpresaController.Cambiar_Estado_Empresa) //CAMBIAR ESTADO DE LA EMPRESA POR ID
 

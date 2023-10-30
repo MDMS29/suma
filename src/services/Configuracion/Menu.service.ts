@@ -1,4 +1,4 @@
-import QueryMenu from "../querys/QueryMenu";
+import QueryMenu from "../../querys/Configuracion/QueryMenu";
 
 export class MenuService {
     private _Query_Menu: QueryMenu;
@@ -63,7 +63,7 @@ export class MenuService {
             return menu[0]
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar el menu' }
+            return { error: true, message: 'Error al buscar el menu' }
         }
     }
 
@@ -105,13 +105,13 @@ export class MenuService {
 
             const menu_editado = await this._Query_Menu.Cambiar_Estado_Menu(id_menu, estado);
             if (!menu_editado?.rowCount) {
-                return { error: true, message: 'Error al editar el menu' } //!ERROR
+                return { error: true, message: 'Error cambiar de estado del menu' } //!ERROR
             }
 
             return { error: false, message: 'Se ha cambiado el estado del menu' }
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar el menu' } //!ERROR
+            return { error: true, message: 'Error cambiar de estado del menu' } //!ERROR
         }
     }
 }

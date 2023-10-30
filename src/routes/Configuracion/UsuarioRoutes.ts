@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { _Autorizacion } from "../middleware/Autorizacion";
-import UsuarioController from "../controller/UsuarioController";
+import { _Autorizacion } from "../../middleware/Autorizacion";
+import UsuarioController from "../../controller/Configuracion/UsuarioController";
 
 //DEFINICÍON DE EL ROUTER
 export const _UsuarioRouter = Router();

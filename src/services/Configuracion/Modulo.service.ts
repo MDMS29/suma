@@ -1,5 +1,5 @@
-import QueryModulo from "../querys/QuerysModulo";
-import { EstadosTablas } from "../validations/utils";
+import QueryModulo from "../../querys/Configuracion/QuerysModulo";
+import { EstadosTablas } from "../../validations/utils";
 export default class ModuloService {
     private _Query_Modulo: QueryModulo;
 

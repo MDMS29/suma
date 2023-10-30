@@ -84,7 +84,16 @@ class RolService {
             let nombre_editado;
             let descripcion_editado;
             try {
+                const Brol = yield this._Query_Rol.Buscar_Rol_Nombre(nombre);
+                if ((Brol === null || Brol === void 0 ? void 0 : Brol.length) > 0 && Brol[0].nombre !== nombre) {
+                    return { error: true, message: 'Ya existe este rol' }; //!ERROR
+                }
+                // COMPROBAR SI ESTE ROL EXISTE
                 const respuesta = yield this._Query_Rol.Buscar_Rol_ID(id_rol);
+                if (respuesta.length === 0) {
+                    return { error: true, message: 'No existe este rol' }; //!ERROR
+                }
+                // ACTUALIZAR
                 if (((_a = respuesta[0]) === null || _a === void 0 ? void 0 : _a.nombre) === nombre) {
                     nombre_editado = (_b = respuesta[0]) === null || _b === void 0 ? void 0 : _b.nombre;
                 }

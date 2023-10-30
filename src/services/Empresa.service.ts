@@ -76,20 +76,23 @@ export default class EmpresaService {
     public async Editar_Empresa(id_empresa: any, empresa_request: Empresa, usuario_modificacion: string) {
 
         try {
-            const empresa_filtrada_razon: any = await this._Query_Empresa.Buscar_Razon_Social(empresa_request.razon_social)
-            if (empresa_filtrada_razon?.length > 0 && empresa_filtrada_razon[0].razon_social !== empresa_request.razon_social) {
-                return { error: true, message: 'Ya existe este nombre de empresa' } //!ERROR
-            }
-            const empresa_filtrada_nit: any = await this._Query_Empresa.Buscar_Nit(empresa_request.nit)
-            if (empresa_filtrada_nit?.length > 0 && empresa_filtrada_nit[0].nit !== empresa_request.nit) {
-                return { error: true, message: 'Ya existe este nit de empresa' } //!ERROR
-            }
-
             // COMPROBAR SI ESTE ROL EXISTE
             const empresa: any = await this._Query_Empresa.Buscar_Empresa_ID(id_empresa)
             if (empresa.length === 0) {
                 return { error: true, message: 'No existe esta empresa' } //!ERROR
             }
+
+            //VERIFICACION DE EMPRESAS CON INFORMACION DUPLICADA
+            const empresa_filtrada_razon: any = await this._Query_Empresa.Buscar_Razon_Social(empresa_request.razon_social)
+            if (empresa_filtrada_razon?.length > 0 && empresa_filtrada_razon[0].razon_social !== empresa[0].razon_social) {
+                return { error: true, message: 'Ya existe este nombre de empresa' } //!ERROR
+            }
+
+            const empresa_filtrada_nit: any = await this._Query_Empresa.Buscar_Nit(empresa_request.nit)
+            if (empresa_filtrada_nit?.length > 0 && empresa_filtrada_nit[0].nit !== empresa[0].nit) {
+                return { error: true, message: 'Ya existe este nit de empresa' } //!ERROR
+            }
+
 
             // ACTUALIZAR
             empresa_request.nit = empresa[0]?.nit === empresa_request.nit ? empresa[0].nit : empresa_request.nit
@@ -110,18 +113,18 @@ export default class EmpresaService {
         }
     }
 
-    public async Cambiar_Estado_Rol(id_rol: number, estado: number) {
+    public async Cambiar_Estado_Empresa(id_empresa: number, estado: number) {
         try {
 
-            const rol_editado = await this._Query_Empresa.Cambiar_Estado_Rol(id_rol, estado);
-            if (!rol_editado?.rowCount) {
-                return { error: true, message: 'Error al editar el rol' } //!ERROR
+            const empresa_editada = await this._Query_Empresa.Cambiar_Estado_Empresa(id_empresa, estado);
+            if (!empresa_editada?.rowCount) {
+                return { error: true, message: 'Error al cambiar el estado de la empresa' } //!ERROR
             }
 
-            return { error: false, message: 'Se ha cambiado el estado del rol' }
+            return { error: false, message: 'Se ha cambiado el estado de la empresa' }
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar el rol' } //!ERROR
+            return { error: true, message: 'Error al cambiar el estado de la empresa' } //!ERROR
         }
     }
 }

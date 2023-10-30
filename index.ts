@@ -1,12 +1,13 @@
 import express, { NextFunction, Response } from 'express';
 import cors from 'cors';
 import logger from 'morgan'
-import { _UsuarioRouter } from './src/routes/UsuarioRoutes';
-import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
-import { _ModulosRouter } from './src/routes/ModulosRoutes';
-import { _RolesRouter } from './src/routes/RolesRoutes';
-import { _MenusRouter } from './src/routes/MenuRoutes';
+import { _UsuarioRouter } from './src/routes/Configuracion/UsuarioRoutes';
+import { _PerfilesRouter } from './src/routes/Configuracion/PerfilesRoutes';
+import { _ModulosRouter } from './src/routes/Configuracion/ModulosRoutes';
+import { _RolesRouter } from './src/routes/Configuracion/RolesRoutes';
+import { _MenusRouter } from './src/routes/Configuracion/MenuRoutes';
 import { _EmpresasRouter } from './src/routes/EmpresaRoutes';
+import { _BasicasProductosRouter } from './src/routes/Opciones_Basicas/BasicasProductosRoute';
 
 const app = express();
 // DEFINIR TIPOS PARA EL OBJETO REQUEST
@@ -63,6 +64,12 @@ app.use('/suma/api/menus', _MenusRouter)
 //DEFINIR RUTA DE LOS EMPRESAS
 app.use('/suma/api/empresas', _EmpresasRouter)
 
+//DEFINIR RUTAS PARA LAS OPCIONES BASICAS
+// app.use('/suma/api/productos', _OpcionesBasicas)
+
+//DEFINIR RUTAS PARA LOS PRODUCTOS
+app.use('/suma/api/basicas_productos', _BasicasProductosRouter)
+
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {
     res.status(405).send({ error: true, message: "No se ha encontrado la request" });
@@ -73,3 +80,5 @@ const PORT = process.env.PORT ?? 3000;
 app.listen(PORT, () => {
     console.log(`Servidor en ejecución en el puerto ${PORT}`);
 });
+
+export default app;

@@ -27,7 +27,6 @@ class UsuarioService {
             //----OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO----
             // Promise<UsuarioLogeado | undefined>
             const respuesta = yield this._Query_Usuario.Autenticar_Usuario({ usuario, clave });
-            // console.log('service', respuesta)
             if (respuesta) {
                 for (const res of respuesta) {
                     res.perfiles = {
@@ -53,7 +52,7 @@ class UsuarioService {
                     }
                 }
                 //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0];
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa } = respuesta[0];
                 respuesta.token = (0, utils_1.generarJWT)(respuesta[0].id_usuario); //GENERAR TOKEN DE AUTENTICACIÓN
                 //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS
                 return {
@@ -65,6 +64,8 @@ class UsuarioService {
                         correo,
                         id_estado,
                         cm_clave,
+                        id_empresa,
+                        nombre_empresa,
                         token: respuesta.token,
                         perfiles: perfilLogin
                     },
@@ -100,7 +101,7 @@ class UsuarioService {
             const respuesta = yield this._Query_Usuario.Buscar_Usuario_Correo(usuario, correo);
             if (respuesta.length > 0) {
                 //SI EL USUARIO YA ESTA REGISTRADO MOSTRAR ERROR
-                return { error: true, message: 'Este usuario ya existe' };
+                return { error: true, message: 'El usuario o correo ya existe' };
             }
             if (clave) {
                 //HASHEAR CLAVE DEL USUARIO
@@ -167,7 +168,7 @@ class UsuarioService {
                         }
                     }
                     //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-                    const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, estado_usuario } = respuesta[0];
+                    const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, estado_usuario, id_empresa, nombre_empresa } = respuesta[0];
                     // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                     return {
                         usuario: {
@@ -179,6 +180,8 @@ class UsuarioService {
                             id_estado,
                             cm_clave,
                             estado_usuario,
+                            id_empresa,
+                            nombre_empresa,
                             perfiles: perfilLogin
                         },
                         modulos: respuesta.modulos
@@ -199,7 +202,7 @@ class UsuarioService {
                     let perfilLogin = []; //ARRAY DE LOS PERFILES DEL USUARIO
                     respuesta.forEach((res) => perfilLogin.push(res === null || res === void 0 ? void 0 : res.perfiles));
                     respuesta.perfiles = perfilLogin;
-                    const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave } = respuesta[0];
+                    const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa } = respuesta[0];
                     // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                     return {
                         id_usuario,
@@ -209,6 +212,8 @@ class UsuarioService {
                         correo,
                         id_estado,
                         cm_clave,
+                        id_empresa,
+                        nombre_empresa,
                         perfiles: perfilLogin
                     };
                 }
@@ -270,7 +275,6 @@ class UsuarioService {
     }
     Editar_Perfiles_Usuario(perfiles, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log(perfiles)
             try {
                 for (let perfil of perfiles) {
                     const perfilExistente = yield this._Query_Usuario.Buscar_Perfil_Usuario(perfil.id_perfil, usuario); //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO

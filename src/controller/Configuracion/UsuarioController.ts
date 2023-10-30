@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import UsuarioService from '../services/Usuario.service';
-import { EstadosTablas, Generar_Llaves_Secretas, _Parse_Clave, _Parse_Correo } from '../validations/utils';
-import { UsuarioLogin } from '../validations/Types';
-import { UsusarioSchema } from '../validations/ValidacionesZod';
-import { transporter } from '../../config/mailer';
+import UsuarioService from '../../services/Configuracion/Usuario.service';
+import { EstadosTablas, Generar_Llaves_Secretas, _Parse_Clave, _Parse_Correo } from '../../validations/utils';
+import { UsuarioLogin } from '../../validations/Types';
+import { UsusarioSchema } from '../../validations/ValidacionesZod';
+import { transporter } from '../../../config/mailer';
 
 export default class UsuarioController {
     public async Autenticar_Usuario(req: Request, res: Response) {

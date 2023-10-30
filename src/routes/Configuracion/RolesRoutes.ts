@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { _Autorizacion } from "../middleware/Autorizacion";
-import { _RolController } from "../controller/RolController";
+import { _Autorizacion } from "../../middleware/Autorizacion";
+import { _RolController } from "../../controller/Configuracion/RolController";
 
 //INICIALIZAR RUTAS PARA ROLES
 export const _RolesRouter = Router()

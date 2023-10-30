@@ -1,4 +1,4 @@
-import { _DB, client } from "../../config/db";
+import { _DB, pool } from "../../../config/db";
 
 import {
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
@@ -7,11 +7,11 @@ import {
     _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
     _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario,
     _CambiarEstadoUsuario, _CambiarClaveUsuario
-} from "../dao/DaoUsuario";
+} from "../../dao/Configuracion/DaoUsuario";
 
 import {
     UsuarioLogin, ModulosUsuario, MenusModulos, PermisosModulos
-} from "../validations/Types";
+} from "../../validations/Types";
 
 let bcrypt = require('bcrypt')
 
@@ -93,6 +93,8 @@ export default class QueryUsuario {
     }
 
     public async Buscar_Usuario_Correo(usuario = '', correo = '') {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             if (usuario !== '' && correo !== '') {
                 //FUNCIÓN ALMACENADA PARA BUSCAR EL USUARIO POR SU USUARIO Y CORREO
@@ -110,6 +112,8 @@ export default class QueryUsuario {
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
 
@@ -152,71 +156,99 @@ export default class QueryUsuario {
     }
 
     public async Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }: any, UsuarioModificador: string) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             const result = await client.query(_EditarUsuario, [id_usuario, Nombre_Editado, Usuario_Editado, Clave_Editada, UsuarioModificador, Correo_Editado])
             return result
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
 
     public async Buscar_Perfil_Usuario(id_perfil: number, usuario: number) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             const result = await client.query(_BuscarPerfilUsuario, [usuario, id_perfil]);
             return result.rows
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
 
     public async Editar_Perfil_Usuario(id_perfil: number, id_estado: number, usuario: number) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             const result = await client.query(_EditarPerfilUsuario, [usuario, id_perfil, id_estado]);
             return result.rows
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
 
     public async Buscar_Rol_Usuario(id_rol: number, usuario: number) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             const result = await client.query(_BuscarRolUsuario, [usuario, id_rol]);
             return result.rows
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
 
     public async Editar_Rol_Usuario(id_rol: number, id_estado: string, usuario: number) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             const result = await client.query(_EditarRolUsuario, [usuario, id_rol, id_estado]);
             return result.rowCount
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
 
     public async Cambiar_Estado_Usuario(usuario: number, estado: string) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             const result = await client.query(_CambiarEstadoUsuario, [usuario, estado]);
             return result
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
     public async Cambiar_Clave_Usuario(id_usuario: number, clave: string, cm_clave: boolean) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
         try {
             const result = await client.query(_CambiarClaveUsuario, [id_usuario, clave, cm_clave]);
             return result
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
         }
     }
 }

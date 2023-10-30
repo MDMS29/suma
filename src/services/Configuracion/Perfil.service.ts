@@ -1,6 +1,6 @@
-import { MessageError, ModulosUsuario } from "../validations/Types"
-import QueryPerfil from "../querys/QuerysPerfil"
-import { EstadosTablas } from "../validations/utils";
+import { MessageError, ModulosUsuario } from "../../validations/Types"
+import QueryPerfil from "../../querys/Configuracion/QuerysPerfil"
+import { EstadosTablas } from "../../validations/utils";
 
 export class PerfilService {
     private _Query_Perfil: QueryPerfil;
@@ -138,7 +138,6 @@ export class PerfilService {
     }
 
     public async Editar_Modulos_Perfil(id_perfil: number, modulos: any) {
-        console.log(modulos)
         for (let modulo of modulos) {
             const B_Modulo = await this._Query_Perfil.Buscar_Modulo_Perfil(id_perfil, modulo.id_modulo)
             if (!B_Modulo || B_Modulo?.length <= 0) {

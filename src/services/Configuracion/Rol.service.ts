@@ -1,4 +1,4 @@
-import QueryRol from "../querys/QueryRol";
+import QueryRol from "../../querys/Configuracion/QueryRol";
 
 export class RolService {
     private _Query_Rol: QueryRol;

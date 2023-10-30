@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { _Autorizacion } from "../middleware/Autorizacion";
-import { _PerfilController } from "../controller/PerfilController";
+import { _Autorizacion } from "../../middleware/Autorizacion";
+import { _PerfilController } from "../../controller/Configuracion/PerfilController";
 
 //INICIALIZAR RUTAS PARA PERFILES
 export const _PerfilesRouter = Router()

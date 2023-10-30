@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports._PerfilController = void 0;
 const Perfil_service_1 = require("../services/Perfil.service");
-const ValidacionesZod_1 = require("../validations/ValidacionesZod");
+// import { PerfilesSchema } from "../validations/ValidacionesZod";
 const utils_1 = require("../validations/utils");
 class _PerfilController {
     Obtener_Perfiles(req, res) {
@@ -71,12 +71,16 @@ class _PerfilController {
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
                 return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
             }
-            if (!nombre_perfil) {
+            if (!nombre_perfil || nombre_perfil === "") {
                 return res.status(404).json({ error: true, message: 'Debe ingresar un nombre al perfil' }); //!ERROR
             }
             if (modulos.length <= 0) {
                 return res.status(404).json({ error: true, message: 'El perfil debe tener al menos un modulo' }); //!ERROR
             }
+            // const zod_validacion = PerfilesSchema.safeParse(req.body)
+            // if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            //     return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
+            // }
             try {
                 const _PerfilService = new Perfil_service_1.PerfilService();
                 const respuesta = yield _PerfilService.Insertar_Perfil(nombre_perfil, usuario.usuario, modulos);
@@ -102,16 +106,16 @@ class _PerfilController {
             if (!id_perfil) {
                 return res.status(404).json({ error: true, message: 'No se ha encontrado el perfil' }); //!ERROR
             }
-            if (!nombre_perfil) {
-                return res.status(404).json({ error: true, message: 'Ingrese el nombre del perfil' }); //!ERROR
+            if (!nombre_perfil || nombre_perfil === "") {
+                return res.status(404).json({ error: true, message: 'Debe ingresar un nombre al perfil' }); //!ERROR
             }
             if (modulos.length <= 0) {
                 return res.status(404).json({ error: true, message: 'El perfil debe tener al menos un modulo' }); //!ERROR
             }
-            const result = ValidacionesZod_1.PerfilesSchema.safeParse(req.body);
-            if (!result.success) {
-                return res.status(404).json({ error: true, message: result.error.issues }); //!ERROR
-            }
+            // const result = PerfilesSchema.safeParse(req.body)
+            // if (!result.success) {
+            //     return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
+            // }
             try {
                 const _PerfilService = new Perfil_service_1.PerfilService();
                 const respuesta = yield _PerfilService.Editar_Perfil(+id_perfil, nombre_perfil, usuario.usuario);

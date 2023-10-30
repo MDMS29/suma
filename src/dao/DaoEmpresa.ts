@@ -53,11 +53,11 @@ export const _editar_empresa = `
         id_empresa=$1;
 `
 
-export const _CambiarEstadoRol = `
+export const _cambiar_estado_empresa = `
     UPDATE 
-        seguridad.tbl_roles
+        seguridad.tbl_empresas te
     SET 
-        id_estado=$2
+       id_estado = $2
     WHERE 
-        id_rol=$1;
+        id_empresa=$1;
 `

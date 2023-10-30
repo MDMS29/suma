@@ -127,7 +127,7 @@ export default class _EmpresaController {
         try {
             const menu_service = new EmpresaService()
 
-            const respuesta = await menu_service.Editar_Empresa(id_empresa, req.body, usuario.usuario)
+            const respuesta: any = await menu_service.Editar_Empresa(id_empresa, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
@@ -143,32 +143,32 @@ export default class _EmpresaController {
         }
     }
 
-    public async Cambiar_Estado_Menu(req: Request, res: Response) {
+    public async Cambiar_Estado_Empresa(req: Request, res: Response) {
         const { usuario } = req
-        const { id_menu } = req.params
+        const { id_empresa } = req.params
         const { estado } = req.query as { estado: string }
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_menu) {
-            return res.json({ error: true, message: 'No se ha encontrado el menu' }) //!ERROR
+        if (!id_empresa) {
+            return res.json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
         }
         if (!estado) {
             return res.json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
         }
 
         try {
-            const menu_service = new EmpresaService()
-            const respuesta = await menu_service.Cambiar_Estado_Rol(+id_menu, +estado)
+            const empresa_service = new EmpresaService()
+            const respuesta = await empresa_service.Cambiar_Estado_Empresa(+id_empresa, +estado)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }) //*SUCCESSFUL
+            return res.status(200).json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado la empresa' : 'Se ha desactivado la empresa' }) //*SUCCESSFUL
 
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el menu' : 'Error al desactivar el menu' }) //!ERROR
+            return res.status(500).json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar la empresa' : 'Error al desactivar la empresa' }) //!ERROR
         }
     }
 
