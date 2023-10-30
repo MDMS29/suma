@@ -6,6 +6,7 @@ import { _PerfilesRouter } from './src/routes/PerfilesRoutes';
 import { _ModulosRouter } from './src/routes/ModulosRoutes';
 import { _RolesRouter } from './src/routes/RolesRoutes';
 import { _MenusRouter } from './src/routes/MenuRoutes';
+import { _ProductosRouter } from './src/routes/ProductosRoute';
 
 const app = express();
 // DEFINIR TIPOS PARA EL OBJETO REQUEST
@@ -41,16 +42,6 @@ app.use(async (__, _, next: NextFunction) => {
         next()
     }
 });
-// app.use(async (__, _, next: NextFunction) => {
-//     try {
-//         const data = await fetch('https://github.com/tabler/tabler-icons/blob/master/icons')
-//         const json = await data.json()
-//         console.log(json)
-//         next()
-//     } catch (error) {
-//         console.log(error)
-//     }
-// });
 
 //DEFINIR RUTA DEL USUARIO
 // Crear una instancia del enrutador de usuario
@@ -68,6 +59,9 @@ app.use('/suma/api/roles', _RolesRouter)
 //DEFINIR RUTA DE LOS MENUS
 app.use('/suma/api/menus', _MenusRouter)
 
+//DEFINIR RUTAS PARA LOS PRODUCTOS
+app.use('/suma/api/productos', _ProductosRouter)
+
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {
     res.status(405).send({ error: true, message: "No se ha encontrado la request" });
@@ -78,3 +72,5 @@ const PORT = process.env.PORT ?? 3000;
 app.listen(PORT, () => {
     console.log(`Servidor en ejecución en el puerto ${PORT}`);
 });
+
+export default app;

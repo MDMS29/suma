@@ -43,7 +43,7 @@ class ModuloService {
                 const modulo = yield this._Query_Modulo.Buscar_Modulo_Nombre(nombre_modulo);
                 if (modulo) {
                     if (modulo.nombre_modulo.toLowerCase() === nombre_modulo.toLowerCase()) {
-                        return { error: true, message: 'Ya existe este modulo' }; //!ERROR
+                        return { error: true, message: 'Este nombre ya esta en uso' }; //!ERROR
                     }
                 }
                 // BUSCAR EL CODIGO DEL MODULO SI NO SE ENCUENTRA DUPLICADO
@@ -65,7 +65,6 @@ class ModuloService {
                         return { error: true, message: 'Error al insertar el rol del modulo' };
                     }
                 }
-                console.log('59 - service', modulo_insertado);
                 // BUSCAR EL MODULO AGREGADO
                 const modulo_nuevo = yield this._Query_Modulo.Buscar_Modulo_ID(modulo_insertado.id_modulo);
                 if (!modulo_nuevo.id_modulo) {
@@ -116,8 +115,8 @@ class ModuloService {
                     return { error: true, message: 'No se ha encontrado el modulo' };
                 }
                 if (moduloB.nombre_modulo !== Request_Modulo.nombre_modulo) {
-                    //TODO: const nombre = await this._Query_Modulo.Buscar_Modulo_Nombre(Request_Modulo.nombre_modulo)
-                    if (moduloB.nombre_modulo.toLowerCase() === Request_Modulo.nombre_modulo.toLowerCase()) {
+                    const nombre = yield this._Query_Modulo.Buscar_Modulo_Nombre(Request_Modulo.nombre_modulo);
+                    if (nombre === null || nombre === void 0 ? void 0 : nombre.id_modulo) {
                         return { error: true, message: 'Ya existe este modulo, ingrese un nombre diferente' };
                     }
                     else {

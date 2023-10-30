@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PerfilService = void 0;
 const QuerysPerfil_1 = __importDefault(require("../querys/QuerysPerfil"));
+const utils_1 = require("../validations/utils");
 class PerfilService {
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
@@ -129,7 +130,6 @@ class PerfilService {
                 else {
                     nombre_editado = nombre_perfil;
                 }
-                // console.log('126 - service', respuesta)
                 const res = yield this._Query_Perfil.Editar_Perfil({ id_perfil, nombre_editado, usuario_creacion });
                 if ((res === null || res === void 0 ? void 0 : res.rowCount) != 1) {
                     return { error: true, message: 'Error al actualizar el perfil' }; //!ERROR
@@ -154,10 +154,19 @@ class PerfilService {
                     }
                 }
                 else {
-                    //EDITAR
+                    //EDITAR MODULOS
                     const Modulos_Editar = yield this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo);
                     if (!Modulos_Editar) {
                         return { error: true, message: 'Error al editar el modulo' }; //!ERROR
+                    }
+                    // PREVENIR QUE EL PERFIL QUEDE SIN MODULOS
+                    const modulos = yield this._Query_Perfil.Modulos_Perfil(id_perfil);
+                    if (modulos.length == 0) {
+                        modulo.id_estado = 1;
+                        const Modulos_Editar = yield this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo);
+                        if (!Modulos_Editar) {
+                            return { error: true, message: 'Error al editar el modulo' }; //!ERROR
+                        }
                     }
                 }
             }
@@ -175,7 +184,7 @@ class PerfilService {
             }
             catch (error) {
                 console.log(error);
-                return { error: true, message: 'Error al editar el perfil' }; //!ERROR
+                return { error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el perfil' : 'Error al desactivar del perfil' }; //!ERROR
             }
         });
     }

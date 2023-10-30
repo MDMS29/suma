@@ -10,4 +10,4 @@ export const transporter = nodemailer.createTransport({
     }
 });
 
-transporter.verify().then(() => console.log('Mailer listo'))
+// transporter.verify().then(() => console.log('Mailer listo'))
