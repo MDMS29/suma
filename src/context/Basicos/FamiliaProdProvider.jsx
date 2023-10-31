@@ -1,18 +1,200 @@
-import { createContext, useMemo } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
+import useAuth from "../../hooks/useAuth";
+import { useLocation } from "react-router-dom";
+import conexion_cliente from "../../config/ConexionCliente";
 const FamiliaProdContext = createContext();
 
-
 const FamiliaProdProvider = ({ children }) => {
-    const obj = useMemo(() => ({
+  const { setAlerta, authUsuario } = useAuth();
+  const [dataFliaPro, setDataFliaPro] = useState([]);
+  const [FliaProState, setFliaProState] = useState({});
+  const [permisosFliaPro, setPermisosFliaPro] = useState([]);
 
-    }));
-    return (
-        <FamiliaProdContext.Provider
-            value={obj}
-        >      {children}
-        </FamiliaProdContext.Provider>
-    )
-}
+  const [errors, setErrors] = useState({ referencia: "", descripcion: "" });
 
-export { FamiliaProdProvider }
-export default FamiliaProdContext
+  const [FliaProAgg, setFliaProAgg] = useState({
+    id_familia: 0,
+    id_empresa: authUsuario.id_empresa,
+    referencia: "",
+    descripcion: "",
+  });
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.includes("familias-productos")) {
+      (async () => {
+        const token = localStorage.getItem("token");
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        if (authUsuario.id_empresa) {
+          try {
+            const estado = location.pathname.includes("inactivos") ? 2 : 1;
+            const { data } = await conexion_cliente(
+              `/basicas_productos/familias_productos?estado=${estado}&empresa=${authUsuario.id_empresa}`,
+              config
+            );
+            setDataFliaPro(data);
+          } catch (error) {
+            setDataFliaPro([]);
+          }
+        }
+      })();
+    }
+  }, [location.pathname]);
+
+  const buscar_flia_pro = async (id) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await conexion_cliente(
+        `/basicas_productos/familias_productos/${id}`,
+        config
+      );
+
+      if (data?.error) {
+        return { error: true, message: data.message };
+      }
+
+      const { id_familia, referencia ,descripcion } = data;
+
+      console.log(data)
+
+      setFliaProAgg(data);
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const guardar_flia_prod = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const response = await conexion_cliente.post(
+        "/basicas_productos/familias_productos",
+        formData,
+        config
+      );
+
+      setDataFliaPro([...dataFliaPro, response.data]);
+      setAlerta({
+        error: false,
+        show: true,
+        message: "Familia de productos creada con exito",
+      });
+
+      setFliaProAgg({
+        id_familia: 0,
+        referencia: "",
+        descripcion: "",
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message,
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+      throw error;
+    }
+  };
+
+  const editar_flia_pro = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await conexion_cliente.patch(
+        `/basicas_productos/familias_productos/${formData.id_familia}`,
+        formData,
+        config
+      );
+      const flia_pro_actualizados = dataFliaPro.map((fliapro) =>
+      fliapro.id_familia === data.id_familia
+          ? data
+          : fliapro
+      );
+      setDataFliaPro(flia_pro_actualizados);
+
+      setAlerta({
+        error: false,
+        show: true,
+        message: "Familia de Producto editado con exito",
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+      setFliaProAgg({
+        id_familia: 0,
+        referencia: "",
+        descripcion: "",
+      });
+    } catch (error) {
+      console.error("Error al guardar la información:", error);
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message,
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+      throw error;
+    }
+  };
+
+  const obj = useMemo(() => ({
+    dataFliaPro,
+    setDataFliaPro,
+    FliaProState,
+    setFliaProState,
+    permisosFliaPro,
+    setPermisosFliaPro,
+    FliaProAgg,
+    setFliaProAgg,
+    errors,
+    setErrors,
+    buscar_flia_pro,
+    guardar_flia_prod,
+    editar_flia_pro
+  }));
+  
+  return (
+    <FamiliaProdContext.Provider value={obj}>
+      {children}
+    </FamiliaProdContext.Provider>
+  );
+};
+
+export { FamiliaProdProvider };
+export default FamiliaProdContext;
