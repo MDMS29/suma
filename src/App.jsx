@@ -13,27 +13,30 @@ import { TipoProdProvider } from "./context/Basicos/TipoProdProvider.jsx";
 
 import AppMain from "./router/AppMain.jsx";
 import { RolesProvider } from "./context/Configuracion/RolesProvider.jsx";
+import { EmpresasProvider } from "./context/EmpresasProvider.jsx";
 
 const App = () => {
   return (
     <BrowserRouter>
       <PrimeReactProvider>
         <AuthProvider>
-          <UsuariosProvider>
-            <PerfilesProvider>
-              <ModulosProvider>
-                <RolesProvider>
-                  <MarcasProvider>
-                    <FamiliaProdProvider>
-                      <TipoProdProvider>
-                        <AppMain />
-                      </TipoProdProvider>
-                    </FamiliaProdProvider>
-                  </MarcasProvider>
-                </RolesProvider>
-              </ModulosProvider>
-            </PerfilesProvider>
-          </UsuariosProvider>
+          <EmpresasProvider>
+            <UsuariosProvider>
+              <PerfilesProvider>
+                <ModulosProvider>
+                  <RolesProvider>
+                    <MarcasProvider>
+                      <FamiliaProdProvider>
+                        <TipoProdProvider>
+                          <AppMain />
+                        </TipoProdProvider>
+                      </FamiliaProdProvider>
+                    </MarcasProvider>
+                  </RolesProvider>
+                </ModulosProvider>
+              </PerfilesProvider>
+            </UsuariosProvider>
+          </EmpresasProvider>
         </AuthProvider>
       </PrimeReactProvider>
     </BrowserRouter>

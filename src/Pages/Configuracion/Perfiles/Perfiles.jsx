@@ -15,7 +15,7 @@ import usePerfiles from "../../../hooks/Configuracion/usePerfiles";
 import BLink from "../../../components/Botones/BLink";
 
 import Loader from "../../../components/Loader";
-import Forbidden from "../../Errors/Forbidden";
+import Forbidden from "../../Errors/forbidden";
 import useAuth from "../../../hooks/useAuth";
 
 // import { Dropdown } from 'primereact/dropdown';

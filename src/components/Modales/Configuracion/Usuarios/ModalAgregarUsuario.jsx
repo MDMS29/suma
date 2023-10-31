@@ -7,6 +7,9 @@ import { Steps } from "primereact/steps";
 import { Message } from "primereact/message";
 import useUsuarios from "../../../../hooks/Configuracion/useUsuarios";
 import Button from "../../../Botones/Button";
+import { Dropdown } from "primereact/dropdown";
+import useAuth from "../../../../hooks/useAuth";
+import useEmpresas from "../../../../hooks/useEmpresas";
 
 // eslint-disable-next-line react/prop-types
 const ModalAgregarUsuarios = ({ visible, onClose }) => {
@@ -26,9 +29,20 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     editar_usuario
   } = useUsuarios();
 
+  const { authUsuario } = useAuth()
+  const { obtener_empresas, dataEmpresas } = useEmpresas()
+
   const [perfilesSeleccionados, setPerfilesSeleccionados] = useState([]);
   const [permisosPorModulo, setPermisosPorModulo] = useState([]);
   const [step, setStep] = useState(1);
+ console.log(UsuariosAgg);
+
+  useEffect(() => {
+    if (authUsuario.perfiles.some((perfil) => perfil.id_perfil == 1)) {
+      obtener_empresas()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (UsuariosAgg.id_usuario) {
@@ -51,6 +65,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       correo: "",
       clave: "",
       clave_repetida: "",
+      id_empresa: "",
     });
 
     // Limpia las selecciones
@@ -80,6 +95,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       usuario: UsuariosAgg.usuario,
       correo: UsuariosAgg.correo,
       clave: UsuariosAgg.clave,
+      id_empresa: UsuariosAgg.id_empresa,
       perfiles: perfilesSeleccionados,
       roles: permisosPorModulo,
     };
@@ -109,6 +125,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
           correo: "",
           clave: "",
           clave_repetida: "",
+          id_empresa: "",
         });
         setPerfilesSeleccionados([]);
         setPermisosPorModulo([]);
@@ -272,7 +289,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     </div>
   );
 
-
   return (
     <Dialog
       header={perfilesEdit.length !== 0 ? <h1>Editar Usuario</h1> : <h1>Agregar Usuario</h1>}
@@ -328,7 +344,39 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   </div>
                 )}
               </div>
-              <div className="flex flex-col col-span-2">
+              {authUsuario.perfiles?.some((perfil) => perfil.id_perfil == 1) && authUsuario.id_empresa == 1 &&
+                <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2"> {/* /*col-span-2*/}
+                  <label className="text-gray-600 pb-2 font-semibold">Empresas <span className="font-bold text-red-900">*</span></label>
+                  <div className="card flex justify-content-center w-full">
+
+                    <Dropdown value={UsuariosAgg.id_empresa} onChange={(e) => btn_cambio_usuario(e)} options={dataEmpresas}
+                      name="id_empresa"
+                      optionLabel="razon_social"
+                      optionValue= "id_empresa" 
+                      placeholder="Seleccione una empresa"
+                      filter className="w-full md:w-14rem" />
+                    {/* <Dropdown value={UsuariosAgg.id_empresa} onChange={(e) => setDataEmpresas(e.value)} options={
+                    Array.isArray(dataEmpresas) && dataEmpresas.length > 0
+                      ? dataEmpresas.map((e) => ({
+                        label: e.razon_social,
+                        value: e.id_empresa,
+                      }))
+                      : [{ label: "No hay datos disponibles", value: "" }]
+                  }
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccione una empresa"
+                    filter className="w-full md:w-14rem" /> */}
+
+                  </div>
+
+                  {errors.correo && (
+                    <div className="text-red-600 text-sm">{errors.correo}</div>
+                  )}
+                </div>
+              }
+
+              <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2"> {/* /*col-span-2*/}
                 <label className="text-gray-600 pb-2 font-semibold">Correo <span className="font-bold text-red-900">*</span></label>
                 <InputText
                   value={UsuariosAgg.correo}

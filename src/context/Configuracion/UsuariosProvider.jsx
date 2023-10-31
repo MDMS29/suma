@@ -10,6 +10,7 @@ const UsuariosContext = createContext();
 const UsuariosProvider = ({ children }) => {
 
   const navigate = useNavigate()
+  const { authUsuario, setAuthUsuario, setAlerta, setVerEliminarRestaurar } = useAuth()
 
   const [dataUsuarios, setDataUsuarios] = useState([])
   const [usuarioState, setUsuarioState] = useState({})
@@ -23,6 +24,7 @@ const UsuariosProvider = ({ children }) => {
   const [perfilesEdit, setPerfilesEdit] = useState([])
   const [permisosEdit, setPermisosEdit] = useState([])
 
+
   const [UsuariosAgg, setUsuariosAgg] = useState({
     id_usuario: 0,
     nombre: "",
@@ -30,6 +32,7 @@ const UsuariosProvider = ({ children }) => {
     correo: "",
     clave: "",
     clave_repetida: "",
+    id_empresa: authUsuario.perfiles?.some((perfil) => perfil.id_perfil == 1) && authUsuario.id_empresa == 1 ? "" : authUsuario.id_empresa && authUsuario.id_empresa
   });
 
   const [errors, setErrors] = useState({
@@ -43,8 +46,6 @@ const UsuariosProvider = ({ children }) => {
   const [permisosUsuario, setPermisosUsuario] = useState([])
 
   const [resClave, setResClave] = useState(false)
-
-  const { authUsuario, setAuthUsuario, setAlerta, setVerEliminarRestaurar } = useAuth()
 
   const location = useLocation()
 
@@ -290,6 +291,7 @@ const UsuariosProvider = ({ children }) => {
         correo: correo,
         clave: "",
         clave_repetida: "",
+        id_empresa: authUsuario.id_empresa
       })
       await data?.modulos.map((modulo) => {
         modulo?.permisos.map((permiso) => {
