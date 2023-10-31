@@ -24,12 +24,11 @@ _BasicasProductosRouter.route('/:id_producto')
 /* UNIDADES DE MEDIDAD PARA LOS PRODUCTOS */
 _BasicasProductosRouter.route('/unidades_medida')
     .get(_Autorizacion, _Unidad_Medida_Controller.Obtener_Unidades_Medida) //OBTENER TODOS LAS UNIDADES DE MEDIDA
-    .post(_Autorizacion, _Unidad_Medida_Controller.Insertar_Unidad_Medida) //INSERTAR ROL
+    .post(_Autorizacion, _Unidad_Medida_Controller.Insertar_Unidad_Medida) //INSERTAR UNIDAD DE MEDIDA
 
 _BasicasProductosRouter.route('/unidades_medida/:id_unidad')
-    .get(_Autorizacion, _Unidad_Medida_Controller.Buscar_Unidad_Medida) //BUSCAR EL ROL SEGUN SU ID
-    .patch(_Autorizacion,) //EDITAR ROL SEGUN SU ID
-    .delete(_Autorizacion,) //CAMBIAR ESTADO DEL ROL POR ID
+    .get(_Autorizacion, _Unidad_Medida_Controller.Buscar_Unidad_Medida) //BUSCAR LA UNIDAD DE MEDIDA SEGUN SU ID
+    .patch(_Autorizacion, _Unidad_Medida_Controller.Editar_Unidad_Medida) //EDITAR LA UNIDAD DE MEDIDA SEGUN SU ID
 
 
 

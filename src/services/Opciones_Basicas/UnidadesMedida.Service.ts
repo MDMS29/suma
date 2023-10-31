@@ -76,7 +76,6 @@ export class UnidadesMedidaService {
             }
             const respuesta: any = await this._Query_Unidades_Medida.Buscar_Unidad_Medida_ID(id_unidad)
 
-
             unidad_medida_request.unidad = respuesta[0]?.unidad === unidad_medida_request.unidad ? respuesta[0]?.unidad : unidad_medida_request.unidad
 
             const res = await this._Query_Unidades_Medida.Editar_Unidad_Medida(id_unidad, unidad_medida_request)
@@ -88,21 +87,6 @@ export class UnidadesMedidaService {
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al editar la unidad de medida' } //!ERROR
-        }
-    }
-
-    public async Cambiar_Estado_Menu(id_menu: number, estado: number) {
-        try {
-
-            const menu_editado = await this._Query_Unidades_Medida.Cambiar_Estado_Menu(id_menu, estado);
-            if (!menu_editado?.rowCount) {
-                return { error: true, message: 'Error al editar el menu' } //!ERROR
-            }
-
-            return { error: false, message: 'Se ha cambiado el estado del menu' }
-        } catch (error) {
-            console.log(error)
-            return { error: true, message: 'Error al editar el menu' } //!ERROR
         }
     }
 }

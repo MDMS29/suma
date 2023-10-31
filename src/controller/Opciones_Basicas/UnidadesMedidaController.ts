@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { EstadosTablas } from "../../validations/utils";
 import { UnidadesMedidaService } from "../../services/Opciones_Basicas/UnidadesMedida.Service"
 
 export default class UnidadesMedidaController {
@@ -84,7 +83,7 @@ export default class UnidadesMedidaController {
         }
     }
 
-    public async Editar_Menu(req: Request, res: Response) {
+    public async Editar_Unidad_Medida(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_unidad } = req.params
         const { id_empresa, unidad } = req.body
@@ -122,34 +121,4 @@ export default class UnidadesMedidaController {
             return res.status(500).json({ error: true, message: 'Error al editar la unidad de medida' }) //!ERROR
         }
     }
-
-    public async Cambiar_Estado_Menu(req: Request, res: Response) {
-        const { usuario } = req
-        const { id_menu } = req.params
-        const { estado } = req.query as { estado: string }
-        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
-        }
-        if (!id_menu) {
-            return res.json({ error: true, message: 'No se ha encontrado el menu' }) //!ERROR
-        }
-        if (!estado) {
-            return res.json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
-        }
-
-        try {
-            const menu_service = new UnidadesMedidaService()
-            const respuesta = await menu_service.Cambiar_Estado_Menu(+id_menu, +estado)
-            if (respuesta.error) {
-                return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
-            }
-
-            return res.status(200).json({ error: false, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }) //*SUCCESSFUL
-
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({ error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el menu' : 'Error al desactivar el menu' }) //!ERROR
-        }
-    }
-
 }

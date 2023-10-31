@@ -45,12 +45,3 @@ export const _editar_unidad_medida = `
     WHERE 
         id_unidad=$1;
 `
-
-export const _CambiarEstadoMenu = `
-    UPDATE 
-        seguridad.tbl_menus
-    SET
-       id_estado = $2
-    WHERE
-        id_menu = $1
-`

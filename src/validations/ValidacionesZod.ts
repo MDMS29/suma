@@ -4,6 +4,7 @@ import z from 'zod'
 // VALIDACION PARA LOS VALORES DEL USUARIO
 export const UsusarioSchema = z.object({
     id_usuario: z.number().int().optional(),
+    id_empresa: z.number().int().optional(),
     nombre_completo: z.string({
         invalid_type_error: 'Debe ingresar un nombre valido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {

@@ -6,7 +6,7 @@ import {
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
     _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
     _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario,
-    _CambiarEstadoUsuario, _CambiarClaveUsuario
+    _CambiarEstadoUsuario, _CambiarClaveUsuario, _Insertar_Empresa_Usuario
 } from "../../dao/Configuracion/DaoUsuario";
 
 import {
@@ -155,11 +155,39 @@ export default class QueryUsuario {
         }
     }
 
+    public async Insertar_Empresa_Usuario(id_usuario: number, id_empresa: any, UsuarioCreador: string) {
+        const client = await pool.connect()
+        try {
+            //PROCESO ALMACENADO PARA INSERTAR LOS ROLES DEL USUARIO 
+            const result = await client.query(_Insertar_Empresa_Usuario, [id_empresa, id_usuario, UsuarioCreador]);
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+
     public async Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }: any, UsuarioModificador: string) {
         const client = await pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_EditarUsuario, [id_usuario, Nombre_Editado, Usuario_Editado, Clave_Editada, UsuarioModificador, Correo_Editado])
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Editar_Empresa_Usuario(id_empresa: string, id_usuario: string, UsuarioModificador: string) {
+        const client = await pool.connect(); // Obtiene una conexión de la piscina
+
+        try {
+            const result = await client.query(_EditarUsuario, [id_usuario, id_empresa, UsuarioModificador])
             return result
         } catch (error) {
             console.log(error)

@@ -80,17 +80,4 @@ export default class QueryUnidadesMedida {
         }
     }
 
-    public async Cambiar_Estado_Menu(id_menu: number, estado: number) {
-        const client = await pool.connect()
-
-        try {
-            let result = await client.query(_CambiarEstadoMenu, [id_menu, estado]);
-            return result
-        } catch (error) {
-            console.log(error)
-            return
-        } finally {
-            client.release();
-        }
-    }
 }

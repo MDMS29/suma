@@ -1,6 +1,6 @@
 export const _FALoginUsuario = 'seguridad.login_usuario'
 
-export const  _FAModulosUsuario = 'seguridad.modulos_usuario'
+export const _FAModulosUsuario = 'seguridad.modulos_usuario'
 
 export const _FAMenusModulos = 'seguridad.menus_modulo'
 
@@ -73,4 +73,21 @@ export const _CambiarClaveUsuario = `
         clave=$2, cm_clave=$3
     WHERE 
         id_usuario=$1
+`
+
+export const _Insertar_Empresa_Usuario = `
+    INSERT INTO 
+        seguridad.tbl_usuarios_empresa
+        (id_empresa, id_usuario, id_estado, fecha_creacion, usuario_creacion)
+    VALUES 
+        ($1, $2, 1, now(), $3)
+`
+
+export const _Editar_Empresa_Usuario = `
+    UPDATE
+        seguridad.tbl_usuarios_empresa
+    SET
+        id_empresa=$2, fecha_actualizacion=now(), usuario_modificacion=$3
+    WHERE 
+        id_usuario = $1
 `

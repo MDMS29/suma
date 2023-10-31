@@ -74,7 +74,7 @@ export default class UsuarioService {
         }
 
         try {
-            const respuesta = await this._Query_Usuario.Obtener_Usuarios(estado,empresa) //INVOCAR FUNCION PARA OBTENER LOS USUARIOS
+            const respuesta = await this._Query_Usuario.Obtener_Usuarios(estado, empresa) //INVOCAR FUNCION PARA OBTENER LOS USUARIOS
             if (respuesta) { //VALIDACION SI HAY ALGUNA RESPUESTA
                 return respuesta //RETORNAR LA RESPUESTA
             }
@@ -115,6 +115,13 @@ export default class UsuarioService {
                         throw new Error('Error al insertar el rol') //!ERROR
                     }
                 }
+
+                const empresa_usuario = await this._Query_Usuario.Insertar_Empresa_Usuario(respuesta, RequestUsuario.id_empresa, UsuarioCreador)
+
+                if (empresa_usuario?.rowCount !== 1) {
+                    return { error: true, message: "Error al guardar la empresa del usuario" } //!ERROR
+                }
+
                 const data = await this._Query_Usuario.Buscar_Usuario_ID(respuesta) //BUSCAR EL USUARIO GUARDADO Y RETORNARLO 
                 return data[0]
             }
@@ -262,6 +269,7 @@ export default class UsuarioService {
 
             //INVOCAR FUNCION PARA EDITAR EL USUARIO
             const result = await this._Query_Usuario.Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador)
+             await this._Query_Usuario.Editar_Empresa_Usuario(RequestUsuario.id_empresa, id_usuario, UsuarioModificador)
             return result //RETORNAR EL USUARIO EDITADO
         } catch (error) {
             console.log(error)
