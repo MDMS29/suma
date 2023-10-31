@@ -3,7 +3,6 @@ import { UnidadesMedidaService } from "../../services/Opciones_Basicas/UnidadesM
 
 export default class UnidadesMedidaController {
 
-
     public async Obtener_Unidades_Medida(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
@@ -40,7 +39,7 @@ export default class UnidadesMedidaController {
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_empresa) {
-            return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'No se ha definido la empresa' }) //!ERROR
         }
         if (!unidad) {
             return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
@@ -92,7 +91,7 @@ export default class UnidadesMedidaController {
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
         if (!id_empresa) {
-            return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'No se ha definido la empresa' }) //!ERROR
         }
         if (!unidad) {
             return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR

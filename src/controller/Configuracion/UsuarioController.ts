@@ -100,7 +100,6 @@ export default class UsuarioController {
     }
 
     public async Crear_Usuario(req: Request, res: Response) {
-        // const { roles } = req.body
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }) //!ERROR
         }

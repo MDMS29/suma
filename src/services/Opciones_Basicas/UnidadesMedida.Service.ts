@@ -70,11 +70,12 @@ export class UnidadesMedidaService {
 
     public async Editar_Unidad_Medida(id_unidad: number, unidad_medida_request: Unidad_Medida) {
         try {
+            const respuesta: any = await this._Query_Unidades_Medida.Buscar_Unidad_Medida_ID(id_unidad)
+
             const unidad_filtrada: any = await this._Query_Unidades_Medida.Buscar_Unidad_Medida(unidad_medida_request)
-            if (unidad_filtrada?.length > 0 && unidad_filtrada[0].unidad !== unidad_medida_request.unidad) {
+            if (unidad_filtrada?.length > 0 && unidad_filtrada[0].unidad !== respuesta[0].unidad) {
                 return { error: true, message: 'Ya existe esta unidad de medida' } //!ERROR
             }
-            const respuesta: any = await this._Query_Unidades_Medida.Buscar_Unidad_Medida_ID(id_unidad)
 
             unidad_medida_request.unidad = respuesta[0]?.unidad === unidad_medida_request.unidad ? respuesta[0]?.unidad : unidad_medida_request.unidad
 

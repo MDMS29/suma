@@ -77,7 +77,7 @@ export const _CambiarClaveUsuario = `
 
 export const _Insertar_Empresa_Usuario = `
     INSERT INTO 
-        seguridad.tbl_usuarios_empresa
+        seguridad.tbl_usuarios_empresas
         (id_empresa, id_usuario, id_estado, fecha_creacion, usuario_creacion)
     VALUES 
         ($1, $2, 1, now(), $3)
@@ -85,7 +85,7 @@ export const _Insertar_Empresa_Usuario = `
 
 export const _Editar_Empresa_Usuario = `
     UPDATE
-        seguridad.tbl_usuarios_empresa
+        seguridad.tbl_usuarios_empresas
     SET
         id_empresa=$2, fecha_actualizacion=now(), usuario_modificacion=$3
     WHERE 

@@ -8,6 +8,7 @@ import { _RolesRouter } from './src/routes/Configuracion/RolesRoutes';
 import { _MenusRouter } from './src/routes/Configuracion/MenuRoutes';
 import { _EmpresasRouter } from './src/routes/EmpresaRoutes';
 import { _BasicasProductosRouter } from './src/routes/Opciones_Basicas/BasicasProductosRoute';
+import { _Autorizacion } from './src/middleware/Autorizacion';
 
 const app = express();
 // DEFINIR TIPOS PARA EL OBJETO REQUEST

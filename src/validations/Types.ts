@@ -67,5 +67,22 @@ export interface Unidad_Medida {
     id_unidad?: number
     id_empresa: number
     unidad: string
+}
 
+export interface Tipo_Producto {
+    id_tipo_producto?: number
+    id_empresa: number
+    descripcion: string
+}
+
+export interface Marca_Producto {
+    id_marca?: number
+    marca: string
+}
+export interface Familia_Producto {
+    id_familia?: number
+    id_empresa: number
+    referencia: string
+    descripcion: string
+    id_estado: number
 }
