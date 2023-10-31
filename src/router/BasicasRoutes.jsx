@@ -1,7 +1,7 @@
 import Marcas from '../Pages/Basicos/Marcas/Marcas'
-import Centros from '../Pages/Centros/Centros'
-import Procesos from '../Pages/Procesos/Procesos'
-import Unidades from '../Pages/Unidades/Unidades'
+import Centros from '../Pages/Basicos/Centros/Centros'
+import Procesos from '../Pages/Basicos/Procesos/Procesos'
+import Unidades from '../Pages/Basicos/Unidades/Unidades'
 import FamiliaProd from '../Pages/Basicos/FamiliaProd/FamiliaProd'
 import TipoProd from '../Pages/Basicos/TipoProd/TipoProd'
 

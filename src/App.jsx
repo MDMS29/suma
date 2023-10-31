@@ -8,6 +8,7 @@ import { UsuariosProvider } from "./context/Configuracion/UsuariosProvider.jsx";
 import { PerfilesProvider } from "./context/Configuracion/PerfilesProvider.jsx";
 import { ModulosProvider } from "./context/Configuracion/ModulosProvider.jsx";
 import { MarcasProvider } from "./context/Basicos/MarcasProvider.jsx";
+import { UnidadesProvider } from "./context/Basicos/UnidadesProvider.jsx";
 import { FamiliaProdProvider } from "./context/Basicos/FamiliaProdProvider.jsx";
 import { TipoProdProvider } from "./context/Basicos/TipoProdProvider.jsx";
 
@@ -26,11 +27,13 @@ const App = () => {
                 <ModulosProvider>
                   <RolesProvider>
                     <MarcasProvider>
-                      <FamiliaProdProvider>
-                        <TipoProdProvider>
-                          <AppMain />
-                        </TipoProdProvider>
-                      </FamiliaProdProvider>
+                      <UnidadesProvider>
+                        <FamiliaProdProvider>
+                          <TipoProdProvider>
+                            <AppMain />
+                          </TipoProdProvider>
+                        </FamiliaProdProvider>
+                      </UnidadesProvider>
                     </MarcasProvider>
                   </RolesProvider>
                 </ModulosProvider>

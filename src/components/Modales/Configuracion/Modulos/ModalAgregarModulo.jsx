@@ -44,13 +44,13 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     item.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSearch = (event) => {
+  const buscador = (event) => {
     setSearchTerm(event.target.value);
   };
 
   const toast = useRef(null);
 
-  const handleClose = () => {
+  const cerrar_modal = () => {
     onClose();
 
     setModulosAgg({
@@ -71,7 +71,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
   }, [rolesEdit]);
 
-  const handleSpacePrevention = (e, fieldName) => {
+  const prevencion_de_espacios = (e, fieldName) => {
     if (fieldName === "cod_modulo" && e.key === " ") {
       e.preventDefault();
     }
@@ -141,7 +141,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
   };
 
-  const CheckboxChangeroles = (nombrePermiso, idRolModulo) => {
+  const ChklRoles = (nombrePermiso, idRolModulo) => {
     if (rolesporModulo.find((permiso) => permiso.id_rol == idRolModulo)) {
       if (rolesEdit.find((permiso) => permiso.id_rol == idRolModulo)) {
         const [permiso] = rolesporModulo.filter(
@@ -189,12 +189,12 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     </div>
   );
 
-  const selccionarIcono = () => {
+  const seleccionar_icono = () => {
     setVentanaIcon(true);
     setTextoBotonIcon("Cambiar");
   };
 
-  const handleOpcionModulos =(e)=>{
+  const manejar_opcion_modulos =(e)=>{
     cambiar_modulos(e)
     setVentanaIcon(false)
   }
@@ -209,7 +209,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
         )
       }
       visible={visible}
-      onHide={handleClose}
+      onHide={cerrar_modal}
       className="w-full sm:w-full md:w-1/2 lg:w-1/2 xl:w-1/2"
       footer={footerContent}
     >
@@ -229,7 +229,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                   errors.cod_modulo ? "border-red-500" : "border-gray-300"
                 }`}
                 onChange={(e) => cambiar_modulos(e, "cod_modulo")}
-                onKeyDown={(e) => handleSpacePrevention(e, "cod_modulo")}
+                onKeyDown={(e) => prevencion_de_espacios(e, "cod_modulo")}
               />
               {errors.cod_modulo && (
                 <div className="text-red-600 text-xs ">{errors.cod_modulo}</div>
@@ -241,7 +241,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
               </label>
 
               <div className="flex items-center gap-2">
-                <Button tipo={"CANCELAR"} funcion={selccionarIcono}>
+                <Button tipo={"CANCELAR"} funcion={seleccionar_icono}>
                   {textoBotonIcon}
                 </Button>
                 <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
@@ -254,7 +254,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                     placeholder="Busca"
                     className="p-2 focus:outline-none rounded-md"
                     value={searchTerm}
-                    onChange={handleSearch}
+                    onChange={buscador}
                   />
                   <hr />
                   <div
@@ -274,7 +274,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                             icono.name == ModulosAgg.icono &&
                             "border-blue-400 bg-gray-200"
                           }`}
-                          onClick={handleOpcionModulos}
+                          onClick={manejar_opcion_modulos}
                           name="icono"
                           key={icono.name}
                         ></button>
@@ -327,7 +327,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                         checked={rol.id_rol == 1 ? true : fncChkPermiso(rol)}
                         className="sr-only peer"
                         onChange={() =>
-                          CheckboxChangeroles(rol.id_rol, rol.id_rol)
+                          ChklRoles(rol.id_rol, rol.id_rol)
                         }
                       />
                       <span

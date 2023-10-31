@@ -31,7 +31,7 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
 
   const btn_cambio_perfil = (e) => {
     const value = e.target.value;
-    setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: value.replace(/\d/g, '')});
+    setPerfilesAgg({ ...PerfilesAgg, [e.target.name]: value.replace(/\d/g, '') });
   };
 
   const btn_guardar = async () => {
@@ -42,13 +42,13 @@ const ModalAgregarPerfil = ({ visible, onClose }) => {
     };
     const regex = /^[a-zA-Z0-9\s]*$/;
     const errors = {};
-    
+
     if (PerfilesAgg.nombre_perfil.trim() === '') {
       errors.nombre_perfil = "Este campo es obligatorio"
       setErrors(errors);
       return
     }
-    
+
     if (!regex.test(PerfilesAgg.nombre_perfil)) {
       errors.nombre_perfil = "No se permiten caracteres especiales";
       setErrors(errors);

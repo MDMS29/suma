@@ -13,7 +13,7 @@ import useModulos from "../../../../hooks/Configuracion/useModulos";
 import useAuth from "../../../../hooks/useAuth";
 import EliminarRestaurar from "../../../Modales/EliminarRestaurar";
 import Loader from "../../../Loader";
-import Forbidden from "../../../../Pages/Errors/forbidden";
+import Forbidden from "../../../../Pages/Errors/Forbidden";
 import Button from "../../../Botones/Button";
 
 const ModalAsignarMenu = ({ visible, onClose }) => {

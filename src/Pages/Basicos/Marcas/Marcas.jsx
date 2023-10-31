@@ -11,27 +11,52 @@ import Button from "../../../components/Botones/Button";
 import { Edit_Icono } from "../../../components/Icons/Iconos";
 import { Button as PButton } from "primereact/button";
 import useAuth from "../../../hooks/useAuth";
-
-
-
-
+import ModalAgregarMarcas from "../../../components/Modales/Basicos/Marcas/ModalAgregarMarcas";
 
 const Marcas = () => {
   const toast = useRef(null);
 
+  
   const columns = [
     { field: "id_marca", header: "ID" },
     { field: "marca", header: "Marca" }
   ];
-
-  const { dataMarcas, permisosMarcas, setPermisosMarcas } = useMarcas()
+  const { dataMarcas, permisosMarcas, setPermisosMarcas, buscar_marca } = useMarcas()
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(dataMarcas);
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+
+  const editar_marca = async (e, id_marca) => {
+    e.preventDefault()
+    setModalVisible(true)
+    console.log(id_marca);
+    await buscar_marca(id_marca)
+  }
+  const filtrar_columnas = (event) => {
+    let columnas_seleccionadas = event.value;
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+      columnas_seleccionadas.some((sCol) => sCol.field === col.field)
+    );
+    setVisibleColumns(columnas_ordenadas_seleccionadas);
+  };
+  const buscador = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    const items_filtrados = dataMarcas.filter((item) => {
+      return (
+        item.marca.toLowerCase().includes(value)
+      );
+    });
+    setFilteredData(items_filtrados);
+  };
+  const cambiar_visibilidad_modal = () => {
+    setModalVisible(!modalVisible);
+  };
 
   useEffect(() => {
     setFilteredData(dataMarcas);
@@ -62,25 +87,6 @@ const Marcas = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta])
 
-  const filtrar_columnas = (event) => {
-    let columnas_seleccionadas = event.value;
-    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
-      columnas_seleccionadas.some((sCol) => sCol.field === col.field)
-    );
-    setVisibleColumns(columnas_ordenadas_seleccionadas);
-  };
-  const buscador = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-
-    const items_filtrados = dataMarcas.filter((item) => {
-      return (
-        item.marca.toLowerCase().includes(value)
-      );
-    });
-    setFilteredData(items_filtrados);
-  };
-
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -103,6 +109,7 @@ const Marcas = () => {
               tooltip="Editar"
               tooltipOptions={{ position: "top" }}
               className="p-button-rounded p-mr-2"
+              onClick={e => editar_marca(e, rowData.id_marca)}
             >{Edit_Icono}</PButton>
           )}
       </div>
@@ -127,6 +134,7 @@ const Marcas = () => {
           ).length > 0 && (
               <Button
                 tipo={'PRINCIPAL'}
+                funcion={(e) => setModalVisible(true, e)}
               >
                 <i className="pi pi-plus mx-2 font-medium"></i>
                 Agregar
