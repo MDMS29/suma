@@ -1,10 +1,198 @@
-import { createContext, useMemo } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import conexion_cliente from "../../config/ConexionCliente";
+import useAuth from "../../hooks/useAuth";
+
 const ProcesosContext = createContext();
 
 const ProcesosProvider = ({ children }) => {
+    const location = useLocation()
+    const { authUsuario, setAlerta } = useAuth()
+
+
+    const [permisosProcesos, setPermisosProcesos] = useState([])
+    const [dataProcesos, setDataProcesos] = useState([])
+
+    const [procesosAgg, setProcesosAgg] = useState({
+        id_empresa: authUsuario.id_empresa,
+        id_proceso: 0,
+        codigo: "",
+        proceso: ""
+    })
+
+    const [errors, setErrors] = useState({
+        codigo: '',
+        proceso: ''
+    });
+
+    useEffect(() => {
+        if (location.pathname.includes('procesos')) {
+            const obtener_procesos = async () => {
+                const token = localStorage.getItem('token')
+
+                const config = {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+                if (authUsuario.id_empresa) {
+                    try {
+                        const { data } = await conexion_cliente(`/opciones-basicas/procesos-empresa?empresa=${authUsuario.id_empresa} `, config)
+                        setDataProcesos(data)
+                    } catch (error) {
+                        setDataProcesos([])
+                    }
+                }
+            }
+            obtener_procesos()
+        }
+    }, [location.pathname])
+
+    const buscar_proceso = async (id) => {
+        const token = localStorage.getItem("token");
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        try {
+            const { data } = await conexion_cliente(`/opciones-basicas/procesos-empresa/${id}`, config);
+
+            if (data?.error) {
+                return { error: true, message: data.message }
+            }
+
+            const { id_proceso, codigo, proceso } = data
+            setProcesosAgg({
+                id_proceso,
+                id_empresa: authUsuario.id_empresa,
+                codigo: codigo,
+                proceso: proceso
+            })
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    const guardar_proceso = async (formData) => {
+        const token = localStorage.getItem("token");
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        try {
+            const { data } = await conexion_cliente.post("/opciones-basicas/procesos-empresa", formData, config);
+            if (!data?.error) {
+                setDataProcesos([...dataProcesos, data]);
+                setAlerta({
+                    error: false,
+                    show: true,
+                    message: 'Proceso creado con exito'
+                })
+                setProcesosAgg({
+                    id_empresa: formData.id_empresa,
+                    id_proceso: 0,
+                    codigo: "",
+                    proceso: ""
+                });
+                setTimeout(() => setAlerta({}), 1500)
+                return true
+            }
+
+            setAlerta({
+                error: true,
+                show: true,
+                message: data.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            return false;
+
+        } catch (error) {
+            setAlerta({
+                error: true,
+                show: true,
+                message: error.data?.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            throw error; // Puedes lanzar una excepción en caso de error
+        }
+    }
+
+    const editar_proceso = async (formData) => {
+        const token = localStorage.getItem("token");
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        try {
+            const { data } = await conexion_cliente.patch(`/opciones-basicas/procesos-empresa/${formData.id_proceso}`, formData, config);
+
+            if (!data?.error) {
+                const procesos_actualizados = dataProcesos.map((proceso) =>
+                    proceso.id_proceso === data.id_proceso ? { id_proceso: data.id_proceso, codigo: data.codigo, proceso: data.proceso } : proceso
+                );
+                setDataProcesos(procesos_actualizados);
+
+                setAlerta({
+                    error: false,
+                    show: true,
+                    message: 'Proceso editado con exito'
+                })
+                setProcesosAgg({
+                    id_empresa: authUsuario.id_empresa,
+                    id_proceso: 0,
+                    codigo: "",
+                    proceso: ""
+                });
+                setTimeout(() => setAlerta({}), 1500)
+                return true
+            }
+            setAlerta({
+                error: true,
+                show: true,
+                message: data.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            return false;
+
+        } catch (error) {
+            setAlerta({
+                error: true,
+                show: true,
+                message: error.response.data.message
+
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            throw error; // Puedes lanzar una excepción en caso de error
+        }
+    }
+
 
     const obj = useMemo(() => ({
-        
+        errors,
+        setErrors,
+        permisosProcesos,
+        setPermisosProcesos,
+        dataProcesos,
+        setDataProcesos,
+        buscar_proceso,
+        guardar_proceso,
+        editar_proceso,
+        procesosAgg,
+        setProcesosAgg
     }));
 
     return (

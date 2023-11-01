@@ -235,15 +235,12 @@ const UsuariosProvider = ({ children }) => {
       const { data } = await conexion_cliente.post("/usuarios", formData, config);
       if (!data?.error) {
         setDataUsuarios([...dataUsuarios, data])
-
         setAlerta({
           error: false,
           show: true,
           message: 'Usuario creado con exito'
         })
-
         setTimeout(() => setAlerta({}), 1500)
-
         return true
       }
       setAlerta({

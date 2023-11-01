@@ -15,6 +15,7 @@ import { TipoProdProvider } from "./context/Basicos/TipoProdProvider.jsx";
 import AppMain from "./router/AppMain.jsx";
 import { RolesProvider } from "./context/Configuracion/RolesProvider.jsx";
 import { EmpresasProvider } from "./context/EmpresasProvider.jsx";
+import { ProcesosProvider } from "./context/Basicos/ProcesosProvider.jsx";
 import { CentrosProvider } from "./context/Basicos/CentrosProvider.jsx";
 
 const App = () => {
@@ -31,9 +32,11 @@ const App = () => {
                       <UnidadesProvider>
                         <FamiliaProdProvider>
                           <TipoProdProvider>
+                            <ProcesosProvider>
                             <CentrosProvider>
                               <AppMain />
                             </CentrosProvider>
+                            </ProcesosProvider>
                           </TipoProdProvider>
                         </FamiliaProdProvider>
                       </UnidadesProvider>

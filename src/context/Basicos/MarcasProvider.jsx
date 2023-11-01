@@ -13,7 +13,7 @@ const MarcasProvider = ({ children }) => {
     const [permisosMarcas, setPermisosMarcas] = useState([])
 
     const [marcasAgg, setMarcasAgg] = useState({
-        id_marcas: "",
+        id_marca: 0,
         marcas: ""
     })
 
@@ -34,7 +34,7 @@ const MarcasProvider = ({ children }) => {
                 }
                 if (authUsuario.id_empresa) {
                     try {
-                        const { data } = await conexion_cliente(`/basicas_productos/marcas_productos/`, config)
+                        const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/`, config)
                         setDataMarcas(data)
                     } catch (error) {
                         setDataMarcas([])
@@ -56,7 +56,7 @@ const MarcasProvider = ({ children }) => {
         };
 
         try {
-            const { data } = await conexion_cliente(`/basicas_productos/marcas_productos/${id}`, config);
+            const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/${id}`, config);
 
             if (data?.error) {
                 return { error: true, message: data.message }
@@ -86,25 +86,36 @@ const MarcasProvider = ({ children }) => {
         };
 
         try {
-            const response = await conexion_cliente.post("/basicas_productos/marcas_productos", formData, config
+            const { data } = await conexion_cliente.post("/opciones-basicas/marcas-productos", formData, config
             );
-            setDataMarcas([...dataMarcas, response.data]);
-            setAlerta({
-                error: false,
-                show: true,
-                message: 'Marca creada con exito'
-            })
-            setMarcasAgg({
-                id_marca: 0,
-                marca: ""
-            });
-            setTimeout(() => setAlerta({}), 1500)
-        } catch (error) {
-            console.error("Error al guardar la información:", error);
+            if (!data?.error) {
+                setDataMarcas([...dataMarcas, data]);
+                setAlerta({
+                    error: false,
+                    show: true,
+                    message: 'Marca creada con exito'
+                })
+                setMarcasAgg({
+                    id_marca: 0,
+                    marca: ""
+                });
+                setTimeout(() => setAlerta({}), 1500)
+                return true
+            }
+
             setAlerta({
                 error: true,
                 show: true,
-                message: error.response.data.message
+                message: data.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            return false;
+
+        } catch (error) {
+            setAlerta({
+                error: true,
+                show: true,
+                message: error.data?.message
             })
             setTimeout(() => setAlerta({}), 1500)
             throw error; // Puedes lanzar una excepción en caso de error
@@ -122,29 +133,38 @@ const MarcasProvider = ({ children }) => {
         };
 
         try {
-            const { data } = await conexion_cliente.patch(`/basicas_productos/marcas_productos/${formData.id_marca}`, formData, config);
-            const marcas_actualizados = dataMarcas.map((marca) =>
-                marca.id_marca === data.id_marca ? { id_marca: data.id_marca, marca: data.marca } : marca
-            );
-            setDataMarcas(marcas_actualizados);
-            
-
-            setAlerta({
-                error: false,
-                show: true,
-                message: 'Marca editado con exito'
-            })
-            setTimeout(() => setAlerta({}), 1500)
-            setMarcasAgg({
-                id_marca: 0,
-                marca: ""
-            });
-        } catch (error) {
-            console.error("Error al guardar la información:", error);
+            const { data } = await conexion_cliente.patch(`/opciones-basicas/marcas-productos/${formData.id_marca}`, formData, config);
+            if (!data?.error) {
+                const marcas_actualizados = dataMarcas.map((marca) =>
+                    marca.id_marca === data.id_marca ? { id_marca: data.id_marca, marca: data.marca } : marca
+                );
+                setDataMarcas(marcas_actualizados);
+                setAlerta({
+                    error: false,
+                    show: true,
+                    message: 'Marca editado con exito'
+                })
+                setMarcasAgg({
+                    id_marca: 0,
+                    marca: ""
+                });
+                setTimeout(() => setAlerta({}), 1500)
+                return true
+            }
             setAlerta({
                 error: true,
                 show: true,
-                message: error
+                message: data.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            return false;
+
+
+        } catch (error) {
+            setAlerta({
+                error: true,
+                show: true,
+                message: error.response.data.message
             })
             setTimeout(() => setAlerta({}), 1500)
             throw error; // Puedes lanzar una excepción en caso de error

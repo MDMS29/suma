@@ -4,10 +4,11 @@ import Button from "../../../Botones/Button";
 import { InputText } from "primereact/inputtext";
 
 
+
 const ModalAgregarMarcas = ({ visible, onClose }) => {
     const { marcasAgg, setMarcasAgg, errors, setErrors, guardar_marca, editar_marca } = useMarcas()
 
-    const cerrar_modal = () => {
+        const cerrar_modal = () => {
         onClose();
         setMarcasAgg({
             id_marca: 0,
@@ -44,10 +45,8 @@ const ModalAgregarMarcas = ({ visible, onClose }) => {
             let response;
             if (marcasAgg.id_marca !== 0) {
                 response = await editar_marca(formData);
-                onClose();
             } else {
                 response = await guardar_marca(formData);
-                onClose();
             }
 
             if (response) {
@@ -66,13 +65,14 @@ const ModalAgregarMarcas = ({ visible, onClose }) => {
             <Button
                 tipo={'PRINCIPAL'}
                 funcion={btn_guardar}
-            > {marcasAgg.id_marca == 0 ? 'Guardar' : 'Actualizar'}
+            > {marcasAgg.id_marca !== 0 ? 'Actualizar' : 'Guardar'}
             </Button>
         </div>
     );
+
     return (
         <Dialog
-            header={marcasAgg.id_marca !== 0 ? <h1>Editar Marca</h1> : <h1>Agregar Marca</h1>}
+            header={marcasAgg.id_marca !==0 ? <h1>Editar Marca</h1> : <h1>Agregar Marca</h1>}
             visible={visible}
             onHide={cerrar_modal}
             className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
