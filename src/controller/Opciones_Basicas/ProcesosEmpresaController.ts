@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ProcesosEmpresaService } from "../../services/Opciones_Basicas/ProcesosEmpresa.Service";
+import { ProcesoEmpresaSchema } from "../../validations/Validaciones.Zod";
 
 export default class ProcesosEmpresaController {
 
@@ -43,6 +44,11 @@ export default class ProcesosEmpresaController {
         }
         if (!proceso) {
             return res.status(400).json({ error: true, message: 'Debe ingresar el nombre del proceso' }) //!ERROR
+        }
+
+        const result = ProcesoEmpresaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
@@ -100,6 +106,11 @@ export default class ProcesosEmpresaController {
         }
         if (!proceso) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el proceso' }) //!ERROR
+        }
+
+        const result = ProcesoEmpresaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {

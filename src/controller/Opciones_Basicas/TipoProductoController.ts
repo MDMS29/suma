@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { TiposProductoService } from "../../services/Opciones_Basicas/TipoProducto.Service";
+import { TipoProductoSchema } from "../../validations/Validaciones.Zod";
 
 export default class TipoProductoController {
 
@@ -43,6 +44,10 @@ export default class TipoProductoController {
             return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al tipo de producto' }) //!ERROR
         }
 
+        const result = TipoProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
 
         try {
             const tipos_producto_service = new TiposProductoService()
@@ -93,6 +98,11 @@ export default class TipoProductoController {
         }
         if (!descripcion) {
             return res.status(400).json({ error: true, message: 'Debe asignarle una descripcion al tipo de producto' }) //!ERROR
+        }
+
+        const result = TipoProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {

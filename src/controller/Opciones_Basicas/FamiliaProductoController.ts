@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { FamiliaProductoService } from "../../services/Opciones_Basicas/FamiliaProducto.Service";
 import { EstadosTablas } from "../../validations/utils";
+import { FamiliaProductoSchema } from "../../validations/Validaciones.Zod";
 
 export default class FamiliaProductoController {
 
@@ -47,6 +48,11 @@ export default class FamiliaProductoController {
         }
         if (!descripcion) {
             return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion para la familia' }) //!ERROR
+        }
+
+        const result = FamiliaProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
@@ -103,7 +109,12 @@ export default class FamiliaProductoController {
             return res.status(400).json({ error: true, message: 'Debe ingresar una referencia para la familia' }) //!ERROR
         }
         if (!descripcion) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion para la familia' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para la familia' }) //!ERROR
+        }
+
+        const result = FamiliaProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {

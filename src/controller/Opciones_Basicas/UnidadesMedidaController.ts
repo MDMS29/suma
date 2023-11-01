@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UnidadesMedidaService } from "../../services/Opciones_Basicas/UnidadesMedida.Service"
+import { UnidadMedidaSchema } from "../../validations/Validaciones.Zod";
 
 export default class UnidadesMedidaController {
 
@@ -43,6 +44,11 @@ export default class UnidadesMedidaController {
         }
         if (!unidad) {
             return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
+        }
+
+        const result = UnidadMedidaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
@@ -97,10 +103,10 @@ export default class UnidadesMedidaController {
             return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al menu' }) //!ERROR
         }
 
-        // const result = PerfilesSchema.safeParse(req.body)
-        // if (!result.success) {
-        //     return res.status(400).json({ error: true, message: result.error.issues }) //!ERROR
-        // }
+        const result = UnidadMedidaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
 
         try {
             const menu_service = new UnidadesMedidaService()

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CentroCostoEmpresaService } from "../../services/Opciones_Basicas/CentroCostoEmpresa.Service";
 import { EstadosTablas } from "../../validations/utils";
+import { CentroEmpresaSchema } from "../../validations/Validaciones.Zod";
 
 export default class CentroCostoEmpresa {
 
@@ -53,6 +54,11 @@ export default class CentroCostoEmpresa {
         }
         if (!correo_responsable) {
             return res.status(400).json({ error: true, message: 'El centro debe tener un responsable' }) //!ERROR
+        }
+
+        const result = CentroEmpresaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
@@ -116,6 +122,11 @@ export default class CentroCostoEmpresa {
         }
         if (!correo_responsable) {
             return res.status(400).json({ error: true, message: 'El centro debe tener un responsable' }) //!ERROR
+        }
+
+        const result = CentroEmpresaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {

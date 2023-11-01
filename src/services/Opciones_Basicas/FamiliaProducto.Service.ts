@@ -74,7 +74,7 @@ export class FamiliaProductoService {
 
             const familia_filtrada_descripcion: any = await this._Query_Familia_Producto.Buscar_Familia_Descripcion(familia_producto_request)
             if (familia_filtrada_descripcion?.length > 0 && familia_filtrada_descripcion[0].descripcion !== respuesta[0].descripcion && familia_producto_request.id_empresa === respuesta[0].id_empresa) {
-                return { error: true, message: 'Ya existe esta descripcion para la familia' } //!ERROR
+                return { error: true, message: 'Ya existe este nombre de familia' } //!ERROR
             }
 
             familia_producto_request.referencia = respuesta[0]?.referencia === familia_producto_request.referencia ? respuesta[0]?.referencia : familia_producto_request.referencia

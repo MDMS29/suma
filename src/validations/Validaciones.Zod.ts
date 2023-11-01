@@ -125,3 +125,111 @@ export const MenuSchema = z.object({
         required_error: 'El link del menu es requerido'
     })
 })
+
+// VALIDACION PARA LOS VALORES DE LAS UNIDADES DE MEDIDA
+export const UnidadMedidaSchema = z.object({
+    id_empresa: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+    unidad: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre de la unidad es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    })
+})
+
+// VALIDACION PARA LOS VALORES DE LOS TIPOS DE PRODUCTO
+export const TipoProductoSchema = z.object({
+    id_empresa: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+    descripcion: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre del tipo es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    })
+})
+
+// VALIDACION PARA LOS VALORES DE LAS MARCAS
+export const MarcaSchema = z.object({
+    marca: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre de la marca es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    })
+})
+
+// VALIDACION PARA LOS VALORES DE LAS FAMILIAS DE LOS PRODUCTOS
+export const FamiliaProductoSchema = z.object({
+    id_empresa: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+    referencia: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La referencia de la familia es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }),
+    descripcion: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La descripcion de la familia es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    })
+})
+
+// VALIDACION PARA LOS VALORES DE LAS PROCESOS DE LA EMPRESA
+export const ProcesoEmpresaSchema = z.object({
+    id_empresa: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+    codigo: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El codigo del proceso es requerido'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }),
+    proceso: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre del proceso es requerido'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    })
+})
+
+// VALIDACION PARA LOS VALORES DE LOS CENTROS DE LOS PROCESOS DE LA EMPRESA
+export const CentroEmpresaSchema = z.object({
+    id_empresa: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+    id_proceso: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El proceso es requerido'
+    }),
+    codigo: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El codigo del proceso es requerido'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }),
+    centro_costo: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre del proceso es requerido'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }),
+    correo_responsable: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre del proceso es requerido'
+    }).email({
+        message : "Ingrese un correo valido"
+    })
+})

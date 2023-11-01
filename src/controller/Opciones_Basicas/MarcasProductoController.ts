@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { MarcaProductoService } from "../../services/Opciones_Basicas/MarcaProducto.Service";
+import { MarcaSchema } from "../../validations/Validaciones.Zod";
 
 export default class MarcasProductoController {
 
@@ -35,6 +36,11 @@ export default class MarcasProductoController {
         }
         if (!marca) {
             return res.status(400).json({ error: true, message: 'Debe asignarle un nombre a la marca' }) //!ERROR
+        }
+
+        const result = MarcaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
@@ -84,6 +90,11 @@ export default class MarcasProductoController {
 
         if (!marca) {
             return res.status(400).json({ error: true, message: 'Debe ingresar el nombre de la marca' }) //!ERROR
+        }
+
+        const result = MarcaSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
