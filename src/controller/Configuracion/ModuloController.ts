@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import ModuloService from "../../services/Configuracion/Modulo.service";
 import { EstadosTablas } from "../../validations/utils";
-import { ModulosSchema } from "../../validations/ValidacionesZod";
+import { ModulosSchema } from "../../validations/Validaciones.Zod";
 
 export default class _ModuloController {
     public async Obtener_Modulos(req: Request, res: Response) {

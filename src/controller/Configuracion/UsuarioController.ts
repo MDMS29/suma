@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import UsuarioService from '../../services/Configuracion/Usuario.service';
-import { EstadosTablas, Generar_Llaves_Secretas, _Parse_Clave, _Parse_Correo } from '../../validations/utils';
+import { EstadosTablas, Generar_Llaves_Secretas } from '../../validations/utils';
 import { UsuarioLogin } from '../../validations/Types';
-import { UsusarioSchema } from '../../validations/ValidacionesZod';
+import { UsusarioSchema } from '../../validations/Validaciones.Zod';
 import { transporter } from '../../../config/mailer';
 
 export default class UsuarioController {
@@ -13,17 +13,20 @@ export default class UsuarioController {
         if (captcha === '') {
             return res.status(404).json({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
         }
+
+        const result: any = UsusarioSchema.partial().safeParse(req.body)
+        if (!result.success) {
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
+
         try {
-            //ORGANIZAR INFORMACIÓN CLAVE PARA LA AUTENTICACIÓN
-            const usuario_login: Omit<UsuarioLogin, 'captcha'> = {
-                usuario: _Parse_Correo(usuario),
-                clave: _Parse_Clave(clave)
-            }
-
-            const usuario_service = new UsuarioService()
-
+            
             //SERVICIO PARA LA AUTENTICACIÓN
-            const val = await usuario_service.Autenticar_Usuario(usuario_login)
+            const usuario_service = new UsuarioService()
+            const val = await usuario_service.Autenticar_Usuario({
+                usuario,
+                clave
+            })
 
             //VERFICICARIÓN DE DATOS RETORNADOS
             if (!val) {

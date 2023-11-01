@@ -1,6 +1,6 @@
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 import { PerfilUsuario, UsuarioLogin } from "../../validations/Types";
-import { generarJWT } from "../../validations/utils";
+import { Generar_JWT } from "../../validations/utils";
 
 let bcrypt = require('bcrypt')
 
@@ -44,7 +44,7 @@ export default class UsuarioService {
 
             //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
             const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa } = respuesta[0]
-            respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
+            respuesta.token = Generar_JWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
             //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS
             return {
                 usuario:

@@ -1,6 +1,5 @@
 import z from 'zod'
 
-
 // VALIDACION PARA LOS VALORES DEL USUARIO
 export const UsusarioSchema = z.object({
     id_usuario: z.number().int().optional(),
@@ -113,6 +112,7 @@ export const RolesSchema = z.object({
     })
 })
 
+// VALIDACION PARA LOS VALORES DE LOS MENUS
 export const MenuSchema = z.object({
     nombre_menu: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
