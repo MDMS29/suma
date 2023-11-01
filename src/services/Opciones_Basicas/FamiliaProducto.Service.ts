@@ -26,6 +26,7 @@ export class FamiliaProductoService {
 
     public async Insertar_Familia_Producto(familia_producto_request: Familia_Producto, usuario_creacion: string) {
         try {
+            //TODO: ARREGLAR VALIDACION DE DATOS
             const familia_filtrada: any = await this._Query_Familia_Producto.Buscar_Familia_Producto(familia_producto_request)
             if (familia_filtrada?.length > 0) {
                 return { error: true, message: 'Ya existe esta familia de producto' } //!ERROR

@@ -86,3 +86,25 @@ export interface Familia_Producto {
     descripcion: string
     id_estado: number
 }
+
+export interface Procesos_Empresa {
+    id_proceso?: number
+    id_empresa: number
+    codigo: string
+    proceso: string
+    fecha_creacion?: Date
+    usuario_creacion?: string
+}
+
+export interface Centro_Costo {
+    id_centro?: number
+    id_empresa?: number
+    id_proceso: number
+    codigo: string
+    centro_costo: string
+    correo_responsable: string
+    consecutivo: number
+    id_estado: number
+    fecha_creacion?: Date
+    usuario_creacion?: string
+}

@@ -40,7 +40,7 @@ export default class TipoProductoController {
             return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
         }
         if (!descripcion) {
-            return res.status(400).json({ error: true, message: 'Debe asignarle una descripcion al tipo de producto' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe asignarle un nombre al tipo de producto' }) //!ERROR
         }
 
 

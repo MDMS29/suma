@@ -128,13 +128,10 @@ export default class FamiliaProductoController {
     public async Cambiar_Estado_Familia(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_familia_producto } = req.params
-        const { id_empresa, estado } = req.body
+        const { estado } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
-        }
-        if (!id_empresa) {
-            return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
         }
         if (!id_familia_producto) {
             return res.status(400).json({ error: true, message: 'No se ha definido la familia' }) //!ERROR
@@ -153,7 +150,7 @@ export default class FamiliaProductoController {
             return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado la familia' : 'Se ha desactivado la familia' })
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el usuario' : 'Error al desactivar el usuario' }) //!ERROR
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Error al activar la familia' : 'Error al desactivar la familia' }) //!ERROR
         }
     }
 }

@@ -229,6 +229,17 @@ export default class UsuarioService {
             return { error: true, message: "No se ha encontrado el usuario" } //!ERROR
         }
 
+        const usuario_filtrado_correo: any = await this._Query_Usuario.Buscar_Usuario_Correo('', RequestUsuario.correo)
+        if (usuario_filtrado_correo?.length > 0 && usuario_filtrado_correo[0].correo !== respuesta[0].correo) {
+            return { error: true, message: 'Ya existe este correo de usuario' } //!ERROR
+        }
+        
+        const usuario_filtrado: any = await this._Query_Usuario.Buscar_Usuario_Correo(RequestUsuario.usuario, '')
+        if (usuario_filtrado?.length > 0 && usuario_filtrado[0].usuario !== respuesta[0].usuario) {
+            return { error: true, message: 'Ya existe este usuario' } //!ERROR
+        }
+
+
         const { usuario, nombre_completo, correo, clave } = respuesta[0] //DESTRUCTURING PARA OBTENER LA INFORMACION PERSONALIZADA
 
         let Usuario_Editado: string = RequestUsuario.usuario == usuario ? usuario : RequestUsuario.usuario //NUEVO USUARIO
@@ -238,22 +249,6 @@ export default class UsuarioService {
 
 
         try {
-
-            // VERIFICACION PARA EL USUARIO INGRESADO NO ESTE DUPLICADO
-            if (Usuario_Editado != usuario) {
-                const usuarioDuplicado = await this._Query_Usuario.Buscar_Usuario_Correo(Usuario_Editado, '') //INVOCAR FUNCION PARA BUSCAR EL USUARIO 
-                if (usuarioDuplicado.legnth == 0) { //VERIFICAR SI HAY INFORMACION IGUAL 
-                    return { error: true, message: "Usuario ya registrado" } //!ERROR
-                }
-            }
-            // VERIFICACION PARA EL CORREO INGRESADO NO ESTE DUPLICADO
-            if (Correo_Editado != correo) {
-                const correoDuplicado = await this._Query_Usuario.Buscar_Usuario_Correo('', Correo_Editado)  //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR EL CORREO
-                if (correoDuplicado.legnth == 0) { //VERIFICAR SI HAY INFORMACION IGUAL
-                    return { error: true, message: "Correo ya registrado" } //!ERROR
-                }
-            }
-
             if (RequestUsuario.clave === '') {
                 Clave_Editada = clave
             } else {
@@ -269,7 +264,7 @@ export default class UsuarioService {
 
             //INVOCAR FUNCION PARA EDITAR EL USUARIO
             const result = await this._Query_Usuario.Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador)
-             await this._Query_Usuario.Editar_Empresa_Usuario(RequestUsuario.id_empresa, id_usuario, UsuarioModificador)
+            await this._Query_Usuario.Editar_Empresa_Usuario(RequestUsuario.id_empresa, id_usuario, UsuarioModificador)
             return result //RETORNAR EL USUARIO EDITADO
         } catch (error) {
             console.log(error)

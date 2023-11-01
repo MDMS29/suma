@@ -118,6 +118,14 @@ export class PerfilService {
     public async Editar_Perfil(id_perfil: number, nombre_perfil: string, usuario_creacion: string) {
         let nombre_editado: string
         try {
+            const perfil_filtrado: any = await this._Query_Perfil.Buscar_Perfil_ID(id_perfil)
+
+            const perfil_filtrado_nombre: any = await this._Query_Perfil.Buscar_Perfil_Nombre(nombre_perfil)
+            if (perfil_filtrado_nombre?.length > 0 && perfil_filtrado_nombre[0].nombre_perfil !== perfil_filtrado.nombre_perfil) {
+                return { error: true, message: 'Ya existe este perfil' } //!ERROR
+            }
+
+
             const respuesta = await this._Query_Perfil.Buscar_Perfil_ID(id_perfil)
             if (respuesta?.nombre_perfil === nombre_perfil) {
                 nombre_editado = respuesta.nombre_perfil
@@ -152,7 +160,7 @@ export class PerfilService {
                 if (!Modulos_Editar) {
                     return { error: true, message: 'Error al editar el modulo' } //!ERROR
                 }
-                
+
                 // PREVENIR QUE EL PERFIL QUEDE SIN MODULOS
                 //TODO: SOLUCIONAR.
                 // const modulos = await this._Query_Perfil.Modulos_Perfil(id_perfil)

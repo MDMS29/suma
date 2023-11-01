@@ -70,16 +70,17 @@ export class RolService {
         let nombre_editado: string
         let descripcion_editado: string
         try {
-            const Brol: any = await this._Query_Rol.Buscar_Rol_Nombre(nombre)
-            if (Brol?.length > 0 && Brol[0].nombre !== nombre) {
-                return { error: true, message: 'Ya existe este rol' } //!ERROR
-            }
-            
             // COMPROBAR SI ESTE ROL EXISTE
             const respuesta: any = await this._Query_Rol.Buscar_Rol_ID(id_rol)
-            if(respuesta.length === 0){
+            if (respuesta.length === 0) {
                 return { error: true, message: 'No existe este rol' } //!ERROR
             }
+
+            const rol_filtrado: any = await this._Query_Rol.Buscar_Rol_Nombre(nombre)
+            if (rol_filtrado?.length > 0 && rol_filtrado[0].nombre !== respuesta[0].nombre) {
+                return { error: true, message: 'Ya existe este rol' } //!ERROR
+            }
+
 
             // ACTUALIZAR
             if (respuesta[0]?.nombre === nombre) {
