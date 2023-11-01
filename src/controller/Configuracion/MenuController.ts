@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../validations/utils";
 import { MenuService } from "../../services/Configuracion/Menu.service";
+import { MenuSchema } from "../../validations/ValidacionesZod";
 
 export default class _MenuController {
 
@@ -48,6 +49,11 @@ export default class _MenuController {
         }
         if (!link_menu || link_menu === "") {
             return res.status(400).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
+        }
+
+        const result: any = MenuSchema.safeParse(req.body)
+        if (!result.success) {
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
@@ -104,10 +110,10 @@ export default class _MenuController {
             return res.status(400).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
         }
 
-        // const result = PerfilesSchema.safeParse(req.body)
-        // if (!result.success) {
-        //     return res.status(400).json({ error: true, message: result.error.issues }) //!ERROR
-        // }
+        const result: any = MenuSchema.safeParse(req.body)
+        if (!result.success) {
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
 
         try {
             const menu_service = new MenuService()

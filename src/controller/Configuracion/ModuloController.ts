@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import ModuloService from "../../services/Configuracion/Modulo.service";
-// import { ModulosSchema } from "../validations/ValidacionesZod";
 import { EstadosTablas } from "../../validations/utils";
+import { ModulosSchema } from "../../validations/ValidacionesZod";
 
 export default class _ModuloController {
     public async Obtener_Modulos(req: Request, res: Response) {
@@ -52,10 +52,10 @@ export default class _ModuloController {
             return res.status(400).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
         }
 
-        // const zod_validacion = ModulosSchema.safeParse(req.body)
-        // if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-        //     return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
-        // }
+        const result: any = ModulosSchema.safeParse(req.body)
+        if (!result.success) {
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
 
         try {
             const _ModuloService = new ModuloService()
@@ -124,11 +124,11 @@ export default class _ModuloController {
             return res.status(400).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
         }
 
-        //VALIDACIONES CON LIBRERIA ZOD
-        // const result: any = ModulosSchema.safeParse(req.body)
-        // if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-        //     return res.status(400).json({ error: true, message: result.error.issues }) //!ERROR
-        // }
+        // VALIDACIONES CON LIBRERIA ZOD
+        const result: any = ModulosSchema.safeParse(req.body)
+        if (!result.success) {
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
 
         try {
             const _ModuloService = new ModuloService()

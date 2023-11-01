@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { RolService } from "../../services/Configuracion/Rol.service";
 import { EstadosTablas } from "../../validations/utils";
-// import { RolesSchema } from "../validations/ValidacionesZod";
+import { RolesSchema } from "../../validations/ValidacionesZod";
 
 export class _RolController {
 
@@ -42,10 +42,10 @@ export class _RolController {
             return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }) //!ERROR
         }
 
-        // const zod_validacion = RolesSchema.safeParse(req.body)
-        // if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-        //     return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
-        // }
+        const zod_validacion = RolesSchema.safeParse(req.body)
+        if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: zod_validacion.error.issues[0].message }) //!ERROR
+        }
 
         try {
             const _RolService = new RolService()
@@ -101,10 +101,10 @@ export class _RolController {
             return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }) //!ERROR
         }
 
-        // const zod_validacion = RolesSchema.safeParse(req.body)
-        // if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-        //     return res.status(400).json({ error: true, message: zod_validacion.error.issues }) //!ERROR
-        // }
+        const zod_validacion = RolesSchema.safeParse(req.body)
+        if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: zod_validacion.error.issues[0].message }) //!ERROR
+        }
 
 
         try {

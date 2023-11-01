@@ -107,7 +107,7 @@ export default class UsuarioController {
 
         const result = UsusarioSchema.safeParse(req.body) //VALIDACION DE LOS DATOS CON LA LIBRERIA ZOD
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-            return res.status(404).json({ error: true, message: result.error.issues }) //!ERROR
+            return res.status(404).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
@@ -154,10 +154,10 @@ export default class UsuarioController {
             return res.status(400).json({ error: true, message: "Debe asignarle permisos al usuario" }) //!ERROR
         }
 
-        // const result = UsusarioSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
-        // if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
-        //     return res.json({ error: true, message: result.error.issues }) //!ERROR
-        // }
+        const result = UsusarioSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
 
         try {
             const usuario_service = new UsuarioService()

@@ -112,3 +112,16 @@ export const RolesSchema = z.object({
         message: 'No se permiten caracteres especiales'
     })
 })
+
+export const MenuSchema = z.object({
+    nombre_menu: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre del menu es requerido'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }),
+    link_menu: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El link del menu es requerido'
+    })
+})
