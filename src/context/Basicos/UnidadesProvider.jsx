@@ -32,7 +32,7 @@ const UnidadesProvider = ({ children }) => {
           },
         };
         // const estado = location.pathname.includes("inactivos") ? 2 : 1;
-        if (authUsuario.id_empresa){
+        if (authUsuario.id_empresa) {
           try {
             const { data } = await conexion_cliente(
               `/opciones-basicas/unidades-medida?estado=1&empresa=${authUsuario.id_empresa}`,
@@ -92,32 +92,44 @@ const UnidadesProvider = ({ children }) => {
     };
 
     try {
-      const response = await conexion_cliente.post(
+      const { data } = await conexion_cliente.post(
         "/opciones-basicas/unidades-medida",
         formData,
         config
       );
 
-      setDataUnidades([...dataUnidades, response.data]);
+      if (!data?.error) {
+        setDataUnidades([...dataUnidades, data]);
+        setAlerta({
+          error: false,
+          show: true,
+          message: "Unidad de medida creada con exito",
+        });
+
+        setUnidadesAgg({
+          id_unidad: 0,
+          unidad: "",
+        });
+
+        setTimeout(() => setAlerta({}), 1500);
+        return true
+      }
+
       setAlerta({
-        error: false,
+        error: true,
         show: true,
-        message: "Unidad de medida creada con exito",
-      });
+        message: data.message
+      })
+      setTimeout(() => setAlerta({}), 1500)
+      return false;
 
-      setUnidadesAgg({
-        id_unidad: 0,
-        unidad: "",
-      });
-
-      setTimeout(() => setAlerta({}), 1500);
     } catch (error) {
       console.error("Error al guardar la información:", error);
 
       setAlerta({
         error: true,
         show: true,
-        message: error.response.data.message,
+        message: error.data?.message
       });
 
       setTimeout(() => setAlerta({}), 1500);

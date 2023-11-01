@@ -9,9 +9,6 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
     const { procesosAgg, setProcesosAgg, errors, setErrors, guardar_proceso, editar_proceso } = useProcesos()
      const { authUsuario } = useAuth()
 
-
-    // console.log(authUsuario.id_empresa);
-
     const btn_guardar = async () => {
         const formData = {
             id_empresa: authUsuario.id_empresa,
@@ -25,11 +22,11 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
         const codigoRegex = /^[0-9]*$/;
 
         if (!procesosAgg.codigo) {
-            errors.codigo = "El código del módulo es obligatorio";
+            errors.codigo = "El código es obligatorio";
             setErrors(errors);
         }
         if (!codigoRegex.test(procesosAgg.codigo)) {
-            errors.codigo = "El código del módulo debe contener solo dígitos";
+            errors.codigo = "El código debe contener solo dígitos";
             setErrors(errors);
         }
         if (procesosAgg.codigo.length > 3) {

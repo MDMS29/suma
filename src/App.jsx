@@ -33,9 +33,9 @@ const App = () => {
                         <FamiliaProdProvider>
                           <TipoProdProvider>
                             <ProcesosProvider>
-                            <CentrosProvider>
-                              <AppMain />
-                            </CentrosProvider>
+                              <CentrosProvider>
+                                <AppMain />
+                              </CentrosProvider>
                             </ProcesosProvider>
                           </TipoProdProvider>
                         </FamiliaProdProvider>

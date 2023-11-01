@@ -32,20 +32,28 @@ const ModalAgregarUnidades = ({ visible, onClose }) => {
       unidad: UnidadesAgg.unidad,
     };
 
+
+    const regex = /^[a-zA-Z0-9\s]*$/;
+    const errors = {};
+
     if (UnidadesAgg.unidad.trim() === "") {
       errors.unidad = "Este campo es obligatorio";
+      console.log("Este campo es obligatorio");
       setErrors(errors);
       return;
+    }
+    if (!regex.test(UnidadesAgg.unidad)) {
+      errors.unidad = "No se permiten caracteres especiales";
+      setErrors(errors);
+      return
     }
 
     try {
       let response;
       if (UnidadesAgg.id_unidad !== 0) {
         response = await editar_unidad(formData);
-        onClose();
       } else {
         response = await guardar_unidad(formData);
-        onClose();
       }
 
       if (response) {
@@ -102,11 +110,10 @@ const ModalAgregarUnidades = ({ visible, onClose }) => {
               value={UnidadesAgg.unidad}
               type="text"
               name="unidad"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.unidad ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.unidad ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => btn_cambio_unidad(e)}
-              />
+            />
             {errors.unidad && (
               <div className="text-red-600 text-xs">{errors.unidad}</div>
             )}

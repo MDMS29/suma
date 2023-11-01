@@ -67,13 +67,13 @@ const FamiliaProdProvider = ({ children }) => {
         return { error: true, message: data.message };
       }
 
-      const { id_familia, referencia ,descripcion } = data;
+      const { id_familia, referencia, descripcion } = data;
 
       console.log(data)
 
       setFliaProAgg({
         id_familia,
-        id_empresa:authUsuario.id_empresa,
+        id_empresa: authUsuario.id_empresa,
         referencia,
         descripcion,
       });
@@ -95,26 +95,36 @@ const FamiliaProdProvider = ({ children }) => {
     };
 
     try {
-      const response = await conexion_cliente.post(
+      const { data } = await conexion_cliente.post(
         "/opciones-basicas/familias-productos",
         formData,
         config
       );
 
-      setDataFliaPro([...dataFliaPro, response.data]);
+      if (!data?.error) {
+        setDataFliaPro([...dataFliaPro, data]);
+        setAlerta({
+          error: false,
+          show: true,
+          message: "Familia de productos creada con exito",
+        });
+        setFliaProAgg({
+          id_familia: 0,
+          referencia: "",
+          descripcion: "",
+        });
+        setTimeout(() => setAlerta({}), 1500);
+        return true
+      }
+
       setAlerta({
-        error: false,
+        error: true,
         show: true,
-        message: "Familia de productos creada con exito",
-      });
+        message: data.message
+      })
+      setTimeout(() => setAlerta({}), 1500)
+      return false;
 
-      setFliaProAgg({
-        id_familia: 0,
-        referencia: "",
-        descripcion: "",
-      });
-
-      setTimeout(() => setAlerta({}), 1500);
     } catch (error) {
       console.error("Error al guardar la información:", error);
 
@@ -146,24 +156,36 @@ const FamiliaProdProvider = ({ children }) => {
         config
       );
       const flia_pro_actualizados = dataFliaPro.map((fliapro) =>
-      fliapro.id_familia === data.id_familia
+        fliapro.id_familia === data.id_familia
           ? data
           : fliapro
       );
-      setDataFliaPro(flia_pro_actualizados);
 
+      if (!data?.error) {
+        setDataFliaPro(flia_pro_actualizados);
+
+        setAlerta({
+          error: false,
+          show: true,
+          message: "Familia de Producto editado con exito",
+        });
+
+        setTimeout(() => setAlerta({}), 1500);
+        setFliaProAgg({
+          id_familia: 0,
+          referencia: "",
+          descripcion: "",
+        });
+        return true
+      }
       setAlerta({
-        error: false,
+        error: true,
         show: true,
-        message: "Familia de Producto editado con exito",
-      });
+        message: data.message
+      })
+      setTimeout(() => setAlerta({}), 1500)
+      return false;
 
-      setTimeout(() => setAlerta({}), 1500);
-      setFliaProAgg({
-        id_familia: 0,
-        referencia: "",
-        descripcion: "",
-      });
     } catch (error) {
       console.error("Error al guardar la información:", error);
 
@@ -193,7 +215,7 @@ const FamiliaProdProvider = ({ children }) => {
     guardar_flia_prod,
     editar_flia_pro
   }));
-  
+
   return (
     <FamiliaProdContext.Provider value={obj}>
       {children}

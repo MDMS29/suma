@@ -24,7 +24,7 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       id_familia: 0,
       id_empresa: authUsuario.id_empresa,
       referencia: "",
-      descripcion:"",
+      descripcion: "",
     })
     setErrors({});
     onClose();
@@ -38,14 +38,33 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       descripcion: FliaProAgg.descripcion,
     };
 
+    const regex = /^[a-zA-Z0-9\s]*$/;
+    const errors = {};
+    const refeRegex = /^[0-9]*$/;
+
+    if (!refeRegex.test(FliaProAgg.referencia)) {
+      errors.refePro = "La referencia debe contener solo dígitos";
+      setErrors(errors);
+    }
+
+    if (!regex.test(FliaProAgg.descripcion)) {
+      errors.fliaPro = "No se permiten caracteres especiales";
+      setErrors(errors);
+      return
+    }
+
+    if (FliaProAgg.descripcion.trim() === '') {
+      errors.fliaPro = "Este campo es obligatorio"
+      setErrors(errors);
+      return
+    }
+
     try {
       let response;
       if (FliaProAgg.id_familia !== 0) {
         response = await editar_flia_pro(formData);
-        onClose();
       } else {
         response = await guardar_flia_prod(formData);
-        onClose();
       }
 
       if (response) {
@@ -65,7 +84,7 @@ function ModalAgregarFliaPro({ visible, onClose }) {
     const value = e.target.value;
     setFliaProAgg({
       ...FliaProAgg,
-      [e.target.name]:value,
+      [e.target.name]: value,
     });
   };
 
@@ -77,8 +96,6 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       </Button>
     </div>
   );
-
-
 
   return (
     <Dialog
@@ -104,28 +121,30 @@ function ModalAgregarFliaPro({ visible, onClose }) {
               value={FliaProAgg.referencia}
               type="number"
               name="referencia"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.fliapro ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.refePro ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => btn_cambio_flia_pro(e)}
             />
-            {errors.fliapro && (
-              <div className="text-red-600 text-xs">{errors.fliapro}</div>
+            {errors.refePro && (
+              <div className="text-red-600 text-xs">{errors.refePro}</div>
             )}
           </div>
           <div className="flex flex-col">
-          <label className="text-gray-600 pb-2 font-semibold">
+            <label className="text-gray-600 pb-2 font-semibold">
               Descripción <span className="font-bold text-red-900">*</span>
             </label>
-          <InputText
+            <InputText
               value={FliaProAgg.descripcion}
               type="text"
               name="descripcion"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.fliapro ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.fliaPro ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => btn_cambio_flia_pro(e)}
             />
+            {errors.fliaPro && (
+              <div className="text-red-600 text-xs">{errors.fliaPro}</div>
+            )}
+
           </div>
         </div>
       </div>

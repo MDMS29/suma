@@ -92,7 +92,6 @@ const Procesos = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta])
-  console.log(permisosProcesos);
 
   const header = (
     <MultiSelect

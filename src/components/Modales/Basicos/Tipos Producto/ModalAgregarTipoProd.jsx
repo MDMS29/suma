@@ -32,7 +32,14 @@ const ModalAgregarTipoProd = ({ visible, onClose }) => {
       id_empresa: authUsuario.id_empresa,
       descripcion: TipoProdAgg.descripcion,
     };
-    
+    const regex = /^[a-zA-Z0-9\s]*$/;
+    const errors = {};
+
+    if (!regex.test(TipoProdAgg.descripcion)) {
+      errors.tipoprod = "No se permiten caracteres especiales";
+      setErrors(errors);
+      return
+    }
     try {
       let response;
       if (TipoProdAgg.id_tipo_producto !== 0) {
@@ -97,9 +104,8 @@ const ModalAgregarTipoProd = ({ visible, onClose }) => {
               value={TipoProdAgg.descripcion}
               type="text"
               name="descripcion"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.tipoprod ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.tipoprod ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => btn_cambio_tipo_prod(e)}
             />
             {errors.tipoprod && (
