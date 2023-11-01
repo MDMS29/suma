@@ -64,6 +64,7 @@ const AuthProvider = ({ children }) => {
     }
   }, [location.pathname, authUsuario.id_usuario])
 
+
   const cerrar_salir = () => {
     setAuthUsuario({})
     setAuthModulos([])

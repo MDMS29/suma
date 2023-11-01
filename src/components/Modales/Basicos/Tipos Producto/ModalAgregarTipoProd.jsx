@@ -32,13 +32,7 @@ const ModalAgregarTipoProd = ({ visible, onClose }) => {
       id_empresa: authUsuario.id_empresa,
       descripcion: TipoProdAgg.descripcion,
     };
-
-    // if (TipoProdAgg.tipoprod.trim() === "") {
-    //   errors.tipoprod = "Este campo es obligatorio";
-    //   setErrors(errors);
-    //   return;
-    // }
-
+    
     try {
       let response;
       if (TipoProdAgg.id_tipo_producto !== 0) {
@@ -104,7 +98,7 @@ const ModalAgregarTipoProd = ({ visible, onClose }) => {
               type="text"
               name="descripcion"
               className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.unidad ? "border-red-500" : "border-gray-300"
+                errors.tipoprod ? "border-red-500" : "border-gray-300"
               }`}
               onChange={(e) => btn_cambio_tipo_prod(e)}
             />

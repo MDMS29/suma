@@ -34,7 +34,7 @@ const TipoProdProvider = ({ children }) => {
             if (authUsuario.id_empresa){
               try {
                 const { data } = await conexion_cliente(
-                  `/basicas_productos/tipos_producto?estado=1&empresa=${authUsuario.id_empresa}`,
+                  `/opciones-basicas/tipos-producto?estado=1&empresa=${authUsuario.id_empresa}`,
                   config
                   );
                 setDataTipoProf(data);
@@ -58,7 +58,7 @@ const TipoProdProvider = ({ children }) => {
     
         try {
           const { data } = await conexion_cliente(
-            `/basicas_productos/tipos_producto/${id}`,
+            `/opciones-basicas/tipos-producto/${id}`,
             config
           );
     
@@ -90,7 +90,7 @@ const TipoProdProvider = ({ children }) => {
     
         try {
           const response = await conexion_cliente.post(
-            "/basicas_productos/tipos_producto",
+            "/opciones-basicas/tipos-producto",
             formData,
             config
           );
@@ -134,7 +134,7 @@ const TipoProdProvider = ({ children }) => {
     
         try {
           const { data } = await conexion_cliente.patch(
-            `/basicas_productos/tipos_producto/${formData.id_tipo_producto}`,
+            `/opciones-basicas/tipos-producto/${formData.id_tipo_producto}`,
             formData,
             config
           );

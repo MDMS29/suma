@@ -35,7 +35,7 @@ const FamiliaProdProvider = ({ children }) => {
           try {
             const estado = location.pathname.includes("inactivos") ? 2 : 1;
             const { data } = await conexion_cliente(
-              `/basicas_productos/familias_productos?estado=${estado}&empresa=${authUsuario.id_empresa}`,
+              `/opciones-basicas/familias-productos?estado=${estado}&empresa=${authUsuario.id_empresa}`,
               config
             );
             setDataFliaPro(data);
@@ -59,7 +59,7 @@ const FamiliaProdProvider = ({ children }) => {
 
     try {
       const { data } = await conexion_cliente(
-        `/basicas_productos/familias_productos/${id}`,
+        `/opciones-basicas/familias-productos/${id}`,
         config
       );
 
@@ -71,7 +71,12 @@ const FamiliaProdProvider = ({ children }) => {
 
       console.log(data)
 
-      setFliaProAgg(data);
+      setFliaProAgg({
+        id_familia,
+        id_empresa:authUsuario.id_empresa,
+        referencia,
+        descripcion,
+      });
 
     } catch (error) {
       console.error(error);
@@ -91,7 +96,7 @@ const FamiliaProdProvider = ({ children }) => {
 
     try {
       const response = await conexion_cliente.post(
-        "/basicas_productos/familias_productos",
+        "/opciones-basicas/familias-productos",
         formData,
         config
       );
@@ -136,7 +141,7 @@ const FamiliaProdProvider = ({ children }) => {
 
     try {
       const { data } = await conexion_cliente.patch(
-        `/basicas_productos/familias_productos/${formData.id_familia}`,
+        `/opciones-basicas/familias-productos/${formData.id_familia}`,
         formData,
         config
       );

@@ -35,7 +35,7 @@ const UnidadesProvider = ({ children }) => {
         if (authUsuario.id_empresa){
           try {
             const { data } = await conexion_cliente(
-              `/basicas_productos/unidades_medida?estado=1&empresa=${authUsuario.id_empresa}`,
+              `/opciones-basicas/unidades-medida?estado=1&empresa=${authUsuario.id_empresa}`,
               config
             );
             setDataUnidades(data);
@@ -59,7 +59,7 @@ const UnidadesProvider = ({ children }) => {
 
     try {
       const { data } = await conexion_cliente(
-        `/basicas_productos/unidades_medida/${id}`,
+        `/opciones-basicas/unidades-medida/${id}`,
         config
       );
 
@@ -93,7 +93,7 @@ const UnidadesProvider = ({ children }) => {
 
     try {
       const response = await conexion_cliente.post(
-        "/basicas_productos/unidades_medida",
+        "/opciones-basicas/unidades-medida",
         formData,
         config
       );
@@ -137,7 +137,7 @@ const UnidadesProvider = ({ children }) => {
 
     try {
       const { data } = await conexion_cliente.patch(
-        `/basicas_productos/unidades_medida/${formData.id_unidad}`,
+        `/opciones-basicas/unidades-medida/${formData.id_unidad}`,
         formData,
         config
       );

@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import useFamiliaProd from "../../../hooks/Basicos/useFamiliaProd";
 import useAuth from "../../../hooks/useAuth";
-import { Edit_Icono, TipoProduc_Icono } from "../../../components/Icons/Iconos";
+import { Edit_Icono, FliaProd_Icono, TipoProduc_Icono } from "../../../components/Icons/Iconos";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import Button from "../../../components/Botones/Button";
@@ -12,6 +12,8 @@ import { MultiSelect } from "primereact/multiselect";
 import Loader from "../../../components/Loader";
 import { Toast } from "primereact/toast";
 import { Button as PButton } from "primereact/button";
+import ModalAgregarTipoProd from "../../../components/Modales/Basicos/Tipos Producto/ModalAgregarTipoProd";
+import ModalAgregarFliaPro from "../../../components/Modales/Basicos/Familia Productos/ModalAgregarFliaPro";
 
 const FamiliaProd = () => {
   const toast = useRef(null);
@@ -124,11 +126,11 @@ const FamiliaProd = () => {
       <>
         <div className="w-5/6">
           <Toast ref={toast} />
-          {modalVisible && <ModalAgregarTipoProd visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+          {modalVisible && <ModalAgregarFliaPro visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
   
           <div className="flex justify-center gap-x-4 m-2 p-3">
-            <h1 className="text-3xl">Tipo de Productos</h1>
-            {TipoProduc_Icono}
+            <h1 className="text-3xl">Familia de Productos</h1>
+            {FliaProd_Icono}
           </div>
           <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
             {
