@@ -1,15 +1,15 @@
 import { MultiSelect } from "primereact/multiselect";
 import { useEffect, useRef, useState } from "react";
-import useMarcas from "../../../hooks/Basicos/useMarcas";
-import Loader from "../../../components/Loader";
-import Forbidden from "../../Errors/forbidden";
 import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
-import Button from "../../../components/Botones/Button";
-import { Edit_Icono } from "../../../components/Icons/Iconos";
+import { Edit_Icono, Marca_Icono } from "../../../components/Icons/Iconos";
 import { Button as PButton } from "primereact/button";
+import useMarcas from "../../../hooks/Basicos/useMarcas";
+import Loader from "../../../components/Loader";
+import Forbidden from "../../Errors/forbidden";
+import Button from "../../../components/Botones/Button";
 import useAuth from "../../../hooks/useAuth";
 import ModalAgregarMarcas from "../../../components/Modales/Basicos/Marcas/ModalAgregarMarcas";
 
@@ -36,6 +36,7 @@ const Marcas = () => {
     console.log(id_marca);
     await buscar_marca(id_marca)
   }
+  
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -43,6 +44,7 @@ const Marcas = () => {
     );
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
+
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
@@ -54,6 +56,7 @@ const Marcas = () => {
     });
     setFilteredData(items_filtrados);
   };
+
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
   };
@@ -125,7 +128,7 @@ const Marcas = () => {
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Marcas</h1>
-          <i className="pi pi-microsoft" style={{ fontSize: "2rem" }}></i>
+          {Marca_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           {permisosMarcas.filter(

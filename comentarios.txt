@@ -77,4 +77,24 @@ diseño modal
                 <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
               </div> */}
 ------------------------------------------------------------------------------------------------------------------------------------------------------
-1. no guarda el id 
+
+----------------------------PROCESOS----------------------------------
+- No se eliminan
+- No tienen estado
+
+- Desarrollo
+- Soporte
+- Admin
+- Taller
+- Gerencia
+- PMO
+- Aseo
+
+- mira validacion en roles de numeros
+- id_empresa al guardar
+
+----------------------------CORRECIONES----------------------------------
+- Editar Roles ya existentes
+- Editar y crear marcas ya existentes
+- Editar procesos ya existentes
+- modales abiertos despues de la accion

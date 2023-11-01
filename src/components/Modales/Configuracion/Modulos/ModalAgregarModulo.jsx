@@ -87,6 +87,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
       errors.cod_modulo = "El código del módulo debe contener solo dígitos";
     }
     const nombreModuloRegex = /^[A-Za-z\s]*$/;
+
     if (!ModulosAgg.nombre_modulo) {
       errors.nombre_modulo = "El nombre del módulo es obligatorio";
     } else if (!nombreModuloRegex.test(ModulosAgg.nombre_modulo)) {
