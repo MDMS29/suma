@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import conexion_cliente from "../../config/ConexionCliente";
 const UnidadesContext = createContext();
@@ -153,24 +153,34 @@ const UnidadesProvider = ({ children }) => {
         formData,
         config
       );
-      const unidades_actualizados = dataUnidades.map((unidades) =>
-        unidades.id_unidad === data.id_unidad
-          ? { id_unidad: data.id_unidad, unidad: data.unidad }
-          : unidades
-      );
-      setDataUnidades(unidades_actualizados);
+      if (!data?.error) {
+        const unidades_actualizados = dataUnidades.map((unidades) =>
+          unidades.id_unidad === data.id_unidad
+            ? { id_unidad: data.id_unidad, unidad: data.unidad }
+            : unidades
+        );
+        setDataUnidades(unidades_actualizados);
+        setAlerta({
+          error: false,
+          show: true,
+          message: "Unidad de medida editada con exito",
+        });
 
+        setUnidadesAgg({
+          id_unidad: 0,
+          unidad: "",
+        });
+        setTimeout(() => setAlerta({}), 1500);
+        return true
+      }
       setAlerta({
-        error: false,
+        error: true,
         show: true,
-        message: "Unidad de medida editada con exito",
-      });
+        message: data.message
+      })
+      setTimeout(() => setAlerta({}), 1500)
+      return false;
 
-      setTimeout(() => setAlerta({}), 1500);
-      setUnidadesAgg({
-        id_unidad: 0,
-        unidad: "",
-      });
     } catch (error) {
       console.error("Error al guardar la información:", error);
 

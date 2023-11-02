@@ -94,7 +94,3 @@ diseño modal
 - id_empresa al guardar
 
 ----------------------------CORRECIONES----------------------------------
-- Editar Roles ya existentes
-- Editar y crear marcas ya existentes
-- Editar procesos ya existentes
-- modales abiertos despues de la accion
