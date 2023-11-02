@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CentroCostoEmpresaService } from "../../services/Opciones_Basicas/CentroCostoEmpresa.Service";
-import { EstadosTablas } from "../../validations/utils";
+import { EstadosTablas } from "../../utils";
 import { CentroEmpresaSchema } from "../../validations/Validaciones.Zod";
 
 export default class CentroCostoEmpresa {
@@ -35,7 +35,7 @@ export default class CentroCostoEmpresa {
     public async Insertar_Centros_Costo_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         // const { id_familia_producto } = req.params
-        const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body
+        const { id_empresa, id_proceso, codigo, consecutivo, centro_costo, correo_responsable } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
@@ -44,10 +44,13 @@ export default class CentroCostoEmpresa {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
         }
         if (!id_proceso) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar el nombre del proceso' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe seleccionar un proceso' }) //!ERROR
         }
         if (!codigo) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el proceso' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el centro' }) //!ERROR
+        }
+        if (!consecutivo || consecutivo <= 0) {
+            return res.status(400).json({ error: true, message: 'Debe ingresar un consecutivo para el centro' }) //!ERROR
         }
         if (!centro_costo) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el centro' }) //!ERROR
@@ -100,7 +103,7 @@ export default class CentroCostoEmpresa {
     public async Editar_Centro_Costo(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_centro_costo } = req.params
-        const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body
+        const { id_empresa, id_proceso, codigo, consecutivo, centro_costo, correo_responsable } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
@@ -116,6 +119,9 @@ export default class CentroCostoEmpresa {
         }
         if (!codigo) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el proceso' }) //!ERROR
+        }
+        if (!consecutivo || consecutivo <= 0) {
+            return res.status(400).json({ error: true, message: 'Debe ingresar un consecutivo valido para el centro' }) //!ERROR
         }
         if (!centro_costo) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el centro' }) //!ERROR
@@ -151,7 +157,7 @@ export default class CentroCostoEmpresa {
     public async Cambiar_Estado_Centro(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_centro_costo } = req.params
-        const { estado } = req.body
+        const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
@@ -165,7 +171,7 @@ export default class CentroCostoEmpresa {
 
         try {
             const centro_costo_service = new CentroCostoEmpresaService()
-            const centro_cambio_estado = await centro_costo_service.Cambiar_Estado_Centro(+id_centro_costo, estado)
+            const centro_cambio_estado = await centro_costo_service.Cambiar_Estado_Centro(+id_centro_costo, +estado)
             if (centro_cambio_estado.error) {
                 return res.status(400).json({ error: true, message: centro_cambio_estado.message }) //!ERROR
             }

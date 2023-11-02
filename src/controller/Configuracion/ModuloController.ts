@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import ModuloService from "../../services/Configuracion/Modulo.service";
-import { EstadosTablas } from "../../validations/utils";
+import { EstadosTablas } from "../../utils";
 import { ModulosSchema } from "../../validations/Validaciones.Zod";
 
 export default class _ModuloController {

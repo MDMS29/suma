@@ -220,6 +220,10 @@ export const CentroEmpresaSchema = z.object({
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     }),
+    consecutivo: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El numero consecutivo es requerido'
+    }).positive().int(),
     centro_costo: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'El nombre del proceso es requerido'
@@ -230,6 +234,71 @@ export const CentroEmpresaSchema = z.object({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'El nombre del proceso es requerido'
     }).email({
-        message : "Ingrese un correo valido"
+        message: "Ingrese un correo valido"
+    })
+})
+
+export const ProductosSchema = z.object({
+    id_empresa: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+    id_familia: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione una familia para el producto'
+    }),
+    id_marca: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione una marca del producto'
+    }),
+    id_tipo_producto: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione el tipo del producto'
+    }),
+    referencia: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Ingrese la referencia del producto'
+    }),
+    id_unidad: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La unidad de medida del producto es requerida'
+    }),
+    foto: z.string({
+        invalid_type_error: 'El tipo de dato es invalido'
+    }),
+
+    descripcion: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El nombre del producto es requerido'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }),
+    precio_costo: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Ingrese el precio de costo del producto'
+    }),
+    precio_venta: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Ingrese el precio de venta del producto'
+    }),
+    critico: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione si el producto es critico'
+    }),
+    inventariable: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione si el producto es inventariable'
+    }),
+    compuesto: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione si el producto es compuesto'
+    }),
+    ficha: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione si el producto requiere una ficha tecnica'
+    }),
+    certificado: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'Seleccione si el producto requiere un certificado'
     })
 })

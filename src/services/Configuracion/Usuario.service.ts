@@ -1,6 +1,6 @@
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 import { PerfilUsuario, UsuarioLogin } from "../../validations/Types";
-import { Generar_JWT } from "../../validations/utils";
+import { Generar_JWT } from "../../utils";
 
 let bcrypt = require('bcrypt')
 

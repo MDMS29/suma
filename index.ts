@@ -8,6 +8,7 @@ import { _RolesRouter } from './src/routes/Configuracion/RolesRoutes';
 import { _MenusRouter } from './src/routes/Configuracion/MenuRoutes';
 import { _EmpresasRouter } from './src/routes/EmpresaRoutes';
 import { _OpcionesBasicasRouter } from './src/routes/Opciones_Basicas/BasicasRoute';
+import { _ProductosRouter } from './src/routes/Opciones_Basicas/ProductosRoute';
 
 const app = express();
 // DEFINIR TIPOS PARA EL OBJETO REQUEST
@@ -65,10 +66,10 @@ app.use('/suma/api/menus', _MenusRouter)
 app.use('/suma/api/empresas', _EmpresasRouter)
 
 //DEFINIR RUTAS PARA LAS OPCIONES BASICAS
-// app.use('/suma/api/productos', _OpcionesBasicas)
+app.use('/suma/api/opciones-basicas', _OpcionesBasicasRouter)
 
 //DEFINIR RUTAS PARA LOS PRODUCTOS
-app.use('/suma/api/opciones-basicas', _OpcionesBasicasRouter)
+app.use('/suma/api/opciones-basicas', _ProductosRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {

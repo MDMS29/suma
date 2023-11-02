@@ -6,15 +6,15 @@ export const _obtener_centros_costos_empresa = `
     INNER JOIN public.tbl_procesos tp ON tp.id_proceso = tc.id_proceso
     WHERE
         tc.id_estado = $1 AND tc.id_empresa = $2 
-    ORDER BY tp.id_empresa DESC;
+    ORDER BY tc.id_centro DESC;
 `
 
 export const _insertar_centro_costo = `
     INSERT INTO 
         public.tbl_centros
-        (id_centro, id_empresa, id_proceso, codigo, centro_costo, correo_responsable, id_estado, fecha_creacion, usuario_creacion)
+        (id_centro, id_empresa, id_proceso, codigo, centro_costo, correo_responsable, id_estado, fecha_creacion, usuario_creacion, consecutivo)
     VALUES
-        (nextval('public.tbl_centros_id_centro_seq'::regclass), $1, $2, $3, $4, $5, 1, now(), $6)
+        (nextval('public.tbl_centros_id_centro_seq'::regclass), $1, $2, $3, $4, $5, 1, now(), $6, $7)
     RETURNING id_centro;
 `
 
@@ -65,7 +65,7 @@ export const _editar_centro_costo = `
     UPDATE 
         public.tbl_centros
     SET 
-        id_proceso=$2, codigo=$3, centro_costo=$4, correo_responsable=$5
+        id_proceso=$2, codigo=$3, centro_costo=$4, correo_responsable=$5, consecutivo=$6
     WHERE 
         id_centro=$1;
 `

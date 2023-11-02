@@ -5,7 +5,7 @@ export const _obtener_procesos_empresa = `
         public.tbl_procesos tp
     WHERE
         tp.id_empresa = $1
-    ORDER BY tp.id_empresa DESC;
+    ORDER BY tp.id_proceso DESC;
 `
 
 export const _insertar_proceso_empresa = `

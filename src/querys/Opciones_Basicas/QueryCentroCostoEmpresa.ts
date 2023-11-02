@@ -25,9 +25,9 @@ export default class QueryCentroCostoEmpresa {
     public async Insertar_Centro_Costo(centro_costo_request: Centro_Costo, usuario_creacion: string) {
         const client = await pool.connect()
 
-        const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = centro_costo_request
+        const { id_empresa, id_proceso, codigo, consecutivo, centro_costo, correo_responsable } = centro_costo_request
         try {
-            let result = await client.query(_insertar_centro_costo, [id_empresa, id_proceso, codigo, centro_costo, correo_responsable, usuario_creacion]);
+            let result = await client.query(_insertar_centro_costo, [id_empresa, id_proceso, codigo, centro_costo, correo_responsable, usuario_creacion, consecutivo]);
             return result.rows
         } catch (error) {
             console.log(error)
@@ -100,8 +100,8 @@ export default class QueryCentroCostoEmpresa {
         const client = await pool.connect()
 
         try {
-            const { id_proceso, codigo, centro_costo, correo_responsable } = centro_costo_request
-            let result = client.query(_editar_centro_costo, [id_centro_costo, id_proceso, codigo, centro_costo, correo_responsable]);
+            const { id_proceso, codigo, centro_costo, correo_responsable, consecutivo } = centro_costo_request
+            let result = client.query(_editar_centro_costo, [id_centro_costo, id_proceso, codigo, centro_costo, correo_responsable, consecutivo]);
             return result
         } catch (error) {
             console.log(error)

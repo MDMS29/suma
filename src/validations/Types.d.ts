@@ -101,6 +101,7 @@ export interface Centro_Costo {
     id_empresa?: number
     id_proceso: number
     codigo: string
+    consecutivo: number
     centro_costo: string
     correo_responsable: string
     consecutivo: number
@@ -108,3 +109,22 @@ export interface Centro_Costo {
     fecha_creacion?: Date
     usuario_creacion?: string
 }
+
+export interface Producto_Empresa {
+    id_producto?: number;
+    id_empresa: number;
+    id_familia: number;
+    id_marca: number;
+    id_tipo_producto: number;
+    referencia: string;
+    id_unidad: number;
+    descripcion: string;
+    foto?: string;
+    precio_costo: number;
+    precio_venta: number;
+    critico: boolean;
+    inventariable: boolean;
+    compuesto: boolean;
+    ficha: boolean;
+    certificado: boolean;
+};
