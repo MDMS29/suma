@@ -8,6 +8,7 @@ const PerfilesContext = createContext();
 // eslint-disable-next-line react/prop-types
 const PerfilesProvider = ({ children }) => {
   const navigate = useNavigate()
+  const location = useLocation();
 
   const { setAlerta, setVerEliminarRestaurar, setAuthUsuario } = useAuth()
 
@@ -28,7 +29,6 @@ const PerfilesProvider = ({ children }) => {
     nombre_perfil: "",
   });
 
-  const location = useLocation();
 
 
   useEffect(() => {

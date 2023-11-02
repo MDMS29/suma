@@ -84,7 +84,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   const btn_cambio_usuario = e => {
     const value = e.target.value;
-
     setUsuariosAgg({ ...UsuariosAgg, [e.target.name]: e.target.name == "nombre" ? value.replace(/\d/g, '') : value });
   };
 
@@ -355,19 +354,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                       optionValue= "id_empresa" 
                       placeholder="Seleccione una empresa"
                       filter className="w-full md:w-14rem" />
-                    {/* <Dropdown value={UsuariosAgg.id_empresa} onChange={(e) => setDataEmpresas(e.value)} options={
-                    Array.isArray(dataEmpresas) && dataEmpresas.length > 0
-                      ? dataEmpresas.map((e) => ({
-                        label: e.razon_social,
-                        value: e.id_empresa,
-                      }))
-                      : [{ label: "No hay datos disponibles", value: "" }]
-                  }
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Seleccione una empresa"
-                    filter className="w-full md:w-14rem" /> */}
-
                   </div>
 
                   {errors.correo && (

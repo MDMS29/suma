@@ -18,7 +18,6 @@ const Procesos = () => {
   const toast = useRef(null);
 
   const columns = [
-    { field: "id_proceso", header: "ID" },
     { field: "codigo", header: "Codigo" },
     { field: "proceso", header: "Proceso" }
   ];

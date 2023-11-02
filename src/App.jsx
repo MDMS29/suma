@@ -17,6 +17,7 @@ import { RolesProvider } from "./context/Configuracion/RolesProvider.jsx";
 import { EmpresasProvider } from "./context/EmpresasProvider.jsx";
 import { ProcesosProvider } from "./context/Basicos/ProcesosProvider.jsx";
 import { CentrosProvider } from "./context/Basicos/CentrosProvider.jsx";
+import { ProductosProvider } from "./context/Basicos/ProductosProvider.jsx";
 
 const App = () => {
   return (
@@ -28,19 +29,21 @@ const App = () => {
               <PerfilesProvider>
                 <ModulosProvider>
                   <RolesProvider>
-                    <MarcasProvider>
-                      <UnidadesProvider>
-                        <FamiliaProdProvider>
-                          <TipoProdProvider>
-                            <ProcesosProvider>
-                              <CentrosProvider>
-                                <AppMain />
-                              </CentrosProvider>
-                            </ProcesosProvider>
-                          </TipoProdProvider>
-                        </FamiliaProdProvider>
-                      </UnidadesProvider>
-                    </MarcasProvider>
+                    <ProductosProvider>
+                      <MarcasProvider>
+                        <UnidadesProvider>
+                          <FamiliaProdProvider>
+                            <TipoProdProvider>
+                              <ProcesosProvider>
+                                <CentrosProvider>
+                                  <AppMain />
+                                </CentrosProvider>
+                              </ProcesosProvider>
+                            </TipoProdProvider>
+                          </FamiliaProdProvider>
+                        </UnidadesProvider>
+                      </MarcasProvider>
+                    </ProductosProvider>
                   </RolesProvider>
                 </ModulosProvider>
               </PerfilesProvider>

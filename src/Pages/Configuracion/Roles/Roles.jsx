@@ -5,7 +5,7 @@ import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
 import { Button as PButton } from "primereact/button";
-import Forbidden from "../../Errors/Forbidden";
+import Forbidden from "../../Errors/forbidden";
 import useRoles from "../../../hooks/Configuracion/useRoles";
 import useAuth from "../../../hooks/useAuth";
 import Button from "../../../components/Botones/Button";
@@ -14,9 +14,9 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Loader from "../../../components/Loader";
 import ModalPrinRoles from "../../../components/Modales/Configuracion/Roles/ModalPrinRoles";
 import {
-    Trash_Icono, 
+    Trash_Icono,
     Edit_Icono,
-    Add_Icono, 
+    Add_Icono,
     Rol_Icono
 } from "../../../components/Icons/Iconos";
 
@@ -26,24 +26,23 @@ const Roles = () => {
     const columns = [
         { field: "id_rol", header: "ID" },
         { field: "nombre", header: "Nombre" },
-        { field: "descripcion", header: "Descripcion" },
-        { field: "id_estado", header: "Estado" },
+        { field: "descripcion", header: "Descripcion" }
     ];
 
-    const { dataRoles, 
-        permisosRoles, 
+    const { dataRoles,
+        permisosRoles,
         setPermisosRoles,
-        buscar_rol, 
-        eliminar_rol, 
-        rolAgg, 
-        setRolAgg 
+        buscar_rol,
+        eliminar_rol,
+        rolAgg,
+        setRolAgg
     } = useRoles();
 
-    const { authPermisos, 
-        Permisos_DB, 
-        alerta, 
+    const { authPermisos,
+        Permisos_DB,
+        alerta,
         setAlerta,
-        verEliminarRestaurar, 
+        verEliminarRestaurar,
         setVerEliminarRestaurar
     } = useAuth()
 
@@ -74,7 +73,7 @@ const Roles = () => {
     const filtrar_columnas = (event) => {
         let columnas_seleccionadas = event.value;
         let columnas_ordenadas_seleccionadas = columns.filter((col) =>
-        columnas_seleccionadas.some((sCol) => sCol.field === col.field)
+            columnas_seleccionadas.some((sCol) => sCol.field === col.field)
         );
         setVisibleColumns(columnas_ordenadas_seleccionadas);
     };
@@ -86,15 +85,14 @@ const Roles = () => {
         const items_filtrados = dataRoles.filter((item) => {
             return (
                 item.nombre.toLowerCase().includes(value) ||
-                item.descripcion.toLowerCase().includes(value) 
+                item.descripcion.toLowerCase().includes(value)
             );
         });
         setFilteredData(items_filtrados);
     };
 
     const cambiar_visibilidad_modal = () => { setModalVisible(!modalVisible) };
-    const estadoTexto = (numero) => +numero === 1 ? "ACTIVO" : "INACTIVO";
-    
+
     const mostrar_modal_eliminar = (row) => {
         setVerEliminarRestaurar(true)
         setRolAgg(row)
@@ -110,7 +108,7 @@ const Roles = () => {
             display="chip"
         />
     );
-    
+
     const columna_acciones = rowData => {
         return (
             (
@@ -202,15 +200,8 @@ const Roles = () => {
                         tableStyle={{ minWidth: "50rem" }}
                     >
                         {visibleColumns.map((col) => (
-                            col.field !== 'id_estado' && <Column key={col.field} field={col.field} header={col.header} />
+                            <Column key={col.field} field={col.field} header={col.header} />
                         ))}
-
-                        <Column
-                            key="estado"
-                            field="id_estado"
-                            header="Estado"
-                            body={(rowData) => estadoTexto(rowData.id_estado)}
-                        />
 
                         <Column
                             key="actions"

@@ -78,19 +78,19 @@ diseño modal
               </div> */}
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-----------------------------PROCESOS----------------------------------
-- No se eliminan
-- No tienen estado
+----------------------------PRODUCTOS----------------------------------
 
-- Desarrollo
-- Soporte
-- Admin
-- Taller
-- Gerencia
-- PMO
-- Aseo
+- CRITICO es si un producto es solicitado y es dificil de conseguir, y demora en llegar
+- COMPUESTO si un producto se compone de otros prodcutos (un plato de comida) (por ahora no se dieron ejemplos)
 
-- mira validacion en roles de numeros
-- id_empresa al guardar
+- los productos se borrar? ok
+- esta el id_marca pero mostrara el nombre de la marca? ok
+- referencia es el nombre del producto? numero codigo
+- description es una observacion? es el nombre 
+- critico seria ESTADO CRITICO: si o no? ok
+- inventariable seria si o no? ok
+- foto se muestra en tabla? y los que no entonces dira no fotoq?  ok
+- compuesto seria si o no? ok
+- ficha es si tiene la ficha tecnica si o no? ok
 
-----------------------------CORRECIONES----------------------------------
+- marca, familia, unidad, tipo de producto, producto critico, Inventariable, Producto Compuesto, Ficha, Certificado es SELECT

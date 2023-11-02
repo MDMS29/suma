@@ -1,27 +1,23 @@
 import { useState, useEffect, useRef } from "react";
+import { DataTable } from "primereact/datatable";
 import { MultiSelect } from "primereact/multiselect";
-
 import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
+import { InputText } from "primereact/inputtext"
 import {
   Trash_Icono,
   Edit_Icono,
 } from "../../../components/Icons/Iconos";
-import { InputText } from "primereact/inputtext"
 
 import ModalAgregarPerfil from "../../../components/Modales/Configuracion/Perfiles/ModalAgregarPerfil";
 import usePerfiles from "../../../hooks/Configuracion/usePerfiles";
 import BLink from "../../../components/Botones/BLink";
-
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
 import useAuth from "../../../hooks/useAuth";
-
-// import { Dropdown } from 'primereact/dropdown';
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Button from "../../../components/Botones/Button";
-import { DataTable } from "primereact/datatable";
 
 
 const Perfiles = () => {

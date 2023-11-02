@@ -4,6 +4,8 @@ import Procesos from '../Pages/Basicos/Procesos/Procesos'
 import Unidades from '../Pages/Basicos/Unidades/Unidades'
 import FamiliaProd from '../Pages/Basicos/FamiliaProd/FamiliaProd'
 import TipoProd from '../Pages/Basicos/TipoProd/TipoProd'
+import Productos from '../Pages/Basicos/Productos/Productos'
+import ProductosInactivos from '../Pages/Basicos/Productos/ProductosInactivos'
 
 const BasicasRoutes =[
     {
@@ -41,6 +43,18 @@ const BasicasRoutes =[
         route: "/basicas/tipos-productos",
         component: <TipoProd />,
         key: 19
+    },
+    {
+        name: "Productos",
+        route: "/basicas/productos",
+        component: <Productos />,
+        key: 20
+    },
+    {
+        name: "Productos Inactivos",
+        route: "/basicas/productos/inactivos",
+        component: <ProductosInactivos />,
+        key: 21
     }
 ]
 

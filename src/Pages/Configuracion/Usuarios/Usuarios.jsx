@@ -24,8 +24,7 @@ const Usuarios = () => {
     { field: "id_usuario", header: "ID" },
     { field: "nombre_completo", header: "Nombre" },
     { field: "usuario", header: "Usuario" },
-    { field: "correo", header: "Correo" },
-    // { field: "estado_usuario", header: "Estado" },
+    { field: "correo", header: "Correo" }
   ];
 
   const {
