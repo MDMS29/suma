@@ -1,5 +1,5 @@
-import QueryEmpresa from "../querys/QueryEmpresa";
-import { Empresa } from "../validations/Types";
+import QueryEmpresa from "../../querys/Configuracion/QueryEmpresa";
+import { Empresa } from "../../validations/Types";
 
 export default class EmpresaService {
     private _Query_Empresa: QueryEmpresa;

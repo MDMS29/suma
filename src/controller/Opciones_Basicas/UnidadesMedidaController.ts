@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UnidadesMedidaService } from "../../services/Opciones_Basicas/UnidadesMedida.Service"
-import { UnidadMedidaSchema } from "../../validations/Validaciones.Zod";
+import { UnidadMedidaSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
 
 export default class UnidadesMedidaController {
 

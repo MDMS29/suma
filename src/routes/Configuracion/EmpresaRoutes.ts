@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { _Autorizacion } from "../middleware/Autorizacion";
-import _EmpresaController from "../controller/EmpresaController";
+import { _Autorizacion } from "../../middleware/Autorizacion";
+import _EmpresaController from "../../controller/Configuracion/EmpresaController";
 
 //INICIALIZAR RUTAS PARA LAS EMPRESAS
 export const _EmpresasRouter = Router()

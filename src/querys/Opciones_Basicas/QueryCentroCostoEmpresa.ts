@@ -1,9 +1,10 @@
-import { pool } from "../../../config/db";
+import { _DB, pool } from "../../../config/db";
 
 import {
+    _FA_obtener_centros_filtro,
     _buscar_centro_codigo, _buscar_centro_id, _buscar_centro_nombre,
     _buscar_responsable_centro, _cambiar_estado_centro, _editar_centro_costo, _insertar_centro_costo,
-    _obtener_centros_costos_empresa
+    _obtener_centros_costos_empresa,
 } from "../../dao/Opciones_Basicas/DaoCentroCostoEmpresa";
 
 import { Centro_Costo } from "../../validations/Types";
@@ -14,6 +15,19 @@ export default class QueryCentroCostoEmpresa {
         try {
             let result = await client.query(_obtener_centros_costos_empresa, [estado, empresa]);
             return result.rows
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Obtener_Centros_Costo_Filtro(empresa: number, tipo: string, valor: number): Promise<any> {
+        const client = await pool.connect()
+        try {
+            let result = await _DB.func(_FA_obtener_centros_filtro, [empresa, tipo, valor]);
+            return result
         } catch (error) {
             console.log(error)
             return
@@ -101,7 +115,7 @@ export default class QueryCentroCostoEmpresa {
 
         try {
             const { id_proceso, codigo, centro_costo, correo_responsable, consecutivo } = centro_costo_request
-            let result = client.query(_editar_centro_costo, [id_centro_costo, id_proceso, codigo, centro_costo, correo_responsable, consecutivo]);
+            let result = await client.query(_editar_centro_costo, [id_centro_costo, id_proceso, codigo, centro_costo, correo_responsable, consecutivo]);
             return result
         } catch (error) {
             console.log(error)

@@ -9,12 +9,25 @@ export class CentroCostoEmpresaService {
         this._Query_Centro_Costo_Empresa = new QueryCentroCostoEmpresa();
     }
 
-    public async Obtener_Centros_Costo_Empresa(estado: number, empresa: number): Promise<any> {
+    public async Obtener_Centros_Costo_Empresa(estado: number, empresa: number, tipo: string, valor: number): Promise<any> {
+        const TIPOS_CONSULTA = {
+            proceso: 'proceso'
+        }
         try {
-            const respuesta = await this._Query_Centro_Costo_Empresa.Obtener_Centros_Costo_Empresa(estado, empresa)
+            let respuesta: any
+            if (TIPOS_CONSULTA.proceso === tipo) {
+                respuesta = await this._Query_Centro_Costo_Empresa.Obtener_Centros_Costo_Filtro(empresa, tipo, valor)
 
-            if (respuesta?.length <= 0) {
-                return { error: false, message: 'No se han encontrado procesos en la empresa' } //!ERROR
+                if (respuesta?.length <= 0) {
+                    return { error: false, message: 'No se han encontrado procesos en la empresa' } //!ERROR
+                }
+            } else {
+
+                respuesta = await this._Query_Centro_Costo_Empresa.Obtener_Centros_Costo_Empresa(estado, empresa)
+
+                if (respuesta?.length <= 0) {
+                    return { error: false, message: 'No se han encontrado procesos en la empresa' } //!ERROR
+                }
             }
 
             return respuesta

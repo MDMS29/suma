@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ProcesosEmpresaService } from "../../services/Opciones_Basicas/ProcesosEmpresa.Service";
-import { ProcesoEmpresaSchema } from "../../validations/Validaciones.Zod";
+import { ProcesoEmpresaSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
 
 export default class ProcesosEmpresaController {
 

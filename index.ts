@@ -6,9 +6,10 @@ import { _PerfilesRouter } from './src/routes/Configuracion/PerfilesRoutes';
 import { _ModulosRouter } from './src/routes/Configuracion/ModulosRoutes';
 import { _RolesRouter } from './src/routes/Configuracion/RolesRoutes';
 import { _MenusRouter } from './src/routes/Configuracion/MenuRoutes';
-import { _EmpresasRouter } from './src/routes/EmpresaRoutes';
+import { _EmpresasRouter } from './src/routes/Configuracion/EmpresaRoutes';
 import { _OpcionesBasicasRouter } from './src/routes/Opciones_Basicas/BasicasRoute';
 import { _ProductosRouter } from './src/routes/Opciones_Basicas/ProductosRoute';
+import { _RequisicionesRouter } from './src/routes/Compras/RequisicionesRoutes';
 
 const app = express();
 // DEFINIR TIPOS PARA EL OBJETO REQUEST
@@ -48,7 +49,7 @@ app.use(async (__, _, next: NextFunction) => {
 /* ----- DEFINIR RUTA DEL USUARIO ---- */
 
 // Crear una instancia del enrutador de usuario
-app.use('/suma/api/usuarios', _UsuarioRouter);
+app.use('/suma/api/usuarios', _UsuarioRouter)
 
 //DEFINIR RUTA DE LOS PERFILES
 app.use('/suma/api/perfiles', _PerfilesRouter)
@@ -70,6 +71,9 @@ app.use('/suma/api/opciones-basicas', _OpcionesBasicasRouter)
 
 //DEFINIR RUTAS PARA LOS PRODUCTOS
 app.use('/suma/api/opciones-basicas', _ProductosRouter)
+
+//DEFINIR RUTAS PARA LAS REQUISICIONES
+app.use('/suma/api/compras', _RequisicionesRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {

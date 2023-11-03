@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { _Autorizacion } from "../../middleware/Autorizacion";
-import ProductosEmpresaController from "../../controller/Opciones_Basicas/ProductosEmpresController";
+import ProductosEmpresaController from "../../controller/Opciones_Basicas/ProductosEmpresaController";
 
 import multer from "multer";
 

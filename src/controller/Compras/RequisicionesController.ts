@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import { FamiliaProductoService } from "../../services/Opciones_Basicas/FamiliaProducto.Service";
 import { EstadosTablas } from "../../utils";
 import { FamiliaProductoSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
+import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
 
-export default class FamiliaProductoController {
+export default class RequisicionesController {
 
-    public async Obtener_Familias_Producto(req: Request, res: Response) {
+    public async Obtener_Requisiciones(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -19,8 +20,8 @@ export default class FamiliaProductoController {
         }
 
         try {
-            const familias_producto_service = new FamiliaProductoService()
-            const respuesta = await familias_producto_service.Obtener_Familias_Producto(+estado, +empresa)
+            const requisiciones_service = new RequisicionesService()
+            const respuesta = await requisiciones_service.Obtener_Requisiciones(+estado, +empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -28,11 +29,11 @@ export default class FamiliaProductoController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al obtener las familias de los productos' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al obtener las requisiciones' }) //!ERROR
         }
     }
 
-    public async Insertar_Familia_Producto(req: Request, res: Response) {
+    public async Insertar_Requisicion(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         // const { id_familia_producto } = req.params
         const { id_empresa, referencia, descripcion } = req.body
@@ -90,7 +91,6 @@ export default class FamiliaProductoController {
             return res.json({ error: true, message: 'Error al encontrar la familia' }) //!ERROR
         }
     }
-
     public async Editar_Familia_Producto(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_familia_producto } = req.params

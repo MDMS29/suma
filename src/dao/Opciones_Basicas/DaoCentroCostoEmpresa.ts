@@ -9,6 +9,8 @@ export const _obtener_centros_costos_empresa = `
     ORDER BY tc.id_centro DESC;
 `
 
+export const _FA_obtener_centros_filtro = 'public.obtener_centro_proceso'
+
 export const _insertar_centro_costo = `
     INSERT INTO 
         public.tbl_centros

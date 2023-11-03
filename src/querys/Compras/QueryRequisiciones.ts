@@ -1,22 +1,37 @@
-import { pool } from "../../config/db";
+import { pool } from "../../../config/db";
+import { _buscar_detalle_requisicion, _obtener_requisicion_enc } from "../../dao/Compras/DaoRequisiciones";
 import {
     _buscar_empresa_id, _buscar_empresa_nit, _buscar_razon_social, _cambiar_estado_empresa,
-    _editar_empresa, _insertar_empresa, _obtener_empresas
-} from "../dao/DaoEmpresa";
-import { Empresa } from "../validations/Types";
+    _editar_empresa, _insertar_empresa
+} from "../../dao/Configuracion/DaoEmpresa";
+import { Empresa } from "../../validations/Types";
 
-export default class QueryEmpresa {
-    public async Obtener_Empresas(estado: number): Promise<any> {
+export default class QueryRequisiciones {
+    public async Obtener_Requisiciones_Enc(estado: number, empresa: number): Promise<any> {
         const client = await pool.connect()
 
         try {
-            let result = await client.query(_obtener_empresas, [estado]);
+            let result = await client.query(_obtener_requisicion_enc, [estado, empresa]);
             return result.rows
         } catch (error) {
             console.log(error)
             return
         } finally {
             client.release();
+        }
+    }
+
+    public async Buscar_Detalle_Requisicion(id_requisicion:number){
+        const client = await pool.connect()
+
+        try {
+            let result = await client.query(_buscar_detalle_requisicion , [id_requisicion])
+            return result.rows 
+        } catch (error) {
+            console.log(error)
+            return   
+        }finally{
+            client.release()
         }
     }
 

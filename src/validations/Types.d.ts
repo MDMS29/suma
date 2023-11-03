@@ -128,3 +128,21 @@ export interface Producto_Empresa {
     ficha: boolean;
     certificado: boolean;
 };
+
+export interface Requisicion_Det {
+    id_detalle?: number
+    id_producto: number
+    cantidad: number
+    justificacion: string
+}
+
+export interface Requisicion_Enc {
+    id_requisicion?: number
+    id_empresa: number
+    consecutivo: string
+    id_proceso: number
+    id_centro: number
+    id_tipo_producto: number
+    comentarios: string
+    det_requisicion: Requisicion_Det[]
+}

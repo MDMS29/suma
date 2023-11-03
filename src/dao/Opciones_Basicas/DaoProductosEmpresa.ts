@@ -91,7 +91,17 @@ export const _buscar_producto_id = `
         tp.id_producto, tp.id_empresa, tp.id_familia, tp.id_marca, tp.id_tipo_producto,
         tp.referencia, tp.id_unidad, tp.descripcion, 
         tp.precio_costo, tp.precio_venta, tp.foto, tp.ficha, tp.inventariable,  
-        tp.compuesto, tp.critico, tp.certificado
+        tp.compuesto, tp.critico, tp.certificado,
+
+        tp.descripcion as nombre_producto, tm.marca,tf.descripcion as nombre_familia,
+        tpp.descripcion as tipo_producto,  tu.unidad,
+
+        CASE WHEN tp.foto = '' OR tp.foto = NULL THEN 'Sin foto' ELSE tp.foto END as foto_con,
+        CASE WHEN tp.ficha = true THEN 'SI' ELSE 'NO' END as ficha_con,
+        CASE WHEN tp.inventariable = true THEN 'SI' ELSE 'NO' END as inventariable_con,
+        CASE WHEN tp.compuesto = true THEN 'SI' ELSE 'NO' END as compuesto_con,
+        CASE WHEN tp.critico = true THEN 'SI' ELSE 'NO' END as critico_con,
+        CASE WHEN tp.certificado = true THEN 'SI' ELSE 'NO' END as certificado_con
     FROM 
         public.tbl_productos tp
 

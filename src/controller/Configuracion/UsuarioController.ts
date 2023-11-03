@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import UsuarioService from '../../services/Configuracion/Usuario.service';
 import { EstadosTablas, Generar_Llaves_Secretas } from '../../utils';
 import { UsuarioLogin } from '../../validations/Types';
-import { UsusarioSchema } from '../../validations/Validaciones.Zod';
+import { UsusarioSchema } from '../../validations/Zod/Configuracion.Zod';
 import { transporter } from '../../../config/mailer';
 
 export default class UsuarioController {

@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { CentroCostoEmpresaService } from "../../services/Opciones_Basicas/CentroCostoEmpresa.Service";
 import { EstadosTablas } from "../../utils";
-import { CentroEmpresaSchema } from "../../validations/Validaciones.Zod";
+import { CentroEmpresaSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
 
 export default class CentroCostoEmpresa {
 
     public async Obtener_Centros_Costo_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        const { estado, empresa, proceso } = req.query as { estado: string, empresa: string, proceso: any } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
@@ -20,12 +20,21 @@ export default class CentroCostoEmpresa {
 
         try {
             const centro_costo_service = new CentroCostoEmpresaService()
-            const respuesta = await centro_costo_service.Obtener_Centros_Costo_Empresa(+estado, +empresa)
-            if (respuesta?.error) {
-                return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
-            }
+            if (proceso != undefined) {
+                const respuesta = await centro_costo_service.Obtener_Centros_Costo_Empresa(+estado, +empresa, 'proceso', proceso)
+                if (respuesta?.error) {
+                    return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
+                }
 
-            return res.status(200).json(respuesta)
+                return res.status(200).json(respuesta)
+            } else {
+                const respuesta = await centro_costo_service.Obtener_Centros_Costo_Empresa(+estado, +empresa, '', 0)
+                if (respuesta?.error) {
+                    return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
+                }
+
+                return res.status(200).json(respuesta)
+            }
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: true, message: 'Error al obtener los centros de costos' }) //!ERROR

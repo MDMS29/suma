@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../utils";
 import { MenuService } from "../../services/Configuracion/Menu.service";
-import { MenuSchema } from "../../validations/Validaciones.Zod";
+import { MenuSchema } from "../../validations/Zod/Configuracion.Zod";
 
 export default class _MenuController {
 
