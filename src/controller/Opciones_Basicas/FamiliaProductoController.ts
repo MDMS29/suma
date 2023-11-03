@@ -127,19 +127,19 @@ export default class FamiliaProductoController {
 
             const response = await familia_producto_service.Buscar_Familia_Producto(+id_familia_producto)
             if (!response) {
-                return res.status(400).json({ error: true, message: 'Error al editar la marca' }) //!ERROR
+                return res.status(400).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
             }
             return res.status(200).json(response) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al editar la marca' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
         }
     }
 
     public async Cambiar_Estado_Familia(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_familia_producto } = req.params
-        const { estado } = req.body
+        const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
@@ -152,8 +152,8 @@ export default class FamiliaProductoController {
         }
 
         try {
-            const usuario_service = new FamiliaProductoService()
-            const familia_estado = await usuario_service.Cambiar_Estado_Familia(+id_familia_producto, estado)
+            const familia_producto_service = new FamiliaProductoService()
+            const familia_estado = await familia_producto_service.Cambiar_Estado_Familia(+id_familia_producto, +estado)
             if (familia_estado.error) {
                 return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
             }

@@ -18,8 +18,10 @@ _ProductosRouter.route('/productos-empresa')
     .get(_Autorizacion, EmpresaController.Obtener_Productos_Empresa) //OBTENER TODOS LAS EMPRESAS
     .post(_Autorizacion, upload.single('image'), EmpresaController.Insertar_Producto_Empresa) //CREAR EMPRESA
 
-// _ProductosRouter.route('/productos-empresa:id_empresa')
-//     .get(_Autorizacion, EmpresaController.Buscar_Familia_Producto) //BUSCAR UNA EMPRESA SEGUN SU ID
-//     .patch(_Autorizacion, EmpresaController.Editar_Familia_Producto) //EDITAR SEGUN SU ID
-//     .delete(_Autorizacion, EmpresaController.Cambiar_Estado_Familia) //CAMBIAR ESTADO DE LA EMPRESA POR ID
+_ProductosRouter.route('/productos-empresa/:id_producto')
+    .get(_Autorizacion, EmpresaController.Buscar_Producto_Empresa) //BUSCAR UNA EMPRESA SEGUN SU ID
+    .patch(_Autorizacion, upload.single('image'), EmpresaController.Editar_Producto_Empresa) //EDITAR SEGUN SU ID
+    .delete(_Autorizacion, EmpresaController.Cambiar_Estado_Producto) //CAMBIAR ESTADO DE LA EMPRESA POR ID
+
+_ProductosRouter.get('/productos-empresa/filtro', _Autorizacion, EmpresaController.Buscar_Producto_Empresa)
 

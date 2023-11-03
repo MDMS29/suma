@@ -242,31 +242,42 @@ export const ProductosSchema = z.object({
     id_empresa: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'La empresa es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     id_familia: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione una familia para el producto'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     id_marca: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione una marca del producto'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     id_tipo_producto: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione el tipo del producto'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     referencia: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Ingrese la referencia del producto'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     id_unidad: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'La unidad de medida del producto es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     foto: z.string({
         invalid_type_error: 'El tipo de dato es invalido'
     }),
-
     descripcion: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'El nombre del producto es requerido'
@@ -284,21 +295,31 @@ export const ProductosSchema = z.object({
     critico: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione si el producto es critico'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     inventariable: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione si el producto es inventariable'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     compuesto: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione si el producto es compuesto'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     ficha: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione si el producto requiere una ficha tecnica'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     }),
     certificado: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'Seleccione si el producto requiere un certificado'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
     })
 })

@@ -104,21 +104,29 @@ export const _buscar_producto_id = `
         tp.id_producto = $1;
 `
 
-export const _editar_familia_producto = `
+export const _FA_obtener_productos_filtro = 'public.obtener_productos_filtro'
+
+
+export const _editar_producto_empresa = `
     UPDATE 
-        public.tbl_familia
+        public.tbl_productos
     SET 
-        id_empresa=$2, referencia=$3, descripcion=$4
+        id_empresa=$2, id_familia=$3, id_marca=$4,
+        id_tipo_producto=$5, referencia=$6, id_unidad=$7,
+        descripcion=$8, precio_costo=$9, precio_venta=$10,
+        critico=$11, inventariable=$12, foto=$13,
+        compuesto=$14, ficha=$15, certificado=$16,
+        fecha_modificacion=now(), usuario_modificacion=$17
     WHERE 
-        id_familia=$1;
+        id_producto=$1;
 `
 
 
-export const _cambiar_estado_familia = `
+export const _cambiar_estado_producto = `
     UPDATE 
-        public.tbl_familia
+        public.tbl_productos
     SET 
         id_estado=$2
     WHERE 
-        id_familia=$1;
+        id_producto=$1;
 `

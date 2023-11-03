@@ -57,64 +57,87 @@ export class ProductosEmpresaService {
         }
     }
 
-    // public async Buscar_Familia_Producto(id_familia_producto: number): Promise<any> {
-    //     try {
-    //         const familia_producto = await this._Query_Productos_Empresa.Buscar_Familia_Producto_ID(id_familia_producto)
-    //         if (!familia_producto) {
-    //             return { error: true, message: 'No se ha encontrado la familia' } //!ERROR
-    //         }
-    //         return familia_producto[0]
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { error: true, message: 'Error al encontrar la familia' }
-    //     }
-    // }
+    public async Buscar_Producto_Empresa(id_producto: number): Promise<any> {
+        try {
+            const producto_empresa = await this._Query_Productos_Empresa.Buscar_Producto_ID(id_producto)
+            if (!producto_empresa) {
+                return { error: true, message: 'No se ha encontrado el producto' } //!ERROR
+            }
+            return producto_empresa[0]
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al encontrar el producto' }
+        }
+    }
 
-    // public async Editar_Familia_Producto(id_familia_producto: number, familia_producto_request: Familia_Producto) {
-    //     try {
-    //         const respuesta: any = await this._Query_Productos_Empresa.Buscar_Familia_Producto_ID(id_familia_producto)
+    public async Buscar_Producto_Filtro(tipo: string, valor: number): Promise<any> {
+        const TIPOS_FILTROS = {
+            tipo_producto: 'tipo_producto',
+        }
+        try {
+            if (TIPOS_FILTROS.tipo_producto === tipo) {
+                const producto_empresa = await this._Query_Productos_Empresa.Buscar_Producto_Filtro(tipo, valor)
+                if (!producto_empresa) {
+                    return { error: true, message: 'No se han encontrado los productos' } //!ERROR
+                }
+                return producto_empresa
+            }
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al encontrar los productos' }
+        }
+    }
 
-    //         const familia_filtrada_referencia: any = await this._Query_Productos_Empresa.Buscar_Familia_Producto(familia_producto_request)
-    //         if (familia_filtrada_referencia?.length > 0 && familia_filtrada_referencia[0].referencia !== respuesta[0].referencia && familia_producto_request.id_empresa === respuesta[0].id_empresa) {
-    //             return { error: true, message: 'Ya existe esta referencia' } //!ERROR
-    //         }
 
-    //         const familia_filtrada_descripcion: any = await this._Query_Productos_Empresa.Buscar_Familia_Descripcion(familia_producto_request)
-    //         if (familia_filtrada_descripcion?.length > 0 && familia_filtrada_descripcion[0].descripcion !== respuesta[0].descripcion && familia_producto_request.id_empresa === respuesta[0].id_empresa) {
-    //             return { error: true, message: 'Ya existe este nombre de familia' } //!ERROR
-    //         }
+    public async Editar_Producto_Empresa(id_producto: number, producto_empresa_request: Producto_Empresa, usuario_edicion: string) {
+        try {
+            const respuesta: any = await this._Query_Productos_Empresa.Buscar_Producto_ID(id_producto)
 
-    //         familia_producto_request.referencia = respuesta[0]?.referencia === familia_producto_request.referencia ? respuesta[0]?.referencia : familia_producto_request.referencia
-    //         familia_producto_request.descripcion = respuesta[0]?.descripcion === familia_producto_request.descripcion ? respuesta[0]?.descripcion : familia_producto_request.descripcion
+            const producto_filtrado_refe: any = await this._Query_Productos_Empresa.Buscar_Producto_Referencia(producto_empresa_request)
+            if (producto_filtrado_refe?.length > 0 && producto_filtrado_refe[0].referencia !== respuesta[0].referencia && producto_empresa_request.id_empresa === respuesta[0].id_empresa) {
+                return { error: true, message: 'Ya existe esta referencia' } //!ERROR
+            }
 
-    //         const res = await this._Query_Productos_Empresa.Editar_Familia_Producto(id_familia_producto, familia_producto_request)
-    //         if (res?.rowCount != 1) {
-    //             return { error: true, message: 'Error al actualizar la familia' } //!ERROR
-    //         }
+            const producto_filtrado_desc: any = await this._Query_Productos_Empresa.Buscar_Producto_Nombre(producto_empresa_request)
+            if (producto_filtrado_desc?.length > 0 && producto_filtrado_desc[0].descripcion !== respuesta[0].descripcion && producto_empresa_request.id_empresa === respuesta[0].id_empresa) {
+                return { error: true, message: 'Ya existe este nombre de producto' } //!ERROR
+            }
 
-    //         return { error: false, message: '' } //*SUCCESSFUL
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { error: true, message: 'Error al editar la familia' } //!ERROR
-    //     }
-    // }
 
-    // public async Cambiar_Estado_Familia(id_familia_producto: number, estado: number) {
-    //     try {
-    //         const familia_filtrada: any = await this._Query_Productos_Empresa.Buscar_Familia_Producto_ID(id_familia_producto)
-    //         if (familia_filtrada?.length <= 0) {
-    //             return { error: true, message: 'No se ha encontrado esta la familia' } //!ERROR
-    //         }
+            producto_empresa_request.referencia = respuesta[0]?.referencia === producto_empresa_request.referencia ? respuesta[0]?.referencia : producto_empresa_request.referencia
+            producto_empresa_request.descripcion = respuesta[0]?.descripcion === producto_empresa_request.descripcion ? respuesta[0]?.descripcion : producto_empresa_request.descripcion
 
-    //         const familia_cambiada = await this._Query_Productos_Empresa.Cambiar_Estado_Familia(id_familia_producto, estado)
-    //         if (familia_cambiada?.rowCount != 1) {
-    //             return { error: true, message: 'Error al cambiar el estado de la familia' } //!ERROR
-    //         }
+            producto_empresa_request.foto = producto_empresa_request.foto === '' ? respuesta[0].foto : producto_empresa_request.foto
 
-    //         return { error: false, message: '' } //*SUCCESSFUL
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { error: true, message: 'Error al cambiar el estado de la familia' } //!ERROR
-    //     }
-    // }
+
+            const res = await this._Query_Productos_Empresa.Editar_Producto_Empresa(id_producto, producto_empresa_request, usuario_edicion)
+            if (res?.rowCount != 1) {
+                return { error: true, message: 'Error al actualizar el producto' } //!ERROR
+            }
+
+            return { error: false, message: '' } //*SUCCESSFUL
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al editar el producto' } //!ERROR
+        }
+    }
+
+    public async Cambiar_Estado_Producto(id_producto: number, estado: number) {
+        try {
+            const producto_filtrado: any = await this._Query_Productos_Empresa.Buscar_Producto_ID(id_producto)
+            if (producto_filtrado?.length <= 0) {
+                return { error: true, message: 'No se ha encontrado este producto' } //!ERROR
+            }
+
+            const producto = await this._Query_Productos_Empresa.Cambiar_Estado_Producto(id_producto, estado)
+            if (producto?.rowCount != 1) {
+                return { error: true, message: 'Error al cambiar el estado del producto' } //!ERROR
+            }
+
+            return { error: false, message: '' } //*SUCCESSFUL
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al cambiar el estado del producto' } //!ERROR
+        }
+    }
 }
