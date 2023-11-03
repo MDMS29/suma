@@ -3,7 +3,6 @@ import conexion_cliente from "../../config/ConexionCliente";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../../hooks/useAuth'
 
-
 const UsuariosContext = createContext();
 
 // eslint-disable-next-line react/prop-types

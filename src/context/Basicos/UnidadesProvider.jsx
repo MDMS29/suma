@@ -21,29 +21,30 @@ const UnidadesProvider = ({ children }) => {
 
   const location = useLocation();
 
+  const obtener_unidades = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (authUsuario.id_empresa) {
+      try {
+        const { data } = await conexion_cliente(
+          `/opciones-basicas/unidades-medida?estado=1&empresa=${authUsuario.id_empresa}`,
+          config
+        );
+        setDataUnidades(data);
+      } catch (error) {
+        setDataUnidades([]);
+      }
+    }
+  }
+
   useEffect(() => {
     if (location.pathname.includes("unidades")) {
-      (async () => {
-        const token = localStorage.getItem("token");
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        // const estado = location.pathname.includes("inactivos") ? 2 : 1;
-        if (authUsuario.id_empresa) {
-          try {
-            const { data } = await conexion_cliente(
-              `/opciones-basicas/unidades-medida?estado=1&empresa=${authUsuario.id_empresa}`,
-              config
-            );
-            setDataUnidades(data);
-          } catch (error) {
-            setDataUnidades([]);
-          }
-        }
-      })();
+      obtener_unidades()
     }
   }, [location.pathname]);
 
@@ -196,6 +197,7 @@ const UnidadesProvider = ({ children }) => {
   };
 
   const obj = useMemo(() => ({
+    obtener_unidades,
     dataUnidades,
     setDataUnidades,
     buscar_unidad,

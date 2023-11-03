@@ -17,18 +17,18 @@ import Button from "../../../components/Botones/Button";
 
 const PerfilesInactivos = () => {
   const toast = useRef(null);
-  const { dataPerfiles, 
-    permisosPerfil, 
-    setPerfilState, 
-    perfilState, 
-    eliminar_restablecer_perfil 
+  const { dataPerfiles,
+    permisosPerfil,
+    setPerfilState,
+    perfilState,
+    eliminar_restablecer_perfil
   } = usePerfiles();
 
-  const { Permisos_DB, 
-    verEliminarRestaurar, 
-    setVerEliminarRestaurar, 
-    alerta, 
-    setAlerta 
+  const { Permisos_DB,
+    verEliminarRestaurar,
+    setVerEliminarRestaurar,
+    alerta,
+    setAlerta
   } = useAuth()
 
   const modal_restaurar_perfil = (perfil) => {

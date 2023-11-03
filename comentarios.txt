@@ -83,6 +83,9 @@ diseño modal
 - CRITICO es si un producto es solicitado y es dificil de conseguir, y demora en llegar
 - COMPUESTO si un producto se compone de otros prodcutos (un plato de comida) (por ahora no se dieron ejemplos)
 
+  data.map((e) => { data.compuesto == true ? e.compuesto = "si" : e.compuesto = "no" })
+
+
 - los productos se borrar? ok
 - esta el id_marca pero mostrara el nombre de la marca? ok
 - referencia es el nombre del producto? numero codigo
@@ -94,3 +97,8 @@ diseño modal
 - ficha es si tiene la ficha tecnica si o no? ok
 
 - marca, familia, unidad, tipo de producto, producto critico, Inventariable, Producto Compuesto, Ficha, Certificado es SELECT
+            
+                              --HACER-- 
+- Editar Producto
+- editar_producto
+- buscar_producto

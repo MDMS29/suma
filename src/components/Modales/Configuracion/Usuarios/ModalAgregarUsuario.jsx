@@ -35,7 +35,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
   const [perfilesSeleccionados, setPerfilesSeleccionados] = useState([]);
   const [permisosPorModulo, setPermisosPorModulo] = useState([]);
   const [step, setStep] = useState(1);
- console.log(UsuariosAgg);
 
   useEffect(() => {
     if (authUsuario.perfiles.some((perfil) => perfil.id_perfil == 1)) {
@@ -94,7 +93,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       usuario: UsuariosAgg.usuario,
       correo: UsuariosAgg.correo,
       clave: UsuariosAgg.clave,
-      id_empresa: UsuariosAgg.id_empresa,
+      id_empresa: +UsuariosAgg.id_empresa,
       perfiles: perfilesSeleccionados,
       roles: permisosPorModulo,
     };
@@ -118,7 +117,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
         // Limpia los campos del formulario
         setUsuariosAgg({
-          id_usuario: 0,
+          id_usuario: UsuariosAgg.id_empresa,
           nombre: "",
           usuario: "",
           correo: "",
@@ -197,7 +196,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
-
 
   const chk_perfil = (rowData) => {
     const perfil_id = rowData;
@@ -346,8 +344,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
               {authUsuario.perfiles?.some((perfil) => perfil.id_perfil == 1) && authUsuario.id_empresa == 1 &&
                 <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2"> {/* /*col-span-2*/}
                   <label className="text-gray-600 pb-2 font-semibold">Empresas <span className="font-bold text-red-900">*</span></label>
-                  <div className="card flex justify-content-center w-full">
 
+                  <div className="card flex justify-content-center w-full">
                     <Dropdown value={UsuariosAgg.id_empresa} onChange={(e) => btn_cambio_usuario(e)} options={dataEmpresas}
                       name="id_empresa"
                       optionLabel="razon_social"

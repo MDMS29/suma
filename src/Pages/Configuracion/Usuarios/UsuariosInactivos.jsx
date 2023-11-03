@@ -17,9 +17,7 @@ import Button from "../../../components/Botones/Button";
 const UsuariosInactivos = () => {
   const toast = useRef(null);
 
-  // const [modalEliminar, setModalEliminar] = useState(false);
-
-  const { dataUsuarios, setUsuarioState, permisosUsuario, eliminar_restablecer_usuario, usuarioState } = useUsuarios();
+  const { dataUsuarios, setUsuarioState, usuarioState, permisosUsuario, eliminar_restablecer_usuario } = useUsuarios();
   const { alerta, setAlerta, Permisos_DB, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
 
   const modal_restaurar_usuario = (usuario) => {

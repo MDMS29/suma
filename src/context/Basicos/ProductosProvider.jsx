@@ -2,8 +2,6 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import conexion_cliente from "../../config/ConexionCliente";
-// import useFamiliaProd from "../../hooks/Basicos/useFamiliaProd";
-// import useMarcas from "../../hooks/Basicos/useMarcas";
 
 
 const ProductosContext = createContext();
@@ -12,21 +10,35 @@ const ProductosProvider = ({ children }) => {
     const navigate = useNavigate()
     const location = useLocation();
     const { setAlerta, setVerEliminarRestaurar, authUsuario, setAuthUsuario } = useAuth()
-    // const [dataFliaPro] = useFamiliaProd()
-    // const [dataMarcas] = useMarcas()
 
     const [permisosProductos, setPermisosProductos] = useState([])
     const [dataProductos, setDataProductos] = useState([])
     const [productoState, setProductoState] = useState({});
 
     const [productosAgg, setProductosAgg] = useState({
-
+        id_empresa: authUsuario.id_empresa,
+        id_producto: 0,
+        id_familia: 0,
+        id_marca: 0,
+        id_tipo_producto: 0,
+        id_unidad: 0,
+        referencia: 0,
+        descripcion: "",
+        foto: "fotasa",
+        precio_costo: 0,
+        precio_venta: 0,
+        critico: false,
+        inventariable: false,
+        compuesto: false,
+        ficha: false,
+        certificado: false,
     })
+
     const [errors, setErrors] = useState({
         referencia: "",
         marca: "",
         familia: "",
-        nombre_producto: "",
+        descripcion: "",
         unidad: "",
         precio_costo: "",
         precio_venta: "",
@@ -57,9 +69,8 @@ const ProductosProvider = ({ children }) => {
                             `/opciones-basicas/productos-empresa?estado=${estado}&empresa=${authUsuario.id_empresa}`,
                             config
                         );
-                        // console.log(data);
-                        // data.map((e) => { data.compuesto == true ? e.compuesto = "si" : e.compuesto = "no" })
                         setDataProductos(data);
+                        console.log(productosAgg);
                     } catch (error) {
                         setDataProductos([]);
                     }
@@ -69,6 +80,66 @@ const ProductosProvider = ({ children }) => {
         }
     }, [location.pathname]);
 
+    const guardar_producto = async (formData) => {
+        const token = localStorage.getItem("token");
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        try {
+            const { data } = await conexion_cliente.post("/opciones-basicas/productos-empresa", formData, config);
+            if (!data?.error) {
+                setDataProductos([...dataProductos, data])
+                setAlerta({
+                    error: false,
+                    show: true,
+                    message: 'Producto creado con exito'
+                })
+                setTimeout(() => setAlerta({}), 1500)
+                return true
+            }
+            setAlerta({
+                error: true,
+                show: true,
+                message: data.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            return false;
+
+        } catch (error) {
+            setAlerta({
+                error: true,
+                show: true,
+                message: error.response?.data.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+        }
+    }
+
+    const buscar_producto = async (id) => {
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        try {
+            const { data } = await conexion_cliente(`/opciones-basicas/productos-empresa/${id}`, config);
+            console.log(data.id_producto);
+            if (!data?.error) {
+
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
     const eliminar_restablecer_producto = async (id) => {
         const token = localStorage.getItem('token')
         if (!token) {
@@ -76,7 +147,6 @@ const ProductosProvider = ({ children }) => {
             navigate('/auth')
             return
         }
-
         const config = {
             headers: {
                 "Content-Type": "application/json",
@@ -86,7 +156,7 @@ const ProductosProvider = ({ children }) => {
 
         try {
             const estado = location.pathname.includes("inactivos") ? 1 : 2;
-            const { data } = await conexion_cliente.delete(`/perfiles/${id}?estado=${estado}`, config)
+            const { data } = await conexion_cliente.delete(`/opciones-basicas/productos-empresa/${id}?estado=${estado}`, config)
 
             if (data?.error) {
                 setAlerta({ error: true, show: true, message: data.message })
@@ -117,10 +187,12 @@ const ProductosProvider = ({ children }) => {
         productoState,
         setProductoState,
         eliminar_restablecer_producto,
-        errors, 
+        errors,
         setErrors,
-        productosAgg, 
-        setProductosAgg
+        productosAgg,
+        setProductosAgg,
+        buscar_producto,
+        guardar_producto
     }));
     return (
         <ProductosContext.Provider

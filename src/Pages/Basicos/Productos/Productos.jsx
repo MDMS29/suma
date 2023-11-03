@@ -19,17 +19,17 @@ const Productos = () => {
     const toast = useRef(null);
 
     const columns = [
-        { field: "referencia", header: "referencia" },
+        { field: "referencia", header: "Referencia" },
+        { field: "nombre_producto", header: "Nombre" },
         { field: "marca", header: "Marca" },
         { field: "nombre_familia", header: "Familia" },
-        { field: "nombre_producto", header: "Descripcion" },
-        { field: "unidad", header: "Unidad" },
-        { field: "precio_costo", header: "Costo" },
-        { field: "precio_venta", header: "Venta" },
-        { field: "tipo_producto", header: "Tipo de producto" },
-        { field: "critico_con", header: "Producto Critico" },
+        { field: "tipo_producto", header: "Tipo Producto" },
+        { field: "unidad", header: "Unidad Medida" },
+        { field: "precio_costo", header: "Precio Costo" },
+        { field: "precio_venta", header: "Precio Venta" },
+        { field: "critico_con", header: "Critico" },
         { field: "inventariable_con", header: "Inventariable" },
-        { field: "compuesto_con", header: "Producto Compuesto" },
+        { field: "compuesto_con", header: "Compuesto" },
         { field: "ficha_con", header: "Ficha" },
         { field: "certificado_con", header: "Certificado" }
     ];
@@ -56,18 +56,17 @@ const Productos = () => {
 
         const items_filtrados = dataProductos.filter((item) => {
             return (
-                item.referencia.toLowerCase().includes(value) ||
-                item.id_marca.toLowerCase().includes(value) ||
-                item.familia.toLowerCase().includes(value) ||
+                item.referencia.includes(value) ||
+                item.marca.toLowerCase().includes(value) ||
+                item.nombre_familia.toLowerCase().includes(value) ||
                 item.nombre_producto.toLowerCase().includes(value) ||
                 item.unidad.toLowerCase().includes(value) ||
-                item.precio_costo.toLowerCase().includes(value) ||
-                item.precio_venta.toLowerCase().includes(value) ||
+                item.precio_costo == value ||
+                item.precio_venta == value ||
                 item.tipo_producto.toLowerCase().includes(value) ||
-                item.compuesto.toLowerCase().includes(value) ||
-                item.ficha.toLowerCase().includes(value) ||
-                item.certificado.toLowerCase().includes(value) ||
-                item.estado.toLowerCase().includes(value)
+                item.compuesto_con.toLowerCase().includes(value) ||
+                item.ficha_con.toLowerCase().includes(value) ||
+                item.certificado_con.toLowerCase().includes(value)
             );
         });
         setFilteredData(items_filtrados);
@@ -172,91 +171,91 @@ const Productos = () => {
     };
 
     const main = () => (
-        <>
-            <div className="w-5/6">
-                <Toast ref={toast} />
 
-                {modalVisible && <ModalAgregarProducto visible={modalVisible} onClose={cambiar_visibilidad_modal} onUpload={onUpload} />}
-                {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminar_restablecer_producto(productoState.id_producto, e)} />}
+        <div className="w-5/6">
+            <Toast ref={toast} />
 
-                <div className="flex justify-center gap-x-4 m-2 p-3">
-                    <h1 className="text-3xl">Productos</h1>
-                    {Producto_Icono}
-                </div>
-                <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-                    {permisosProductos.filter(
-                        (permiso) =>
-                            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
-                    ).length > 0 && (
-                            <Button
-                                tipo={'PRINCIPAL'}
-                                funcion={(e) => setModalVisible(true, e)}
-                            >
-                                <i className="pi pi-plus mx-2 font-medium"></i>
-                                Agregar
-                            </Button>
-                        )}
-                    {permisosProductos.filter(
-                        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-                    ).length > 0 && (
-                            <div className="h-full flex justify-center items-center">
-                                <BLink
-                                    tipo={'INACTIVOS'}
-                                    url="/basicos/productos/inactivos"
-                                >
-                                    Inactivos
-                                </BLink>
-                            </div>
-                        )}
-                    <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
-                        <i className="pi pi-search" />
-                        <InputText
-                            className="h-10 pl-8 rounded-md"
-                            placeholder="Buscar"
-                            onChange={(e) => buscador(e)}
-                            value={searchTerm}
-                        />
-                    </span>
-                </div>
+            {modalVisible && <ModalAgregarProducto visible={modalVisible} onClose={cambiar_visibilidad_modal} onUpload={onUpload} />}
+            {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminar_restablecer_producto(productoState.id_producto, e)} />}
 
-                <div className="card">
-                    <DataTable
-                        className="custom-datatable"
-                        stripedRows
-                        value={filteredData}
-                        paginator={true}
-                        rows={5}
-                        header={header}
-                        emptyMessage="No se han encontrado resultados"
-                        rowsPerPageOptions={[5, 10, 25, 50]}
-                        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                        currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                        scrollable
-                        scrollHeight="400px"
-                        tableStyle={{ minWidth: "50rem" }}
-                    >
-                        {visibleColumns.map((col) => (
-                            <Column key={col.field} field={col.field} header={col.header}
-                                body={col.field === 'precio_costo' || col.field === "precio_venta" ? (rowData) => formatMoney(rowData[col.field]) : null}
-                            />))}
-
-                        <Column
-                            header="Foto"
-                            key="foto"
-                            style={{ width: "10%" }}
-                            body={(rowData) => <img className="h-24 w-24" src={rowData.foto_con} />}
-                        />
-                        <Column
-                            key="actions"
-                            style={{ width: "10%" }}
-                            body={(rowData) => columna_acciones(rowData)}
-                            frozen
-                            alignFrozen="right"
-                        />
-                    </DataTable>
-                </div>
+            <div className="flex justify-center gap-x-4 m-2 p-3">
+                <h1 className="text-3xl">Productos</h1>
+                {Producto_Icono}
             </div>
-        </>
+            <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+                {permisosProductos.filter(
+                    (permiso) =>
+                        permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+                ).length > 0 && (
+                        <Button
+                            tipo={'PRINCIPAL'}
+                            funcion={(e) => setModalVisible(true, e)}
+                        >
+                            <i className="pi pi-plus mx-2 font-medium"></i>
+                            Agregar
+                        </Button>
+                    )}
+                {permisosProductos.filter(
+                    (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+                ).length > 0 && (
+                        <div className="h-full flex justify-center items-center">
+                            <BLink
+                                tipo={'INACTIVOS'}
+                                url="/basicas/productos/inactivos"
+                            >
+                                Inactivos
+                            </BLink>
+                        </div>
+                    )}
+                <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
+                    <i className="pi pi-search" />
+                    <InputText
+                        className="h-10 pl-8 rounded-md"
+                        placeholder="Buscar"
+                        onChange={(e) => buscador(e)}
+                        value={searchTerm}
+                    />
+                </span>
+            </div>
+
+            <div className="card">
+                <DataTable
+                    className="custom-datatable"
+                    stripedRows
+                    value={filteredData}
+                    paginator={true}
+                    rows={5}
+                    header={header}
+                    emptyMessage="No se han encontrado resultados"
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                    scrollable
+                    scrollHeight="400px"
+                    tableStyle={{ minWidth: "50rem" }}
+                >
+                    {visibleColumns.map((col) => (
+                        <Column key={col.field} field={col.field} header={col.header}
+                            body={col.field === 'precio_costo' || col.field === "precio_venta" ? (rowData) => formatMoney(rowData[col.field]) : null}
+                        />))}
+
+                    <Column
+                        header="Foto"
+                        key="foto"
+                        style={{ width: "10%" }}
+                        body={(rowData) => <img className="h-24 w-24" src={rowData.foto_con} />}
+                    />
+                    <Column
+                        key="actions"
+                        style={{ width: "10%" }}
+                        body={(rowData) => columna_acciones(rowData)}
+                        frozen
+                        alignFrozen="right"
+                    />
+                </DataTable>
+            </div>
+        </div>
+
     );
 
 

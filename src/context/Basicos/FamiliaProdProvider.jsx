@@ -21,29 +21,31 @@ const FamiliaProdProvider = ({ children }) => {
 
   const location = useLocation();
 
+  const obtener_familia_prod = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (authUsuario.id_empresa) {
+      try {
+        const estado = location.pathname.includes("inactivos") ? 2 : 1;
+        const { data } = await conexion_cliente(
+          `/opciones-basicas/familias-productos?estado=${estado}&empresa=${authUsuario.id_empresa}`,
+          config
+        );
+        setDataFliaPro(data);
+      } catch (error) {
+        setDataFliaPro([]);
+      }
+    }
+  }
+
   useEffect(() => {
     if (location.pathname.includes("familias-productos")) {
-      (async () => {
-        const token = localStorage.getItem("token");
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        if (authUsuario.id_empresa) {
-          try {
-            const estado = location.pathname.includes("inactivos") ? 2 : 1;
-            const { data } = await conexion_cliente(
-              `/opciones-basicas/familias-productos?estado=${estado}&empresa=${authUsuario.id_empresa}`,
-              config
-            );
-            setDataFliaPro(data);
-          } catch (error) {
-            setDataFliaPro([]);
-          }
-        }
-      })();
+      obtener_familia_prod()
     }
   }, [location.pathname]);
 
@@ -201,6 +203,7 @@ const FamiliaProdProvider = ({ children }) => {
   };
 
   const obj = useMemo(() => ({
+    obtener_familia_prod,
     dataFliaPro,
     setDataFliaPro,
     FliaProState,

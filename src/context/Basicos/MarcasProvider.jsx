@@ -20,27 +20,26 @@ const MarcasProvider = ({ children }) => {
     const [errors, setErrors] = useState({
         marca: ''
     });
+    const obtener_marcas = async () => {
+        const token = localStorage.getItem('token')
 
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+        if (authUsuario.id_empresa) {
+            try {
+                const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/`, config)
+                setDataMarcas(data)
+            } catch (error) {
+                setDataMarcas([])
+            }
+        }
+    }
     useEffect(() => {
         if (location.pathname.includes('marcas')) {
-            const obtener_marcas = async () => {
-                const token = localStorage.getItem('token')
-
-                const config = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-                if (authUsuario.id_empresa) {
-                    try {
-                        const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/`, config)
-                        setDataMarcas(data)
-                    } catch (error) {
-                        setDataMarcas([])
-                    }
-                }
-            }
             obtener_marcas()
         }
     }, [location.pathname])
@@ -172,6 +171,7 @@ const MarcasProvider = ({ children }) => {
     }
 
     const obj = useMemo(() => ({
+        obtener_marcas,
         buscar_marca,
         dataMarcas,
         marcasAgg,
