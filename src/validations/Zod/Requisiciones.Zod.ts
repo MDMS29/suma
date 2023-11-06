@@ -17,6 +17,10 @@ export const RequisicionesSchema = z.object({
         invalid_type_error: "Valor del tipo de producto es invalido",
         required_error: "Seleccione un tipo de producto para la requisicion"
     }).int(),
+    consecutivo: z.string({
+        invalid_type_error: "Tipo del comentarios es invalido",
+        required_error: "Seleccione un centro de costo"
+    }),
     comentarios: z.optional(
         z.string({
             invalid_type_error: "Tipo del comentarios es invalido"
@@ -27,7 +31,7 @@ export const RequisicionesSchema = z.object({
             invalid_type_error: "El valor del producto es invalido",
             required_error: "Seleccione un producto valido"
         }),
-        cantidad : z.number({
+        cantidad: z.number({
             invalid_type_error: "El tipo de valor la cantidad es invalida",
             required_error: "Ingrese una cantidad valida"
         }),

@@ -1,4 +1,5 @@
 import QueryRequisiciones from "../../querys/Compras/QueryRequisiciones";
+import { Requisicion_Det, Requisicion_Enc } from "../../validations/Types";
 
 export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
@@ -31,44 +32,60 @@ export class RequisicionesService {
         }
     }
 
-    // public async Insertar_Familia_Producto(familia_producto_request: Familia_Producto, usuario_creacion: string) {
-    //     try {
-    //         //TODO: ARREGLAR VALIDACION DE DATOS
-    //         const familia_filtrada: any = await this._Query_Requisiciones.Buscar_Familia_Producto(familia_producto_request)
-    //         if (familia_filtrada?.length > 0) {
-    //             return { error: true, message: 'Ya existe esta familia de producto' } //!ERROR
-    //         }
+    public async Insertar_Requisicion(requisicion_request: Requisicion_Enc, usuario_creacion: string) {
+        try {
+            //TODO: ARREGLAR VALIDACION DE DATOS
+            const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_Consecutivo(requisicion_request)
+            if (requisicion_filtrada?.length > 0) {
+                return { error: true, message: 'Ya existe este consecutivo' } //!ERROR
+            }
 
-    //         const respuesta = await this._Query_Requisiciones.Insertar_Familia_Producto(familia_producto_request, usuario_creacion)
+            // INSERTAR ENCABEZADO DE LA REQUISICION
+            const requisicion_enc = await this._Query_Requisiciones.Insertar_Requisicion_Enc(requisicion_request, usuario_creacion)
+            if (!requisicion_enc) {
+                return { error: true, message: 'No se ha podido crear la requisicion' } //!ERROR
+            }
 
-    //         if (!respuesta) {
-    //             return { error: true, message: 'No se ha podido crear la familia de productos' } //!ERROR
-    //         }
+            // INSERTAR DETALLES DE LA REQUISICION
+            const { det_requisicion } = requisicion_request
+            if (det_requisicion) {
+                let detalle: Requisicion_Det
+                for (detalle of det_requisicion) {
+                    const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, requisicion_enc[0].id_requisicion, usuario_creacion)
+                    if (!requisicion_det) {
+                        return { error: true, message: `Error al insertar el producto ${detalle.id_producto}` } //!ERROR
+                    }
+                }
+            } else {
+                return { error: true, message: `Error al crear la requisicion ${requisicion_request.consecutivo}` } //!ERROR
+            }
 
-    //         const familia_producto = await this._Query_Requisiciones.Buscar_Familia_Producto_ID(respuesta[0].id_familia)
-    //         if (!familia_producto) {
-    //             return { error: true, message: 'No se ha encontrado la familia de productos' } //!ERROR
-    //         }
+            // EN ESTE ESPACIO DE LINEA SE EJECUTA UN TRIGGER PARA AUMENTAR EL CONSECUTIVO DEL CENTRO UTILIZADO
 
-    //         return familia_producto[0]
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { error: true, message: 'Error al crear la familia de productos' } //!ERROR
-    //     }
-    // }
+            const nueva_requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(requisicion_enc[0].id_requisicion)
+            if (!nueva_requisicion) {
+                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+            }
 
-    // public async Buscar_Familia_Producto(id_familia_producto: number): Promise<any> {
-    //     try {
-    //         const familia_producto = await this._Query_Requisiciones.Buscar_Familia_Producto_ID(id_familia_producto)
-    //         if (!familia_producto) {
-    //             return { error: true, message: 'No se ha encontrado la familia' } //!ERROR
-    //         }
-    //         return familia_producto[0]
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { error: true, message: 'Error al encontrar la familia' }
-    //     }
-    // }
+            return nueva_requisicion
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: `Error al crear la requisicion ${requisicion_request.consecutivo}` } //!ERROR
+        }
+    }
+
+    public async Buscar_Requisicion(id_requisicion: number): Promise<any> {
+        try {
+            const familia_producto = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            if (!familia_producto) {
+                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+            }
+            return familia_producto[0]
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al encontrar la requisicion' }
+        }
+    }
 
     // public async Editar_Familia_Producto(id_familia_producto: number, familia_producto_request: Familia_Producto) {
     //     try {

@@ -3,6 +3,7 @@ import { FamiliaProductoService } from "../../services/Opciones_Basicas/FamiliaP
 import { EstadosTablas } from "../../utils";
 import { FamiliaProductoSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
 import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
+import { RequisicionesSchema } from "../../validations/Zod/Requisiciones.Zod";
 
 export default class RequisicionesController {
 
@@ -35,30 +36,20 @@ export default class RequisicionesController {
 
     public async Insertar_Requisicion(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        // const { id_familia_producto } = req.params
-        const { id_empresa, referencia, descripcion } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_empresa) {
-            return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
-        }
-        if (!referencia) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar una referencia para la familia' }) //!ERROR
-        }
-        if (!descripcion) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion para la familia' }) //!ERROR
-        }
 
-        const result = FamiliaProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        // VALIDACION DE DATOS
+        const result = RequisicionesSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
-            const familias_producto_service = new FamiliaProductoService()
-            const respuesta = await familias_producto_service.Insertar_Familia_Producto(req.body, usuario?.usuario)
+            const familias_producto_service = new RequisicionesService()
+            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -66,31 +57,33 @@ export default class RequisicionesController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al crear la marca' }) //!ERROR
+            return res.status(500).json({ error: true, message: `Error al crear la requisicion ${req.body.consecutivo}` }) //!ERROR
         }
     }
 
-    public async Buscar_Familia_Producto(req: Request, res: Response) {
+    public async Buscar_Requisicion(req: Request, res: Response) {
         const { usuario } = req
-        const { id_familia_producto } = req.params
+        const { id_requisicion } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_familia_producto) {
-            return res.status(400).json({ error: true, message: 'No se ha encontrado la familia' }) //!ERROR
+        if (!id_requisicion) {
+            return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
         }
         try {
-            const familias_producto_service = new FamiliaProductoService()
-            const respuesta = await familias_producto_service.Buscar_Familia_Producto(+id_familia_producto)
+            const requisiciones_service = new RequisicionesService()
+            const respuesta = await requisiciones_service.Buscar_Requisicion(+id_requisicion)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
             return res.json(respuesta) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return res.json({ error: true, message: 'Error al encontrar la familia' }) //!ERROR
+            return res.json({ error: true, message: 'Error al encontrar la requisicion' }) //!ERROR
         }
     }
+
+    //TODO: REALIZAR LA EDICION DE LAS REQUISICIONES
     public async Editar_Familia_Producto(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_familia_producto } = req.params

@@ -26,7 +26,7 @@ export default class QueryCentroCostoEmpresa {
     public async Obtener_Centros_Costo_Filtro(empresa: number, tipo: string, valor: number): Promise<any> {
         const client = await pool.connect()
         try {
-            let result = await _DB.func(_FA_obtener_centros_filtro, [empresa, tipo, valor]);
+            let result = await _DB.func(_FA_obtener_centros_filtro, [empresa, tipo, +valor]);
             return result
         } catch (error) {
             console.log(error)
@@ -65,6 +65,7 @@ export default class QueryCentroCostoEmpresa {
             client.release();
         }
     }
+
     public async Buscar_Centro_Nombre(centro_costo_request: Centro_Costo) {
         const client = await pool.connect()
 
@@ -80,6 +81,7 @@ export default class QueryCentroCostoEmpresa {
             client.release();
         }
     }
+    
     public async Buscar_Responsable_Centro(centro_costo_request: Centro_Costo) {
         const client = await pool.connect()
 
@@ -109,7 +111,7 @@ export default class QueryCentroCostoEmpresa {
             client.release();
         }
     }
-
+    
     public async Editar_Centro_Costo(id_centro_costo: number, centro_costo_request: Centro_Costo) {
         const client = await pool.connect()
 
@@ -124,7 +126,7 @@ export default class QueryCentroCostoEmpresa {
             client.release();
         }
     }
-
+    
     public async Cambiar_Estado_Centro(id_centro_costo: number, estado: number) {
         const client = await pool.connect()
 
@@ -138,5 +140,7 @@ export default class QueryCentroCostoEmpresa {
             client.release();
         }
     }
+
+    
 
 }
