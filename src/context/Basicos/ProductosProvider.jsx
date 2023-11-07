@@ -24,14 +24,14 @@ const ProductosProvider = ({ children }) => {
         id_unidad: 0,
         referencia: 0,
         descripcion: "",
-        foto: "fotasa",
+        foto: "",
         precio_costo: 0,
         precio_venta: 0,
         critico: false,
         inventariable: false,
         compuesto: false,
         ficha: false,
-        certificado: false,
+        certificado: false
     })
 
     const [errors, setErrors] = useState({
@@ -69,8 +69,12 @@ const ProductosProvider = ({ children }) => {
                             `/opciones-basicas/productos-empresa?estado=${estado}&empresa=${authUsuario.id_empresa}`,
                             config
                         );
+                        if (data.error == false) {
+                            setDataProductos([]);
+                            return
+                        }
+
                         setDataProductos(data);
-                        console.log(productosAgg);
                     } catch (error) {
                         setDataProductos([]);
                     }
@@ -119,27 +123,6 @@ const ProductosProvider = ({ children }) => {
         }
     }
 
-    const buscar_producto = async (id) => {
-        const token = localStorage.getItem("token");
-        const config = {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        };
-
-        try {
-            const { data } = await conexion_cliente(`/opciones-basicas/productos-empresa/${id}`, config);
-            console.log(data.id_producto);
-            if (!data?.error) {
-
-            }
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
-
     const eliminar_restablecer_producto = async (id) => {
         const token = localStorage.getItem('token')
         if (!token) {
@@ -173,9 +156,131 @@ const ProductosProvider = ({ children }) => {
             return true
 
         } catch (error) {
-            setAlerta({ error: false, show: true, message: error.response.data.message })
+            setAlerta({ error: false, show: true, message: error.data })
             setTimeout(() => setAlerta({}), 1500)
             return false
+        }
+    }
+
+    const buscar_producto = async (id) => {
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        try {
+            const { data } = await conexion_cliente(`/opciones-basicas/productos-empresa/${id}`, config);
+            console.log(data);
+            if (data?.error) {
+                return { error: true, message: data.message }
+            }
+            const { id_producto,
+                id_familia,
+                id_marca,
+                id_tipo_producto,
+                id_unidad,
+                referencia,
+                descripcion,
+                foto,
+                precio_costo,
+                precio_venta,
+                critico,
+                inventariable,
+                compuesto,
+                ficha,
+                certificado } = data
+
+            setProductosAgg({
+                id_producto,
+                id_familia,
+                id_marca,
+                id_tipo_producto,
+                id_unidad,
+                referencia: referencia,
+                descripcion: descripcion,
+                foto: foto,
+                precio_costo: precio_costo,
+                precio_venta: precio_venta,
+                critico: critico,
+                inventariable: inventariable,
+                compuesto: compuesto,
+                ficha: ficha,
+                certificado: certificado
+            })
+
+
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    const editar_producto = async (formData) => {
+        const token = localStorage.getItem("token");
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        try {
+            const { data } = await conexion_cliente.patch(`/opciones-basicas/productos-empresa/${formData.id_producto}`, formData, config);
+            console.log(data);
+            if (!data?.error) {
+                const productos_actualizados = dataProductos.map((producto) =>
+                    producto.id_producto === data.id_producto
+                        ? data
+                        : producto
+                );
+                setDataProductos(productos_actualizados);
+
+                setAlerta({
+                    error: false,
+                    show: true,
+                    message: 'Producto editado con exito'
+                })
+                setProductosAgg({
+                    id_empresa: authUsuario.id_empresa,
+                    id_producto: 0,
+                    id_familia: 0,
+                    id_marca: 0,
+                    id_tipo_producto: 0,
+                    referencia: 0,
+                    id_unidad: 0,
+                    descripcion: "",
+                    foto: "",
+                    precio_costo: "",
+                    precio_venta: "",
+                    critico: false,
+                    inventariable: false,
+                    compuesto: false,
+                    ficha: false,
+                    certificado: false
+                });
+                setTimeout(() => setAlerta({}), 1500)
+                return true
+            }
+            setAlerta({
+                error: true,
+                show: true,
+                message: data.message
+            })
+            setTimeout(() => setAlerta({}), 1500)
+            return false;
+
+        } catch (error) {
+            setAlerta({
+                error: true,
+                show: true,
+                message: error.response.data.message
+            })
+
+            setTimeout(() => setAlerta({}), 1500)
         }
     }
 
@@ -192,7 +297,8 @@ const ProductosProvider = ({ children }) => {
         productosAgg,
         setProductosAgg,
         buscar_producto,
-        guardar_producto
+        guardar_producto,
+        editar_producto
     }));
     return (
         <ProductosContext.Provider

@@ -21,18 +21,12 @@ const ProductosInactivos = () => {
 
   const columns = [
     { field: "referencia", header: "Referencia" },
+    { field: "nombre_producto", header: "Nombre" },
     { field: "marca", header: "Marca" },
     { field: "nombre_familia", header: "Familia" },
-    { field: "nombre_producto", header: "Descripcion" },
-    { field: "unidad", header: "Unidad" },
-    { field: "precio_costo", header: "Costo" },
-    { field: "precio_venta", header: "Venta" },
-    { field: "tipo_producto", header: "Tipo de producto" },
-    { field: "critico_con", header: "Producto Critico" },
-    { field: "inventariable_con", header: "Inventariable" },
-    { field: "compuesto_con", header: "Producto Compuesto" },
-    { field: "ficha_con", header: "Ficha" },
-    { field: "certificado_con", header: "Certificado" }
+    { field: "tipo_producto", header: "Tipo Producto" },
+    { field: "unidad", header: "Unidad Medida" },
+    { field: "critico_con", header: "Critico" }
   ];
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -59,16 +53,12 @@ const ProductosInactivos = () => {
     const items_filtrados = dataProductos.filter((item) => {
       return (
         item.referencia.includes(value) ||
+        item.nombre_producto.toLowerCase().includes(value) ||
         item.marca.toLowerCase().includes(value) ||
         item.nombre_familia.toLowerCase().includes(value) ||
-        item.nombre_producto.toLowerCase().includes(value) ||
-        item.unidad.toLowerCase().includes(value) ||
-        item.precio_costo == value ||
-        item.precio_venta == value ||
         item.tipo_producto.toLowerCase().includes(value) ||
-        item.compuesto_con.toLowerCase().includes(value) ||
-        item.ficha_con.toLowerCase().includes(value) ||
-        item.certificado_con.toLowerCase().includes(value)
+        item.unidad.toLowerCase().includes(value) ||
+        item.critico.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
@@ -105,8 +95,6 @@ const ProductosInactivos = () => {
       display="chip"
     />
   );
-
-
 
   const main = () => (
     <div className="w-5/6">
@@ -145,19 +133,11 @@ const ProductosInactivos = () => {
           rowsPerPageOptions={[5, 10, 25, 50]}
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}"
-          scrollable
-          scrollHeight="400px"
           tableStyle={{ minWidth: "50rem" }}
         >
           {visibleColumns.map((col) => (
             <Column key={col.field} field={col.field} header={col.header} />
           ))}
-          <Column
-            header="Foto"
-            key="foto"
-            style={{ width: "10%" }}
-            body={(rowData) => <img className="h-24 w-24" src={rowData.foto_con} />}
-          />
           {/*columna Acciones */}
           <Column
             key="actions"
@@ -175,8 +155,6 @@ const ProductosInactivos = () => {
                   </PButton>
                 </div>
               ) : '')}
-            frozen
-            alignFrozen="right"
           />
         </DataTable>
       </div>

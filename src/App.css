@@ -25,6 +25,11 @@
     src: url("./fonts/OpenSans/OpenSans Medium.ttf");
 }
 
+:root {
+    --primaryYellow: #f2c302;
+    --secundaryYellow: #F0C81F
+}
+
 h1,
 h2,
 h3,
@@ -156,5 +161,27 @@ form>input {
 
 /* ------ Select ------ */
 select {
-    font-family: 'FontAwesome', Verdana
+    font-family: 'FontAwesome', Verdana;
+}
+
+/* ------ file ------ */
+.custom-file-input {
+    visibility: hidden;
+    position: absolute;
+}
+
+.custom-file-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secundaryYellow);
+    border: 2px solid var(--secundaryYellow);
+    border-radius: 5px;
+    font-weight: 500;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.custom-file-label:hover {
+    background-color: var(--primaryYellow);
 }

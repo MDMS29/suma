@@ -277,7 +277,6 @@ const UsuariosProvider = ({ children }) => {
       if (data?.error) {
         return { error: true, message: data.message }
       }
-
       const { id_usuario, nombre_completo, usuario, correo, perfiles } = data.usuario
       let permisos = []
       setUsuariosAgg({

@@ -99,6 +99,4 @@ diseño modal
 - marca, familia, unidad, tipo de producto, producto critico, Inventariable, Producto Compuesto, Ficha, Certificado es SELECT
             
                               --HACER-- 
-- Editar Producto
-- editar_producto
-- buscar_producto
+- Productos inactivos BUG

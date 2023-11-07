@@ -1,10 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "primereact/dialog";
 import Button from "../../../Botones/Button";
 import { InputText } from "primereact/inputtext";
 import useProductos from "../../../../hooks/Basicos/useProductos";
 import { Dropdown } from "primereact/dropdown";
-import { FileUpload } from "primereact/fileupload";
 
 import useMarcas from "../../../../hooks/Basicos/useMarcas";
 import useFamiliaProd from "../../../../hooks/Basicos/useFamiliaProd";
@@ -12,8 +11,9 @@ import useUnidades from "../../../../hooks/Basicos/useUnidades";
 import useTipoProd from "../../../../hooks/Basicos/useTipoProd";
 import useAuth from "../../../../hooks/useAuth";
 
-const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
+const ModalAgregarProducto = ({ visible, onClose }) => {
 
+  const [selectedImage, setSelectedImage] = useState()
   const { errors, setErrors, productosAgg, setProductosAgg, editar_producto, guardar_producto } = useProductos()
   const { dataMarcas, obtener_marcas } = useMarcas()
   const { dataFliaPro, obtener_familia_prod } = useFamiliaProd()
@@ -21,12 +21,21 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
   const { dataTipoProf, obtener_tipo_producto } = useTipoProd()
   const { authUsuario } = useAuth()
 
-
   const btn_cambio_producto = (e) => {
-    console.log(e.target.name);
+    const esBoleano = ['critico', 'inventariable', 'compuesto', 'ficha', 'certificado']
     const value = e.target.value;
-    setProductosAgg({ ...productosAgg, [e.target.name]: e.target.name == "descripcion" ? value.replace(/\d/g, '') : value });
+    console.log(e.target.name);
+    setProductosAgg({ ...productosAgg, [e.target.name]: e.target.name == "descripcion" ? value.replace(/\d/g, '') : esBoleano.includes(e.target.name) ? Boolean(!productosAgg[e.target.name]) : value });
+
   };
+  const handleImageChange = (e) => {
+    // console.log(e.target.files)
+    const file = new FileReader()
+    file.addEventListener("load", () => {
+      setSelectedImage(file.result)
+    })
+    file.readAsDataURL(e.target.files[0])
+  }
 
   const campos_vacios = () => {
     setProductosAgg({
@@ -45,7 +54,7 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
       inventariable: false,
       compuesto: false,
       ficha: false,
-      certificado: false,
+      certificado: false
     });
   }
 
@@ -66,7 +75,7 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
       compuesto: Boolean(productosAgg.compuesto),
       ficha: Boolean(productosAgg.ficha),
       certificado: Boolean(productosAgg.certificado),
-      foto: "fotasa"
+      foto: selectedImage
     }
 
     const errors = {};
@@ -103,7 +112,6 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
     }
     if (productosAgg.precio_costo == 0) {
       errors.precio_costo = "El Precio Costo es obligatorio";
-
     }
     if (productosAgg.precio_venta == 0) {
       errors.precio_venta = "El Precio Venta es obligatorio";
@@ -124,11 +132,16 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
         campos_vacios()
       }
     } catch (error) {
-      // Maneja los errores si ocurren
-      console.error("Error al guardar el usuario:", error.response.data.message);
+      console.error("Error al guardar el usuario:", error.response);
     }
-
   }
+
+  const formatearCantidad = (cantidad) => {
+    return Number(cantidad).toLocaleString('es-CO', {
+      style: 'currency',
+      currency: 'COP'
+    })
+  };
 
   const cerrar_modal = () => {
     campos_vacios()
@@ -286,8 +299,8 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
               Precio Costo <span className="font-bold text-red-900">*</span>
             </label>
             <InputText
-              value={productosAgg.precio_costo}
               type="number"
+              value={productosAgg.precio_costo}
               name="precio_costo"
               className={`border-1 h-10 rounded-md px-3 py-2 ${errors.precio_costo ? "border-red-500" : "border-gray-300"
                 }`}
@@ -305,8 +318,8 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
               Precio Venta <span className="font-bold text-red-900">*</span>
             </label>
             <InputText
+            type="number"
               value={productosAgg.precio_venta}
-              type="number"
               name="precio_venta"
               className={`border-1 h-10 rounded-md px-3 py-2 ${errors.precio_venta ? "border-red-500" : "border-gray-300"
                 }`}
@@ -321,20 +334,19 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 col-span-2 gap-4 p-2 border rounded-md">
             <div className="flex gap-3 justify-between items-center">
-              <label className="text-gray-600 pb-2 font-semibold">
-                Critico <span className="font-bold text-red-900">*</span>
-              </label>
+              <label className="text-gray-600 pb-2 font-semibold">Critico</label>
               <label
                 className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosAgg.critico == true ? "bg-primaryYellow" : "bg-gray-300"
                   }`}>
                 <input
                   value={productosAgg.critico}
+                  checked={productosAgg.critico}
                   type="checkbox"
                   name="critico"
                   onChange={(e) => btn_cambio_producto(e)}
                   className="sr-only peer" />
                 <span
-                  className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                  className={`w-2/5 h-4/5  bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
               </label>
 
               {errors.critico && (
@@ -344,15 +356,14 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
               )}
             </div>
             <div className="flex gap-3 justify-between items-center">
-              <label className="text-gray-600 pb-2 font-semibold">
-                Inventariable <span className="font-bold text-red-900">*</span>
-              </label>
+              <label className="text-gray-600 pb-2 font-semibold">Inventariable </label>
               <label
                 className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosAgg.inventariable == true ? "bg-primaryYellow" : "bg-gray-300"
                   }`}>
                 <input
                   value={productosAgg.inventariable}
                   type="checkbox"
+                  checked={productosAgg.inventariable}
                   name="inventariable"
                   onChange={(e) => btn_cambio_producto(e)}
                   className="sr-only peer" />
@@ -366,14 +377,13 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
               )}
             </div>
             <div className="flex gap-3 justify-between items-center">
-              <label className="text-gray-600 pb-2 font-semibold">
-                Compuesto <span className="font-bold text-red-900">*</span>
-              </label>
+              <label className="text-gray-600 pb-2 font-semibold"> Compuesto </label>
               <label
                 className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosAgg.compuesto == true ? "bg-primaryYellow" : "bg-gray-300"
                   }`}>
                 <input
                   value={productosAgg.compuesto}
+                  checked={productosAgg.compuesto}
                   name="compuesto"
                   type="checkbox"
                   onChange={(e) => btn_cambio_producto(e)}
@@ -388,14 +398,13 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
               )}
             </div>
             <div className="flex gap-3 justify-between items-center">
-              <label className="text-gray-600 pb-2 font-semibold">
-                Ficha <span className="font-bold text-red-900">*</span>
-              </label>
+              <label className="text-gray-600 pb-2 font-semibold">Ficha</label>
               <label
                 className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosAgg.ficha == true ? "bg-primaryYellow" : "bg-gray-300"
                   }`}>
                 <input
                   value={productosAgg.ficha}
+                  checked={productosAgg.ficha}
                   name="ficha"
                   type="checkbox"
                   onChange={(e) => btn_cambio_producto(e)}
@@ -410,14 +419,13 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
               )}
             </div>
             <div className="flex gap-3 justify-between">
-              <label className="text-gray-600 pb-2 font-semibold">
-                Certificado <span className="font-bold text-red-900">*</span>
-              </label>
+              <label className="text-gray-600 pb-2 font-semibold">Certificado </label>
               <label
                 className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosAgg.certificado == true ? "bg-primaryYellow" : "bg-gray-300"
                   }`}>
                 <input
                   value={productosAgg.certificado}
+                  checked={productosAgg.certificado}
                   name="certificado"
                   type="checkbox"
                   onChange={(e) => btn_cambio_producto(e)}
@@ -432,11 +440,15 @@ const ModalAgregarProducto = ({ visible, onClose, onUpload }) => {
               )}
             </div>
           </div>
-          <div className="flex justify-between max-sm:col-span-2">
+          <div className="flex justify-between max-sm:col-span-2 flex-col">
             <label className="text-gray-600 pb-2 font-semibold">
-              Foto del Producto <span className="font-bold text-red-900">*</span>
-            </label>
-            <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" maxFileSize={1000000} onUpload={onUpload} />
+              Foto del Producto </label>
+            <label className="custom-file-label gap-2" htmlFor="fileInput"><i className="pi pi-download"></i> Seleccionar archivo</label>
+            <input type="file" accept="image/*" name="foto" onChange={handleImageChange} id="fileInput" className="custom-file-input" />
+            <br />
+            {selectedImage && <img src={selectedImage} alt="Preview" height={200} width={200} />}
+            <br />
+            {productosAgg.id_producto !== 0 && !selectedImage && <img src={productosAgg.foto} alt="Foto" height={200} width={200} />}
           </div>
         </div>
       </div>

@@ -25,13 +25,7 @@ const Productos = () => {
         { field: "nombre_familia", header: "Familia" },
         { field: "tipo_producto", header: "Tipo Producto" },
         { field: "unidad", header: "Unidad Medida" },
-        { field: "precio_costo", header: "Precio Costo" },
-        { field: "precio_venta", header: "Precio Venta" },
-        { field: "critico_con", header: "Critico" },
-        { field: "inventariable_con", header: "Inventariable" },
-        { field: "compuesto_con", header: "Compuesto" },
-        { field: "ficha_con", header: "Ficha" },
-        { field: "certificado_con", header: "Certificado" }
+        { field: "critico_con", header: "Critico" }
     ];
 
     const { permisosProductos, setPermisosProductos, dataProductos, buscar_producto, setProductoState, productoState, eliminar_restablecer_producto } = useProductos()
@@ -57,16 +51,12 @@ const Productos = () => {
         const items_filtrados = dataProductos.filter((item) => {
             return (
                 item.referencia.includes(value) ||
+                item.nombre_producto.toLowerCase().includes(value) ||
                 item.marca.toLowerCase().includes(value) ||
                 item.nombre_familia.toLowerCase().includes(value) ||
-                item.nombre_producto.toLowerCase().includes(value) ||
-                item.unidad.toLowerCase().includes(value) ||
-                item.precio_costo == value ||
-                item.precio_venta == value ||
                 item.tipo_producto.toLowerCase().includes(value) ||
-                item.compuesto_con.toLowerCase().includes(value) ||
-                item.ficha_con.toLowerCase().includes(value) ||
-                item.certificado_con.toLowerCase().includes(value)
+                item.unidad.toLowerCase().includes(value) ||
+                item.critico.toLowerCase().includes(value)
             );
         });
         setFilteredData(items_filtrados);
@@ -83,17 +73,7 @@ const Productos = () => {
         setProductoState(producto);
         setVerEliminarRestaurar(true);
     };
-
-    function formatMoney(number) {
-        const roundedNumber = parseFloat(number).toFixed(2);
-        const formattedMoney = `$${roundedNumber}`;
-        return formattedMoney;
-    }
-
-    const onUpload = () => {
-        toast.current.show({ severity: 'info', summary: 'Success', detail: 'Subido con exito' });
-    };
-
+    
     const cambiar_visibilidad_modal = () => {
         setModalVisible(!modalVisible);
     };
@@ -175,7 +155,7 @@ const Productos = () => {
         <div className="w-5/6">
             <Toast ref={toast} />
 
-            {modalVisible && <ModalAgregarProducto visible={modalVisible} onClose={cambiar_visibilidad_modal} onUpload={onUpload} />}
+            {modalVisible && <ModalAgregarProducto visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
             {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminar_restablecer_producto(productoState.id_producto, e)} />}
 
             <div className="flex justify-center gap-x-4 m-2 p-3">
@@ -230,32 +210,20 @@ const Productos = () => {
                     rowsPerPageOptions={[5, 10, 25, 50]}
                     paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                     currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                    scrollable
-                    scrollHeight="400px"
                     tableStyle={{ minWidth: "50rem" }}
                 >
                     {visibleColumns.map((col) => (
-                        <Column key={col.field} field={col.field} header={col.header}
-                            body={col.field === 'precio_costo' || col.field === "precio_venta" ? (rowData) => formatMoney(rowData[col.field]) : null}
-                        />))}
+                        <Column key={col.field} field={col.field} header={col.header} />
+                    ))}
 
-                    <Column
-                        header="Foto"
-                        key="foto"
-                        style={{ width: "10%" }}
-                        body={(rowData) => <img className="h-24 w-24" src={rowData.foto_con} />}
-                    />
                     <Column
                         key="actions"
                         style={{ width: "10%" }}
                         body={(rowData) => columna_acciones(rowData)}
-                        frozen
-                        alignFrozen="right"
                     />
                 </DataTable>
             </div>
         </div>
-
     );
 
 

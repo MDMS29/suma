@@ -428,7 +428,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                       className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
                   </label>
                   <span className="ml-6">{perfil.nombre_perfil}</span>
-
                 </div>
               ))}
             </div>
