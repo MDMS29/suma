@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { FamiliaProductoService } from "../../services/Opciones_Basicas/FamiliaProducto.Service";
 import { EstadosTablas } from "../../utils";
-import { FamiliaProductoSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
 import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
 import { RequisicionesSchema } from "../../validations/Zod/Requisiciones.Zod";
 
@@ -83,42 +81,32 @@ export default class RequisicionesController {
         }
     }
 
-    //TODO: REALIZAR LA EDICION DE LAS REQUISICIONES
-    public async Editar_Familia_Producto(req: Request, res: Response) {
+    public async Editar_Requisicion(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { id_familia_producto } = req.params
-        const { id_empresa, referencia, descripcion } = req.body
+        const { id_requisicion } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_empresa) {
-            return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
-        }
-        if (!id_familia_producto) {
-            return res.status(400).json({ error: true, message: 'No se ha definido la familia' }) //!ERROR
-        }
-        if (!referencia) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar una referencia para la familia' }) //!ERROR
-        }
-        if (!descripcion) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para la familia' }) //!ERROR
+
+        if (!id_requisicion) {
+            return res.status(404).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
         }
 
-        const result = FamiliaProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        // VALIDACION DE DATOS
+        const result = RequisicionesSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
-            const familia_producto_service = new FamiliaProductoService()
-
-            const respuesta = await familia_producto_service.Editar_Familia_Producto(+id_familia_producto, req.body)
+            const requisiciones_service = new RequisicionesService()
+            const respuesta = await requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario?.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await familia_producto_service.Buscar_Familia_Producto(+id_familia_producto)
+            const response = await requisiciones_service.Buscar_Requisicion(+id_requisicion)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
             }
@@ -129,32 +117,58 @@ export default class RequisicionesController {
         }
     }
 
-    public async Cambiar_Estado_Familia(req: Request, res: Response) {
+    public async Cambiar_Estado_Requisicion(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { id_familia_producto } = req.params
+        const { id_requisicion } = req.params
         const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
-        if (!id_familia_producto) {
-            return res.status(400).json({ error: true, message: 'No se ha definido la familia' }) //!ERROR
+        if (!id_requisicion) {
+            return res.status(400).json({ error: true, message: 'No se ha definido la requisicion' }) //!ERROR
         }
         if (!estado) {
             return res.status(400).json({ error: true, message: 'No se ha definido un estado a cambiar' }) //!ERROR
         }
 
         try {
-            const familia_producto_service = new FamiliaProductoService()
-            const familia_estado = await familia_producto_service.Cambiar_Estado_Familia(+id_familia_producto, +estado)
+            const requisiciones_service = new RequisicionesService()
+            const familia_estado = await requisiciones_service.Cambiar_Estado_Requisicion(+id_requisicion, +estado)
             if (familia_estado.error) {
                 return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado la familia' : 'Se ha desactivado la familia' })
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_APROBADO ? 'Se ha aprobado la requisicion' : 'Se ha anulado la requisicion' })
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Error al activar la familia' : 'Error al desactivar la familia' }) //!ERROR
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_APROBADO ? 'Error al aprobar la requisicion' : 'Error al anular la requisicion' }) //!ERROR
+        }
+    }
+
+    public async Generar_PDF_Requisicion(req: Request, res: Response) {
+        const { usuario } = req
+        const { id_requisicion } = req.params
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+        }
+        if (!id_requisicion) {
+            return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
+        }
+        try {
+            const requisiciones_service = new RequisicionesService()
+            const pdf: any = await requisiciones_service.Generar_PDF_Requisicion(+id_requisicion)
+            if (pdf.error) {
+                return res.json({ error: true, message: pdf.message }) //!ERROR
+            }
+
+            // Configurar encabezados para el navegador
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'inline; filename=ejemplo.pdf');
+            return res.send(pdf)
+        } catch (error) {
+            console.log(error)
+            return res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ProductosEmpresaService } from "../../services/Opciones_Basicas/ProductosEmpresa.Service";
 import { ProductosSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
-import { EstadosTablas } from "../../utils";
+import { EstadosTablas, _Foto_Default } from "../../utils";
 
 export default class ProductosEmpresaController {
 
@@ -35,10 +35,12 @@ export default class ProductosEmpresaController {
     public async Insertar_Producto_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
 
-        console.log(req.body)
-
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+        }
+
+        if(!req.body.foto){
+            req.body.foto = _Foto_Default
         }
 
         const result: any = ProductosSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
@@ -48,7 +50,7 @@ export default class ProductosEmpresaController {
 
         try {
             const producto_empresa_service = new ProductosEmpresaService()
-            const respuesta = await producto_empresa_service.Insertar_Producto_Empresa(result.data, usuario?.usuario)
+            const respuesta = await producto_empresa_service.Insertar_Producto_Empresa(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -97,8 +99,13 @@ export default class ProductosEmpresaController {
     public async Editar_Producto_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_producto } = req.params
+
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+        }
+
+        if(!req.body.foto){
+            req.body.foto = _Foto_Default
         }
 
         const result: any = ProductosSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS

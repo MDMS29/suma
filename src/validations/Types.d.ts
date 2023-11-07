@@ -132,6 +132,7 @@ export interface Producto_Empresa {
 export interface Requisicion_Det {
     id_detalle?: number
     id_producto: number
+    id_estado?: number
     cantidad: number
     justificacion: string
 }

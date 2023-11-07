@@ -1,11 +1,13 @@
 export const _obtener_requisicion_enc = `
     SELECT 
         tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
-        te.nombre_estado, tr.fecha_requisicion
+        te.nombre_estado, tr.fecha_requisicion, tc.correo_responsable, te.nombre_estado, tr.id_tipo_producto,
+        ttp.descripcion as tipo_productos
     FROM
         tbl_requisiciones tr
     INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 
     INNER JOIN seguridad.tbl_estados te ON te.id_estado = tr.id_estado 
+    INNER JOIN public.tbl_tipo_producto ttp ON ttp.id_tipo_producto = tr.id_tipo_producto 
     WHERE
         tr.id_estado = $1 AND tr.id_empresa = $2
 `
@@ -19,7 +21,7 @@ export const _buscar_detalle_requisicion = `
     INNER JOIN public.tbl_productos tp  ON tp.id_producto   = trd.id_producto
     INNER JOIN public.tbl_unidad    tu  ON tu.id_unidad     = tp.id_unidad
     WHERE 
-        trd.id_requisicion = $1
+        trd.id_requisicion = $1 AND trd.id_estado != 2
 `
 
 export const _buscar_requisicion_consecutivo = `
@@ -77,11 +79,45 @@ export const _insertar_requisicion_det = `
 export const _buscar_requisicion_id = ` 
     SELECT 
         tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
-        te.nombre_estado, tr.fecha_requisicion
+        te.nombre_estado, tr.fecha_requisicion, tr.id_empresa, ste.razon_social, tp.proceso, 
+        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion
     FROM
         tbl_requisiciones tr
     INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 
+    INNER JOIN public.tbl_procesos tp ON tp.id_proceso = tr.id_proceso 
     INNER JOIN seguridad.tbl_estados te ON te.id_estado = tr.id_estado 
+    INNER JOIN seguridad.tbl_empresas ste ON ste.id_empresa = tr.id_empresa
+    INNER JOIN public.tbl_tipo_producto ttp ON ttp.id_tipo_producto = tr.id_tipo_producto 
     WHERE
         tr.id_requisicion = $1
+`
+
+export const _editar_requisicion_enc = `
+    UPDATE 
+        public.tbl_requisiciones
+    SET 
+        id_empresa=$2, id_proceso=$3, id_centro=$4, 
+        id_tipo_producto=$5, requisicion=$6, comentarios=$7, 
+        equipo=$8
+    WHERE 
+        id_requisicion=$1;       
+`
+
+export const _editar_requisicion_det = `
+    UPDATE 
+        public.tbl_requisicion_detalle
+    SET 
+        id_producto=$2, cantidad=$3, justificacion=$4, 
+        id_estado=$5, fecha_modificacion=now(), usuario_modificacion=$6
+    WHERE 
+        id_detalle=$1;
+`
+
+export const _cambiar_estado_requisicion = `
+    UPDATE 
+        public.tbl_requisiciones
+    SET 
+        id_estado=$2
+    WHERE 
+        id_requisicion=$1;     
 `

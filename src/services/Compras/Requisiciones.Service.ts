@@ -1,6 +1,8 @@
 import QueryRequisiciones from "../../querys/Compras/QueryRequisiciones";
 import { Requisicion_Det, Requisicion_Enc } from "../../validations/Types";
 
+import { jsPDF } from "jspdf"
+
 export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
 
@@ -76,62 +78,148 @@ export class RequisicionesService {
 
     public async Buscar_Requisicion(id_requisicion: number): Promise<any> {
         try {
-            const familia_producto = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
-            if (!familia_producto) {
+            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            if (!requisicion) {
                 return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
             }
-            return familia_producto[0]
+            return requisicion
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al encontrar la requisicion' }
         }
     }
 
-    // public async Editar_Familia_Producto(id_familia_producto: number, familia_producto_request: Familia_Producto) {
-    //     try {
-    //         const respuesta: any = await this._Query_Requisiciones.Buscar_Familia_Producto_ID(id_familia_producto)
+    public async Editar_Requisicion(id_requisicion: number, requisicion_request: Requisicion_Enc, usuario_modificacion: string) {
+        try {
+            const respuesta: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
 
-    //         const familia_filtrada_referencia: any = await this._Query_Requisiciones.Buscar_Familia_Producto(familia_producto_request)
-    //         if (familia_filtrada_referencia?.length > 0 && familia_filtrada_referencia[0].referencia !== respuesta[0].referencia && familia_producto_request.id_empresa === respuesta[0].id_empresa) {
-    //             return { error: true, message: 'Ya existe esta referencia' } //!ERROR
-    //         }
+            if (!respuesta) {
+                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+            }
 
-    //         const familia_filtrada_descripcion: any = await this._Query_Requisiciones.Buscar_Familia_Descripcion(familia_producto_request)
-    //         if (familia_filtrada_descripcion?.length > 0 && familia_filtrada_descripcion[0].descripcion !== respuesta[0].descripcion && familia_producto_request.id_empresa === respuesta[0].id_empresa) {
-    //             return { error: true, message: 'Ya existe este nombre de familia' } //!ERROR
-    //         }
+            const req_enc = await this._Query_Requisiciones.Editar_Requisicion_Enc(id_requisicion, requisicion_request)
+            if (req_enc?.rowCount != 1) {
+                return { error: true, message: 'Error al actualizar la requisicion' } //!ERROR
+            }
 
-    //         familia_producto_request.referencia = respuesta[0]?.referencia === familia_producto_request.referencia ? respuesta[0]?.referencia : familia_producto_request.referencia
-    //         familia_producto_request.descripcion = respuesta[0]?.descripcion === familia_producto_request.descripcion ? respuesta[0]?.descripcion : familia_producto_request.descripcion
+            const { det_requisicion } = requisicion_request
+            if (det_requisicion) {
+                let detalle: Requisicion_Det
+                for (detalle of det_requisicion) {
+                    if (detalle.id_detalle) {
+                        // EDITAR DETALLE
+                        const requisicion_det = await this._Query_Requisiciones.Editar_Requisicion_Det(detalle, usuario_modificacion)
+                        if (!requisicion_det) {
+                            return { error: true, message: `Error al editar el detalle ${detalle.id_producto}` } //!ERROR
+                        }
+                    } else {
+                        // INSERTAR DETALLE
+                        const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, id_requisicion, usuario_modificacion)
+                        if (!requisicion_det) {
+                            return { error: true, message: `Error al crear el detalle ${detalle.id_producto}` } //!ERROR
+                        }
+                    }
+                }
+            } else {
+                return { error: true, message: `Error al editar la requisicion ${requisicion_request.consecutivo}` } //!ERROR
+            }
 
-    //         const res = await this._Query_Requisiciones.Editar_Familia_Producto(id_familia_producto, familia_producto_request)
-    //         if (res?.rowCount != 1) {
-    //             return { error: true, message: 'Error al actualizar la familia' } //!ERROR
-    //         }
+            return { error: false, message: '' } //*SUCCESSFUL
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al editar la requisicion' } //!ERROR
+        }
+    }
+    public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
+        try {
+            const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            if (requisicion_filtrada?.length <= 0) {
+                return { error: true, message: 'No se ha encontrado esta la requisicion' } //!ERROR
+            }
 
-    //         return { error: false, message: '' } //*SUCCESSFUL
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { error: true, message: 'Error al editar la familia' } //!ERROR
-    //     }
-    // }
+            const requisicion = await this._Query_Requisiciones.Cambiar_Estado_Requisicion(id_requisicion, estado)
+            if (requisicion?.rowCount != 1) {
+                return { error: true, message: 'Error al cambiar el estado de la requisicion' } //!ERROR
+            }
 
-    // public async Cambiar_Estado_Familia(id_familia_producto: number, estado: number) {
-    //     try {
-    //         const familia_filtrada: any = await this._Query_Requisiciones.Buscar_Familia_Producto_ID(id_familia_producto)
-    //         if (familia_filtrada?.length <= 0) {
-    //             return { error: true, message: 'No se ha encontrado esta la familia' } //!ERROR
-    //         }
+            return { error: false, message: '' } //*SUCCESSFUL
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al cambiar el estado de la requisicion' } //!ERROR
+        }
+    }
 
-    //         const familia_cambiada = await this._Query_Requisiciones.Cambiar_Estado_Familia(id_familia_producto, estado)
-    //         if (familia_cambiada?.rowCount != 1) {
-    //             return { error: true, message: 'Error al cambiar el estado de la familia' } //!ERROR
-    //         }
 
-    //         return { error: false, message: '' } //*SUCCESSFUL
-    //     } catch (error) {
-    //         console.log(error)
-    //         return { error: true, message: 'Error al cambiar el estado de la familia' } //!ERROR
-    //     }
-    // }
+    public async Generar_PDF_Requisicion(id_requisicion: number) {
+
+        try {
+            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            if (!requisicion) {
+                return { error: true, message: "No se ha encontrado la requisicion" }
+            }
+
+            // GENERAR PDFs
+            const doc = new jsPDF();
+
+            // CABERZERA DOCUMENTO
+            doc.setFontSize(12)
+
+            doc.rect(5, 5, 200, 30); // (x, y, ancho, alto)
+
+            doc.text(`${requisicion.razon_social}`, 10, 10); // (texto, x, y)
+            doc.text(`${requisicion.requisicion}`, 90, 10); // (texto, x, y)
+            doc.text(`${requisicion.fecha_requisicion.toLocaleString().split(',')[0]}`, 150, 10); // (texto, x, y)
+
+            doc.text(`${requisicion.proceso}`, 10, 30); // (texto, x, y)
+            doc.text(`${requisicion.centro_costo}`, 90, 30); // (texto, x, y)
+
+
+            doc.rect(150, 26, 5, 5, `${requisicion.id_tipo_producto === 1 ? 'F' : 'S'}`) // (x, y, ancho, alto)
+            doc.text('Material', 156, 30); // (texto, x, y)
+
+            doc.rect(180, 26, 5, 5, `${requisicion.id_tipo_producto === 2 ? 'F' : 'S'}`) // (x, y, ancho, alto)
+            doc.text(`Servicio`, 186, 30); // (texto, x, y)
+
+            // DETALLES DE LA REQUISICION
+            let Y_Init = 12
+            doc.rect(5, 37, 200, Y_Init); // (x, y, ancho, alto)
+            doc.text('Detalles Requisicion', 83, 41.5)
+            
+            doc.line(5, 43, 205, 43) // (x1, y1, x2, y2)
+            
+            doc.text('Item', 6, 47)
+            doc.line(15, 43, 15, 49) // (x1, y1, x2, y2)
+            
+            doc.text('Cod. Producto', 17.5, 47)
+            doc.line(48, 43, 48, 49) // (x1, y1, x2, y2)
+            
+            doc.text('Nombre', 65, 47)
+            doc.line(100, 43, 100, 49) // (x1, y1, x2, y2)
+            
+            doc.text('Cantidad', 102, 47)
+            doc.line(121, 43, 121, 49) // (x1, y1, x2, y2)
+            
+            doc.text('Unid. Medida', 122, 47)
+            doc.line(148, 43, 148, 49) // (x1, y1, x2, y2)
+            
+            doc.text('Justificación', 165, 47)
+            
+            if(requisicion.det_requisicion.length <= 0){
+                doc.text('No hay productos en la requisición', 82, 43)
+            }else{
+                // for(let detalle of requisicion.det_requisicion){
+                //     doc.text(`${detalle.nombre_producto}`, 71, 47)
+                // }
+            }
+
+
+
+            const pdfBase64 = doc.output('datauristring');
+            return pdfBase64
+
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
 }

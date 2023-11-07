@@ -1,15 +1,11 @@
 import { pool } from "../../../config/db";
 import {
-    _buscar_detalle_requisicion, _buscar_requisicion_consecutivo, _buscar_requisicion_id, _insertar_requisicion_det,
-    _insertar_requisicion_enc, _obtener_requisicion_enc
+    _buscar_detalle_requisicion, _buscar_requisicion_consecutivo, _buscar_requisicion_id, 
+    _cambiar_estado_requisicion, _editar_requisicion_det, _editar_requisicion_enc, 
+    _insertar_requisicion_det, _insertar_requisicion_enc, _obtener_requisicion_enc
 } from "../../dao/Compras/DaoRequisiciones";
 
-import {
-    _buscar_empresa_id, _buscar_empresa_nit, _buscar_razon_social, _cambiar_estado_empresa,
-    _editar_empresa, _insertar_empresa
-} from "../../dao/Configuracion/DaoEmpresa";
-
-import { Empresa, Requisicion_Enc } from "../../validations/Types";
+import { Requisicion_Det, Requisicion_Enc } from "../../validations/Types";
 
 export default class QueryRequisiciones {
     public async Obtener_Requisiciones_Enc(estado: number, empresa: number): Promise<any> {
@@ -123,11 +119,42 @@ export default class QueryRequisiciones {
         }
     }
 
-    public async Buscar_Nit(nit: string) {
+    public async Editar_Requisicion_Enc(id_requisicion: number, requisicion_request: Requisicion_Enc) {
         const client = await pool.connect()
+        const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, comentarios, equipo } = requisicion_request
+
 
         try {
-            let result = await client.query(_buscar_empresa_nit, [nit]);
+            let result = await client.query(
+                _editar_requisicion_enc,
+                [
+                    id_requisicion,
+                    id_empresa, id_proceso, id_centro,
+                    id_tipo_producto, consecutivo, comentarios,
+                    equipo
+                ]
+            );
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+    public async Editar_Requisicion_Det(requisicion_det_request: Requisicion_Det, usuario_modificacion: string) {
+        const client = await pool.connect()
+        const { id_detalle, id_producto, cantidad, justificacion, id_estado } = requisicion_det_request
+
+        try {
+            let result = await client.query(
+                _editar_requisicion_det,
+                [
+                    id_detalle,
+                    id_producto, cantidad, justificacion,
+                    id_estado, usuario_modificacion
+                ]
+            );
             return result.rows
         } catch (error) {
             console.log(error)
@@ -137,13 +164,12 @@ export default class QueryRequisiciones {
         }
     }
 
-    public async Editar_Empresa(id_empresa: number, empresa_request: Empresa, usuario_modificacion: string) {
+    public async Buscar_Detalle_ID(id_detalle: number) {
         const client = await pool.connect()
-        const { nit, razon_social, direccion, telefono, correo } = empresa_request
 
         try {
-            let result = await client.query(_editar_empresa, [id_empresa, nit, razon_social, telefono, direccion, correo, usuario_modificacion]);
-            return result
+            let result: any = await client.query(_buscar_requisicion_id, [id_detalle]);
+            return result.rows
         } catch (error) {
             console.log(error)
             return
@@ -151,11 +177,10 @@ export default class QueryRequisiciones {
             client.release();
         }
     }
-
-    public async Cambiar_Estado_Empresa(id_empresa: number, estado: number) {
+    public async Cambiar_Estado_Requisicion(id_empresa: number, estado: number) {
         const client = await pool.connect()
         try {
-            let result = await client.query(_cambiar_estado_empresa, [id_empresa, estado]);
+            let result = await client.query(_cambiar_estado_requisicion, [id_empresa, estado]);
             return result
         } catch (error) {
             console.log(error)

@@ -138,9 +138,9 @@ export const ProductosSchema = z.object({
         invalid_type_error: 'El tipo de dato es invalido unidad',
         required_error: 'La unidad de medida del producto es requerida'
     }),
-    foto: z.string({
+    foto: z.optional(z.string({
         invalid_type_error: 'El tipo de dato es invalido foto'
-    }),
+    })),
     descripcion: z.string({
         invalid_type_error: 'El tipo de dato es invalido descripcion',
         required_error: 'El nombre del producto es requerido'
