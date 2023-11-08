@@ -6,7 +6,7 @@ import {
     _CambiarEstadoPerfil
 } from "../../dao/Configuracion/DaoPerfil";
 
-import { PerfilUsuario } from "../../validations/Types";
+import { PerfilUsuario } from '../../Interfaces/Configuracion/IConfig'
 
 export default class QueryPerfil {
     public async Obtener_Perfiles(estado: number): Promise<any> {

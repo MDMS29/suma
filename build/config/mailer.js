@@ -14,4 +14,4 @@ exports.transporter = nodemailer_1.default.createTransport({
         pass: process.env.MAILER_PASS
     }
 });
-exports.transporter.verify().then(() => console.log('Mailer listo'));
+// transporter.verify().then(() => console.log('Mailer listo'))

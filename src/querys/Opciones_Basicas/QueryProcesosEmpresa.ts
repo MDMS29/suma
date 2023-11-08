@@ -4,7 +4,7 @@ import {
     _obtener_procesos_empresa
 } from "../../dao/Opciones_Basicas/DaoProcesosEmpresa";
 
-import { Procesos_Empresa } from "../../validations/Types";
+import { Procesos_Empresa } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryProcesosEmpresa {
     public async Obtener_Procesos_Empresa(empresa: number): Promise<any> {

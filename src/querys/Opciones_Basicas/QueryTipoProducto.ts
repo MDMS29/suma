@@ -5,7 +5,7 @@ import {
     _insertar_tipo_producto, _obtener_tipos_producto
 } from "../../dao/Opciones_Basicas/DaoTipoProducto";
 
-import { Tipo_Producto } from "../../validations/Types";
+import { Tipo_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryTipoProducto {
     public async Obtener_Tipos_Producto(id_empresa: number): Promise<any> {

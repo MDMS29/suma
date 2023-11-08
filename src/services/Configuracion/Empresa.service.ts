@@ -1,5 +1,5 @@
 import QueryEmpresa from "../../querys/Configuracion/QueryEmpresa";
-import { Empresa } from "../../validations/Types";
+import { Empresa } from '../../Interfaces/Configuracion/IConfig'
 
 export default class EmpresaService {
     private _Query_Empresa: QueryEmpresa;

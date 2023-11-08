@@ -7,7 +7,7 @@ import {
     _obtener_centros_costos_empresa,
 } from "../../dao/Opciones_Basicas/DaoCentroCostoEmpresa";
 
-import { Centro_Costo } from "../../validations/Types";
+import { Centro_Costo } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryCentroCostoEmpresa {
     public async Obtener_Centros_Costo_Empresa(estado: number, empresa: number): Promise<any> {

@@ -4,7 +4,7 @@ import {
     _buscar_marca_producto, _buscar_marca_producto_id, _editar_marca_producto, _insertar_marca_producto, _obtener_marcas_producto
 } from "../../dao/Opciones_Basicas/DaoMarcaProducto";
 
-import { Marca_Producto } from "../../validations/Types";
+import { Marca_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryMarcaProducto {
     public async Obtener_Marcas_Producto(): Promise<any> {

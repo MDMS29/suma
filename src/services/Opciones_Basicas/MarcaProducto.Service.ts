@@ -1,5 +1,5 @@
 import QueryMarcaProducto from "../../querys/Opciones_Basicas/QueryMarcaProducto";
-import { Marca_Producto } from "../../validations/Types";
+import { Marca_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export class MarcaProductoService {
     private _Query_Marca_Producto: QueryMarcaProducto;

@@ -1,5 +1,5 @@
 import QueryCentroCostoEmpresa from "../../querys/Opciones_Basicas/QueryCentroCostoEmpresa";
-import { Centro_Costo } from "../../validations/Types";
+import { Centro_Costo } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export class CentroCostoEmpresaService {
     private _Query_Centro_Costo_Empresa: QueryCentroCostoEmpresa;

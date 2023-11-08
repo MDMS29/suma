@@ -1,12 +1,9 @@
 import { pool } from "../../../config/db";
-import {
-    _CambiarEstadoMenu,
-} from "../../dao/Configuracion/DaoMenu";
 
 import {
     _buscar_unidad_medida, _buscar_unidad_medida_id, _editar_unidad_medida, _insertar_unidad_medida, _obtener_unidades_medida
 } from "../../dao/Opciones_Basicas/DaoUnidadesMedida";
-import { Unidad_Medida } from "../../validations/Types";
+import { Unidad_Medida } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryUnidadesMedida {
     public async Obtener_Unidades_Medida(_: number, id_empresa: number): Promise<any> {

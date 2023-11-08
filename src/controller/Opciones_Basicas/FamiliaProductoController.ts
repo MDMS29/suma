@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { FamiliaProductoService } from "../../services/Opciones_Basicas/FamiliaProducto.Service";
 import { EstadosTablas } from "../../utils";
-import { FamiliaProductoSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
+import { FamiliaProductoSchema } from "../../validations/OpcionesBasicas.Zod";
 
 export default class FamiliaProductoController {
 

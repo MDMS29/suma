@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ProductosEmpresaService } from "../../services/Opciones_Basicas/ProductosEmpresa.Service";
-import { ProductosSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
+import { ProductosSchema } from "../../validations/OpcionesBasicas.Zod";
 import { EstadosTablas, _Foto_Default } from "../../utils";
 
 export default class ProductosEmpresaController {

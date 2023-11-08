@@ -1,5 +1,5 @@
 import QueryProcesosEmpresa from "../../querys/Opciones_Basicas/QueryProcesosEmpresa";
-import { Procesos_Empresa } from "../../validations/Types";
+import { Procesos_Empresa } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export class ProcesosEmpresaService {
     private _Query_Proceso_Empresa: QueryProcesosEmpresa;

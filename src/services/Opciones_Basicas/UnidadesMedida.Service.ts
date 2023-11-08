@@ -1,5 +1,5 @@
 import QueryUnidadesMedida from "../../querys/Opciones_Basicas/QueryUnidadesMedida";
-import { Unidad_Medida } from "../../validations/Types";
+import { Unidad_Medida } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export class UnidadesMedidaService {
     private _Query_Unidades_Medida: QueryUnidadesMedida;

@@ -3,7 +3,7 @@ import {
     _buscar_empresa_id, _buscar_empresa_nit, _buscar_razon_social, _cambiar_estado_empresa,
     _editar_empresa, _insertar_empresa, _obtener_empresas
 } from "../../dao/Configuracion/DaoEmpresa";
-import { Empresa } from "../../validations/Types";
+import { Empresa } from '../../Interfaces/Configuracion/IConfig';
 
 export default class QueryEmpresa {
     public async Obtener_Empresas(estado: number): Promise<any> {

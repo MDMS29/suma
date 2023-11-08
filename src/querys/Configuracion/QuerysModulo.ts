@@ -5,7 +5,7 @@ import {
     _EditarRolModulo, _InsertarModulo, _InsertarRolModulo, _ObtenerModulos,
     _ObtenerRolesModulo, _ObtenerUltimoID
 } from "../../dao/Configuracion/DaoModulo"
-import { ModulosUsuario } from "../../validations/Types"
+import { ModulosUsuario } from '../../Interfaces/Configuracion/IConfig'
 
 export default class QueryModulo {
     public async Obtener_Modulos(estado: number): Promise<any> {

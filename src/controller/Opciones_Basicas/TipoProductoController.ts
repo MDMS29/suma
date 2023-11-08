@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { TiposProductoService } from "../../services/Opciones_Basicas/TipoProducto.Service";
-import { TipoProductoSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
+import { TipoProductoSchema } from "../../validations/OpcionesBasicas.Zod";
 
 export default class TipoProductoController {
 

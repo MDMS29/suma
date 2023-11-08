@@ -4,7 +4,7 @@ import {
     _cambiar_estado_familia, _editar_familia_producto, _insertar_familia_producto, _obtener_familias_producto
 } from "../../dao/Opciones_Basicas/DaoFamiliaProducto";
 
-import { Familia_Producto } from "../../validations/Types";
+import { Familia_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryFamiliaProducto {
     public async Obtener_Familias_Producto(estado: number, empresa: number): Promise<any> {

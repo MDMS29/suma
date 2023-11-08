@@ -1,4 +1,4 @@
-import { MessageError, ModulosUsuario } from "../../validations/Types"
+import { MessageError, ModulosUsuario } from '../../Interfaces/Configuracion/IConfig'
 import QueryPerfil from "../../querys/Configuracion/QuerysPerfil"
 import { EstadosTablas } from "../../utils";
 

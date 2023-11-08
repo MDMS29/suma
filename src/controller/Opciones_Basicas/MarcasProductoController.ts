@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { MarcaProductoService } from "../../services/Opciones_Basicas/MarcaProducto.Service";
-import { MarcaSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
+import { MarcaSchema } from "../../validations/OpcionesBasicas.Zod";
 
 export default class MarcasProductoController {
 

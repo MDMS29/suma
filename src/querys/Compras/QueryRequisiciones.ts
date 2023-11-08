@@ -5,7 +5,7 @@ import {
     _insertar_requisicion_det, _insertar_requisicion_enc, _obtener_requisicion_enc
 } from "../../dao/Compras/DaoRequisiciones";
 
-import { Requisicion_Det, Requisicion_Enc } from "../../validations/Types";
+import { Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras';
 
 export default class QueryRequisiciones {
     public async Obtener_Requisiciones_Enc(estado: number, empresa: number): Promise<any> {

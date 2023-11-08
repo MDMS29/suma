@@ -11,7 +11,7 @@ import {
 
 import {
     UsuarioLogin, ModulosUsuario, MenusModulos, PermisosModulos
-} from "../../validations/Types";
+} from '../../Interfaces/Configuracion/IConfig'
 
 let bcrypt = require('bcrypt')
 

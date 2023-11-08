@@ -6,7 +6,7 @@ import {
     _FA_obtener_productos_filtro, _obtener_productos_empresa
 } from "../../dao/Opciones_Basicas/DaoProductosEmpresa";
 
-import { Producto_Empresa } from "../../validations/Types";
+import { Producto_Empresa } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryProductosEmpresa {
     public async Obtener_Productos_Empresa(estado: number, empresa: number): Promise<any> {

@@ -1,5 +1,5 @@
 import QueryProductosEmpresa from "../../querys/Opciones_Basicas/QueryProductosEmpresa";
-import { Producto_Empresa } from "../../validations/Types";
+import { Producto_Empresa } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export class ProductosEmpresaService {
     private _Query_Productos_Empresa: QueryProductosEmpresa;

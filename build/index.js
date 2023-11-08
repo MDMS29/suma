@@ -16,11 +16,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
-const UsuarioRoutes_1 = require("./src/routes/UsuarioRoutes");
-const PerfilesRoutes_1 = require("./src/routes/PerfilesRoutes");
-const ModulosRoutes_1 = require("./src/routes/ModulosRoutes");
-const RolesRoutes_1 = require("./src/routes/RolesRoutes");
-const MenuRoutes_1 = require("./src/routes/MenuRoutes");
+const UsuarioRoutes_1 = require("./src/routes/Configuracion/UsuarioRoutes");
+const PerfilesRoutes_1 = require("./src/routes/Configuracion/PerfilesRoutes");
+const ModulosRoutes_1 = require("./src/routes/Configuracion/ModulosRoutes");
+const RolesRoutes_1 = require("./src/routes/Configuracion/RolesRoutes");
+const MenuRoutes_1 = require("./src/routes/Configuracion/MenuRoutes");
+const EmpresaRoutes_1 = require("./src/routes/Configuracion/EmpresaRoutes");
+const BasicasRoute_1 = require("./src/routes/Opciones_Basicas/BasicasRoute");
+const ProductosRoute_1 = require("./src/routes/Opciones_Basicas/ProductosRoute");
+const RequisicionesRoutes_1 = require("./src/routes/Compras/RequisicionesRoutes");
 const app = (0, express_1.default)();
 app.disable('x-powered-by');
 app.use(express_1.default.json());
@@ -44,17 +48,7 @@ app.use((__, _, next) => __awaiter(void 0, void 0, void 0, function* () {
         next();
     }
 }));
-// app.use(async (__, _, next: NextFunction) => {
-//     try {
-//         const data = await fetch('https://github.com/tabler/tabler-icons/blob/master/icons')
-//         const json = await data.json()
-//         console.log(json)
-//         next()
-//     } catch (error) {
-//         console.log(error)
-//     }
-// });
-//DEFINIR RUTA DEL USUARIO
+/* ----- DEFINIR RUTA DEL USUARIO ---- */
 // Crear una instancia del enrutador de usuario
 app.use('/suma/api/usuarios', UsuarioRoutes_1._UsuarioRouter);
 //DEFINIR RUTA DE LOS PERFILES
@@ -65,6 +59,14 @@ app.use('/suma/api/modulos', ModulosRoutes_1._ModulosRouter);
 app.use('/suma/api/roles', RolesRoutes_1._RolesRouter);
 //DEFINIR RUTA DE LOS MENUS
 app.use('/suma/api/menus', MenuRoutes_1._MenusRouter);
+//DEFINIR RUTA DE LOS EMPRESAS
+app.use('/suma/api/empresas', EmpresaRoutes_1._EmpresasRouter);
+//DEFINIR RUTAS PARA LAS OPCIONES BASICAS
+app.use('/suma/api/opciones-basicas', BasicasRoute_1._OpcionesBasicasRouter);
+//DEFINIR RUTAS PARA LOS PRODUCTOS
+app.use('/suma/api/opciones-basicas', ProductosRoute_1._ProductosRouter);
+//DEFINIR RUTAS PARA LAS REQUISICIONES
+app.use('/suma/api/compras', RequisicionesRoutes_1._RequisicionesRouter);
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res) => {
     res.status(405).send({ error: true, message: "No se ha encontrado la request" });
@@ -73,3 +75,4 @@ const PORT = (_a = process.env.PORT) !== null && _a !== void 0 ? _a : 3000;
 app.listen(PORT, () => {
     console.log(`Servidor en ejecución en el puerto ${PORT}`);
 });
+exports.default = app;

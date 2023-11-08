@@ -1,5 +1,5 @@
 import QueryRequisiciones from "../../querys/Compras/QueryRequisiciones";
-import { Requisicion_Det, Requisicion_Enc } from "../../validations/Types";
+import { Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras'
 
 import { jsPDF } from "jspdf"
 import fs from "fs"

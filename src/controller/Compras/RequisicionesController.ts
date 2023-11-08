@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../utils";
 import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
-import { RequisicionesSchema } from "../../validations/Zod/Requisiciones.Zod";
+import { RequisicionesSchema } from "../../validations/Requisiciones.Zod";
 
 export default class RequisicionesController {
 

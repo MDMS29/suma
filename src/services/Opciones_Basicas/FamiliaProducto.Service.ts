@@ -1,5 +1,5 @@
 import QueryFamiliaProducto from "../../querys/Opciones_Basicas/QueryFamiliaProducto";
-import { Familia_Producto } from "../../validations/Types";
+import { Familia_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export class FamiliaProductoService {
     private _Query_Familia_Producto: QueryFamiliaProducto;
