@@ -2,6 +2,7 @@ import QueryRequisiciones from "../../querys/Compras/QueryRequisiciones";
 import { Requisicion_Det, Requisicion_Enc } from "../../validations/Types";
 
 import { jsPDF } from "jspdf"
+import fs from "fs"
 
 export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
@@ -163,13 +164,23 @@ export class RequisicionesService {
 
             // CABERZERA DOCUMENTO
             doc.setFontSize(12)
+            doc.setFont('Arial', 'normal', 'normal')
 
             doc.rect(5, 5, 200, 30); // (x, y, ancho, alto)
 
-            doc.text(`${requisicion.razon_social}`, 10, 10); // (texto, x, y)
-            doc.text(`${requisicion.requisicion}`, 90, 10); // (texto, x, y)
-            doc.text(`${requisicion.fecha_requisicion.toLocaleString().split(',')[0]}`, 150, 10); // (texto, x, y)
+            const imageData = fs.readFileSync('src/helpers/logo_empresa.png')
 
+            doc.addImage(imageData, 'PNG', 5, 7, 53, 11)
+
+            doc.line(59, 5, 59, 35)
+
+            doc.setFont('Arial', 'normal', 'bold')
+            doc.text('REQUISICIÓN DE COMPRA', 60, 10); // (texto, x, y)
+            
+            doc.setFont('Arial', 'normal', 'normal')
+            doc.text(`${requisicion.requisicion}`, 90, 10); // (texto, x, y)
+            
+            doc.text(`${requisicion.fecha_requisicion.toLocaleString().split(',')[0]}`, 10, 30); // (texto, x, y)
             doc.text(`${requisicion.proceso}`, 10, 30); // (texto, x, y)
             doc.text(`${requisicion.centro_costo}`, 90, 30); // (texto, x, y)
 
@@ -184,29 +195,29 @@ export class RequisicionesService {
             let Y_Init = 12
             doc.rect(5, 37, 200, Y_Init); // (x, y, ancho, alto)
             doc.text('Detalles Requisicion', 83, 41.5)
-            
+
             doc.line(5, 43, 205, 43) // (x1, y1, x2, y2)
-            
+
             doc.text('Item', 6, 47)
             doc.line(15, 43, 15, 49) // (x1, y1, x2, y2)
-            
+
             doc.text('Cod. Producto', 17.5, 47)
             doc.line(48, 43, 48, 49) // (x1, y1, x2, y2)
-            
+
             doc.text('Nombre', 65, 47)
             doc.line(100, 43, 100, 49) // (x1, y1, x2, y2)
-            
+
             doc.text('Cantidad', 102, 47)
             doc.line(121, 43, 121, 49) // (x1, y1, x2, y2)
-            
+
             doc.text('Unid. Medida', 122, 47)
             doc.line(148, 43, 148, 49) // (x1, y1, x2, y2)
-            
+
             doc.text('Justificación', 165, 47)
-            
-            if(requisicion.det_requisicion.length <= 0){
+
+            if (requisicion.det_requisicion.length <= 0) {
                 doc.text('No hay productos en la requisición', 82, 43)
-            }else{
+            } else {
                 // for(let detalle of requisicion.det_requisicion){
                 //     doc.text(`${detalle.nombre_producto}`, 71, 47)
                 // }
