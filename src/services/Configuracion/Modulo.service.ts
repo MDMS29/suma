@@ -178,7 +178,6 @@ export default class ModuloService {
                 }
             }
 
-
             return modulo //*SUCCESSFUL
         } catch (error) {
             console.log(error)
