@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ProductosEmpresaService } from "../../services/Opciones_Basicas/ProductosEmpresa.Service";
 import { ProductosSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
-import { EstadosTablas, _Foto_Default } from "../../utils";
+import { EstadosTablas, _Foto_Default } from "../../helpers/constants";
 
 export default class ProductosEmpresaController {
 
@@ -98,6 +98,7 @@ export default class ProductosEmpresaController {
 
     public async Editar_Producto_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        console.log(req.body)
         const { id_producto } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO

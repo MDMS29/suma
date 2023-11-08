@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { RolService } from "../../services/Configuracion/Rol.service";
-import { EstadosTablas } from "../../utils";
+import { EstadosTablas } from "../../helpers/constants";
 import { RolesSchema } from "../../validations/Zod/Configuracion.Zod";
 
 export class _RolController {

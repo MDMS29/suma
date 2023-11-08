@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { EstadosTablas } from "../../utils";
+import { EstadosTablas } from "../../helpers/constants";
 import EmpresaService from "../../services/Configuracion/Empresa.service";
 
 export default class _EmpresaController {

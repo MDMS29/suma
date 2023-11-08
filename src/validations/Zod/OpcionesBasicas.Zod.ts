@@ -133,6 +133,8 @@ export const ProductosSchema = z.object({
     referencia: z.number({
         invalid_type_error: 'El tipo de dato es invalido referencia',
         required_error: 'Ingrese la referencia del producto'
+    }).positive({
+        message: "El valor de la referencia debe ser mayor a 0"
     }),
     id_unidad: z.number({
         invalid_type_error: 'El tipo de dato es invalido unidad',
@@ -144,8 +146,6 @@ export const ProductosSchema = z.object({
     descripcion: z.string({
         invalid_type_error: 'El tipo de dato es invalido descripcion',
         required_error: 'El nombre del producto es requerido'
-    }).regex(/^[a-zA-Z0-9\s]*$/, {
-        message: 'No se permiten caracteres especiales'
     }),
     precio_costo: z.number({
         invalid_type_error: 'El tipo de dato es invalido precio costo',

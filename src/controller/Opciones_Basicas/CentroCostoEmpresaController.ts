@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CentroCostoEmpresaService } from "../../services/Opciones_Basicas/CentroCostoEmpresa.Service";
-import { EstadosTablas } from "../../utils";
+import { EstadosTablas } from "../../helpers/constants";
 import { CentroEmpresaSchema } from "../../validations/Zod/OpcionesBasicas.Zod";
 
 export default class CentroCostoEmpresa {

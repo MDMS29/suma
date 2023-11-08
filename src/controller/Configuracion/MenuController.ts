@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { EstadosTablas } from "../../utils";
+import { EstadosTablas } from "../../helpers/constants";
 import { MenuService } from "../../services/Configuracion/Menu.service";
 import { MenuSchema } from "../../validations/Zod/Configuracion.Zod";
 

@@ -1,6 +1,6 @@
 import { MessageError, ModulosUsuario } from "../../validations/Types"
 import QueryPerfil from "../../querys/Configuracion/QuerysPerfil"
-import { EstadosTablas } from "../../utils";
+import { EstadosTablas } from "../../helpers/constants";
 
 export class PerfilService {
     private _Query_Perfil: QueryPerfil;
