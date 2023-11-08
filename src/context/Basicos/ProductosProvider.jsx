@@ -230,7 +230,7 @@ const ProductosProvider = ({ children }) => {
 
         try {
             const { data } = await conexion_cliente.patch(`/opciones-basicas/productos-empresa/${formData.id_producto}`, formData, config);
-            console.log(data);
+            console.log(formData);
             if (!data?.error) {
                 const productos_actualizados = dataProductos.map((producto) =>
                     producto.id_producto === data.id_producto

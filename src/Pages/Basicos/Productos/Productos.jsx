@@ -55,8 +55,7 @@ const Productos = () => {
                 item.marca.toLowerCase().includes(value) ||
                 item.nombre_familia.toLowerCase().includes(value) ||
                 item.tipo_producto.toLowerCase().includes(value) ||
-                item.unidad.toLowerCase().includes(value) ||
-                item.critico.toLowerCase().includes(value)
+                item.unidad.toLowerCase().includes(value) 
             );
         });
         setFilteredData(items_filtrados);
@@ -64,6 +63,7 @@ const Productos = () => {
 
     const editar_producto = async (e, id_producto) => {
         e.preventDefault();
+        console.log(e);
         setModalVisible(true);
         await buscar_producto(id_producto);
     };

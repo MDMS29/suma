@@ -25,7 +25,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
     const esBoleano = ['critico', 'inventariable', 'compuesto', 'ficha', 'certificado']
     const value = e.target.value;
     console.log(e.target.name);
-    setProductosAgg({ ...productosAgg, [e.target.name]: e.target.name == "descripcion" ? value.replace(/\d/g, '') : esBoleano.includes(e.target.name) ? Boolean(!productosAgg[e.target.name]) : value });
+    setProductosAgg({ ...productosAgg, [e.target.name]: esBoleano.includes(e.target.name) ? Boolean(!productosAgg[e.target.name]) : value });
 
   };
   const handleImageChange = (e) => {
@@ -79,7 +79,6 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
     }
 
     const errors = {};
-    const regex = /^[a-zA-Z0-9\s]*$/;
     const codRegex = /^[0-9]*$/;
 
     if (!productosAgg.referencia) {
@@ -88,9 +87,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       errors.referencia = "La referencia debe contener solo dígitos";
     }
 
-    if (!regex.test(productosAgg.descripcion)) {
-      errors.descripcion = "No se permiten caracteres especiales";
-    } else if (productosAgg.descripcion.trim() === '') {
+    if (productosAgg.descripcion.trim() === '') {
       errors.descripcion = "El Nombre es obligatorio";
     }
 
@@ -185,8 +182,9 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
               value={productosAgg.referencia}
               type="number"
               name="referencia"
+              disabled={productosAgg.id_producto !== 0 && "disabled"}
               className={`border-1 h-10 rounded-md px-3 py-2 ${errors.referencia ? "border-red-500" : "border-gray-300"
-                }`}
+                } ${productosAgg.id_producto !== 0 && "bg-gray-200"}`}
               onChange={(e) => btn_cambio_producto(e)}
             />
             {errors.referencia && (
@@ -194,6 +192,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
                 {errors.referencia}
               </div>
             )}
+
           </div>
 
           <div className="flex flex-col">
@@ -318,7 +317,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
               Precio Venta <span className="font-bold text-red-900">*</span>
             </label>
             <InputText
-            type="number"
+              type="number"
               value={productosAgg.precio_venta}
               name="precio_venta"
               className={`border-1 h-10 rounded-md px-3 py-2 ${errors.precio_venta ? "border-red-500" : "border-gray-300"
