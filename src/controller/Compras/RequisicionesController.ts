@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { EstadosTablas } from "../../utils";
+import { EstadosTablas } from "../../helpers/constants";
 import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
 import { RequisicionesSchema } from "../../validations/Requisiciones.Zod";
 

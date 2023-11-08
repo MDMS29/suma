@@ -191,7 +191,8 @@ export class RequisicionesService {
             doc.rect(180, 26, 5, 5, `${requisicion.id_tipo_producto === 2 ? 'F' : 'S'}`) // (x, y, ancho, alto)
             doc.text(`Servicio`, 186, 30); // (texto, x, y)
 
-            // DETALLES DE LA REQUISICION
+
+            // CUERPO DEL DOCUMENTO - DETALLES DE LA REQUISICION
             let Y_Init = 12
             doc.rect(5, 37, 200, Y_Init); // (x, y, ancho, alto)
             doc.text('Detalles Requisicion', 83, 41.5)

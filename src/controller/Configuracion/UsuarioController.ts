@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import UsuarioService from '../../services/Configuracion/Usuario.service';
-import { EstadosTablas, Generar_Llaves_Secretas } from '../../utils';
 import { UsuarioLogin } from '../../Interfaces/Configuracion/IConfig';
 import { UsusarioSchema } from '../../validations/Configuracion.Zod';
+import { EstadosTablas } from '../../helpers/constants';
+import { Generar_Llaves_Secretas } from '../../helpers/utils';
 import { transporter } from '../../../config/mailer';
 
 export default class UsuarioController {
