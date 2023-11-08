@@ -36,6 +36,8 @@ const Productos = () => {
     const [filteredData, setFilteredData] = useState(dataProductos);
     const [modalVisible, setModalVisible] = useState(false);
 
+    
+
     const filtrar_columnas = (event) => {
         let columnas_seleccionadas = event.value;
         let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -55,7 +57,7 @@ const Productos = () => {
                 item.marca.toLowerCase().includes(value) ||
                 item.nombre_familia.toLowerCase().includes(value) ||
                 item.tipo_producto.toLowerCase().includes(value) ||
-                item.unidad.toLowerCase().includes(value) 
+                item.unidad.toLowerCase().includes(value)
             );
         });
         setFilteredData(items_filtrados);
@@ -63,7 +65,7 @@ const Productos = () => {
 
     const editar_producto = async (e, id_producto) => {
         e.preventDefault();
-        console.log(e);
+        console.log(id_producto);
         setModalVisible(true);
         await buscar_producto(id_producto);
     };
@@ -73,7 +75,7 @@ const Productos = () => {
         setProductoState(producto);
         setVerEliminarRestaurar(true);
     };
-    
+
     const cambiar_visibilidad_modal = () => {
         setModalVisible(!modalVisible);
     };

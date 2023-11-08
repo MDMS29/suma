@@ -19,7 +19,7 @@ const EliminarRestaurar = ({ tipo, funcion }) => {
     const footerModal = (
         <React.Fragment>
             <Button tipo="CANCELAR" funcion={e => setVerEliminarRestaurar(false)}>Cancelar</Button>
-            <Button tipo='PRINCIPAL' funcion={e => funcion(e)}>{tipo_modal[tipo] === tipo_modal.ELIMINAR ? 'Eliminar' : tipo_modal[tipo] === tipo_modal.RESTABLECER_CLAVE ? 'Restablecer' : 'Restaurar' }</Button>
+            <Button tipo='PRINCIPAL' funcion={e => funcion(e)}>{tipo_modal[tipo] === tipo_modal.ELIMINAR ? 'Inactivar' : tipo_modal[tipo] === tipo_modal.RESTABLECER_CLAVE ? 'Restablecer' : 'Restaurar' }</Button>
         </React.Fragment>
     );
 

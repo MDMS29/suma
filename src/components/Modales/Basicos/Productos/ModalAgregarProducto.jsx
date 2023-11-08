@@ -13,8 +13,7 @@ import useAuth from "../../../../hooks/useAuth";
 
 const ModalAgregarProducto = ({ visible, onClose }) => {
 
-  const [selectedImage, setSelectedImage] = useState()
-  const { errors, setErrors, productosAgg, setProductosAgg, editar_producto, guardar_producto } = useProductos()
+  const { errors, setErrors, productosAgg, setProductosAgg, editar_producto, guardar_producto, selectedImage, setSelectedImage } = useProductos()
   const { dataMarcas, obtener_marcas } = useMarcas()
   const { dataFliaPro, obtener_familia_prod } = useFamiliaProd()
   const { dataUnidades, obtener_unidades } = useUnidades()
@@ -47,7 +46,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       referencia: 0,
       id_unidad: 0,
       descripcion: "",
-      foto: "",
+      foto: setSelectedImage(""),
       precio_costo: "",
       precio_venta: "",
       critico: false,
@@ -59,6 +58,8 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
   }
 
   const btn_guardar = async () => {
+    // console.log(productosAgg)
+
     const formData = {
       id_empresa: authUsuario.id_empresa,
       id_producto: productosAgg.id_producto,

@@ -106,7 +106,7 @@ const CentrosProvider = ({ children }) => {
         config
       );
 
-      setDataCentros([...dataCentros, response.data]);
+      setDataCentros((dataCentros)=>[response.data, ...dataCentros]);
       setAlerta({
         error: false,
         show: true,

@@ -92,7 +92,7 @@ const TipoProdProvider = ({ children }) => {
         config
       );
 
-      setDataTipoProf([...dataTipoProf, response.data]);
+      setDataTipoProf((dataTipoProf) => [response.data, ...dataTipoProf]);
       setAlerta({
         error: false,
         show: true,

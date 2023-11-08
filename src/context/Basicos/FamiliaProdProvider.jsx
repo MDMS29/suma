@@ -104,7 +104,7 @@ const FamiliaProdProvider = ({ children }) => {
       );
 
       if (!data?.error) {
-        setDataFliaPro([...dataFliaPro, data]);
+        setDataFliaPro((dataFliaPro)=>[data, ...dataFliaPro]);
         setAlerta({
           error: false,
           show: true,
