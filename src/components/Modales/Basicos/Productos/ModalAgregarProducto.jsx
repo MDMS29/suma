@@ -58,7 +58,6 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
   }
 
   const btn_guardar = async () => {
-    // console.log(productosAgg)
 
     const formData = {
       id_empresa: authUsuario.id_empresa,
@@ -90,26 +89,37 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
 
     if (productosAgg.descripcion.trim() === '') {
       errors.descripcion = "El Nombre es obligatorio";
+      setErrors(errors);
+      return
     }
 
     if (productosAgg.id_marca == 0) {
       errors.marca = "Seleccione una opcion";
+      setErrors(errors);
+      return
 
     }
     if (productosAgg.id_familia == 0) {
       errors.familia = "Seleccione una opcion";
-
+      setErrors(errors);
+      return
     }
     if (productosAgg.id_tipo_producto == 0) {
       errors.tipo_producto = "Seleccione una opcion";
+      setErrors(errors);
+      return
 
     }
     if (productosAgg.id_unidad == 0) {
       errors.unidad = "Seleccione una opcion";
+      setErrors(errors);
+      return
 
     }
     if (productosAgg.precio_costo == 0) {
       errors.precio_costo = "El Precio Costo es obligatorio";
+      setErrors(errors);
+      return
     }
     if (productosAgg.precio_venta == 0) {
       errors.precio_venta = "El Precio Venta es obligatorio";
@@ -126,25 +136,17 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       }
 
       if (response) {
-        onClose();
-        campos_vacios()
+        cerrar_modal()
       }
     } catch (error) {
       console.error("Error al guardar el usuario:", error.response);
     }
   }
 
-  const formatearCantidad = (cantidad) => {
-    return Number(cantidad).toLocaleString('es-CO', {
-      style: 'currency',
-      currency: 'COP'
-    })
-  };
-
   const cerrar_modal = () => {
+    setErrors({});
     campos_vacios()
     onClose();
-    setErrors({});
   };
 
   useEffect(() => {
@@ -219,14 +221,15 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
             <label className="text-gray-600 pb-2 font-semibold">
               Marca <span className="font-bold text-red-900">*</span>
             </label>
-            <div className="card flex justify-content-center">
+            <div className={`card flex justify-content-center border-1 rounded-md ${errors.marca ? "border-red-500" : "border-gray-300"
+              }`}>
               <Dropdown
                 value={productosAgg.id_marca} onChange={(e) => btn_cambio_producto(e)} options={dataMarcas}
                 name="id_marca"
                 optionLabel="marca"
                 optionValue="id_marca"
                 placeholder="Seleccione"
-                filter className="w-full md:w-14rem"
+                filter className="w-full md:w-14rem rounded-md"
               />
             </div>
             {errors.marca && (
@@ -239,14 +242,14 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
           <div className="flex flex-col">
             <label className="text-gray-600 pb-2 font-semibold">
               Familia <span className="font-bold text-red-900">*</span>
-            </label>
-            <div className="card flex justify-content-center">
+            </label><div className={`card flex justify-content-center border-1 rounded-md ${errors.familia ? "border-red-500" : "border-gray-300"
+              }`}>
               <Dropdown value={productosAgg.id_familia} onChange={(e) => btn_cambio_producto(e)} options={dataFliaPro}
                 name="id_familia"
                 optionLabel="descripcion"
                 optionValue="id_familia"
                 placeholder="Seleccione"
-                filter className="w-full md:w-14rem"
+                filter className="w-full md:w-14rem rounded-md"
               />
             </div>
             {errors.familia && (
@@ -260,13 +263,14 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
             <label className="text-gray-600 pb-2 font-semibold">
               Tipo Producto <span className="font-bold text-red-900">*</span>
             </label>
-            <div className="card flex justify-content-center">
+            <div className={`card flex justify-content-center border-1 rounded-md ${errors.tipo_producto ? "border-red-500" : "border-gray-300"
+              }`}>
               <Dropdown value={productosAgg.id_tipo_producto} onChange={(e) => btn_cambio_producto(e)} options={dataTipoProf}
                 name="id_tipo_producto"
                 optionLabel="descripcion"
                 optionValue="id_tipo_producto"
                 placeholder="Seleccione"
-                filter className="w-full md:w-14rem" />
+                filter className="w-full md:w-14rem rounded-md" />
             </div>
             {errors.tipo_producto && (
               <div className="text-red-600 text-xs">
@@ -279,13 +283,14 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
             <label className="text-gray-600 pb-2 font-semibold">
               Unidad Medida <span className="font-bold text-red-900">*</span>
             </label>
-            <div className="card flex justify-content-center">
+            <div className={`card flex justify-content-center border-1 rounded-md ${errors.unidad ? "border-red-500" : "border-gray-300"
+              }`}>
               <Dropdown value={productosAgg.id_unidad} onChange={(e) => btn_cambio_producto(e)} options={dataUnidades}
                 name="id_unidad"
                 optionLabel="unidad"
                 optionValue="id_unidad"
                 placeholder="Seleccione"
-                filter className="w-full md:w-14rem" />
+                filter className="w-full md:w-14rem rounded-md" />
             </div>
             {errors.unidad && (
               <div className="text-red-600 text-xs">

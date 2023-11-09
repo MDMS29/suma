@@ -38,7 +38,7 @@ const Home = () => {
         }
       }
 
-      const { data } = await conexion_cliente('compras/requisiciones/doc/1', config)
+      const { data } = await conexion_cliente('compras/requisiciones/doc/5', config)
       console.log(data.split('filename=')[1].split(';')[0])
       setSrc(data)
     } catch (error) {

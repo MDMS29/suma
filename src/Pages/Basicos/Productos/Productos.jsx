@@ -14,7 +14,7 @@ import useProductos from "../../../hooks/Basicos/useProductos";
 import useAuth from "../../../hooks/useAuth";
 import ModalAgregarProducto from "../../../components/Modales/Basicos/Productos/ModalAgregarProducto";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
-import ExportExcel from 'react-export-excel';
+import ExcelJS from 'exceljs';
 
 const Productos = () => {
     const toast = useRef(null);
@@ -29,9 +29,6 @@ const Productos = () => {
         { field: "critico_con", header: "Critico" }
     ];
 
-    const ExcelFile = ExportExcel.ExcelFile;
-    const ExcelSheet = ExportExcel.ExcelSheet;
-    const ExcelColumn = ExportExcel.ExcelColumn;
 
     const { permisosProductos, setPermisosProductos, dataProductos, buscar_producto, setProductoState, productoState, eliminar_restablecer_producto } = useProductos()
     const { authPermisos, Permisos_DB, alerta, setAlerta, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth();
@@ -82,6 +79,48 @@ const Productos = () => {
     const cambiar_visibilidad_modal = () => {
         setModalVisible(!modalVisible);
     }
+
+    const descargarExcel = () => {
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Productos');
+
+        // Definir las columnas que deseas incluir
+        const columnasIncluidas = [
+            'referencia',
+            'nombre_producto',
+            'marca',
+            'nombre_familia',
+            'tipo_producto',
+            'unidad',
+            'precio_costo',
+            'precio_venta',
+            'critico_con',
+            'inventariable_con',
+            'compuesto_con',
+            'ficha_con',
+            'certificado_con'
+        ];
+
+        // Añadir encabezados de columna
+        worksheet.addRow(columnasIncluidas);
+
+        // Añadir datos
+        filteredData.forEach((obj) => {
+            const rowValues = columnasIncluidas.map((columna) => obj[columna]);
+            worksheet.addRow(rowValues);
+        });
+
+        // Descargar el archivo
+        workbook.xlsx.writeBuffer().then((buffer) => {
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Productos.xlsx';
+            a.click();
+        });
+    };
 
     useEffect(() => {
         setFilteredData(dataProductos);
@@ -191,6 +230,8 @@ const Productos = () => {
                             </BLink>
                         </div>
                     )}
+                <Button type="button" funcion={descargarExcel} tipo={'EXPORTAR'}><i className="pi pi-file-excel text-xl"></i> Exportar</Button>
+
                 <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
                     <i className="pi pi-search" />
                     <InputText
@@ -201,23 +242,6 @@ const Productos = () => {
                     />
                 </span>
 
-                <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
-                    <ExcelSheet data={dataProductos} name="Datos">
-                        <ExcelColumn label="Referencia" value="referencia" />
-                        <ExcelColumn label="Nombre" value="nombre_producto" />
-                        <ExcelColumn label="Marca" value="marca" />
-                        <ExcelColumn label="Familia" value="nombre_familia" />
-                        <ExcelColumn label="Tipo" value="tipo_producto" />
-                        <ExcelColumn label="Unidad" value="unidad" />
-                        <ExcelColumn label="Precio Costo" value="precio_costo" />
-                        <ExcelColumn label="Precio Venta" value="precio_venta" />
-                        <ExcelColumn label="Critico" value="critico_con" />
-                        <ExcelColumn label="Inventariable" value="inventariable_con" />
-                        <ExcelColumn label="Compuesto" value="compuesto_con" />
-                        <ExcelColumn label="Ficha" value="ficha_con" />
-                        <ExcelColumn label="Certificado" value="certificado_con" />
-                    </ExcelSheet>
-                </ExcelFile>
             </div>
 
             <div className="card">

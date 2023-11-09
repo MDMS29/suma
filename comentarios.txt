@@ -17,13 +17,17 @@ diseño modal
             </div>
         </Dialog>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------PRUEBA DE LIBREIAS DE EXCEL------------------------------------------------------------------------------------------------
+ 
+ 1
  const descargar_excel = () => {
         const libro = XLSX.utils.book_new();
         const hoja = XLSX.utils.json_to_sheet(dataProductos);
         XLSX.utils.book_append_sheet(libro, hoja, "Productos");
         XLSX.writeFile(libro, "Productos.xlsx");
     }
+
+  2
      const exportExcel = () => {
          import('xlsx').then((xlsx) => {
              const worksheet = xlsx.utils.json_to_sheet(dataProductos);
@@ -50,6 +54,48 @@ diseño modal
              }
          });
      };
+
+  3
+import ExportExcel from 'react-export-excel';
+
+    const ExcelFile = ExportExcel.ExcelFile;
+    const ExcelSheet = ExportExcel.ExcelSheet;
+    const ExcelColumn = ExportExcel.ExcelColumn;
+                
+                <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
+                    <ExcelSheet data={dataProductos} name="Datos">
+                        <ExcelColumn label="Referencia" value="referencia" />
+                        <ExcelColumn label="Nombre" value="nombre_producto" />
+                        <ExcelColumn label="Marca" value="marca" />
+                        <ExcelColumn label="Familia" value="nombre_familia" />
+                        <ExcelColumn label="Tipo" value="tipo_producto" />
+                        <ExcelColumn label="Unidad" value="unidad" />
+                        <ExcelColumn label="Precio Costo" value="precio_costo" />
+                        <ExcelColumn label="Precio Venta" value="precio_venta" />
+                        <ExcelColumn label="Critico" value="critico_con" />
+                        <ExcelColumn label="Inventariable" value="inventariable_con" />
+                        <ExcelColumn label="Compuesto" value="compuesto_con" />
+                        <ExcelColumn label="Ficha" value="ficha_con" />
+                        <ExcelColumn label="Certificado" value="certificado_con" />
+                    </ExcelSheet>
+                </ExcelFile>
+
+  4
+  const columnasIncluidas = [
+            'referencia',
+            'descripcion',
+            'id_marca',
+            'id_familia',
+            'id_tipo_producto',
+            'id_unidad',
+            'precio_costo',
+            'precio_venta',
+            'critico',
+            'inventariable',
+            'compuesto',
+            'ficha',
+            'certificado'
+        ];
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 <div className="flex">
                   <div>icon</div>
