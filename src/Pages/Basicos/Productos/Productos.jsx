@@ -2,18 +2,19 @@ import { Button as PButton } from "primereact/button";
 import { MultiSelect } from 'primereact/multiselect';
 import { useEffect, useRef, useState } from 'react'
 import { Edit_Icono, Producto_Icono, Trash_Icono } from '../../../components/Icons/Iconos';
-import Loader from "../../../components/Loader";
-import Forbidden from "../../Errors/forbidden";
 import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
+import Loader from "../../../components/Loader";
+import Forbidden from "../../Errors/forbidden";
 import Button from "../../../components/Botones/Button";
 import BLink from "../../../components/Botones/BLink";
 import useProductos from "../../../hooks/Basicos/useProductos";
 import useAuth from "../../../hooks/useAuth";
 import ModalAgregarProducto from "../../../components/Modales/Basicos/Productos/ModalAgregarProducto";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import ExportExcel from 'react-export-excel';
 
 const Productos = () => {
     const toast = useRef(null);
@@ -28,6 +29,10 @@ const Productos = () => {
         { field: "critico_con", header: "Critico" }
     ];
 
+    const ExcelFile = ExportExcel.ExcelFile;
+    const ExcelSheet = ExportExcel.ExcelSheet;
+    const ExcelColumn = ExportExcel.ExcelColumn;
+
     const { permisosProductos, setPermisosProductos, dataProductos, buscar_producto, setProductoState, productoState, eliminar_restablecer_producto } = useProductos()
     const { authPermisos, Permisos_DB, alerta, setAlerta, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth();
 
@@ -35,8 +40,6 @@ const Productos = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredData, setFilteredData] = useState(dataProductos);
     const [modalVisible, setModalVisible] = useState(false);
-
-    
 
     const filtrar_columnas = (event) => {
         let columnas_seleccionadas = event.value;
@@ -78,7 +81,7 @@ const Productos = () => {
 
     const cambiar_visibilidad_modal = () => {
         setModalVisible(!modalVisible);
-    };
+    }
 
     useEffect(() => {
         setFilteredData(dataProductos);
@@ -171,8 +174,7 @@ const Productos = () => {
                 ).length > 0 && (
                         <Button
                             tipo={'PRINCIPAL'}
-                            funcion={(e) => setModalVisible(true, e)}
-                        >
+                            funcion={(e) => setModalVisible(true, e)}>
                             <i className="pi pi-plus mx-2 font-medium"></i>
                             Agregar
                         </Button>
@@ -198,6 +200,24 @@ const Productos = () => {
                         value={searchTerm}
                     />
                 </span>
+
+                <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
+                    <ExcelSheet data={dataProductos} name="Datos">
+                        <ExcelColumn label="Referencia" value="referencia" />
+                        <ExcelColumn label="Nombre" value="nombre_producto" />
+                        <ExcelColumn label="Marca" value="marca" />
+                        <ExcelColumn label="Familia" value="nombre_familia" />
+                        <ExcelColumn label="Tipo" value="tipo_producto" />
+                        <ExcelColumn label="Unidad" value="unidad" />
+                        <ExcelColumn label="Precio Costo" value="precio_costo" />
+                        <ExcelColumn label="Precio Venta" value="precio_venta" />
+                        <ExcelColumn label="Critico" value="critico_con" />
+                        <ExcelColumn label="Inventariable" value="inventariable_con" />
+                        <ExcelColumn label="Compuesto" value="compuesto_con" />
+                        <ExcelColumn label="Ficha" value="ficha_con" />
+                        <ExcelColumn label="Certificado" value="certificado_con" />
+                    </ExcelSheet>
+                </ExcelFile>
             </div>
 
             <div className="card">

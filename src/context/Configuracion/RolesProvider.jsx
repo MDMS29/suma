@@ -71,7 +71,7 @@ const RolesProvider = ({ children }) => {
         return false
       }
 
-      setDataRoles([...dataRoles, data])
+      setDataRoles((dataRoles)=>[data, ...dataRoles])
       setAlerta({ error: false, show: true, message: 'Rol creado con exito' })
       setTimeout(() => setAlerta({}), 1500)
       return true

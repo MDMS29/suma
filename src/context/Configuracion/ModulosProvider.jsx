@@ -241,7 +241,7 @@ const ModulosProvider = ({ children }) => {
       const { data } = await conexionCliente.post("/modulos", formData, config);
       console.log("data back", data);
       if (!data?.error) {
-        setDataModulos([...dataModulos, data]);
+        setDataModulos((dataModulos) => [data, ...dataModulos]);
 
         setAlerta({
           error: false,
@@ -354,7 +354,7 @@ const ModulosProvider = ({ children }) => {
       return false;
 
     } catch (error) {
-     
+
       setAlerta({
         error: true,
         show: true,
@@ -473,7 +473,7 @@ const ModulosProvider = ({ children }) => {
   }));
 
   return (
-    <ModulosContext.Provider 
+    <ModulosContext.Provider
       value={obj}
     >
       {children}

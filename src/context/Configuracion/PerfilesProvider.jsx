@@ -170,7 +170,7 @@ const PerfilesProvider = ({ children }) => {
         config
       );
 
-      setDataPerfiles([...dataPerfiles, response.data]);
+      setDataPerfiles((dataPerfiles)=>[response.data, ...dataPerfiles]);
       setAlerta({
         error: false,
         show: true,

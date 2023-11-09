@@ -148,70 +148,68 @@ const Roles = () => {
     }
 
     const main = () => (
-        <>
-            <div className="w-5/6">
-                <Toast ref={toast} />
-                {modalVisible && <ModalPrinRoles visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
-                {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminar_rol(rolAgg.id_rol, e)} />}
+        <div className="w-5/6">
+            <Toast ref={toast} />
+            {modalVisible && <ModalPrinRoles visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+            {verEliminarRestaurar && <EliminarRestaurar tipo={'ELIMINAR'} funcion={e => eliminar_rol(rolAgg.id_rol, e)} />}
 
-                <div className="flex justify-center items-center gap-x-4 m-2 p-3">
-                    <h1 className="text-3xl">Roles</h1>
-                    {Rol_Icono}
-                </div>
-                <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-
-                    {
-                        permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-                            <Button tipo={'PRINCIPAL'} funcion={(e) => {
-                                setRolAgg({ id_rol: 0, nombre: '', descripcion: '' })
-                                setModalVisible(true, e)
-                            }}>
-                                {Add_Icono} Agregar
-                            </Button>
-                        )
-                    }
-                    {
-                        permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
-                            <div className="h-full flex justify-center items-center">
-                                <BLink url={"/configuracion/roles/inactivos"} tipo={'INACTIVOS'}>
-                                    Inactivos
-                                </BLink>
-                            </div>
-                        )
-                    }
-                    <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
-                        <i className="pi pi-search" />
-                        <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
-                    </span>
-                </div>
-
-                <div className="card">
-                    <DataTable
-                        className="custom-datatable"
-                        stripedRows
-                        value={filteredData}
-                        paginator={true}
-                        rows={5}
-                        header={header}
-                        emptyMessage="No se han encontrado resultados"
-                        rowsPerPageOptions={[5, 10, 25, 50]}
-                        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                        currentPageReportTemplate="{first} to {last} of {totalRecords}"
-                        tableStyle={{ minWidth: "50rem" }}
-                    >
-                        {visibleColumns.map((col) => (
-                            <Column key={col.field} field={col.field} header={col.header} />
-                        ))}
-
-                        <Column
-                            key="actions"
-                            style={{ width: "10%" }}
-                            body={(rowData) => columna_acciones(rowData)}
-                        />
-                    </DataTable>
-                </div>
+            <div className="flex justify-center items-center gap-x-4 m-2 p-3">
+                <h1 className="text-3xl">Roles</h1>
+                {Rol_Icono}
             </div>
-        </>
+            <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+
+                {
+                    permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
+                        <Button tipo={'PRINCIPAL'} funcion={(e) => {
+                            setRolAgg({ id_rol: 0, nombre: '', descripcion: '' })
+                            setModalVisible(true, e)
+                        }}>
+                            {Add_Icono} Agregar
+                        </Button>
+                    )
+                }
+                {
+                    permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0 && (
+                        <div className="h-full flex justify-center items-center">
+                            <BLink url={"/configuracion/roles/inactivos"} tipo={'INACTIVOS'}>
+                                Inactivos
+                            </BLink>
+                        </div>
+                    )
+                }
+                <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
+                    <i className="pi pi-search" />
+                    <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
+                </span>
+            </div>
+
+            <div className="card">
+                <DataTable
+                    className="custom-datatable"
+                    stripedRows
+                    value={filteredData}
+                    paginator={true}
+                    rows={5}
+                    header={header}
+                    emptyMessage="No se han encontrado resultados"
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                    currentPageReportTemplate="{first} to {last} of {totalRecords}"
+                    tableStyle={{ minWidth: "50rem" }}
+                >
+                    {visibleColumns.map((col) => (
+                        <Column key={col.field} field={col.field} header={col.header} />
+                    ))}
+
+                    <Column
+                        key="actions"
+                        style={{ width: "10%" }}
+                        body={(rowData) => columna_acciones(rowData)}
+                    />
+                </DataTable>
+            </div>
+        </div>
     )
 
     return (
