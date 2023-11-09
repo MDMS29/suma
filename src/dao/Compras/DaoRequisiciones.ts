@@ -72,7 +72,7 @@ export const _insertar_requisicion_det = `
             nextval('tbl_requisicion_detalle_id_detalle_seq'::regclass), 
             $1,
             $2, $3, $4, 
-            1, now(), $5
+            3, now(), $5
         )
     RETURNING id_detalle;
 `

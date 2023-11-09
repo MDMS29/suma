@@ -95,11 +95,11 @@ export default class QueryProductosEmpresa {
         }
     }
 
-    public async Buscar_Producto_Filtro(tipo: string, valor:any) {
+    public async Buscar_Producto_Filtro(tipo: string, valor: any, empresa_usuario: number) {
         const client = await pool.connect()
 
         try {
-            let result = await _DB.func(_FA_obtener_productos_filtro, [tipo, valor])
+            let result = await _DB.func(_FA_obtener_productos_filtro, [tipo, valor, empresa_usuario])
             return result
         } catch (error) {
             console.log(error)

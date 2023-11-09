@@ -164,8 +164,8 @@ export default class RequisicionesController {
 
             // Configurar encabezados para el navegador
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'inline; filename=ejemplo.pdf');
-            return res.send(pdf)
+            res.setHeader('Content-Disposition', `inline; filename=Req_${pdf.nombre}.pdf`);
+            return res.send(pdf.data)
         } catch (error) {
             console.log(error)
             return res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR

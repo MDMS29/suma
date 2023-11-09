@@ -76,7 +76,7 @@ export default class ProductosEmpresaController {
         try {
             const producto_empresa_service = new ProductosEmpresaService()
             if (tipo) {
-                const respuesta = await producto_empresa_service.Buscar_Producto_Filtro('tipo_producto', +tipo)
+                const respuesta = await producto_empresa_service.Buscar_Producto_Filtro('tipo_producto', +tipo, usuario.id_empresa)
                 if (respuesta.error) {
                     return res.json({ error: true, message: respuesta.message }) //!ERROR
                 }

@@ -70,13 +70,13 @@ export class ProductosEmpresaService {
         }
     }
 
-    public async Buscar_Producto_Filtro(tipo: string, valor: number): Promise<any> {
+    public async Buscar_Producto_Filtro(tipo: string, valor: number, empresa_usuario: number): Promise<any> {
         const TIPOS_FILTROS = {
             tipo_producto: 'tipo_producto',
         }
         try {
             if (TIPOS_FILTROS.tipo_producto === tipo) {
-                const producto_empresa = await this._Query_Productos_Empresa.Buscar_Producto_Filtro(tipo, valor)
+                const producto_empresa = await this._Query_Productos_Empresa.Buscar_Producto_Filtro(tipo, valor, empresa_usuario)
                 if (!producto_empresa) {
                     return { error: true, message: 'No se han encontrado los productos' } //!ERROR
                 }
