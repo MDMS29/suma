@@ -15,6 +15,7 @@ import useAuth from "../../../hooks/useAuth";
 import ModalAgregarProducto from "../../../components/Modales/Basicos/Productos/ModalAgregarProducto";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
+
 const Productos = () => {
     const toast = useRef(null);
 
@@ -78,6 +79,48 @@ const Productos = () => {
     const cambiar_visibilidad_modal = () => {
         setModalVisible(!modalVisible);
     }
+
+    const descargarExcel = () => {
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Productos');
+
+        // Definir las columnas que deseas incluir
+        const columnasIncluidas = [
+            'referencia',
+            'nombre_producto',
+            'marca',
+            'nombre_familia',
+            'tipo_producto',
+            'unidad',
+            'precio_costo',
+            'precio_venta',
+            'critico_con',
+            'inventariable_con',
+            'compuesto_con',
+            'ficha_con',
+            'certificado_con'
+        ];
+
+        // Añadir encabezados de columna
+        worksheet.addRow(columnasIncluidas);
+
+        // Añadir datos
+        filteredData.forEach((obj) => {
+            const rowValues = columnasIncluidas.map((columna) => obj[columna]);
+            worksheet.addRow(rowValues);
+        });
+
+        // Descargar el archivo
+        workbook.xlsx.writeBuffer().then((buffer) => {
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Productos.xlsx';
+            a.click();
+        });
+    };
 
     useEffect(() => {
         setFilteredData(dataProductos);
@@ -187,6 +230,8 @@ const Productos = () => {
                             </BLink>
                         </div>
                     )}
+                <Button type="button" funcion={descargarExcel} tipo={'EXPORTAR'}><i className="pi pi-file-excel text-xl"></i> Exportar</Button>
+
                 <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
                     <i className="pi pi-search" />
                     <InputText
@@ -196,8 +241,6 @@ const Productos = () => {
                         value={searchTerm}
                     />
                 </span>
-
-                <button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>
             </div>
 
             <div className="card">

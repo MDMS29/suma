@@ -17,7 +17,11 @@ diseño modal
             </div>
         </Dialog>
 
+<<<<<<< HEAD
 ---------------------------------------PRUEBAS LIBBREIAS DE EXCEL---------------------------------------------------------------------------------------------------------------
+=======
+------------------------------------------------------PRUEBA DE LIBREIAS DE EXCEL------------------------------------------------------------------------------------------------
+>>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
  
  1
  const descargar_excel = () => {
@@ -27,7 +31,11 @@ diseño modal
         XLSX.writeFile(libro, "Productos.xlsx");
     }
 
+<<<<<<< HEAD
 2
+=======
+  2
+>>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
      const exportExcel = () => {
          import('xlsx').then((xlsx) => {
              const worksheet = xlsx.utils.json_to_sheet(dataProductos);
@@ -55,6 +63,7 @@ diseño modal
          });
      };
 
+<<<<<<< HEAD
 3
 // import * as ExportExcel from 'react-export-excel';
   
@@ -63,6 +72,16 @@ diseño modal
     const ExcelColumn = ExportExcel.ExcelColumn;
 
     <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
+=======
+  3
+import ExportExcel from 'react-export-excel';
+
+    const ExcelFile = ExportExcel.ExcelFile;
+    const ExcelSheet = ExportExcel.ExcelSheet;
+    const ExcelColumn = ExportExcel.ExcelColumn;
+                
+                <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
+>>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
                     <ExcelSheet data={dataProductos} name="Datos">
                         <ExcelColumn label="Referencia" value="referencia" />
                         <ExcelColumn label="Nombre" value="nombre_producto" />
@@ -79,6 +98,26 @@ diseño modal
                         <ExcelColumn label="Certificado" value="certificado_con" />
                     </ExcelSheet>
                 </ExcelFile>
+<<<<<<< HEAD
+=======
+
+  4
+  const columnasIncluidas = [
+            'referencia',
+            'descripcion',
+            'id_marca',
+            'id_familia',
+            'id_tipo_producto',
+            'id_unidad',
+            'precio_costo',
+            'precio_venta',
+            'critico',
+            'inventariable',
+            'compuesto',
+            'ficha',
+            'certificado'
+        ];
+>>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 <div className="flex">
                   <div>icon</div>
