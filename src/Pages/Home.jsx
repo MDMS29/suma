@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import useAuth from "../hooks/useAuth"
+import conexion_cliente from "../config/ConexionCliente"
 
 const Home = () => {
 
@@ -12,10 +13,29 @@ const Home = () => {
       const res = await data.json()
       setDataIP(res)
     })()
-
-
-
   }, [])
+  const [src, setSrc] = useState(null)
+
+  // setTimeout(()=> pdf(), 10000)
+  const pdf = async () => {
+    // setVerPDF(!verPDF)
+    try {
+
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await conexion_cliente('compras/requisiciones/doc/1', config)
+      setSrc(data)
+      // console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="h-screen w-full p-4">
@@ -26,6 +46,9 @@ const Home = () => {
           <small className="text-gray-400">Ubicación: {`${dataIP?.country} - ${dataIP?.city}/${dataIP?.region}`}</small>
         </div>
       </section>
+    <button className="text-white bg-red-800 p-3" onClick={pdf}>VER PDF</button>
+       <iframe className="w-full h-full" src={src}></iframe>
+
     </div>
   )
 }
