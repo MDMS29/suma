@@ -100,7 +100,7 @@ const UnidadesProvider = ({ children }) => {
       );
 
       if (!data?.error) {
-        setDataUnidades([...dataUnidades, data]);
+        setDataUnidades((dataUnidades) => [data, ...dataUnidades]);
         setAlerta({
           error: false,
           show: true,

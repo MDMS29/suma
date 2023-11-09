@@ -18,6 +18,7 @@ import { EmpresasProvider } from "./context/EmpresasProvider.jsx";
 import { ProcesosProvider } from "./context/Basicos/ProcesosProvider.jsx";
 import { CentrosProvider } from "./context/Basicos/CentrosProvider.jsx";
 import { ProductosProvider } from "./context/Basicos/ProductosProvider.jsx";
+import { RequisicionesProvider } from "./context/Compras/RequisicionesProvider.jsx";
 
 const App = () => {
   return (
@@ -36,7 +37,9 @@ const App = () => {
                             <TipoProdProvider>
                               <ProcesosProvider>
                                 <CentrosProvider>
-                                  <AppMain />
+                                  <RequisicionesProvider>
+                                    <AppMain />
+                                  </RequisicionesProvider>
                                 </CentrosProvider>
                               </ProcesosProvider>
                             </TipoProdProvider>

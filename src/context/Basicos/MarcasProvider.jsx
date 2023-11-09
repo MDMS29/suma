@@ -20,6 +20,13 @@ const MarcasProvider = ({ children }) => {
     const [errors, setErrors] = useState({
         marca: ''
     });
+
+    useEffect(() => {
+        if (location.pathname.includes('marcas')) {
+            obtener_marcas()
+        }
+    }, [location.pathname])
+
     const obtener_marcas = async () => {
         const token = localStorage.getItem('token')
 
@@ -38,11 +45,6 @@ const MarcasProvider = ({ children }) => {
             }
         }
     }
-    useEffect(() => {
-        if (location.pathname.includes('marcas')) {
-            obtener_marcas()
-        }
-    }, [location.pathname])
 
     const buscar_marca = async (id) => {
         const token = localStorage.getItem("token");
@@ -88,7 +90,7 @@ const MarcasProvider = ({ children }) => {
             const { data } = await conexion_cliente.post("/opciones-basicas/marcas-productos", formData, config
             );
             if (!data?.error) {
-                setDataMarcas([...dataMarcas, data]);
+                setDataMarcas((dataMarcas)=> [data, ...dataMarcas]);
                 setAlerta({
                     error: false,
                     show: true,

@@ -15,6 +15,9 @@ const ProductosProvider = ({ children }) => {
     const [dataProductos, setDataProductos] = useState([])
     const [productoState, setProductoState] = useState({});
 
+    const [selectedImage, setSelectedImage] = useState()
+
+
     const [productosAgg, setProductosAgg] = useState({
         id_empresa: authUsuario.id_empresa,
         id_producto: 0,
@@ -75,6 +78,7 @@ const ProductosProvider = ({ children }) => {
                         }
 
                         setDataProductos(data);
+
                     } catch (error) {
                         setDataProductos([]);
                     }
@@ -83,6 +87,7 @@ const ProductosProvider = ({ children }) => {
             obtener_productos();
         }
     }, [location.pathname]);
+
 
     const guardar_producto = async (formData) => {
         const token = localStorage.getItem("token");
@@ -96,13 +101,14 @@ const ProductosProvider = ({ children }) => {
         try {
             const { data } = await conexion_cliente.post("/opciones-basicas/productos-empresa", formData, config);
             if (!data?.error) {
-                setDataProductos([...dataProductos, data])
+                setDataProductos((dataProductos) => [data, ...dataProductos])
                 setAlerta({
                     error: false,
                     show: true,
                     message: 'Producto creado con exito'
                 })
                 setTimeout(() => setAlerta({}), 1500)
+                // addNewRecord()
                 return true
             }
             setAlerta({
@@ -173,7 +179,7 @@ const ProductosProvider = ({ children }) => {
 
         try {
             const { data } = await conexion_cliente(`/opciones-basicas/productos-empresa/${id}`, config);
-            console.log(data);
+            // console.log(data);
             if (data?.error) {
                 return { error: true, message: data.message }
             }
@@ -184,7 +190,6 @@ const ProductosProvider = ({ children }) => {
                 id_unidad,
                 referencia,
                 descripcion,
-                foto,
                 precio_costo,
                 precio_venta,
                 critico,
@@ -192,6 +197,7 @@ const ProductosProvider = ({ children }) => {
                 compuesto,
                 ficha,
                 certificado } = data
+            setSelectedImage(data.foto)
 
             setProductosAgg({
                 id_producto,
@@ -201,7 +207,7 @@ const ProductosProvider = ({ children }) => {
                 id_unidad,
                 referencia: referencia,
                 descripcion: descripcion,
-                foto: foto,
+                foto: selectedImage,
                 precio_costo: precio_costo,
                 precio_venta: precio_venta,
                 critico: critico,
@@ -298,7 +304,9 @@ const ProductosProvider = ({ children }) => {
         setProductosAgg,
         buscar_producto,
         guardar_producto,
-        editar_producto
+        editar_producto,
+        selectedImage,
+        setSelectedImage
     }));
     return (
         <ProductosContext.Provider

@@ -2,7 +2,7 @@ import Home from "../Pages/Home";
 import ErrorRoutes from "./ErrorRoutes";
 import AdminRoutes from "./AdminRoutes";
 import AuthRoutes from "./AuthRoutes";
-import ComercialRoutes from "./ComercialRoutes";
+import ComprasRoutes from "./ComprasRoutes";
 import BasicasRoutes from "./BasicasRoutes";
 
 const rutas_usuario = [
@@ -14,7 +14,7 @@ const rutas_usuario = [
   },
   ...AuthRoutes,
   ...AdminRoutes,
-  ...ComercialRoutes,
+  ...ComprasRoutes,
   ...BasicasRoutes,
   ...ErrorRoutes
 ];

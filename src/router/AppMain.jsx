@@ -61,6 +61,8 @@ const AppMain = () => {
 
       {/* Area Privada */}
       <Route path="/" element={<Layout />}>
+          
+
         <Route path="home" element={<Home />} />
         {rutas.map((ruta) => (
           <Route

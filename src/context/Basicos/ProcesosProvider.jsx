@@ -92,7 +92,7 @@ const ProcesosProvider = ({ children }) => {
         try {
             const { data } = await conexion_cliente.post("/opciones-basicas/procesos-empresa", formData, config);
             if (!data?.error) {
-                setDataProcesos([...dataProcesos, data]);
+                setDataProcesos((dataProcesos) => [data, ...dataProcesos]);
                 setAlerta({
                     error: false,
                     show: true,
