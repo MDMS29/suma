@@ -14,7 +14,6 @@ import useProductos from "../../../hooks/Basicos/useProductos";
 import useAuth from "../../../hooks/useAuth";
 import ModalAgregarProducto from "../../../components/Modales/Basicos/Productos/ModalAgregarProducto";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
-import ExportExcel from 'react-export-excel';
 
 const Productos = () => {
     const toast = useRef(null);
@@ -29,9 +28,6 @@ const Productos = () => {
         { field: "critico_con", header: "Critico" }
     ];
 
-    const ExcelFile = ExportExcel.ExcelFile;
-    const ExcelSheet = ExportExcel.ExcelSheet;
-    const ExcelColumn = ExportExcel.ExcelColumn;
 
     const { permisosProductos, setPermisosProductos, dataProductos, buscar_producto, setProductoState, productoState, eliminar_restablecer_producto } = useProductos()
     const { authPermisos, Permisos_DB, alerta, setAlerta, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth();
@@ -201,23 +197,7 @@ const Productos = () => {
                     />
                 </span>
 
-                <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
-                    <ExcelSheet data={dataProductos} name="Datos">
-                        <ExcelColumn label="Referencia" value="referencia" />
-                        <ExcelColumn label="Nombre" value="nombre_producto" />
-                        <ExcelColumn label="Marca" value="marca" />
-                        <ExcelColumn label="Familia" value="nombre_familia" />
-                        <ExcelColumn label="Tipo" value="tipo_producto" />
-                        <ExcelColumn label="Unidad" value="unidad" />
-                        <ExcelColumn label="Precio Costo" value="precio_costo" />
-                        <ExcelColumn label="Precio Venta" value="precio_venta" />
-                        <ExcelColumn label="Critico" value="critico_con" />
-                        <ExcelColumn label="Inventariable" value="inventariable_con" />
-                        <ExcelColumn label="Compuesto" value="compuesto_con" />
-                        <ExcelColumn label="Ficha" value="ficha_con" />
-                        <ExcelColumn label="Certificado" value="certificado_con" />
-                    </ExcelSheet>
-                </ExcelFile>
+                <button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>
             </div>
 
             <div className="card">

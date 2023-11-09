@@ -29,7 +29,7 @@ const Home = () => {
         },
       };
 
-      const { data } = await conexion_cliente('compras/requisiciones/doc/1', config)
+      const { data } = await conexion_cliente('compras/requisiciones/doc/5', config)
       setSrc(data)
       // console.log(data);
     } catch (error) {
