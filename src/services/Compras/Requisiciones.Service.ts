@@ -159,13 +159,14 @@ export class RequisicionesService {
                 return { error: true, message: "No se ha encontrado la requisicion" }
             }
 
-            // GENERAR PDFs
+            // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
             const doc = new jsPDF({ orientation: 'l' });
 
-            // CABEZERA DOCUMENTO
+            // CABECERA DOCUMENTO
             doc.setFontSize(12) // (size)
             doc.setFont('helvetica', 'normal', 'normal')
 
+            // RECUADRO PARA LA CABECERA
             doc.rect(5, 5, 288, 30); // (x, y, ancho, alto)
 
             // CABECERA - IZQUIERDA
@@ -195,9 +196,7 @@ export class RequisicionesService {
             doc.text('Aprobado por:', 218, 32); // (texto, x, y)
 
             // PIE DE CABEZA - IZQUIERDA
-            let HRectCabePie = 7 //ALTURA INICIAL DEL CUADRADO DE LA CABECERA
-            let JumLine = 40 //POSICION INICIAL DEL SALTO DE LINEA
-            let LineasDivCabe = 42 //POSICION INICIAL DEL SALTO DE LINEA
+            
 
             doc.text('Fecha', 7.5, 40)// (texto, x, y)
             doc.text(`${requisicion.fecha_requisicion.toLocaleString().split(',')[0]} -`, 24, 40); // (texto, x, y)
@@ -206,6 +205,10 @@ export class RequisicionesService {
             doc.setFont('helvetica', 'normal', 'normal')
 
             // PIE DE CABEZA - CENTRO
+            let HRectCabePie = 7 //ALTURA INICIAL DEL CUADRADO DE LA CABECERA
+            let JumLine = 40 //POSICION INICIAL DEL SALTO DE LINEA
+            let LineasDivCabe = 42 //POSICION INICIAL DEL SALTO DE LINEA
+
             const textLines = doc.splitTextToSize(requisicion.comentarios, 180);
             for (let line of textLines) {
                 doc.text(line, 109, JumLine);
@@ -227,16 +230,17 @@ export class RequisicionesService {
 
 
             // CABEZERA CUERPO
+            doc.setFont('helvetica', 'normal', 'bold')
             doc.text('Item', 9, LineasDivCuerpo + 7)// (texto, x, y)
             doc.line(22, LineasDivCuerpo, 22, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
-            doc.text('Cod. Producto', 25, LineasDivCuerpo + 7)
+            doc.text('Cod. Producto', 23.5, LineasDivCuerpo + 7)
             doc.line(54, LineasDivCuerpo, 54, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
             doc.text('Nombre', 70, LineasDivCuerpo + 7)
             doc.line(105, LineasDivCuerpo, 105, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
-            doc.text('Cantidad', 108, LineasDivCuerpo + 7)
+            doc.text('Cantidad', 107.5, LineasDivCuerpo + 7)
             doc.line(128, LineasDivCuerpo, 128, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
             doc.text('Unidad', 131, LineasDivCuerpo + 7)
@@ -258,73 +262,96 @@ export class RequisicionesService {
             doc.line(5, LineasDivCuerpo + 11.5, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2) LINEA DIVISIORA
 
             // GENERACION DE FILAS DINAMICAS
+            doc.setFont('helvetica', 'normal', 'normal')
 
             let Y = LineasDivCuerpo + 16; // Inicializa la posición vertical
+            let LinesH = LineasDivCuerpo
             const lineHeight = 4; // Altura de línea estimada
+
             let item = 0
             if (requisicion.det_requisicion.length <= 0) {
                 doc.text('No hay productos en la requisición', 82, 43)
             } else {
                 for (let detalle of requisicion.det_requisicion) {
+                    item += 1
 
-                    doc.text(`${item += 1} `, 11.5, Y);
-                    doc.text(`${detalle.referencia} `, 30, Y);
-                    doc.text(`${detalle.nombre_producto} `, 60, Y);
-                    doc.text(`${detalle.cantidad} `, 102, Y);
-                    doc.text(`${detalle.unidad} `, 122, Y);
-                    // Asegúrate de que la justificación no exceda el límite de caracteres
-                    const justificacion = detalle.justificacion.substring(0, 100);
-                    const textLines = doc.splitTextToSize(justificacion, 35);
-                    // Dibuja la justificación en múltiples líneas
-                    for (let line of textLines) {
-                        doc.text(line, 150, Y);
-                        Y += lineHeight; // Aumenta la posición vertical para la siguiente línea
-                        HRectCabePie2 += lineHeight //AUMENTA EL TAMAÑO DEL CUADRO DEL CUERPO
+
+                    if (item > 1) {
+                        // Dibuja la línea divisora después de cada fila
+                        doc.line(5, Y, 293, Y); // Línea divisora
+                        Y += 5
+                        HRectCabePie2 += 5
                     }
 
-                    // Dibuja la línea divisora después de cada fila
-                    doc.line(5, Y, 205, Y); // Línea divisora
+                    doc.text(`${item} `, 11.5, Y);
+                    doc.text(`${detalle.referencia} `, 30, Y);
+                    doc.text(`${detalle.cantidad} `, 115, Y);
+                    doc.text(`${detalle.unidad} `, 129, Y);
+
+                    switch (detalle.id_estado) {
+                        case 4:
+                            doc.text('X', 223, Y + 2);
+                            break;
+                        case 5:
+                            doc.text('X', 240, Y + 2);
+                            break;
+
+                        default:
+                            console.log('estado indefinido');
+                            break;
+                    }
+
+                    const textLinesNombre = doc.splitTextToSize(detalle.nombre_producto, 45);
+                    const textLinesJustifi = doc.splitTextToSize(detalle.justificacion, 71);
+
+                    let lastY = Y
+
+                    if (textLinesJustifi.length < textLinesNombre.length) {
+                        for (let line of textLinesNombre) {
+                            doc.text(line, 57, Y);
+                            Y += lineHeight; // Aumenta la posición vertical para la siguiente línea
+                            HRectCabePie2 += lineHeight //AUMENTA EL TAMAÑO DEL CUADRO DEL CUERPO
+                        }
+                        for (let line of textLinesJustifi) {
+                            doc.text(line, 149, lastY);
+                            lastY += lineHeight;
+                        }
+                    } else {
+                        for (let line of textLinesNombre) {
+                            doc.text(line, 57, lastY);
+                            lastY += lineHeight
+                        }
+                        for (let line of textLinesJustifi) {
+                            doc.text(line, 149, Y);
+                            Y += lineHeight; // Aumenta la posición vertical para la siguiente línea
+                            HRectCabePie2 += lineHeight //AUMENTA EL TAMAÑO DEL CUADRO DEL CUERPO
+                        }
+                    }
+
                 }
+                // RECTANGULO ENCAPSULADOR DEL CUERPO DE LOS DETALLES
                 doc.rect(5, LineasDivCuerpo, 288, HRectCabePie2); // (x, y, ancho, alto)
+
+                // LINEAS DIVISORAS ENTRE CELDAS
+                doc.line(22, LinesH, 22, Y) // (x1, y1, x2, y2)
+
+                doc.line(54, LinesH, 54, Y) // (x1, y1, x2, y2)
+
+                doc.line(105, LinesH, 105, Y) // (x1, y1, x2, y2)
+
+                doc.line(128, LinesH, 128, Y) // (x1, y1, x2, y2)
+
+                doc.line(148, LinesH, 148, Y) // (x1, y1, x2, y2)
+
+                doc.line(215, LinesH, 215, Y) // (x1, y1, x2, y2)
+
+                doc.line(250, LinesH, 250, Y) // (x1, y1, x2, y2)
+
+                doc.line(233, LinesH + 6.5, 233, Y) // (x1, y1, x2, y2)
 
             }
 
 
-            // doc.text(`${requisicion.comentarios}`, 109, 40); // (texto, x, y)
-
-            // doc.text(`${requisicion.proceso}`, 10, 30); // (texto, x, y)
-            // doc.text(`${requisicion.centro_costo}`, 90, 30); // (texto, x, y)
-
-
-            // doc.rect(150, 26, 5, 5, `${requisicion.id_tipo_producto === 1 ? 'F' : 'S'}`) // (x, y, ancho, alto)
-            // doc.text('Material', 156, 30); // (texto, x, y)
-
-            // doc.rect(180, 26, 5, 5, `${requisicion.id_tipo_producto === 2 ? 'F' : 'S'}`) // (x, y, ancho, alto)
-            // doc.text(`Servicio`, 186, 30); // (texto, x, y)
-
-            // CUERPO DEL DOCUMENTO - DETALLES DE LA REQUISICION
-            // let Y_Init = 12
-            // doc.rect(5, 37, 200, Y_Init); // (x, y, ancho, alto)
-            // doc.text('Detalles Requisicion', 83, 41.5)
-
-            // doc.line(5, 43, 205, 43) // (x1, y1, x2, y2)
-
-            // doc.text('Item', 6, 47)
-            // doc.line(15, 43, 15, 49) // (x1, y1, x2, y2)
-
-            // doc.text('Cod. Producto', 17.5, 47)
-            // doc.line(48, 43, 48, 49) // (x1, y1, x2, y2)
-
-            // doc.text('Nombre', 65, 47)
-            // doc.line(100, 43, 100, 49) // (x1, y1, x2, y2)
-
-            // doc.text('Cantidad', 102, 47)
-            // doc.line(121, 43, 121, 49) // (x1, y1, x2, y2)
-
-            // doc.text('Unid. Medida', 122, 47)
-            // doc.line(148, 43, 148, 49) // (x1, y1, x2, y2)
-
-            // doc.text('Justificación', 165, 47)
 
 
 

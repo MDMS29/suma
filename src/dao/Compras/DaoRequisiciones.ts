@@ -15,13 +15,14 @@ export const _obtener_requisicion_enc = `
 export const _buscar_detalle_requisicion = `
     SELECT 
         trd.id_detalle, trd.id_producto, tp.referencia, tp.descripcion as nombre_producto, tu.unidad,
-        trd.cantidad, trd.justificacion
+        trd.cantidad, trd.justificacion, trd.id_estado
     FROM
         public.tbl_requisicion_detalle trd
     INNER JOIN public.tbl_productos tp  ON tp.id_producto   = trd.id_producto
     INNER JOIN public.tbl_unidad    tu  ON tu.id_unidad     = tp.id_unidad
     WHERE 
-        trd.id_requisicion = $1 AND trd.id_estado != 2
+        trd.id_requisicion = $1 AND trd.id_estado != 2 
+    ORDER BY trd.id_detalle ASC;
 `
 
 export const _buscar_requisicion_consecutivo = `
