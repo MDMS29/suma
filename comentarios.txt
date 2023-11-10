@@ -17,11 +17,7 @@ diseño modal
             </div>
         </Dialog>
 
-<<<<<<< HEAD
----------------------------------------PRUEBAS LIBBREIAS DE EXCEL---------------------------------------------------------------------------------------------------------------
-=======
 ------------------------------------------------------PRUEBA DE LIBREIAS DE EXCEL------------------------------------------------------------------------------------------------
->>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
  
  1
  const descargar_excel = () => {
@@ -30,12 +26,7 @@ diseño modal
         XLSX.utils.book_append_sheet(libro, hoja, "Productos");
         XLSX.writeFile(libro, "Productos.xlsx");
     }
-
-<<<<<<< HEAD
 2
-=======
-  2
->>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
      const exportExcel = () => {
          import('xlsx').then((xlsx) => {
              const worksheet = xlsx.utils.json_to_sheet(dataProductos);
@@ -63,16 +54,6 @@ diseño modal
          });
      };
 
-<<<<<<< HEAD
-3
-// import * as ExportExcel from 'react-export-excel';
-  
-    const ExcelFile = ExportExcel.ExcelFile;
-    const ExcelSheet = ExportExcel.ExcelSheet;
-    const ExcelColumn = ExportExcel.ExcelColumn;
-
-    <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
-=======
   3
 import ExportExcel from 'react-export-excel';
 
@@ -81,7 +62,6 @@ import ExportExcel from 'react-export-excel';
     const ExcelColumn = ExportExcel.ExcelColumn;
                 
                 <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
->>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
                     <ExcelSheet data={dataProductos} name="Datos">
                         <ExcelColumn label="Referencia" value="referencia" />
                         <ExcelColumn label="Nombre" value="nombre_producto" />
@@ -98,8 +78,6 @@ import ExportExcel from 'react-export-excel';
                         <ExcelColumn label="Certificado" value="certificado_con" />
                     </ExcelSheet>
                 </ExcelFile>
-<<<<<<< HEAD
-=======
 
   4
   const columnasIncluidas = [
@@ -117,7 +95,6 @@ import ExportExcel from 'react-export-excel';
             'ficha',
             'certificado'
         ];
->>>>>>> 11dcc5156dfa2d2b816c64262c2563ed44f91c41
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 <div className="flex">
                   <div>icon</div>
@@ -161,25 +138,15 @@ import ExportExcel from 'react-export-excel';
               </div> */}
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-----------------------------PRODUCTOS----------------------------------
+const end = (<div>
+        <img
+            src="https://img.freepik.com/vector-premium/avatar-hombre-sonriente-joven-hombre-bigote-barba-marron-cabello-sueter-amarillo-o-sudadera-ilustracion-personaje-personas-vector-3d-estilo-minimalista-dibujos-animados_365941-860.jpg?w=740"
+            alt=""
+            className="h-10 rounded-full"
+        />
 
-- CRITICO es si un producto es solicitado y es dificil de conseguir, y demora en llegar
-- COMPUESTO si un producto se compone de otros prodcutos (un plato de comida) (por ahora no se dieron ejemplos)
-
-  data.map((e) => { data.compuesto == true ? e.compuesto = "si" : e.compuesto = "no" })
-
-
-- los productos se borrar? ok
-- esta el id_marca pero mostrara el nombre de la marca? ok
-- referencia es el nombre del producto? numero codigo
-- description es una observacion? es el nombre 
-- critico seria ESTADO CRITICO: si o no? ok
-- inventariable seria si o no? ok
-- foto se muestra en tabla? y los que no entonces dira no fotoq?  ok
-- compuesto seria si o no? ok
-- ficha es si tiene la ficha tecnica si o no? ok
-
-- marca, familia, unidad, tipo de producto, producto critico, Inventariable, Producto Compuesto, Ficha, Certificado es SELECT
-            
-                              --HACER-- 
-- excel
+        <div onClick={cerrar_salir}>
+            <i className="pi pi-sign-out"></i>
+            <span className='ml-2'>SALIR</span>
+        </div>
+    </div>)

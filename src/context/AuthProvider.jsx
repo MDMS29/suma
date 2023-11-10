@@ -8,6 +8,8 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const [open, setOpen] = useState(false);
+
 
   const [authUsuario, setAuthUsuario] = useState({})
   const [authModulos, setAuthModulos] = useState([])
@@ -84,7 +86,7 @@ const AuthProvider = ({ children }) => {
   const obj = useMemo(() => ({
     authUsuario, setAuthUsuario, authModulos, setAuthModulos,
     cerrar_salir, authPermisos, Permisos_DB, alerta, setAlerta,
-    verEliminarRestaurar, setVerEliminarRestaurar
+    verEliminarRestaurar, setVerEliminarRestaurar, open, setOpen
   }))
 
   return (

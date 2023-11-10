@@ -14,6 +14,7 @@ import useProductos from "../../../hooks/Basicos/useProductos";
 import useAuth from "../../../hooks/useAuth";
 import ModalAgregarProducto from "../../../components/Modales/Basicos/Productos/ModalAgregarProducto";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import ExcelJS from 'exceljs';
 
 
 const Productos = () => {
@@ -65,7 +66,6 @@ const Productos = () => {
 
     const editar_producto = async (e, id_producto) => {
         e.preventDefault();
-        console.log(id_producto);
         setModalVisible(true);
         await buscar_producto(id_producto);
     };
