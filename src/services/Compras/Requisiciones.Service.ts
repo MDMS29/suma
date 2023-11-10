@@ -107,7 +107,7 @@ export class RequisicionesService {
             if (det_requisicion) {
                 let detalle: Requisicion_Det
                 for (detalle of det_requisicion) {
-                    if (detalle.id_detalle) {
+                    if (typeof detalle.id_detalle !== 'string') {
                         // EDITAR DETALLE
                         const requisicion_det = await this._Query_Requisiciones.Editar_Requisicion_Det(detalle, usuario_modificacion)
                         if (!requisicion_det) {
@@ -431,4 +431,8 @@ export class RequisicionesService {
             return
         }
     }
+
+    // public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: any){
+
+    // }
 }

@@ -1,6 +1,6 @@
 export const _obtener_requisicion_enc = `
     SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
+        tr.id_requisicion, tr.requisicion, tr.id_proceso, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion, tc.correo_responsable, te.nombre_estado, tr.id_tipo_producto,
         ttp.descripcion as tipo_productos
     FROM
@@ -27,7 +27,7 @@ export const _buscar_detalle_requisicion = `
 
 export const _buscar_requisicion_consecutivo = `
     SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
+        tr.id_requisicion, tr.requisicion, tr.id_proceso, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion
     FROM
         tbl_requisiciones tr
@@ -52,8 +52,8 @@ export const _insertar_requisicion_enc = `
             nextval('tbl_requisiciones_id_requisicion_seq'::regclass), 
             $1, $2, $3, 
             $4, $5, $6, 
-            $7, $8, $9, 
-            3, now(), $10
+            now(), $7, $8, 
+            3, now(), $9
         )
     RETURNING id_requisicion;
 `
@@ -79,7 +79,7 @@ export const _insertar_requisicion_det = `
 
 export const _buscar_requisicion_id = ` 
     SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
+        tr.id_requisicion, tr.requisicion, tr.id_centro, tr.id_proceso, tc.centro_costo, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion, tr.id_empresa, ste.razon_social, tp.proceso, 
         tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion
     FROM

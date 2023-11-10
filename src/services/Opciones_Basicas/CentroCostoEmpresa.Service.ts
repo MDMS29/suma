@@ -17,7 +17,7 @@ export class CentroCostoEmpresaService {
             let respuesta: any
             if (TIPOS_CONSULTA.proceso === tipo) {
                 respuesta = await this._Query_Centro_Costo_Empresa.Obtener_Centros_Costo_Filtro(empresa, tipo, valor)
-
+                console.log('20 - centro service', respuesta)
                 if (respuesta?.length <= 0) {
                     return { error: false, message: 'No se han encontrado procesos en la empresa' } //!ERROR
                 }

@@ -54,7 +54,7 @@ export default class QueryRequisiciones {
 
     public async Insertar_Requisicion_Enc(requisicion_request: Requisicion_Enc, usuario_creacion: string) {
         const client = await pool.connect()
-        const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, fecha_requisicion, hora_requisicion, comentarios, equipo } = requisicion_request
+        const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, fecha_requisicion, comentarios, equipo } = requisicion_request
 
         try {
             let result = await client.query(
@@ -62,8 +62,7 @@ export default class QueryRequisiciones {
                 [
                     id_empresa, id_proceso, id_centro,
                     id_tipo_producto, consecutivo, fecha_requisicion,
-                    hora_requisicion, comentarios, equipo,
-                    usuario_creacion
+                    comentarios, equipo, usuario_creacion
                 ]
             );
             return result.rows
