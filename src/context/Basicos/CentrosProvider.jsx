@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { createContext, useEffect, useMemo, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
@@ -13,14 +14,18 @@ const CentrosProvider = ({ children }) => {
   const [errors, setErrors] = useState({
     codigo: "",
     centro_costo: "",
+    id_proceso: "",
+    consecutivo: "",
     correo_responsable: "",
   });
 
   const [CentrosAgg, setCentrosAgg] = useState({
     id_centro: 0,
-    id_empresa: authUsuario.id_empresa,
+    id_empresa: authUsuario.id_empresa && authUsuario.id_empresa,
     codigo: "",
     centro_costo: "",
+    id_proceso: 0,
+    consecutivo: 0,
     correo_responsable: "",
   });
 
@@ -72,17 +77,7 @@ const CentrosProvider = ({ children }) => {
         return { error: true, message: data.message };
       }
 
-      const { id_centro, codigo, centro_costo, correo_responsable } = data;
-
-      console.log(data);
-
-      setCentrosAgg({
-        id_centro,
-        id_empresa: authUsuario.id_empresa,
-        codigo,
-        centro_costo,
-        correo_responsable,
-      });
+      setCentrosAgg(data);
     } catch (error) {
       console.error(error);
       throw error;
@@ -92,6 +87,9 @@ const CentrosProvider = ({ children }) => {
   const guardar_centro_costo = async (formData) => {
     const token = localStorage.getItem("token");
 
+    formData.consecutivo = +formData.consecutivo
+    formData.id_empresa = authUsuario.id_empresa
+
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -100,13 +98,22 @@ const CentrosProvider = ({ children }) => {
     };
 
     try {
-      const response = await conexion_cliente.post(
+      const {data} = await conexion_cliente.post(
         "/opciones-basicas/centro-costo-empresa",
         formData,
         config
       );
 
-      setDataCentros((dataCentros)=>[response.data, ...dataCentros]);
+      if(data.error){
+        setAlerta({
+          error: true,
+          show: true,
+          message: data.message,
+        });
+        return false
+      }
+
+      setDataCentros((dataCentros) => [data, ...dataCentros]);
       setAlerta({
         error: false,
         show: true,
@@ -115,11 +122,16 @@ const CentrosProvider = ({ children }) => {
 
       setCentrosAgg({
         id_centro: 0,
+        id_empresa: authUsuario.id_empresa && authUsuario.id_empresa,
         codigo: "",
+        centro_costo: "",
+        id_proceso: 0,
+        consecutivo: 0,
         correo_responsable: "",
       });
 
       setTimeout(() => setAlerta({}), 1500);
+      return true
     } catch (error) {
       console.error("Error al guardar la información:", error);
 
@@ -150,6 +162,16 @@ const CentrosProvider = ({ children }) => {
         formData,
         config
       );
+
+      if(data.error){
+        setAlerta({
+          error: true,
+          show: true,
+          message: data.message,
+        });
+        return false
+      }
+
       const centro_costo_actualizados = dataCentros.map((centros) =>
         centros.id_centro === data.id_centro ? data : centros
       );
@@ -158,16 +180,21 @@ const CentrosProvider = ({ children }) => {
       setAlerta({
         error: false,
         show: true,
-        message: "Familia de Producto editado con exito",
+        message: "Centro editado con exito",
       });
 
       setTimeout(() => setAlerta({}), 1500);
       setCentrosAgg({
         id_centro: 0,
+        id_empresa: authUsuario.id_empresa && authUsuario.id_empresa,
         codigo: "",
         centro_costo: "",
+        id_proceso: 0,
+        consecutivo: 0,
         correo_responsable: "",
       });
+
+      return true
     } catch (error) {
       console.error("Error al guardar la información:", error);
 

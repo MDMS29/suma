@@ -23,7 +23,7 @@ const Layout = () => {
             <Sidebar />
             <main className="flex flex-col w-screen justify-center flex-1 ">
                 <Navbar />
-                <div className="flex justify-center items-center h-full md:h-screen overflow-y-scroll">
+                <div className="flex justify-center h-full md:h-screen overflow-y-scroll">
                     <Outlet />
                 </div>
             </main>

@@ -24,27 +24,27 @@ const ProcesosProvider = ({ children }) => {
         codigo: '',
         proceso: ''
     });
+    
+    const obtener_procesos = async () => {
+        const token = localStorage.getItem('token')
 
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+        if (authUsuario.id_empresa) {
+            try {
+                const { data } = await conexion_cliente(`/opciones-basicas/procesos-empresa?empresa=${authUsuario.id_empresa} `, config)
+                setDataProcesos(data)
+            } catch (error) {
+                setDataProcesos([])
+            }
+        }
+    }
     useEffect(() => {
         if (location.pathname.includes('procesos')) {
-            const obtener_procesos = async () => {
-                const token = localStorage.getItem('token')
-
-                const config = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-                if (authUsuario.id_empresa) {
-                    try {
-                        const { data } = await conexion_cliente(`/opciones-basicas/procesos-empresa?empresa=${authUsuario.id_empresa} `, config)
-                        setDataProcesos(data)
-                    } catch (error) {
-                        setDataProcesos([])
-                    }
-                }
-            }
             obtener_procesos()
         }
     }, [location.pathname])
@@ -192,7 +192,8 @@ const ProcesosProvider = ({ children }) => {
         guardar_proceso,
         editar_proceso,
         procesosAgg,
-        setProcesosAgg
+        setProcesosAgg,
+        obtener_procesos
     }));
 
     return (
