@@ -181,7 +181,8 @@ export class RequisicionesService {
         doc.line(215, 27, 293, 27.5) //(x1, y1, x2, y2)
 
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('Aprobado por:', 218, 32); // (texto, x, y)
+        doc.text('Aprobado por:', 218, 32.5); // (texto, x, y)
+        doc.text(`${requisicion.usuario_revision}`, 246, 32.5); // (texto, x, y)
 
         // PIE DE CABEZA - IZQUIERDA
         doc.text('Fecha', 7.5, 40)// (texto, x, y)
@@ -432,7 +433,49 @@ export class RequisicionesService {
         }
     }
 
-    // public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: any){
+    private estados_det_requi: any = { '3': true, '4': true, '5': true }
 
-    // }
+    public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: [{ id_detalle: number, id_estado: number }], usuario: any) {
+        try {
+            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            if (!requisicion.id_requisicion) {
+                return { error: true, message: 'No se ha encontrado esta requisicion' }
+            }
+
+            if(!usuario){
+                return { error: true, message: 'No se ha podido encontrar el usuario'}
+            }
+
+            // EDITAR EL USUARIO QUE REVISA LA REQUISICION
+            const requisicion_edit = await this._Query_Requisiciones.Editar_Usuario_Revi_Requisicion(id_requisicion, usuario.nombre_completo)
+            if(requisicion_edit?.rowCount !== 1){
+                return { error: true, message: 'Error al editar el usuario que califica la requisicion'}
+            }
+
+            // CALIFICAR DETALLES
+            for (let detalle of detalles) {
+                // VERIFICAR SI EL DETALLE PERTENECE A LA REQUISICION
+                const detalle_verifi = await this._Query_Requisiciones.Buscar_Detalle_ID(detalle.id_detalle)
+                if (detalle_verifi.id_requisicion !== id_requisicion) {
+                    return { error: true, message: `El detalle ${detalle.id_detalle} no pertenece a la requisicion` }
+                }
+
+                // VERIFICAR SI EL ESTADO ESTA PARAMETRIZADO
+                if (!this.estados_det_requi[detalle.id_estado]) {
+                    return { error: true, message: `El estado del detalle ${detalle.id_detalle} no es aceptable` }
+                }
+                const detalle_cam = await this._Query_Requisiciones.Aprobar_Desaprobar_Detalle(detalle)
+                if (detalle_cam?.rowCount !== 1) {
+                    return { error: true, message: `Error al cambiar el estado del detalle ${detalle.id_detalle}` }
+                }
+            }
+            
+
+            return { error: false, message: 'Se han calificado los detalles' }
+
+        } catch (error) {
+            console.log(error)
+            return
+        }
+    }
 }

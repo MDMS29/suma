@@ -172,34 +172,32 @@ export default class RequisicionesController {
         }
     }
 
-    // public async Aprobar_Desaprobar_Detalle(req: Request, res: Response) {
-    //     const { usuario } = req
-    //     const { id_requisicion } = req.params
-    //     const { detalles } = req.body
-    //     if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-    //         return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
-    //     }
-    //     if (!id_requisicion) {
-    //         return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
-    //     }
-    //     if (detalles.length <= 0) {
-    //         return res.status(400).json({ error: true, message: 'No hay detalles para calificar' }) //!ERROR
-    //     }
+    public async Aprobar_Desaprobar_Detalle(req: Request, res: Response) {
+        const { usuario } = req
+        const { id_requisicion } = req.params
+        const { detalles } = req.body
 
-    //     try {
-    //         const requisiciones_service = new RequisicionesService()
-    //         const pdf: any = await requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles)
-    //         if (pdf.error) {
-    //             return res.json({ error: true, message: pdf.message }) //!ERROR
-    //         }
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+        }
+        if (!id_requisicion) {
+            return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
+        }
+        if (detalles.length <= 0) {
+            return res.status(400).json({ error: true, message: 'No hay detalles para calificar' }) //!ERROR
+        }
 
-    //         // Configurar encabezados para el navegador
-    //         res.setHeader('Content-Type', 'application/pdf');
-    //         res.setHeader('Content-Disposition', `inline; filename=Req_${pdf.nombre}.pdf`);
-    //         return res.send(pdf.data)
-    //     } catch (error) {
-    //         console.log(error)
-    //         return res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
-    //     }
-    // }
+        try {
+            const requisiciones_service = new RequisicionesService()
+            const respuesta: any = await requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario)
+            if (respuesta.error) {
+                return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
+            }
+
+            return res.json(respuesta)
+        } catch (error) {
+            console.log(error)
+            return res.json({ error: true, message: 'Error calificar los detalles de la requisicion' }) //!ERROR
+        }
+    }
 }

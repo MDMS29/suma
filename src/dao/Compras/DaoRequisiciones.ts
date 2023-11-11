@@ -81,7 +81,7 @@ export const _buscar_requisicion_id = `
     SELECT 
         tr.id_requisicion, tr.requisicion, tr.id_centro, tr.id_proceso, tc.centro_costo, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion, tr.id_empresa, ste.razon_social, tp.proceso, 
-        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion
+        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion, tr.usuario_revision
     FROM
         tbl_requisiciones tr
     INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 
@@ -121,4 +121,31 @@ export const _cambiar_estado_requisicion = `
         id_estado=$2
     WHERE 
         id_requisicion=$1;     
+`
+
+export const _aprobar_desaprobar_detalle = `
+    UPDATE 
+        public.tbl_requisicion_detalle
+    SET 
+        id_estado=$2
+    WHERE 
+        id_detalle=$1;     
+`
+
+export const _buscar_detalle_id = `
+    SELECT 
+        id_detalle, id_requisicion
+    FROM 
+        public.tbl_requisicion_detalle
+    WHERE
+        id_detalle=$1;
+`
+
+export const _editar_usuario_revision = `
+    UPDATE 
+        public.tbl_requisiciones
+    SET 
+        usuario_revision=$2, fecha_revision=now()
+    WHERE 
+        id_requisicion=$1;        
 `

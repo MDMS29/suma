@@ -1,7 +1,10 @@
 import { pool } from "../../../config/db";
 import {
-    _buscar_detalle_requisicion, _buscar_requisicion_consecutivo, _buscar_requisicion_id, 
-    _cambiar_estado_requisicion, _editar_requisicion_det, _editar_requisicion_enc, 
+    _aprobar_desaprobar_detalle,
+    _buscar_detalle_id,
+    _buscar_detalle_requisicion, _buscar_requisicion_consecutivo, _buscar_requisicion_id,
+    _cambiar_estado_requisicion, _editar_requisicion_det, _editar_requisicion_enc,
+    _editar_usuario_revision,
     _insertar_requisicion_det, _insertar_requisicion_enc, _obtener_requisicion_enc
 } from "../../dao/Compras/DaoRequisiciones";
 
@@ -167,8 +170,8 @@ export default class QueryRequisiciones {
         const client = await pool.connect()
 
         try {
-            let result: any = await client.query(_buscar_requisicion_id, [id_detalle]);
-            return result.rows
+            let result: any = await client.query(_buscar_detalle_id, [id_detalle]);
+            return result.rows[0]
         } catch (error) {
             console.log(error)
             return
@@ -180,6 +183,32 @@ export default class QueryRequisiciones {
         const client = await pool.connect()
         try {
             let result = await client.query(_cambiar_estado_requisicion, [id_empresa, estado]);
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Aprobar_Desaprobar_Detalle(detalle: any) {
+        const client = await pool.connect()
+        const { id_detalle, id_estado } = detalle
+        try {
+            const result = await client.query(_aprobar_desaprobar_detalle, [id_detalle, id_estado])
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+    public async Editar_Usuario_Revi_Requisicion(id_requisicion: any, usuario: string) {
+        const client = await pool.connect()
+        try {
+            const result = await client.query(_editar_usuario_revision, [id_requisicion, usuario])
             return result
         } catch (error) {
             console.log(error)
