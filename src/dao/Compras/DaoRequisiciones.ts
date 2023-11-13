@@ -81,7 +81,7 @@ export const _buscar_requisicion_id = `
     SELECT 
         tr.id_requisicion, tr.requisicion, tr.id_centro, tr.id_proceso, tc.centro_costo, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion, tr.id_empresa, ste.razon_social, tp.proceso, 
-        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion, tr.usuario_revision
+        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion, tr.usuario_revision, tr.fecha_revision
     FROM
         tbl_requisiciones tr
     INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 

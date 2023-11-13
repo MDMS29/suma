@@ -102,7 +102,7 @@ export default class QueryUsuario {
                 return result
             }
             if (usuario !== '') {
-                let result = await client.query('SELECT tu.usuario FROM seguridad.tbl_usuario tu WHERE tu.usuario = $1', [usuario])
+                let result = await client.query('SELECT tu.usuario, tu.nombre_completo FROM seguridad.tbl_usuario tu WHERE tu.usuario = $1', [usuario])
                 return result.rows
             }
             if (correo !== '') {

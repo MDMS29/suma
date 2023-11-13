@@ -3,6 +3,7 @@ import { Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/IComp
 
 import { jsPDF } from "jspdf"
 import fs from "fs"
+import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 
 export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
@@ -169,19 +170,20 @@ export class RequisicionesService {
 
         // CABECERA - DERECHA
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('Código', 218, 10.2); // (texto, x, y)
+        doc.text('Código:', 217, 10.2); // (texto, x, y)
         doc.line(215, 13, 293, 13) //(x1, y1, x2, y2)
 
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('Versión', 218, 18); // (texto, x, y)
+        doc.text('Versión:', 217, 18); // (texto, x, y)
         doc.line(215, 20, 293, 20.5) //(x1, y1, x2, y2)
 
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('Fecha', 218, 24.5); // (texto, x, y)
+        doc.text('Fecha:', 217, 25); // (texto, x, y)
+        doc.text(`${requisicion.fecha_revision.toLocaleString().split(',')[0]}`, 232, 25); // (texto, x, y)
         doc.line(215, 27, 293, 27.5) //(x1, y1, x2, y2)
 
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('Aprobado por:', 218, 32.5); // (texto, x, y)
+        doc.text('Aprobado por:', 217, 32.5); // (texto, x, y)
         doc.text(`${requisicion.usuario_revision}`, 246, 32.5); // (texto, x, y)
 
         // PIE DE CABEZA - IZQUIERDA
@@ -190,8 +192,6 @@ export class RequisicionesService {
         doc.setFont('helvetica', 'normal', 'bold')
         doc.text(`${requisicion.requisicion}`, 48.5, 40); // (texto, x, y)
         doc.setFont('helvetica', 'normal', 'normal')
-
-
 
         const textLines = doc.splitTextToSize(requisicion.comentarios, 180);
         for (let line of textLines) {
@@ -387,6 +387,12 @@ export class RequisicionesService {
                 return { error: true, message: "No se ha encontrado la requisicion" }
             }
 
+            const query_usuarios = new QueryUsuario()
+            const usuario = await query_usuarios.Buscar_Usuario_Correo(requisicion.usuario_creacion, '')
+            if (!usuario) {
+                return { error: true, message: "No se ha encontrado el usuario creador" }
+            }
+
             // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
             const doc = new jsPDF({ orientation: 'l' });
 
@@ -422,8 +428,11 @@ export class RequisicionesService {
             this.Generar_Filas_Dinamicas_PDF(doc, requisicion, { Y, LinesH, lineHeight, item, limitePag, HRectCabePie2, LineasDivCuerpo })
 
 
-            doc.text('ELABORADO POR: ____________________________________', 5, 190)
             doc.text('APROBADO POR: ____________________________________', 149, 190)
+            doc.text(`${requisicion.usuario_revision}`, 187, 190); // (texto, x, y)
+            
+            doc.text('ELABORADO POR: ____________________________________', 5, 190)
+            doc.text(`${usuario[0].nombre_completo}`, 45, 190); // (texto, x, y)
 
             const pdfBase64 = doc.output('datauristring');
             return { data: pdfBase64, nombre: requisicion.requisicion }
@@ -442,14 +451,14 @@ export class RequisicionesService {
                 return { error: true, message: 'No se ha encontrado esta requisicion' }
             }
 
-            if(!usuario){
-                return { error: true, message: 'No se ha podido encontrar el usuario'}
+            if (!usuario) {
+                return { error: true, message: 'No se ha podido encontrar el usuario' }
             }
 
             // EDITAR EL USUARIO QUE REVISA LA REQUISICION
             const requisicion_edit = await this._Query_Requisiciones.Editar_Usuario_Revi_Requisicion(id_requisicion, usuario.nombre_completo)
-            if(requisicion_edit?.rowCount !== 1){
-                return { error: true, message: 'Error al editar el usuario que califica la requisicion'}
+            if (requisicion_edit?.rowCount !== 1) {
+                return { error: true, message: 'Error al editar el usuario que califica la requisicion' }
             }
 
             // CALIFICAR DETALLES
@@ -469,7 +478,7 @@ export class RequisicionesService {
                     return { error: true, message: `Error al cambiar el estado del detalle ${detalle.id_detalle}` }
                 }
             }
-            
+
 
             return { error: false, message: 'Se han calificado los detalles' }
 
