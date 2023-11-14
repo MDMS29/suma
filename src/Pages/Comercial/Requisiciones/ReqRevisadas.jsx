@@ -8,30 +8,23 @@ import {
   Return_Icono,
   Trash_Icono,
 } from "../../../components/Icons/Iconos";
-import { Card } from "primereact/card";
-import { Button as PButton } from "primereact/button";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
 
-function ReqAprobadas() {
+function ReqRevisadas() {
   const { dataRequisiciones } = useRequisiciones();
 
   const main = () => (
     <>
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Requisiciones Aprobadas</h1>
+          <h1 className="text-3xl">Requisiciones Revisadas</h1>
           {Req_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/anuladas"} tipo={"INACTIVOS"}>
-              Anulados
-            </BLink>
-          </div>
-          <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/aprobadas"} tipo={"APROBADO"}>
-              Aprobados
+              Eliminados
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
@@ -45,9 +38,11 @@ function ReqAprobadas() {
           </span>
         </div>
 
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-        {dataRequisiciones.error === false ? (
-            <p>No hay requisiciones aprobadas</p>
+        <div className="rounded-sm w-full flex flex-wrap gap-3">
+          {dataRequisiciones.error === false ? (
+            <div className="bg-white border w-full my-3 p-3">
+            <p>No hay requisiciones revisadas</p>
+          </div>
           ) : (
             dataRequisiciones.map((requisiciones) => (
               <CardRequisicion requisiciones={requisiciones} />
@@ -60,4 +55,4 @@ function ReqAprobadas() {
   return <>{main()}</>;
 }
 
-export default ReqAprobadas;
+export default ReqRevisadas;

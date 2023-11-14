@@ -25,7 +25,7 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
             errors.codigo = "El código es obligatorio";
             setErrors(errors);
         }
-        if (!codigoRegex.test(procesosAgg.codigo)) {
+        if (!codigoRegex.test(procesosAgg.codigo)) {Z
             errors.codigo = "El código debe contener solo dígitos";
             setErrors(errors);
         }

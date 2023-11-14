@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Req_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import BLink from "../../../components/Botones/BLink";
-import useRequisiciones from "../../../hooks/Compras/useRequisiciones"
+import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
+import useAuth from "../../../hooks/useAuth";
 
 const Requisiciones = () => {
-  const {
-    dataRequisiciones
-  } = useRequisiciones();
+  const { dataRequisiciones, setRequiAgg, setProductosData } = useRequisiciones();
+
+    const { authUsuario } = useAuth();
+
+  useEffect(() => {
+    setRequiAgg({
+      id_requisicion: 0,
+      id_empresa:
+        authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
+      id_proceso: 0,
+      id_centro: 0,
+      id_tipo_producto: 0,
+      consecutivo: "",
+      fecha_requisicion: "",
+      hora_requisicion: "",
+      comentarios: "",
+      equipo: 1,
+    });
+    setProductosData([]);
+    return;
+  }, []);
 
   const main = () => (
     <>
@@ -39,12 +58,17 @@ const Requisiciones = () => {
           </span>
         </div>
 
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-        {dataRequisiciones.error === false ? (
-            <p>No hay requisiciones pendientes</p>
+        <div className="rounded-sm w-full flex flex-wrap gap-3">
+          {dataRequisiciones.error === false ? (
+            <div className="bg-white border w-full my-3 p-3">
+              <p>No hay requisiciones aprobadas</p>
+            </div>
           ) : (
             dataRequisiciones.map((requisiciones) => (
-              <CardRequisicion requisiciones={requisiciones}/>
+              <CardRequisicion
+                key={requisiciones.id_requisiciones}
+                requisiciones={requisiciones}
+              />
             ))
           )}
         </div>

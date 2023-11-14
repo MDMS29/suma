@@ -1,7 +1,7 @@
 import Requisiciones from "../Pages/Comercial/Requisiciones/Requisiciones";
-import ReqAprobadas from "../Pages/Comercial/Requisiciones/ReqAprobadas";
-import ReqAnuladas from "../Pages/Comercial/Requisiciones/ReqAnuladas";
 import AgregarReq from "../Pages/Comercial/Requisiciones/AgregarReq";
+import ReqEliminadas from "../Pages/Comercial/Requisiciones/ReqEliminadas";
+import ReqRevisadas from "../Pages/Comercial/Requisiciones/ReqRevisadas";
 
 const ComprasRoutes = [
     {
@@ -13,13 +13,13 @@ const ComprasRoutes = [
     {
         name: "Requisiciones Aprobadas",
         route: "/compras/requisiciones/aprobadas",
-        component: <ReqAprobadas />,
+        component: <ReqRevisadas />,
         key: 11
     },
     {
         name: "Requisiciones Anuladas",
         route: "/compras/requisiciones/anuladas",
-        component: <ReqAnuladas />,
+        component: <ReqEliminadas />,
         key: 12
     },
     {

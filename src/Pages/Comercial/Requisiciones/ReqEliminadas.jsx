@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
 
-function ReqAnuladas() {
+function ReqEliminadas() {
   const {
     dataRequisiciones
   } = useRequisiciones();
@@ -15,18 +15,13 @@ function ReqAnuladas() {
     <>
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Requisiciones Anuladas</h1>
+          <h1 className="text-3xl">Requisiciones Eliminadas</h1>
           {Req_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/anuladas"} tipo={"INACTIVOS"}>
-              Anulados
-            </BLink>
-          </div>
-          <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/aprobadas"} tipo={"APROBADO"}>
-              Aprobados
+              Revisados
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
@@ -40,9 +35,11 @@ function ReqAnuladas() {
           </span>
         </div>
 
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+        <div className="rounded-sm w-full flex flex-wrap gap-3">
           {dataRequisiciones.error === false ? (
-            <p>No hay requisiciones anuladas.</p>
+            <div className="bg-white border w-full my-3 p-3">
+            <p>No hay requisiciones eliminadas.</p>
+          </div>
           ) : (
             dataRequisiciones.map((requisiciones) => (
               <CardRequisicion requisiciones={requisiciones} />
@@ -55,4 +52,4 @@ function ReqAnuladas() {
   return <>{main()}</>;
 }
 
-export default ReqAnuladas;
+export default ReqEliminadas;
