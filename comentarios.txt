@@ -1,4 +1,4 @@
-diseño modal
+                                                                  DISEÑO MODAL
 
 <Dialog  visible={modalEliminar} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} modal onHide={esconderModalEliminar} footer={deleteProductDialogFooter}>
             <div className="flex flex-col">
@@ -17,85 +17,7 @@ diseño modal
             </div>
         </Dialog>
 
-------------------------------------------------------PRUEBA DE LIBREIAS DE EXCEL------------------------------------------------------------------------------------------------
- 
- 1
- const descargar_excel = () => {
-        const libro = XLSX.utils.book_new();
-        const hoja = XLSX.utils.json_to_sheet(dataProductos);
-        XLSX.utils.book_append_sheet(libro, hoja, "Productos");
-        XLSX.writeFile(libro, "Productos.xlsx");
-    }
-2
-     const exportExcel = () => {
-         import('xlsx').then((xlsx) => {
-             const worksheet = xlsx.utils.json_to_sheet(dataProductos);
-             const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-             const excelBuffer = xlsx.write(workbook, {
-                 bookType: 'xlsx',
-                 type: 'array'
-             });
-
-             saveAsExcelFile(excelBuffer, 'products');
-         });
-     };
-
-     const saveAsExcelFile = (buffer, fileName) => {
-         import('file-saver').then((module) => {
-             if (module && module.default) {
-                 let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-                 let EXCEL_EXTENSION = '.xlsx';
-                 const data = new Blob([buffer], {
-                     type: EXCEL_TYPE
-                 });
-
-                 module.default.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
-             }
-         });
-     };
-
-  3
-import ExportExcel from 'react-export-excel';
-
-    const ExcelFile = ExportExcel.ExcelFile;
-    const ExcelSheet = ExportExcel.ExcelSheet;
-    const ExcelColumn = ExportExcel.ExcelColumn;
-                
-                <ExcelFile element={<button type="button"><i className="pi pi-file-excel bg-green-500 rounded-md w-9 h-9 text-2xl flex items-center justify-center" ></i></button>} filename="Productos">
-                    <ExcelSheet data={dataProductos} name="Datos">
-                        <ExcelColumn label="Referencia" value="referencia" />
-                        <ExcelColumn label="Nombre" value="nombre_producto" />
-                        <ExcelColumn label="Marca" value="marca" />
-                        <ExcelColumn label="Familia" value="nombre_familia" />
-                        <ExcelColumn label="Tipo" value="tipo_producto" />
-                        <ExcelColumn label="Unidad" value="unidad" />
-                        <ExcelColumn label="Precio Costo" value="precio_costo" />
-                        <ExcelColumn label="Precio Venta" value="precio_venta" />
-                        <ExcelColumn label="Critico" value="critico_con" />
-                        <ExcelColumn label="Inventariable" value="inventariable_con" />
-                        <ExcelColumn label="Compuesto" value="compuesto_con" />
-                        <ExcelColumn label="Ficha" value="ficha_con" />
-                        <ExcelColumn label="Certificado" value="certificado_con" />
-                    </ExcelSheet>
-                </ExcelFile>
-
-  4
-  const columnasIncluidas = [
-            'referencia',
-            'descripcion',
-            'id_marca',
-            'id_familia',
-            'id_tipo_producto',
-            'id_unidad',
-            'precio_costo',
-            'precio_venta',
-            'critico',
-            'inventariable',
-            'compuesto',
-            'ficha',
-            'certificado'
-        ];
-------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------SELECT CON DROPDOWN Y NORMAL---------------------------------------------------------------------------------------------------------------------
 <div className="flex">
                   <div>icon</div>
                   <select filter className="border-1 h-10 rounded-md px-2 py-2 border-gray-300">
@@ -112,7 +34,6 @@ import ExportExcel from 'react-export-excel';
                   </select>
                 </div>
 
-------------------------------------------------------------------------------------------------------------------------------------------------------
 {/* <div className="flex items-center gap-2">
                 <div className="card flex justify-content-center w-full">
                   <Dropdown
@@ -137,76 +58,95 @@ import ExportExcel from 'react-export-excel';
                 <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
               </div> */}
 ------------------------------------------------------------------------------------------------------------------------------------------------------
+import { Req_Icono } from "../../../components/Icons/Iconos";
+import { InputText } from "primereact/inputtext";
+import BLink from "../../../components/Botones/BLink";
+import useRequisiciones from "../../../hooks/Compras/useRequisiciones"
+import CardRequisicion from "../../../components/Cards/CardRequisicion";
+import useAuth from "../../../hooks/useAuth";
 
-import { Menubar } from 'primereact/menubar';
-import useAuth from "../hooks/useAuth.jsx";
+const Requisiciones = () => {
+  const { authUsuario } = useAuth()
+  const { dataRequisiciones } = useRequisiciones();
 
 
-export default function Navbar() {
-    
-    const { cerrar_salir, authModulos, open, setOpen } = useAuth();
 
-    const customMenuItem = (item) => {
-        return (
-            <div className="custom-menu-item">
-                {item.icon && <img src={item.icon} alt={item.label} className="menu-icon" />}
-                <span className="menu-label">{item.label}</span>
+  const main = () => (
+    <div className="w-5/6">
+      <div className="flex justify-center gap-x-4 m-2 p-3">
+        <h1 className="text-3xl">Requisiciones</h1>
+        {Req_Icono}
+      </div>
+      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+        {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== 46) &&
+          <>
+            <div className="h-full flex justify-center items-center">
+              <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
+                <i className="pi pi-plus mx-2 font-medium"></i>
+                Agregar
+              </BLink>
             </div>
-        );
-    };
-
-    const toggleSidebarAbierto = () => {
-        setOpen(!open);
-        authModulos.map(modulo => modulo.isOpen === true && !open ? modulo.isOpen = false : modulo.isOpen === true)
-    };
-
-    const items = [
-        {
-            label: 'File',
-            icon: 'pi pi-fw pi-file',
-            end: true,
-            // className:"bg-black w-3",
-            items: [
-                {
-                    label: 'Perfil',
-                    icon: 'pi pi-user-edit',
-                    // className:"bg-black w-3",
-                },
-                {
-                    label: 'Salir',
-                    icon: 'pi pi-sign-out',
-                    command: (event) => cerrar_salir(event),
-                    // className:"bg-black w-3",
-                }
-            ]
+            <div className="h-full flex justify-center items-center">
+              <BLink url={"/compras/requisiciones/anuladas"} tipo={"INACTIVOS"}>
+                Anulados
+              </BLink>
+            </div>
+            <div className="h-full flex justify-center items-center">
+              <BLink url={"/compras/requisiciones/aprobadas"} tipo={"APROBADO"}>
+                Aprobados
+              </BLink>
+            </div>
+          </>
         }
-    ];
 
+        {authUsuario.perfiles?.some((perfil) => perfil.id_perfil == 46) &&
+          <>
+            <div className="h-full flex justify-center items-center">
+              <BLink url={"/compras/requisiciones/aprobadas"} tipo={"APROBADO"}>
+                Revisados
+              </BLink>
+            </div>
+            <div className="h-full flex justify-center items-center">
+              <BLink url={"/compras/requisiciones/anuladas"} tipo={"INACTIVOS"}>
+                Eliminados
+              </BLink>
+            </div>
+          </>
+        }
 
-    const start = (
-        <div className='bg-slate-950 '>
-            <button onClick={toggleSidebarAbierto}
-                className="z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-lg flex justify-center items-center hover:bg-amber-500 duration-300"
-            > <span className="pi pi-bars"></span></button>
-        </div>)
+        <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
+          <i className="pi pi-search" />
+          <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" />
+        </span>
+      </div>
 
+      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+        {dataRequisiciones.error === false ? (
+          <p>No hay requisiciones pendientes</p>
+        ) : (
+          dataRequisiciones.map((requisiciones) => (
+            <CardRequisicion requisiciones={requisiciones} />
+          ))
+        )}
+      </div>
 
-    const end = (<div>
-        <img
-            src="https://img.freepik.com/vector-premium/avatar-hombre-sonriente-joven-hombre-bigote-barba-marron-cabello-sueter-amarillo-o-sudadera-ilustracion-personaje-personas-vector-3d-estilo-minimalista-dibujos-animados_365941-860.jpg?w=740"
-            alt=""
-            className="h-10 rounded-full"
-        />
+      {authUsuario.perfiles?.some((perfil) => perfil.id_perfil == 46) &&
 
-        <div onClick={cerrar_salir}>
-            <i className="pi pi-sign-out"></i>
-            <span className='ml-2'>SALIR</span>
-        </div>
-    </div>)
+        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+          {dataRequisiciones.error === false ? (
+            <p>No hay requisiciones pendientes</p>
+          ) : (
+            dataRequisiciones.map((requisiciones) => (
+              <BLink key={requisiciones} url={"/compras/requisiciones/revisar"} tipo={"APROBADO"}>
+                <CardRequisicion requisiciones={requisiciones} />
+              </BLink>
+            ))
+          )}
+        </div>}
 
-    return (
-        <div className="card">
-            <Menubar model={items} start={start} className='gap-3 flex justify-around max-md:mr-0' />
-        </div>
-    )
-}
+    </div>
+  );
+  return <>{main()}</>;
+};
+
+export default Requisiciones;

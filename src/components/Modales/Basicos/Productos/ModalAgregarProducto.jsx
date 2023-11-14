@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Dialog } from "primereact/dialog";
 import Button from "../../../Botones/Button";
 import { InputText } from "primereact/inputtext";

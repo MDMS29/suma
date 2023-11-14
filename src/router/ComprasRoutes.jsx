@@ -2,6 +2,7 @@ import Requisiciones from "../Pages/Comercial/Requisiciones/Requisiciones";
 import ReqAprobadas from "../Pages/Comercial/Requisiciones/ReqAprobadas";
 import ReqAnuladas from "../Pages/Comercial/Requisiciones/ReqAnuladas";
 import AgregarReq from "../Pages/Comercial/Requisiciones/AgregarReq";
+import RevisarReq from "../Pages/Comercial/Requisiciones/RevisarReq";
 
 const ComprasRoutes = [
     {
@@ -27,6 +28,12 @@ const ComprasRoutes = [
         route: "/compras/requisiciones/agregar",
         component: <AgregarReq />,
         key: 13
+    },
+    {
+        name: "Revisar Requisiciones",
+        route: "/compras/requisiciones/revisar",
+        component: <RevisarReq />,
+        key: 14
     },
 ];
 

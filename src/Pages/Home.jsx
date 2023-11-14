@@ -30,7 +30,6 @@ const Home = () => {
       };
 
       const { data } = await conexion_cliente('compras/requisiciones/doc/1', config)
-      console.log(data.split('filename=')[1].split(';')[0])
       setSrc(data)
       // console.log(data);
     } catch (error) {

@@ -12,49 +12,49 @@ const BasicasRoutes =[
         name: "Centros",
         route: "/basicas/centros",
         component: <Centros/>,
-        key: 14
+        key: 15
     },
     {
         name: "Procesos",
         route: "/basicas/procesos",
         component: <Procesos />,
-        key: 15
+        key: 16
     },
     {
         name: "Unidades",
         route: "/basicas/unidades-de-medida",
         component: <Unidades />,
-        key: 16
+        key: 17
     },
     {
         name: "Marcas",
         route: "/basicas/marcas-productos",
         component: <Marcas />,
-        key: 17
+        key: 18
     },
     {
         name: "Familias de Productos",
         route: "/basicas/familias-productos",
         component: <FamiliaProd />,
-        key: 18
+        key: 19
     },
     {
         name: "Tipos de Productos",
         route: "/basicas/tipos-productos",
         component: <TipoProd />,
-        key: 19
+        key: 20
     },
     {
         name: "Productos",
         route: "/basicas/productos",
         component: <Productos />,
-        key: 20
+        key: 21
     },
     {
         name: "Productos Inactivos",
         route: "/basicas/productos/inactivos",
         component: <ProductosInactivos />,
-        key: 21
+        key: 22
     }
 ]
 
