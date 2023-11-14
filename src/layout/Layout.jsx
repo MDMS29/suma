@@ -1,6 +1,7 @@
 import Sidebar from "../components/Sidebar"
 import { Outlet, Navigate } from "react-router-dom"
 import useAuth from "../hooks/useAuth"
+import Navbar from "../components/Navbar"
 
 const Layout = () => {
     const { authUsuario } = useAuth()
@@ -20,8 +21,11 @@ const Layout = () => {
     let bloqueLayout = (
         <div className="flex h-screen">
             <Sidebar />
-            <main className="flex justify-center flex-1 md:h-screen overflow-y-scroll">
-                <Outlet />
+            <main className="flex flex-col w-screen justify-center flex-1 ">
+                <Navbar />
+                <div className="flex justify-center h-full md:h-screen overflow-y-scroll">
+                    <Outlet />
+                </div>
             </main>
         </div>
     )

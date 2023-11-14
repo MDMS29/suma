@@ -1,15 +1,13 @@
-import { useState } from "react";
+
 import { Link, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth.jsx";
 
 const Sidebar = () => {
-  const { cerrar_salir, authModulos, setAuthModulos, authUsuario } = useAuth();
+  const { cerrar_salir, authModulos, setAuthModulos, authUsuario, open, setOpen } = useAuth();
 
   const { usuario, nombre_empresa } = authUsuario;
 
   const { pathname } = useLocation()
-
-  const [open, setOpen] = useState(false);
 
   const setSubMenuOpen = (index) => {
     setAuthModulos((prevModulos) =>
@@ -30,26 +28,23 @@ const Sidebar = () => {
   return (
     <div className="flex max-sm:absolute relative z-10">
 
-      <div className="h-screen flex border-r shadow-sm bg-white">
+      <div className="h-screen flex border-r shadow-sm bg-white" >
 
         <div className={` ${open ? "w-auto px-2" : "w-16 max-sm:w-0 z-10"} bg-white overflow-hidden transition-all duration-500 ease-in-out`}>
 
-          <div className={`z-10 absolute ${open ? 'max-sm:left-60 max-sm:top-3  left-60 top-5' : 'max-sm:left-3 max-sm:top-3  left-12 top-5'}`}>
-            <button
+          <div className={`z-10 absolute ${open ? 'max-sm:left-60 max-sm:top-3 left-60 top-5 xl:hidden lg:hidden md:hidden' : 'hidden '}`}>
+            <button onClick={toggleSidebarAbierto}
               className="z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-lg drop-shadow-lg flex justify-center items-center hover:bg-amber-500 duration-300"
-              onClick={toggleSidebarAbierto}
             >
               <span className="pi pi-bars"></span>
             </button>
           </div>
 
-
-
           <div className="flex p-2 mx-1">
             <img
-              src="https://img.freepik.com/vector-premium/avatar-hombre-sonriente-joven-hombre-bigote-barba-marron-cabello-sueter-amarillo-o-sudadera-ilustracion-personaje-personas-vector-3d-estilo-minimalista-dibujos-animados_365941-860.jpg?w=740"
-              alt=""
-              className="h-10 rounded-md"
+              src="/src/img/logo-suma.jpeg"
+              alt="Logo SUMA"
+              className="h-10 rounded-full"
             />
             <div className={`flex justify-between items-center w-40 ml-3 mr-4`}>
               <div className={`leading-4 ${!open && "invisible"}`}>
@@ -67,7 +62,7 @@ const Sidebar = () => {
               {open && <span className="ml-2">SALIR</span>}
             </div>
           </div>
-          <ul >
+          <ul>
             {authModulos.map((modulo, index) => (
               <div key={modulo.nombre_modulo}>
                 <li

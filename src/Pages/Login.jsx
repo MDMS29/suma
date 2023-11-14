@@ -85,7 +85,7 @@ const Login = () => {
                         </form>
                     </div>
                     <div className=' rounded-r-lg w-full  md:w-1/2 lg:w-1/2 xl:w-1/2 hidden md:block'>
-                        <img src="/src/img/img_login.png" alt="" className='h-full rounded-r-lg' />
+                        <img src="/src/img/img_login.png" alt="Mascota Devitech" className='h-full rounded-r-lg' />
                     </div>
                 </div>
             </div>

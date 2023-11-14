@@ -26,8 +26,7 @@ diseño modal
         XLSX.utils.book_append_sheet(libro, hoja, "Productos");
         XLSX.writeFile(libro, "Productos.xlsx");
     }
-
-  2
+2
      const exportExcel = () => {
          import('xlsx').then((xlsx) => {
              const worksheet = xlsx.utils.json_to_sheet(dataProductos);
@@ -139,25 +138,75 @@ import ExportExcel from 'react-export-excel';
               </div> */}
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-----------------------------PRODUCTOS----------------------------------
-
-- CRITICO es si un producto es solicitado y es dificil de conseguir, y demora en llegar
-- COMPUESTO si un producto se compone de otros prodcutos (un plato de comida) (por ahora no se dieron ejemplos)
-
-  data.map((e) => { data.compuesto == true ? e.compuesto = "si" : e.compuesto = "no" })
+import { Menubar } from 'primereact/menubar';
+import useAuth from "../hooks/useAuth.jsx";
 
 
-- los productos se borrar? ok
-- esta el id_marca pero mostrara el nombre de la marca? ok
-- referencia es el nombre del producto? numero codigo
-- description es una observacion? es el nombre 
-- critico seria ESTADO CRITICO: si o no? ok
-- inventariable seria si o no? ok
-- foto se muestra en tabla? y los que no entonces dira no fotoq?  ok
-- compuesto seria si o no? ok
-- ficha es si tiene la ficha tecnica si o no? ok
+export default function Navbar() {
+    
+    const { cerrar_salir, authModulos, open, setOpen } = useAuth();
 
-- marca, familia, unidad, tipo de producto, producto critico, Inventariable, Producto Compuesto, Ficha, Certificado es SELECT
-            
-                              --HACER-- 
-- excel
+    const customMenuItem = (item) => {
+        return (
+            <div className="custom-menu-item">
+                {item.icon && <img src={item.icon} alt={item.label} className="menu-icon" />}
+                <span className="menu-label">{item.label}</span>
+            </div>
+        );
+    };
+
+    const toggleSidebarAbierto = () => {
+        setOpen(!open);
+        authModulos.map(modulo => modulo.isOpen === true && !open ? modulo.isOpen = false : modulo.isOpen === true)
+    };
+
+    const items = [
+        {
+            label: 'File',
+            icon: 'pi pi-fw pi-file',
+            end: true,
+            // className:"bg-black w-3",
+            items: [
+                {
+                    label: 'Perfil',
+                    icon: 'pi pi-user-edit',
+                    // className:"bg-black w-3",
+                },
+                {
+                    label: 'Salir',
+                    icon: 'pi pi-sign-out',
+                    command: (event) => cerrar_salir(event),
+                    // className:"bg-black w-3",
+                }
+            ]
+        }
+    ];
+
+
+    const start = (
+        <div className='bg-slate-950 '>
+            <button onClick={toggleSidebarAbierto}
+                className="z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-lg flex justify-center items-center hover:bg-amber-500 duration-300"
+            > <span className="pi pi-bars"></span></button>
+        </div>)
+
+
+    const end = (<div>
+        <img
+            src="https://img.freepik.com/vector-premium/avatar-hombre-sonriente-joven-hombre-bigote-barba-marron-cabello-sueter-amarillo-o-sudadera-ilustracion-personaje-personas-vector-3d-estilo-minimalista-dibujos-animados_365941-860.jpg?w=740"
+            alt=""
+            className="h-10 rounded-full"
+        />
+
+        <div onClick={cerrar_salir}>
+            <i className="pi pi-sign-out"></i>
+            <span className='ml-2'>SALIR</span>
+        </div>
+    </div>)
+
+    return (
+        <div className="card">
+            <Menubar model={items} start={start} className='gap-3 flex justify-around max-md:mr-0' />
+        </div>
+    )
+}

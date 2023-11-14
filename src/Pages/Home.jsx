@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import useAuth from "../hooks/useAuth"
 import conexion_cliente from "../config/ConexionCliente"
-import Loader from "../components/Loader"
 
 const Home = () => {
 
@@ -14,38 +13,32 @@ const Home = () => {
       const res = await data.json()
       setDataIP(res)
     })()
-
-
-
   }, [])
-
-
-  const [verIframe, setIframe] = useState(false)
   const [src, setSrc] = useState(null)
 
-  const ver_pdf = async (e) => {
-    e.preventDefault()
-    setIframe(!verIframe)
-
+  // setTimeout(()=> pdf(), 10000)
+  const pdf = async () => {
+    // setVerPDF(!verPDF)
     try {
 
-      const token = localStorage.getItem('token')
-
+      const token = localStorage.getItem("token");
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        }
-      }
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-      const { data } = await conexion_cliente('compras/requisiciones/doc/5', config)
+      const { data } = await conexion_cliente('compras/requisiciones/doc/1', config)
       console.log(data.split('filename=')[1].split(';')[0])
       setSrc(data)
+      // console.log(data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   }
+
+
 
   return (
     <div className="h-screen w-full p-4">
@@ -56,10 +49,8 @@ const Home = () => {
           <small className="text-gray-400">Ubicación: {`${dataIP?.country} - ${dataIP?.city}/${dataIP?.region}`}</small>
         </div>
       </section>
-
-      <button className="text-white bg-red-700 rounded p-3" onClick={ver_pdf}>VER PDF</button>
-
-      {verIframe && (src == null ? <Loader /> : <iframe src={src} className="border border-black w-full h-full">IFRAME</iframe>)}
+    <button className="text-white bg-red-800 p-3" onClick={pdf}>VER PDF</button>
+       <iframe className="w-full h-full" src={src}></iframe>
 
     </div>
   )

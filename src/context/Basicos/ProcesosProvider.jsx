@@ -24,7 +24,7 @@ const ProcesosProvider = ({ children }) => {
         codigo: '',
         proceso: ''
     });
-
+    
     const obtener_procesos = async () => {
         const token = localStorage.getItem('token')
 
@@ -43,10 +43,8 @@ const ProcesosProvider = ({ children }) => {
             }
         }
     }
-
     useEffect(() => {
         if (location.pathname.includes('procesos')) {
-            
             obtener_procesos()
         }
     }, [location.pathname])

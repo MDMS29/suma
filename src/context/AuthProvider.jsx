@@ -2,12 +2,16 @@ import { createContext, useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom"
 import conexionCliente from "../config/ConexionCliente";
 
+
 const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
+
   const navigate = useNavigate()
   const location = useLocation()
+  const [open, setOpen] = useState(false);
+
 
   const [authUsuario, setAuthUsuario] = useState({})
   const [authModulos, setAuthModulos] = useState([])
@@ -70,6 +74,7 @@ const AuthProvider = ({ children }) => {
     setAuthModulos([])
     localStorage.removeItem('token')
     localStorage.removeItem('modulos')
+    // localStorage.removeItem('_grecaptcha')
     navigate("/auth")
   }
 
@@ -84,7 +89,7 @@ const AuthProvider = ({ children }) => {
   const obj = useMemo(() => ({
     authUsuario, setAuthUsuario, authModulos, setAuthModulos,
     cerrar_salir, authPermisos, Permisos_DB, alerta, setAlerta,
-    verEliminarRestaurar, setVerEliminarRestaurar
+    verEliminarRestaurar, setVerEliminarRestaurar, open, setOpen
   }))
 
   return (
