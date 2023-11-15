@@ -216,14 +216,20 @@ const RequisicionesProvider = ({ children }) => {
       );
 
       if (!data?.error) {
+
+        //SUCCESS
+        const requisiciones = dataRequisiciones.filter(
+          (requisicion) => requisicion.id_requisicion !== RequiAgg.id_requisicion
+        );
+        setDataRequisiciones(requisiciones);
+
         setAlerta({
           error: false,
           show: true,
-          message: "Requisición aprobada con exito",
+          message: "Requisición verificada con exito",
         });
         return true;
       }
-      
 
       setAlerta({
         error: true,
@@ -403,7 +409,6 @@ const RequisicionesProvider = ({ children }) => {
         `/compras/requisiciones/${RequiState}?estado=${estado}`,
         config
       );
-      console.log(RequiState);
 
       if (data.error) {
         //ERROR

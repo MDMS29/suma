@@ -34,13 +34,15 @@ const ModalRevisarReq = ({ visible, onClose }) => {
     const [aprobarTodo, setAprobarTodo] = useState(false);
 
     useEffect(() => {
-        setProductosSeleccionados(productosData)
         if (RequiAgg.fecha_requisicion !== "") {
             setRequiAgg({
                 ...RequiAgg,
                 fecha_requisicion: RequiAgg.fecha_requisicion.split("T")[0],
             });
         }
+    }, [productosData])
+    useEffect(() => {
+        setProductosSeleccionados(productosData)
     }, [productosData])
 
     const filtrar_columnas = (event) => {
@@ -153,7 +155,7 @@ const ModalRevisarReq = ({ visible, onClose }) => {
 
     return (
         <Dialog
-            header={<h1>Revision Requisicion <label className='font-mono text-2xl'>{RequiAgg.consecutivo}</label></h1>}
+            header={<h1>Revision Requisicion <label className='font-sans text-2xl'>{RequiAgg.consecutivo}</label></h1>}
             visible={visible}
             onHide={onClose}
             className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"

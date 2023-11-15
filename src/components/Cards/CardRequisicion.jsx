@@ -5,6 +5,7 @@ import {
   PDF_Icono,
   Restore_Icono,
   Trash_Icono,
+  Lupa_Icono
 } from "../Icons/Iconos";
 import { useNavigate } from "react-router";
 import useRequisiciones from "../../hooks/Compras/useRequisiciones";
@@ -13,7 +14,7 @@ import useAuth from "../../hooks/useAuth.jsx";
 
 
 
-const CardRequisicion = ({ requisiciones }) => {
+const CardRequisicion = ({ requisiciones, setModalVisible }) => {
   const { authUsuario } = useAuth();
   const navigate = useNavigate();
 
@@ -57,6 +58,12 @@ const CardRequisicion = ({ requisiciones }) => {
     return;
   };
 
+  const revisar_req = async (e, id_requisicion) => {
+    e.preventDefault();
+    setModalVisible(true);
+    await buscar_requisicion(id_requisicion);
+  };
+
   return (
     <div className="w-96 bg-white flex flex-col justify-between px-3 py-4 rounded-lg transition-all hover:shadow-xl">
       <div className="flex justify-between ">
@@ -73,7 +80,7 @@ const CardRequisicion = ({ requisiciones }) => {
       </div>
       <hr />
       <div>
-        <p className="my-2 max-h-12 text-ellipsis overflow-hidden">
+        <p className="my-2 max-h-12 truncate">
           {comentarios}
         </p>
       </div>
@@ -112,6 +119,7 @@ const CardRequisicion = ({ requisiciones }) => {
                 {Edit_Icono}
               </PButton>
             }
+
             <PButton
               tooltip="Eliminar"
               tooltipOptions={{ position: "top" }}
@@ -120,6 +128,17 @@ const CardRequisicion = ({ requisiciones }) => {
             >
               {Trash_Icono}
             </PButton>
+
+            {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== IDS_PERMISOS.PERFIL_GERENTE) &&
+              <PButton
+                tooltip="Revisar"
+                tooltipOptions={{ position: "top" }}
+                className="p-button-rounded p-mr-2  mx-1"
+                onClick={e => revisar_req(e, requisiciones.id_requisicion)}
+              >
+                {Lupa_Icono}
+              </PButton>
+            }
           </>
         )}
       </div>

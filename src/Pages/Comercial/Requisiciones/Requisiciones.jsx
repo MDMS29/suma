@@ -15,18 +15,8 @@ import Loader from "../../../components/Loader";
 const Requisiciones = () => {
   const toast = useRef(null);
   const { verEliminarRestaurar, authUsuario, alerta, setAlerta } = useAuth();
-  const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData, buscar_requisicion } = useRequisiciones();
+  const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData } = useRequisiciones();
   const [modalVisible, setModalVisible] = useState(false);
-
-  const revisar_req = async (e, id_requisicion) => {
-    e.preventDefault();
-    console.log(authUsuario.perfiles)
-    if (authUsuario.perfiles?.some((perfil) => perfil.id_perfil == IDS_PERMISOS.PERFIL_GERENTE)) {
-      console.log(id_requisicion);
-      setModalVisible(true);
-      await buscar_requisicion(id_requisicion);
-    }
-  };
 
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
@@ -151,12 +141,11 @@ const Requisiciones = () => {
               ) : (
                 <>
                   {dataRequisiciones.map((requisiciones) => (
-                    <PButton key={requisiciones} onClick={e => revisar_req(e, requisiciones.id_requisicion)}>
-                      <CardRequisicion
-                        key={requisiciones.id_requisiciones}
-                        requisiciones={requisiciones}
-                      />
-                    </PButton>
+                    <CardRequisicion
+                      key={requisiciones.id_requisiciones}
+                      requisiciones={requisiciones}
+                      setModalVisible={setModalVisible}
+                    />
                   ))}
                 </>
               )}

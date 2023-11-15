@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Edit_Icono,
   Req_Icono,
@@ -12,7 +12,6 @@ import { MultiSelect } from "primereact/multiselect";
 import { Mention } from "primereact/mention";
 import useProcesos from "../../../hooks/Basicos/useProcesos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
-import { useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
@@ -42,6 +41,7 @@ const AgregarReq = () => {
     guardar_requisiciones,
     productosData,
     setProductosData,
+    productoState,
     setProductoState,
     editar_requisicion,
     eliminar_requisicion,
