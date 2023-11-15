@@ -5,27 +5,21 @@ import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dialog } from 'primereact/dialog';
 import Button from '../../Botones/Button';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
-import { InputText } from 'primereact/inputtext';
 import useProcesos from '../../../hooks/Basicos/useProcesos';
-import { Mention } from 'primereact/mention';
-import { check_Icono, x_Icono } from '../../Icons/Iconos';
 
 const ModalRevisarReq = ({ visible, onClose }) => {
     const {
-        dataRequisiciones,
         RequiAgg,
-        centroCostoAgg,
+        setRequiAgg,
         filtar_tipo_requ,
         obtener_centro_costo,
         productosData,
-        tipoRequiAgg,
         obtener_tipo_requisicion,
         revisar_requisicion } = useRequisiciones();
 
-    const { dataProcesos, obtener_procesos } = useProcesos();
-    console.log(RequiAgg);
+    const { obtener_procesos } = useProcesos();
+
+
 
     const columns = [
         { field: "nombre_producto", header: "Producto" },
@@ -37,11 +31,18 @@ const ModalRevisarReq = ({ visible, onClose }) => {
     const [visibleColumns, setVisibleColumns] = useState(columns);
     const [filteredData, setFilteredData] = useState(productosData);
     const [productosSeleccionados, setProductosSeleccionados] = useState([]);
+    const [todo, setTodo] = useState(false);
 
     useEffect(() => {
         setProductosSeleccionados(productosData)
-    }, [])
-    console.log(productosSeleccionados);
+        if (RequiAgg.fecha_requisicion !== "") {
+            setRequiAgg({
+                ...RequiAgg,
+                fecha_requisicion: RequiAgg.fecha_requisicion.split("T")[0],
+            });
+        }
+    }, [productosData])
+    console.log(productosData);
 
     const filtrar_columnas = (event) => {
         let columnas_seleccionadas = event.value;
@@ -51,37 +52,62 @@ const ModalRevisarReq = ({ visible, onClose }) => {
         setVisibleColumns(columnas_ordenadas_seleccionadas);
     };
 
+    const columna_acciones = (rowData) => (
+        <label
+            className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${rowData.id_estado == 4 ? "bg-primaryYellow" : "bg-gray-300"
+                }`}>
+            <input
+                type="checkbox"
+                className="sr-only peer"
+                onChange={() =>
+                    chk_producto(rowData.id_detalle, rowData.id_estado)
+                } />
+            <span
+                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+        </label>
+    )
+
+    const chk_producto = (rowData) => {
+        const producto_id = rowData;
+        if (productosSeleccionados.find(producto => producto.id_detalle == producto_id)) {
+            const [productos] = productosSeleccionados.filter(producto => producto.id_detalle == producto_id)
+            if (productos.id_estado == 4) {
+                productos.id_estado = 5
+            } else {
+                productos.id_estado = 4
+            }
+            const productosActualizados = productosSeleccionados.map(productoState => productoState.id_detalle == productos.id_detalle ? productos : productoState)
+            setProductosSeleccionados(productosActualizados)
+        } else {
+            setProductosSeleccionados([...productosSeleccionados], { id_estado: 5 })
+        }
+    }
+
+    const chk_todo = () => {
+        const productos = productosData
+        if (todo == true) {
+            console.log("sipasa true");
+            if (productos.id_estado == 4) {
+                productos.id_estado = 5
+            } else {
+                productos.id_estado = 4
+            }
+            const productosActualizados = productosData.map(productoState => productoState.id_detalle == productos.id_detalle ? productos : productoState)
+            setProductosSeleccionados(productosActualizados)
+        } if (todo == false) {
+            console.log("sipasa false");
+            setProductosSeleccionados([...productosSeleccionados], { id_estado: 5 })
+        }
+    }
+
     const guardar_lista = () => {
-        revisar_requisicion()
+        revisar_requisicion(productosSeleccionados)
+        onClose()
     }
-    console.log(RequiAgg);
 
-    // const btn_producto_seleccionado = (rowData) => {
-    //     const producto_id = rowData;
-    //     if (productosSeleccionados.find(producto => producto.id_producto == producto_id)) {
-    //         const [producto] = productosSeleccionados.filter(producto => producto.id_producto == producto_id)
-    //         if (producto.id_estado == 1) {
-    //             producto.id_estado = 2
-    //         } else {
-    //             producto.id_estado = 1
-    //         }
-
-    //         const perfiles = productosSeleccionados.filter(producto => producto.id_producto !== producto_id)
-    //         productosSeleccionados(perfiles)
-
-    //     } else {
-    //         setProductosSeleccionados([...productosSeleccionados, { id_perfil: perfil_id, estado_perfil: 1 }])
-
-    //     }
-    // }
-
-    const btn_producto = (id_producto) => {
-
-    }
 
     useEffect(() => {
         setFilteredData(productosData);
-
         if (RequiAgg.id_proceso != 0) {
             obtener_centro_costo(RequiAgg.id_proceso);
         }
@@ -96,30 +122,29 @@ const ModalRevisarReq = ({ visible, onClose }) => {
     }, []);
 
     const header = (
-        <div className=''>
+        <>
             <div className='flex gap-3 m-3 items-center'>
                 <span>Aprobar todo</span>
                 <label
-                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full bg-gray-300
-                    }`}>
+                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosSeleccionados.id_estado == 4 ? "bg-primaryYellow" : "bg-gray-300"
+                        }`}>
                     <input
                         type="checkbox"
                         className="sr-only peer"
-
-                    />
+                        onChange={() => chk_todo(setTodo(true))} />
                     <span
                         className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
                 </label>
 
                 <span className='ml-5'>Rechazar todo</span>
                 <label
-                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full bg-gray-300
-                    }`}>
+                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosSeleccionados.id_estado == 5 ? "bg-primaryYellow" : "bg-gray-300"
+                        }`}>
                     <input
                         type="checkbox"
                         className="sr-only peer"
+                        onChange={() => chk_todo(setTodo(false))} />
 
-                    />
                     <span
                         className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
                 </label>
@@ -133,7 +158,7 @@ const ModalRevisarReq = ({ visible, onClose }) => {
                 className="w-full sm:w-20rem"
                 display="chip"
             />
-        </div>
+        </>
     );
 
     const footerContent = (
@@ -141,14 +166,14 @@ const ModalRevisarReq = ({ visible, onClose }) => {
             <Button
                 tipo={'PRINCIPAL'}
                 funcion={guardar_lista}
-            > Revisar
+            > Confirmar
             </Button>
         </div>
     );
 
     return (
         <Dialog
-            header={<h1>Revision Requisicion <label className='font-mono text-2xl'>{RequiAgg.consecutivo}</label> </h1>}
+            header={<h1>Revision Requisicion <label className='font-mono text-2xl'>{RequiAgg.consecutivo}</label></h1>}
             visible={visible}
             onHide={onClose}
             className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
@@ -158,44 +183,39 @@ const ModalRevisarReq = ({ visible, onClose }) => {
             <div className="flex flex-col pt-3 flex-wrap sm:w-full">
                 <div className="grid grid-cols-3 gap-4">
                     <div className="flex flex-col">
-                        <label className="text-gray-600 pb-2 font-semibold">Procesos</label>
+                        <label className="text-gray-600 pb-2 font-semibold">Proceso</label>
                         <p
                             name="id_proceso"
-                            className="w-full px-2 text-base"
+                            className="w-full text-base"
                         >{RequiAgg.proceso}</p>
                     </div>
                     <div className="flex flex-col">
-                        <label className="text-gray-600 pb-2 font-semibold">Centro de Costos</label>
+                        <label className="text-gray-600 pb-2 font-semibold">Centro de Costo</label>
                         <p
                             name="id_centro"
-                            className="w-full px-2 text-base"
+                            className="w-full text-base"
                         >{RequiAgg.centro}</p>
                     </div>
                     <div className="flex flex-col">
                         <label className="text-gray-600 pb-2 font-semibold">Fecha</label>
-                        <Calendar
-                            value={RequiAgg.fecha_requisicion}
+                        <p
                             name="fecha_requisicion"
-                            showIcon
-                            minDate={new Date()}
-                            disabled
-                        />
+                            className="w-full text-base"
+                        >{RequiAgg.fecha_requisicion}</p>
                     </div>
                     <div className="flex flex-col">
-                        <label className="text-gray-600 pb-2 font-semibold">Tipo de Requisiciones</label>
+                        <label className="text-gray-600 pb-2 font-semibold">Tipo de Requisicion</label>
                         <p
                             name="id_tipo_producto"
-                            className="w-full px-2 text-base"
+                            className="w-full text-base"
                         >{RequiAgg.tipo_productos}</p>
                     </div>
                     <div className="flex flex-col col-span-2">
                         <label className="text-gray-600 pb-2 font-semibold">Observaciones</label>
-                        <Mention
-                            value={RequiAgg.comentarios}
+                        <p
                             name="comentarios"
-                            disabled
-                            className="w-full card pl-2 pt-2 border-gray-300"
-                        />
+                            className="border h-20 overflow-y-scroll p-2 border-gray-300 w-full card text-base"
+                        >{RequiAgg.comentarios}</p>
                     </div>
                 </div>
             </div>
@@ -219,18 +239,8 @@ const ModalRevisarReq = ({ visible, onClose }) => {
 
                     <Column
                         key="actions"
-                        style={{ width: "10%" }}
-                        header='Opciones'
-                        body={(rowData) =>
-                        (<div className="flex justify-around">
-                            <button >
-                                {check_Icono}
-                            </button>
-                            <button >
-                                {x_Icono}
-                            </button>
-                        </div>)
-                        }
+                        style={{ width: "10%", textAlign: "center" }}
+                        body={(rowData) => columna_acciones(rowData)}
                     />
 
                 </DataTable>

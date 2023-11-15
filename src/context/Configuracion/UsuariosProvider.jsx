@@ -39,6 +39,7 @@ const UsuariosProvider = ({ children }) => {
     usuario: '',
     correo: '',
     clave: '',
+    empresa: '',
     clave_repetida: '',
   });
 
@@ -207,7 +208,6 @@ const UsuariosProvider = ({ children }) => {
         perfiles,
         config
       );
-      console.log(data);
       setModulosAgg(data);
     } catch (error) {
       setAlerta({
@@ -234,7 +234,7 @@ const UsuariosProvider = ({ children }) => {
       // Realiza la solicitud POST a la API para guardar la información del usuario
       const { data } = await conexion_cliente.post("/usuarios", formData, config);
       if (!data?.error) {
-        setDataUsuarios((dataUsuarios)=>[data, ...dataUsuarios])
+        setDataUsuarios((dataUsuarios) => [data, ...dataUsuarios])
         setAlerta({
           error: false,
           show: true,
@@ -287,14 +287,13 @@ const UsuariosProvider = ({ children }) => {
         correo: correo,
         clave: "",
         clave_repetida: "",
-        id_empresa:id_empresa
+        id_empresa: id_empresa
       })
       await data?.modulos.map((modulo) => {
         modulo?.permisos.map((permiso) => {
           permisos.push({ id_rol: +permiso?.id_rol_modulo, id_estado: +permiso?.id_estado })
         })
       })
-
       setPerfilesEdit(perfiles)
       setPermisosEdit(permisos)
 

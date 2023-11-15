@@ -57,8 +57,8 @@ const RequisicionesProvider = ({ children }) => {
         const estado = location.pathname.includes("anuladas")
           ? 2
           : location.pathname.includes("verificadas")
-          ? 6
-          : 3;
+            ? 6
+            : 3;
 
         try {
           const { data } = await conexion_cliente(
@@ -97,7 +97,7 @@ const RequisicionesProvider = ({ children }) => {
         return;
       }
       setcentroCostoAgg(data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const filtar_tipo_requ = async (id_tipo_req) => {
@@ -120,7 +120,7 @@ const RequisicionesProvider = ({ children }) => {
         return;
       }
       setproductos(data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const obtener_tipo_requisicion = async () => {
@@ -196,6 +196,57 @@ const RequisicionesProvider = ({ children }) => {
     }
   };
 
+  const revisar_requisicion = async (formData) => {
+    const token = localStorage.getItem("token");
+
+    console.log(formData);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await conexion_cliente.patch(
+        `/compras/requisiciones/detalles/${RequiAgg.id_requisicion}`,
+        { detalles: formData },
+        config
+      );
+
+      if (!data?.error) {
+        setAlerta({
+          error: false,
+          show: true,
+          message: "Requisición aprobada con exito",
+        });
+        return true;
+      }
+      //SUCCESS
+      const requisiciones = dataRequisiciones.filter(
+        (requisicion) => requisicion.id_estado == 3 !== RequiState.id_estado
+      );
+      setDataRequisiciones(requisiciones);
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: data.message,
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+      return false;
+    } catch (error) {
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response?.data.message,
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+    }
+  };
+
   const buscar_requisicion = async (id) => {
     const token = localStorage.getItem("token");
 
@@ -229,6 +280,7 @@ const RequisicionesProvider = ({ children }) => {
         fecha_requisicion,
         comentarios,
         det_requisicion,
+        id_estado
       } = data;
 
       setRequiAgg({
@@ -249,8 +301,9 @@ const RequisicionesProvider = ({ children }) => {
         id_centro: id_centro,
         id_tipo_producto: id_tipo_producto,
         id_proceso: id_proceso,
+        id_estado: id_estado,
       });
-
+      console.log(det_requisicion);
       setProductosData(det_requisicion);
     } catch (error) {
       console.error(error);
@@ -403,7 +456,7 @@ const RequisicionesProvider = ({ children }) => {
 
       setSrcPDF(data);
       setVerPDF(true);
-      
+
     } catch (error) {
       console.log(error);
       return
@@ -436,6 +489,7 @@ const RequisicionesProvider = ({ children }) => {
     editar_requisicion,
     buscar_requisicion,
     eliminar_requisicion,
+    revisar_requisicion,
     generar_pdf,
     srcPDF,
     verPDF,

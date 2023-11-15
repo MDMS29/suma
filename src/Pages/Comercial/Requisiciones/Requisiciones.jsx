@@ -13,10 +13,9 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
 const Requisiciones = () => {
   const toast = useRef(null);
-  const { verEliminarRestaurar, authUsuario } = useAuth();
+  const { verEliminarRestaurar, authUsuario, alerta, setAlerta } = useAuth();
   const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData, buscar_requisicion } = useRequisiciones();
   const [modalVisible, setModalVisible] = useState(false);
-
 
   const revisar_req = async (e, id_requisicion) => {
     e.preventDefault();
@@ -49,6 +48,22 @@ const Requisiciones = () => {
     setProductosData([]);
     return;
   }, []);
+
+  //MOSTRAR ALERTA
+  useEffect(() => {
+    if (alerta.show) {
+      const show_alert = () => {
+        toast.current.show({
+          severity: alerta.error ? 'error' : 'success',
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500);
+      };
+      show_alert();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta]);
 
 
   const main = () => (

@@ -43,6 +43,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // console.log(perfilesEdit);
   useEffect(() => {
     if (UsuariosAgg.id_usuario) {
       setPerfilesSeleccionados(perfilesEdit)
@@ -50,7 +51,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permisosEdit, perfilesEdit])
-
+  console.log(perfilesSeleccionados);
 
   const cerrar_modal = () => {
     onClose();
@@ -149,6 +150,12 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       if (!emailPattern.test(UsuariosAgg.correo)) {
         errors.correo = "El correo electrónico no es válido";
       }
+
+      if (UsuariosAgg.id_empresa == 0) {
+        errors.empresa = "Seleccione una opcion";
+
+      }
+
       if (
         UsuariosAgg.clave.trim() === "" &&
         UsuariosAgg.clave_repetida.trim() === "" && perfilesEdit.length <= 0
@@ -190,8 +197,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
-  console.log(perfilesSeleccionados);
-  
+  // console.log(perfilesSeleccionados);
+
   const chk_perfil = (rowData) => {
     const perfil_id = rowData;
 
@@ -340,17 +347,18 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                 <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2"> {/* /*col-span-2*/}
                   <label className="text-gray-600 pb-2 font-semibold">Empresas <span className="font-bold text-red-900">*</span></label>
 
-                  <div className="card flex justify-content-center w-full">
+                  <div className={`card flex justify-content-center border-1 rounded-md ${errors.empresa ? "border-red-500" : "border-gray-300"
+                    }`}>
                     <Dropdown value={UsuariosAgg.id_empresa} onChange={(e) => btn_cambio_usuario(e)} options={dataEmpresas}
                       name="id_empresa"
                       optionLabel="razon_social"
-                      optionValue= "id_empresa" 
+                      optionValue="id_empresa"
                       placeholder="Seleccione una empresa"
-                      filter className="w-full md:w-14rem" />
+                      filter className="w-full md:w-14rem rounded-md" />
                   </div>
 
-                  {errors.correo && (
-                    <div className="text-red-600 text-sm">{errors.correo}</div>
+                  {errors.empresa && (
+                    <div className="text-red-600 text-sm">{errors.empresa}</div>
                   )}
                 </div>
               }

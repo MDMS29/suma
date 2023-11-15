@@ -53,7 +53,7 @@ const CardRequisicion = ({ requisiciones }) => {
   };
 
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-md w-96">
+    <div className="max-w-sm rounded-lg bg-white overflow-hidden w-96">
       <Card className="md:w-25rem rounded-lg h-60">
         <div className="flex justify-between items-center">
           <div className="flex items-center text-sm">
@@ -74,24 +74,6 @@ const CardRequisicion = ({ requisiciones }) => {
         <hr className="w-full" />
         <p className="my-2">{comentarios}</p>
         <div className="pt-4 pb-2">
-          {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== IDS_PERMISOS.PERFIL_GERENTE) &&
-            <PButton
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2  mx-1"
-              onClick={e => editar_requisicion(e, id_requisicion)}
-            >
-              {Edit_Icono}
-            </PButton>
-          }
-
-          <PButton
-            tooltip="Eliminar"
-            tooltipOptions={{ position: "top" }}
-            className="p-button-rounded p-mr-2  mx-1"
-          >
-            {Trash_Icono}
-          </PButton>
           {id_estado == 2 ? (
             <>
               <PButton
@@ -116,14 +98,16 @@ const CardRequisicion = ({ requisiciones }) => {
             </>
           ) : (
             <>
-              <PButton
-                tooltip="Editar"
-                tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2  mx-1"
-                onClick={(e) => editar_requisicion(e, id_requisicion)}
-              >
-                {Edit_Icono}
-              </PButton>
+              {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== IDS_PERMISOS.PERFIL_GERENTE) &&
+                <PButton
+                  tooltip="Editar"
+                  tooltipOptions={{ position: "top" }}
+                  className="p-button-rounded p-mr-2  mx-1"
+                  onClick={e => editar_requisicion(e, id_requisicion)}
+                >
+                  {Edit_Icono}
+                </PButton>
+              }
               <PButton
                 tooltip="Eliminar"
                 tooltipOptions={{ position: "top" }}
