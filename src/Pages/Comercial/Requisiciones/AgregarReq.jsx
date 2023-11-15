@@ -9,7 +9,6 @@ import BLink from "../../../components/Botones/BLink";
 import { Dropdown } from "primereact/dropdown";
 import Button from "../../../components/Botones/Button";
 import { MultiSelect } from "primereact/multiselect";
-import { Calendar } from "primereact/calendar";
 import { Mention } from "primereact/mention";
 import useProcesos from "../../../hooks/Basicos/useProcesos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -23,6 +22,7 @@ import useAuth from "../../../hooks/useAuth";
 import { genLlaveAleatoria } from "../../../helpers/utils";
 
 const AgregarReq = () => {
+
   const columns = [
     { field: "nombre_producto", header: "Producto" },
     { field: "unidad", header: "Unidad" },
@@ -45,23 +45,27 @@ const AgregarReq = () => {
     setProductosData,
     setProductoState,
     productoState,
+    editar_requisicion,
+    eliminar_requisicion
   } = useRequisiciones();
 
-  const { verEliminarRestaurar, authUsuario, setVerEliminarRestaurar } =
-    useAuth();
+  const {
+    verEliminarRestaurar,
+    authUsuario,
+    setVerEliminarRestaurar
+  } = useAuth();
+
   const { obtener_procesos, dataProcesos } = useProcesos();
   const [filteredData, setFilteredData] = useState(productosData);
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [editing, setEditing] = useState(false);
-  const [counterId, setCounterId] = useState(1);
-
   const [detalle, setDetalle] = useState({
-    id: 0,
     id_detalle: 0,
     id_unidad: 0,
     id_producto: 0,
     cantidad: "",
     justificacion: "",
+    id_estado: 3,
   });
 
   useEffect(() => {
@@ -73,6 +77,18 @@ const AgregarReq = () => {
     if (RequiAgg.id_tipo_producto != 0) {
       filtar_tipo_requ(RequiAgg.id_tipo_producto);
     }
+
+    if (RequiAgg.fecha_requisicion !== "") {
+      setRequiAgg({
+        ...RequiAgg,
+        fecha_requisicion: RequiAgg.fecha_requisicion.split("T")[0],
+      });
+    }
+
+    const productos_activos = productosData.filter(
+      (producto) => producto.id_estado !== 2
+    );
+    setFilteredData(productos_activos);
   }, [productosData]);
 
   const btn_cambio = (e) => {
@@ -97,25 +113,8 @@ const AgregarReq = () => {
     }
     if (name === "fecha_requisicion") {
       const selectedDate = new Date(value);
-      const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0); // Establecer horas a 0 para comparar solo las fechas
 
-      if (selectedDate < currentDate) {
-        console.error(
-          "No se pueden seleccionar fechas anteriores al día de hoy"
-        );
-        return;
-      }
-
-      // Formatea la fecha como "dd/mm/yy"
-      const formattedDate =
-        ("0" + selectedDate.getDate()).slice(-2) +
-        "-" +
-        ("0" + (selectedDate.getMonth() + 1)).slice(-2) +
-        "-" +
-        selectedDate.getFullYear().toString().slice(-2);
-
-      setRequiAgg({ ...RequiAgg, [name]: formattedDate });
+      setRequiAgg({ ...RequiAgg, [name]: value });
     } else {
       setRequiAgg({ ...RequiAgg, [name]: value });
     }
@@ -141,7 +140,6 @@ const AgregarReq = () => {
         if (productoSeleccionado) {
           updatedDetalle = {
             ...updatedDetalle,
-            id_detalle: counterId,
             id_producto: productoSeleccionado.id_producto,
             nombre_producto: productoSeleccionado.nombre_producto,
             id_unidad: productoSeleccionado.id_unidad,
@@ -157,32 +155,17 @@ const AgregarReq = () => {
     e.preventDefault();
     if (detalle.id_producto && detalle.cantidad && detalle.justificacion) {
       if (editing) {
-        // const index = productosData.findIndex(
-        //   (item) => item.id_detalle === detalle.id_detalle
-        // );
-        // if (index !== -1) {
-        // const updatedData = [...productosData];
-        // updatedData[index] = {
-        //   ...updatedData[index],
-        //   ...detalle,
-        // };
-        console.log('detalle',detalle)
-
         const productos_actualizados = productosData.map((producto) =>
           producto.id_detalle === detalle.id_detalle ? detalle : producto
         );
-        console.log('actualizados', productos_actualizados)
 
         setProductosData(productos_actualizados);
-        // }
-        //
+
         setEditing(false);
       } else {
+        detalle.id_detalle = genLlaveAleatoria();
         // Agrega un nuevo detalle
-        setProductosData((prevData) => [
-          ...prevData,
-          { ...detalle, id_detalle: genLlaveAleatoria() },
-        ]);
+        setProductosData([...productosData, detalle]);
         // setCounterId((prev) => prev + 1);
       }
 
@@ -190,6 +173,7 @@ const AgregarReq = () => {
         id_unidad: 0,
         id_detalle: 0,
         id_producto: 0,
+        id_estado: 3,
         nombre_producto: "",
         cantidad: 0,
         justificacion: "",
@@ -202,12 +186,12 @@ const AgregarReq = () => {
   const editar_lista_producto = (rowData) => {
     setEditing(true);
 
-    console.log(rowData.id_detalle)
     // Llena los campos de entrada con el detalle seleccionado
     setDetalle({
       id_detalle: rowData.id_detalle,
       id_unidad: rowData.id_unidad,
       id_producto: rowData.id_producto,
+      id_estado: rowData.id_estado,
       nombre_producto: rowData.nombre_producto,
       unidad: rowData.unidad,
       cantidad: rowData.cantidad,
@@ -226,6 +210,7 @@ const AgregarReq = () => {
   const guardar_requi = async (rowData) => {
     try {
       const formData = {
+        id_requisicion: RequiAgg.id_requisicion,
         id_empresa: authUsuario.id_empresa,
         id_proceso: RequiAgg.id_proceso,
         id_centro: RequiAgg.id_centro,
@@ -236,12 +221,21 @@ const AgregarReq = () => {
         equipo: RequiAgg.equipo,
         det_requisicion: productosData,
       };
-      const exito = await guardar_requisiciones(formData);
-      console.log(formData);
 
-      if (exito) {
+      let esExito;
+      if (RequiAgg.id_requisicion !== 0) {
+        esExito = await editar_requisicion(formData);
+      } else {
+        esExito = await guardar_requisiciones(formData);
+      }
+
+      if (esExito) {
+        if (RequiAgg.id_detalle !== 0) {
+          window.history.back();
+        } else {
+          window.history.back();
+        }
         // Realiza acciones adicionales si es necesario después de guardar
-        console.log("Requisición guardada con éxito");
       } else {
         // Manejo de errores si la requisición no se guardó correctamente
         console.error("Error al guardar la requisición");
@@ -273,7 +267,7 @@ const AgregarReq = () => {
       //ESTA EN LA BASE DE DATOS
       const productos_actualizado = productosData.map((producto) =>
         producto.id_detalle === productoState.id_detalle
-          ? (productoState.id_estado = 2)
+          ? { ...productoState, id_estado: 2 }
           : producto
       );
       setProductosData(productos_actualizado);
@@ -286,6 +280,7 @@ const AgregarReq = () => {
       id_unidad: 0,
       id_detalle: 0,
       id_producto: 0,
+      id_estado: 3,
       nombre_producto: "",
       cantidad: 0,
       justificacion: "",
@@ -331,7 +326,7 @@ const AgregarReq = () => {
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"ELIMINAR"}
-          funcion={(e) => eliminar_producto_table(e)}
+          funcion={(e) => eliminar_requisicion(e)}
         />
       )}
       <div className="w-5/6">
@@ -406,13 +401,13 @@ const AgregarReq = () => {
                 Fecha <span className="font-bold text-red-900">*</span>
               </label>
               <div className="card flex justify-content-center w-full h-10">
-                <Calendar
+                <input
                   value={RequiAgg.fecha_requisicion}
                   onChange={(e) => btn_cambio(e)}
                   name="fecha_requisicion"
                   showIcon
+                  type="date"
                   className="px-2 w-72 text-gray-500"
-                  minDate={new Date()}
                 />
               </div>
             </div>

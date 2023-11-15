@@ -90,12 +90,10 @@ const UsuariosInactivos = () => {
     />
   );
 
-
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
       {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminar_restablecer_usuario(usuarioState.id_usuario, e)} />}
-
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Usuarios Inactivos</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
@@ -104,7 +102,6 @@ const UsuariosInactivos = () => {
         <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
           {Return_Icono} Regresar
         </Button>
-
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
           <InputText

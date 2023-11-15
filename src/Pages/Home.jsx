@@ -30,7 +30,9 @@ const Home = () => {
       };
 
       const { data } = await conexion_cliente('compras/requisiciones/doc/1', config)
-      setSrc(data)
+      if(data){
+        setSrc(data)
+      }
       // console.log(data);
     } catch (error) {
       console.log(error);
