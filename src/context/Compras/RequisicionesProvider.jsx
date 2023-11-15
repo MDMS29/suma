@@ -173,10 +173,8 @@ const RequisicionesProvider = ({ children }) => {
         setAlerta({
           error: false,
           show: true,
-          message: "Requisición creado con exito",
+          message: `Se ha creado la requisicion ${formData.consecutivo}`,
         });
-
-        window.history.back();
         setTimeout(() => setAlerta({}), 1500);
         return true;
       }
@@ -327,8 +325,6 @@ const RequisicionesProvider = ({ children }) => {
         config
       );
 
-      console.log(data);
-
       if (!data?.error) {
         const requisiciones_actualizadas = dataRequisiciones.map((req) =>
           req.id_requisiciones === data.id_requisicion ? data : req
@@ -338,7 +334,7 @@ const RequisicionesProvider = ({ children }) => {
         setAlerta({
           error: false,
           show: true,
-          message: "Requisicion editado con exito",
+          message: `Requisicion ${data.requisicion} editada con exito`,
         });
 
         setRequiAgg({
@@ -401,7 +397,7 @@ const RequisicionesProvider = ({ children }) => {
     };
 
     try {
-      const estado = location.pathname.includes("eliminadas") ? 3 : 2;
+      const estado = location.pathname.includes("inactivas") ? 3 : 2;
 
       const { data } = await conexion_cliente.delete(
         `/compras/requisiciones/${RequiState}?estado=${estado}`,

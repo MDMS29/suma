@@ -31,6 +31,8 @@ const Requisiciones = () => {
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
   }
+  const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
+
 
   useEffect(() => {
     setRequiAgg({
@@ -66,6 +68,13 @@ const Requisiciones = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
 
+  const filtrar_requisiciones = (e) => {
+    e.preventDefault();
+    const requisiciones = dataRequisiciones.filter((requisicion) =>
+      requisicion.requisicion?.includes(e.target.value)
+    );
+    setRequisicionesFiltradas(requisiciones);
+  };
 
   const main = () => (
     <>
@@ -95,7 +104,7 @@ const Requisiciones = () => {
           </div>
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>
-            Inactivas
+              Inactivas
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
@@ -109,7 +118,11 @@ const Requisiciones = () => {
 
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" />
+            <InputText
+              className="h-10 pl-8 rounded-md"
+              onChange={(e) => filtrar_requisiciones(e)}
+              placeholder="Buscar No. Requisicion"
+            />
           </span>
         </div>
 
@@ -123,12 +136,31 @@ const Requisiciones = () => {
               <p className="text-center">No hay requisiciones aprobadas</p>
             </div>
           ) : (
-            dataRequisiciones.map((requisiciones) => (
-              <PButton key={requisiciones} onClick={e => revisar_req(e, requisiciones.id_requisicion)}>
-                <CardRequisicion key={requisiciones.id_requisiciones}
-                  requisiciones={requisiciones} />
-              </PButton>
-            ))
+            <>
+              {requisicionesFiltradas.length > 0 ? (
+                <>
+                  {requisicionesFiltradas.map((requisiciones) => (
+                    <PButton key={requisiciones} onClick={e => revisar_req(e, requisiciones.id_requisicion)}>
+                      <CardRequisicion
+                        key={requisiciones.id_requisiciones}
+                        requisiciones={requisiciones}
+                      />
+                    </PButton>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {dataRequisiciones.map((requisiciones) => (
+                    <PButton key={requisiciones} onClick={e => revisar_req(e, requisiciones.id_requisicion)}>
+                      <CardRequisicion
+                        key={requisiciones.id_requisiciones}
+                        requisiciones={requisiciones}
+                      />
+                    </PButton>
+                  ))}
+                </>
+              )}
+            </>
           )}
         </div>
       </div>

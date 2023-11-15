@@ -20,6 +20,7 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import useAuth from "../../../hooks/useAuth";
 
 import { genLlaveAleatoria } from "../../../helpers/utils";
+import { useNavigate } from "react-router";
 
 const AgregarReq = () => {
   const columns = [
@@ -46,8 +47,12 @@ const AgregarReq = () => {
     eliminar_requisicion,
   } = useRequisiciones();
 
-  const { verEliminarRestaurar, authUsuario, setVerEliminarRestaurar } =
-    useAuth();
+  const {
+    verEliminarRestaurar,
+    authUsuario,
+    setVerEliminarRestaurar,
+    setAlerta,
+  } = useAuth();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
   const [filteredData, setFilteredData] = useState(productosData);
@@ -120,6 +125,25 @@ const AgregarReq = () => {
   const filtar_detalle = (e) => {
     const { name, value } = e.target;
 
+    if (name === "id_producto") {
+      if (productosData.some((producto) => producto.id_producto === value)) {
+        setDetalle({
+          id_detalle: 0,
+          id_unidad: 0,
+          id_producto: 0,
+          cantidad: 0,
+          justificacion: "",
+          id_estado: 3,
+        });
+        setAlerta({
+          error: true,
+          show: true,
+          message: "Este producto ya ha sido agregado",
+        });
+        setTimeout(() => setAlerta({}), 1500);
+        return;
+      }
+    }
     setDetalle((prevDetalle) => {
       let updatedDetalle = {
         ...prevDetalle,
@@ -171,7 +195,33 @@ const AgregarReq = () => {
         justificacion: "",
       });
     } else {
-      console.error("Por favor, complete todos los campos requeridos");
+      if (detalle.id_producto == 0) {
+        setAlerta({
+          error: true,
+          show: true,
+          message: "Debe seleccionar un producto",
+        });
+        setTimeout(() => setAlerta({}));
+        return;
+      }
+      if (detalle.cantidad == 0 && detalle.cantidad < 0) {
+        setAlerta({
+          error: true,
+          show: true,
+          message: "Debe ingresar una cantidad valida",
+        });
+        setTimeout(() => setAlerta({}));
+        return;
+      }
+      if (detalle.justificacion == "") {
+        setAlerta({
+          error: true,
+          show: true,
+          message: "Ingrese una justificacion para el producto",
+        });
+        setTimeout(() => setAlerta({}));
+        return;
+      }
     }
   };
 
@@ -199,6 +249,8 @@ const AgregarReq = () => {
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
+  const navigate = useNavigate();
+
   const guardar_requi = async (rowData) => {
     try {
       const formData = {
@@ -222,15 +274,7 @@ const AgregarReq = () => {
       }
 
       if (esExito) {
-        if (RequiAgg.id_detalle !== 0) {
-          window.history.back();
-        } else {
-          window.history.back();
-        }
-        // Realiza acciones adicionales si es necesario después de guardar
-      } else {
-        // Manejo de errores si la requisición no se guardó correctamente
-        console.error("Error al guardar la requisición");
+        navigate("/compras/requisiciones");
       }
     } catch (error) {
       console.error("Error al guardar la requisición:", error);
@@ -281,18 +325,59 @@ const AgregarReq = () => {
       </div>
     );
   };
+  const eliminar_producto_table = () => {
+    if (typeof productoState.id_detalle == "string") {
+      //ESTE NO ESTA EN LA BASE DE DATOS
+      const productos_filtrados = productosData.filter(
+        (producto) => producto.id_detalle !== productoState.id_detalle
+      );
+      setProductosData(productos_filtrados);
+    } else {
+      //ESTA EN LA BASE DE DATOS
+      const productos_actualizado = productosData.map((producto) =>
+        producto.id_detalle === productoState.id_detalle
+          ? { ...producto, id_estado: 2 }
+          : producto
+      );
+      setProductosData(productos_actualizado);
+    }
+
+    setVerEliminarRestaurar(false);
+
+    setDetalle({
+      id: 0,
+      id_unidad: 0,
+      id_detalle: 0,
+      id_producto: 0,
+      nombre_producto: "",
+      cantidad: 0,
+      justificacion: "",
+    });
+  };
 
   const main = () => (
     <>
       {verEliminarRestaurar && (
         <EliminarRestaurar
-          tipo={"ELIMINAR"}
-          funcion={(e) => eliminar_requisicion(e)}
+          tipo={"ELIMINAR2"}
+          funcion={(e) => eliminar_producto_table(e)}
         />
       )}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Agregar Requisiciones</h1>
+          <h1 className="text-3xl ">
+            {RequiAgg?.id_requisicion == 0 ? (
+              "Agregar Requisiciones"
+            ) : (
+              <p>
+                Editar Requisicion{" "}
+                <span className="font-sans font-semibold">
+                  {" "}
+                  {RequiAgg.consecutivo}
+                </span>
+              </p>
+            )}
+          </h1>
           {Req_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
@@ -302,7 +387,10 @@ const AgregarReq = () => {
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/verificadas"} tipo={"VERIFICADA"}>
+            <BLink
+              url={"/compras/requisiciones/verificadas"}
+              tipo={"VERIFICADA"}
+            >
               Verificadas
             </BLink>
           </div>
@@ -311,10 +399,6 @@ const AgregarReq = () => {
               Pendientes
             </BLink>
           </div>
-          <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
-            <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" />
-          </span>
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full">
           <div className="gap-x-4 m-2 p-3 flex flex-wrap gap-3">
@@ -382,15 +466,13 @@ const AgregarReq = () => {
                   onChange={(e) => btn_cambio(e)}
                   name="fecha_requisicion"
                   type="date"
-                  className="px-2 w-72 text-gray-500"
+                  className="px-2 w-42 text-gray-500"
                 />
               </div>
             </div>
-          </div>
-          <div className="flex">
-            <div className="gap-x-4 m-2 p-3 gap-3">
+            <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
               <label className="text-gray-600 pb-2 font-semibold">
-                Tipo de Requisiciones{" "}
+                Tipo de Requisicion{" "}
                 <span className="font-bold text-red-900">*</span>
               </label>
               <div className="card flex justify-content-center w-full">
@@ -417,7 +499,7 @@ const AgregarReq = () => {
                 </label>
                 <div className="card flex justify-content-center w-full">
                   <Dropdown
-                    value={detalle.id_producto}
+                    value={detalle?.id_producto}
                     onChange={(e) => filtar_detalle(e)}
                     options={productos}
                     name="id_producto"
@@ -435,7 +517,7 @@ const AgregarReq = () => {
                 </label>
                 <div className="card flex justify-content-center w-full h-10 bg-gray-100">
                   <InputText
-                    value={detalle.unidad || ""}
+                    value={detalle?.unidad || ""}
                     name="id_unidad"
                     onChange={(e) => filtar_detalle(e)}
                     className="bg-gray-100 p-2 w-32 "
@@ -449,7 +531,7 @@ const AgregarReq = () => {
                 </label>
                 <div className="card flex justify-content-center w-full h-10">
                   <InputText
-                    value={detalle.cantidad}
+                    value={detalle?.cantidad}
                     onChange={(e) => filtar_detalle(e)}
                     name="cantidad"
                     type="number"
@@ -464,7 +546,7 @@ const AgregarReq = () => {
                 </label>
                 <div className="card flex justify-content-center w-full h-10">
                   <InputText
-                    value={detalle.justificacion}
+                    value={detalle?.justificacion}
                     name="justificacion"
                     onChange={(e) => filtar_detalle(e)}
                     className="h-10 p-2 w-72"
@@ -473,8 +555,26 @@ const AgregarReq = () => {
               </div>
               <div className="flex items-center mt-4">
                 <Button tipo={"PRINCIPAL"} funcion={(e) => guardar_producto(e)}>
-                  Guardar Producto
+                  {detalle.id_detalle == 0
+                    ? "Guardar Producto"
+                    : "Actualizar Producto"}
                 </Button>
+                {detalle.id_detalle !== 0 && (
+                  <Button
+                    tipo={"CANCELAR"}
+                    funcion={(e) => setDetalle({
+                      id: 0,
+                      id_unidad: 0,
+                      id_detalle: 0,
+                      id_producto: 0,
+                      nombre_producto: "",
+                      cantidad: 0,
+                      justificacion: "",
+                    })}
+                  >
+                    Cancelar
+                  </Button>
+                )}
               </div>
             </div>
           )}
@@ -511,7 +611,7 @@ const AgregarReq = () => {
               value={RequiAgg.comentarios}
               onChange={(e) => btn_cambio(e)}
               name="comentarios"
-              className="w-full card border-gray-300"
+              className="w-full card border-gray-300 p-2"
             />
           </div>
           <div className="p-2 m-2">
