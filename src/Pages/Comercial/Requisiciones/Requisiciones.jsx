@@ -10,6 +10,7 @@ import { IDS_PERMISOS } from "../../../helpers/constantes.js"
 import ModalRevisarReq from "../../../components/Modales/Compras/ModalRevisarReq.jsx";
 import { Toast } from "primereact/toast";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import Loader from "../../../components/Loader";
 
 const Requisiciones = () => {
   const toast = useRef(null);
@@ -93,12 +94,15 @@ const Requisiciones = () => {
             }
           </div>
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/anuladas"} tipo={"INACTIVOS"}>
-              Eliminados
+            <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>
+            Inactivas
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/verificadas"} tipo={"VERIFICADA"}>
+            <BLink
+              url={"/compras/requisiciones/verificadas"}
+              tipo={"VERIFICADA"}
+            >
               Verificadas
             </BLink>
           </div>
@@ -109,8 +113,12 @@ const Requisiciones = () => {
           </span>
         </div>
 
-        <div className="rounded-sm w-full flex flex-wrap gap-3">
-          {dataRequisiciones.error === false ? (
+        <div className="w-full flex flex-wrap gap-3">
+          {dataRequisiciones.length == 0 ? (
+            <div className="flex justify-center items-center w-full">
+              <Loader />
+            </div>
+          ) : dataRequisiciones.error === false ? (
             <div className="bg-white border w-full my-3 p-3">
               <p className="text-center">No hay requisiciones aprobadas</p>
             </div>

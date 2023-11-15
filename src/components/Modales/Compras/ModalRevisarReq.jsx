@@ -31,7 +31,7 @@ const ModalRevisarReq = ({ visible, onClose }) => {
     const [visibleColumns, setVisibleColumns] = useState(columns);
     const [filteredData, setFilteredData] = useState(productosData);
     const [productosSeleccionados, setProductosSeleccionados] = useState([]);
-    const [todo, setTodo] = useState(false);
+    const [aprobarTodo, setAprobarTodo] = useState(false);
 
     useEffect(() => {
         setProductosSeleccionados(productosData)
@@ -42,7 +42,6 @@ const ModalRevisarReq = ({ visible, onClose }) => {
             });
         }
     }, [productosData])
-    console.log(productosData);
 
     const filtrar_columnas = (event) => {
         let columnas_seleccionadas = event.value;
@@ -54,14 +53,14 @@ const ModalRevisarReq = ({ visible, onClose }) => {
 
     const columna_acciones = (rowData) => (
         <label
-            className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${rowData.id_estado == 4 ? "bg-primaryYellow" : "bg-gray-300"
-                }`}>
+            className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${rowData.id_estado == 4 || aprobarTodo ? "bg-primaryYellow" : "bg-gray-300"}`}>
             <input
                 type="checkbox"
                 className="sr-only peer"
-                onChange={() =>
-                    chk_producto(rowData.id_detalle, rowData.id_estado)
-                } />
+                checked={rowData.id_estado === 4 || aprobarTodo}
+                onChange={() => chk_producto(rowData.id_detalle)}
+                disabled={aprobarTodo && rowData.id_estado === 4}
+            />
             <span
                 className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
         </label>
@@ -82,29 +81,22 @@ const ModalRevisarReq = ({ visible, onClose }) => {
             setProductosSeleccionados([...productosSeleccionados], { id_estado: 5 })
         }
     }
+    console.log(productosSeleccionados);
 
-    const chk_todo = () => {
-        const productos = productosData
-        if (todo == true) {
-            console.log("sipasa true");
-            if (productos.id_estado == 4) {
-                productos.id_estado = 5
-            } else {
-                productos.id_estado = 4
-            }
-            const productosActualizados = productosData.map(productoState => productoState.id_detalle == productos.id_detalle ? productos : productoState)
-            setProductosSeleccionados(productosActualizados)
-        } if (todo == false) {
-            console.log("sipasa false");
-            setProductosSeleccionados([...productosSeleccionados], { id_estado: 5 })
-        }
-    }
+    const aprobar_todo_cambio = () => {
+        setAprobarTodo(!aprobarTodo);
+        // Actualiza el estado de todos los productos según aprobarTodo
+        const productosActualizados = productosSeleccionados.map((producto) => ({
+            ...producto,
+            id_estado: aprobarTodo ? 5 : 4
+        }));
+        setProductosSeleccionados(productosActualizados);
+    };
 
     const guardar_lista = () => {
         revisar_requisicion(productosSeleccionados)
         onClose()
     }
-
 
     useEffect(() => {
         setFilteredData(productosData);
@@ -126,27 +118,15 @@ const ModalRevisarReq = ({ visible, onClose }) => {
             <div className='flex gap-3 m-3 items-center'>
                 <span>Aprobar todo</span>
                 <label
-                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosSeleccionados.id_estado == 4 ? "bg-primaryYellow" : "bg-gray-300"
-                        }`}>
+                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${aprobarTodo ? "bg-primaryYellow" : "bg-gray-300"}`}
+                >
                     <input
                         type="checkbox"
                         className="sr-only peer"
-                        onChange={() => chk_todo(setTodo(true))} />
-                    <span
-                        className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
-                </label>
-
-                <span className='ml-5'>Rechazar todo</span>
-                <label
-                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosSeleccionados.id_estado == 5 ? "bg-primaryYellow" : "bg-gray-300"
-                        }`}>
-                    <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        onChange={() => chk_todo(setTodo(false))} />
-
-                    <span
-                        className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                        checked={aprobarTodo}
+                        onChange={aprobar_todo_cambio}
+                    />
+                    <span className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
                 </label>
             </div>
 
