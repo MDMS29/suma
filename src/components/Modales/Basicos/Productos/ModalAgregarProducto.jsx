@@ -25,8 +25,8 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
     const value = e.target.value;
     console.log(e.target.name);
     setProductosAgg({ ...productosAgg, [e.target.name]: esBoleano.includes(e.target.name) ? Boolean(!productosAgg[e.target.name]) : value });
-
   };
+
   const handleImageChange = (e) => {
     // console.log(e.target.files)
     const file = new FileReader()

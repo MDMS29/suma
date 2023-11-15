@@ -134,15 +134,15 @@ const Centros = () => {
         />
       )}
 
-      <div className="flex justify-center gap-x-4 m-2 p-3">
-        <h1 className="text-3xl">Centro de Costos</h1>
-        {FliaProd_Icono}
-      </div>
-      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-        {permisosCentros.filter(
-          (permiso) =>
-            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
-        ).length > 0 && (
+        <div className="flex justify-center gap-x-4 m-2 p-3">
+          <h1 className="text-3xl">Centro de Costos</h1>
+          {Centro_Icono}
+        </div>
+        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+          {permisosCentros.filter(
+            (permiso) =>
+              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+          ).length > 0 && (
             <Button
               tipo={"PRINCIPAL"}
               funcion={(e) => setModalVisible(true, e)}

@@ -195,7 +195,6 @@ const Productos = () => {
     };
 
     const main = () => (
-
         <div className="w-5/6">
             <Toast ref={toast} />
 

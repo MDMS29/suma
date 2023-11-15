@@ -31,7 +31,7 @@ const UsuariosProvider = ({ children }) => {
     correo: "",
     clave: "",
     clave_repetida: "",
-    id_empresa: authUsuario.perfiles?.some((perfil) => perfil.id_perfil == 1) && authUsuario.id_empresa == 1 ? "" : authUsuario.id_empresa && authUsuario.id_empresa
+    id_empresa: 0
   });
 
   const [errors, setErrors] = useState({
@@ -207,6 +207,7 @@ const UsuariosProvider = ({ children }) => {
         perfiles,
         config
       );
+      console.log(data);
       setModulosAgg(data);
     } catch (error) {
       setAlerta({
@@ -277,7 +278,7 @@ const UsuariosProvider = ({ children }) => {
       if (data?.error) {
         return { error: true, message: data.message }
       }
-      const { id_usuario, nombre_completo, usuario, correo, perfiles } = data.usuario
+      const { id_usuario, nombre_completo, usuario, correo, perfiles, id_empresa } = data.usuario
       let permisos = []
       setUsuariosAgg({
         id_usuario,
@@ -286,7 +287,7 @@ const UsuariosProvider = ({ children }) => {
         correo: correo,
         clave: "",
         clave_repetida: "",
-        id_empresa: authUsuario.id_empresa
+        id_empresa:id_empresa
       })
       await data?.modulos.map((modulo) => {
         modulo?.permisos.map((permiso) => {

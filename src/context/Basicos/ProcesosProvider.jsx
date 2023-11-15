@@ -49,6 +49,8 @@ const ProcesosProvider = ({ children }) => {
         }
     }, [location.pathname])
 
+
+
     const buscar_proceso = async (id) => {
         const token = localStorage.getItem("token");
 
@@ -176,7 +178,7 @@ const ProcesosProvider = ({ children }) => {
 
             })
             setTimeout(() => setAlerta({}), 1500)
-            throw error; // Puedes lanzar una excepción en caso de error
+            throw error; 
         }
     }
 

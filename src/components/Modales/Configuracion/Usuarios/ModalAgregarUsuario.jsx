@@ -53,10 +53,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
 
   const cerrar_modal = () => {
-    // Cierra el Dialog y reinicia el estado
     onClose();
-
-    // Limpia los campos del formulario
     setUsuariosAgg({
       id_usuario: 0,
       nombre: "",
@@ -66,12 +63,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       clave_repetida: "",
       id_empresa: "",
     });
-
-    // Limpia las selecciones
     setPerfilesSeleccionados([]);
     setPermisosPorModulo([]);
-
-    // Limpia los errores
     setErrors({});
   };
 
@@ -197,6 +190,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
+  console.log(perfilesSeleccionados);
+  
   const chk_perfil = (rowData) => {
     const perfil_id = rowData;
 
