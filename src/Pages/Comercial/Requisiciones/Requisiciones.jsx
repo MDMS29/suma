@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Req_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import BLink from "../../../components/Botones/BLink";
@@ -15,6 +15,8 @@ const Requisiciones = () => {
     setProductosData,
     eliminar_requisicion,
   } = useRequisiciones();
+
+  const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
 
   const { verEliminarRestaurar, authUsuario } = useAuth();
 
@@ -36,6 +38,14 @@ const Requisiciones = () => {
     return;
   }, []);
 
+  const filtrar_requisiciones = (e) => {
+    e.preventDefault();
+    const requisiciones = dataRequisiciones.filter((requisicion) =>
+      requisicion.requisicion?.includes(e.target.value)
+    );
+    setRequisicionesFiltradas(requisiciones);
+  };
+
   const main = () => (
     <>
       {verEliminarRestaurar && (
@@ -56,7 +66,7 @@ const Requisiciones = () => {
           </BLink>
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>
-            Inactivas
+              Inactivas
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
@@ -70,7 +80,11 @@ const Requisiciones = () => {
 
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" />
+            <InputText
+              className="h-10 pl-8 rounded-md"
+              onChange={(e) => filtrar_requisiciones(e)}
+              placeholder="Buscar No. Requisicion"
+            />
           </span>
         </div>
 
@@ -84,12 +98,27 @@ const Requisiciones = () => {
               <p className="text-center">No hay requisiciones aprobadas</p>
             </div>
           ) : (
-            dataRequisiciones.map((requisiciones) => (
-              <CardRequisicion
-                key={requisiciones.id_requisiciones}
-                requisiciones={requisiciones}
-              />
-            ))
+            <>
+              {requisicionesFiltradas.length > 0 ? (
+                <>
+                  {requisicionesFiltradas.map((requisiciones) => (
+                    <CardRequisicion
+                      key={requisiciones.id_requisiciones}
+                      requisiciones={requisiciones}
+                    />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {dataRequisiciones.map((requisiciones) => (
+                    <CardRequisicion
+                      key={requisiciones.id_requisiciones}
+                      requisiciones={requisiciones}
+                    />
+                  ))}
+                </>
+              )}
+            </>
           )}
         </div>
       </div>

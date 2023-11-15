@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../../../components/Botones/Button";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
@@ -15,11 +15,20 @@ import Loader from "../../../components/Loader";
 
 function ReqRevisadas() {
   const { dataRequisiciones, verPDF, setVerPDF } = useRequisiciones();
+  const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
 
   const cerrar = () => {
     setVerPDF(false);
   };
 
+
+  const filtrar_requisiciones = (e) => {
+    e.preventDefault();
+    const requisiciones = dataRequisiciones.filter((requisicion) =>
+      requisicion.requisicion?.includes(e.target.value)
+    );
+    setRequisicionesFiltradas(requisiciones);
+  };
   const main = () => (
     <>
       {verPDF && <ModalPDF visible={verPDF} onClose={cerrar} />}
@@ -42,7 +51,11 @@ function ReqRevisadas() {
           </div>
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" />
+            <InputText
+              className="h-10 pl-8 rounded-md"
+              onChange={(e) => filtrar_requisiciones(e)}
+              placeholder="Buscar"
+            />
           </span>
         </div>
 
@@ -56,12 +69,27 @@ function ReqRevisadas() {
               <p className="text-center">No hay requisiciones revisadas.</p>
             </div>
           ) : (
-            dataRequisiciones.map((requisiciones) => (
-              <CardRequisicion
-                key={requisiciones.id_requisicion}
-                requisiciones={requisiciones}
-              />
-            ))
+            <>
+              {requisicionesFiltradas.length > 0 ? (
+                <>
+                  {requisicionesFiltradas.map((requisiciones) => (
+                    <CardRequisicion
+                      key={requisiciones.id_requisiciones}
+                      requisiciones={requisiciones}
+                    />
+                  ))}
+                </>
+              ) : (
+                <>
+                  {dataRequisiciones.map((requisiciones) => (
+                    <CardRequisicion
+                      key={requisiciones.id_requisiciones}
+                      requisiciones={requisiciones}
+                    />
+                  ))}
+                </>
+              )}
+            </>
           )}
         </div>
       </div>
