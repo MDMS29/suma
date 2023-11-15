@@ -1,15 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
 import { createContext } from "react";
 import { useState } from "react";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import { Toast } from "primereact/toast";
 
 const RequisicionesContext = createContext();
 
 const RequisicionesProvider = ({ children }) => {
-  const { authUsuario, setAlerta } = useAuth();
+  const toast = useRef(null);
+
+  const { authUsuario, setAlerta, alerta, setVerEliminarRestaurar } = useAuth();
 
   const [dataRequisiciones, setDataRequisiciones] = useState([]);
   const [procesos, setProcesos] = useState([]);
@@ -36,6 +39,8 @@ const RequisicionesProvider = ({ children }) => {
   const [SeletipoRequ, setSeletipoRequ] = useState([]);
   const [productos, setproductos] = useState([]);
   const [productosData, setProductosData] = useState([]);
+  const [verPDF, setVerPDF] = useState(false);
+  const [srcPDF, setSrcPDF] = useState(null);
 
   const location = useLocation();
 
@@ -50,9 +55,9 @@ const RequisicionesProvider = ({ children }) => {
           },
         };
         const estado = location.pathname.includes("anuladas")
-          ? 5
-          : location.pathname.includes("aprobadas")
-          ? 4
+          ? 2
+          : location.pathname.includes("verificadas")
+          ? 6
           : 3;
 
         try {
@@ -87,13 +92,11 @@ const RequisicionesProvider = ({ children }) => {
         `/opciones-basicas/centro-costo-empresa?estado=1&empresa=${authUsuario.id_empresa}&proceso=${id_proceso}`,
         config
       );
-      console.log('centro de costo',data)
       if (data.error == false) {
         setcentroCostoAgg([]);
         return;
       }
       setcentroCostoAgg(data);
-
     } catch (error) {}
   };
 
@@ -161,6 +164,7 @@ const RequisicionesProvider = ({ children }) => {
         formData,
         config
       );
+
       if (!data?.error) {
         setDataRequisiciones([...dataRequisiciones, data]);
         setAlerta({
@@ -168,6 +172,8 @@ const RequisicionesProvider = ({ children }) => {
           show: true,
           message: "Requisición creado con exito",
         });
+
+        window.history.back();
         setTimeout(() => setAlerta({}), 1500);
         return true;
       }
@@ -209,7 +215,6 @@ const RequisicionesProvider = ({ children }) => {
       if (data?.error) {
         return { error: true, message: data.message };
       }
-
 
       const {
         id_requisicion,
@@ -258,14 +263,16 @@ const RequisicionesProvider = ({ children }) => {
 
     try {
       const { data } = await conexion_cliente.patch(
-        `/compras/requisiciones/${formData.id_requisiciones}`,
+        `/compras/requisiciones/${formData.id_requisicion}`,
         formData,
         config
       );
-      console.log(formData);
+
+      console.log(data);
+
       if (!data?.error) {
         const requisiciones_actualizadas = dataRequisiciones.map((req) =>
-          req.id_requisiciones === data.id_requisiciones ? data : req
+          req.id_requisiciones === data.id_requisicion ? data : req
         );
         setDataRequisiciones(requisiciones_actualizadas);
 
@@ -274,6 +281,7 @@ const RequisicionesProvider = ({ children }) => {
           show: true,
           message: "Requisicion editado con exito",
         });
+
         setRequiAgg({
           id_empresa: authUsuario.id_empresa,
           id_proceso: 0,
@@ -289,6 +297,7 @@ const RequisicionesProvider = ({ children }) => {
         setTimeout(() => setAlerta({}), 1500);
         return true;
       }
+
       setAlerta({
         error: true,
         show: true,
@@ -304,6 +313,93 @@ const RequisicionesProvider = ({ children }) => {
       });
 
       setTimeout(() => setAlerta({}), 1500);
+    }
+  };
+
+  useEffect(() => {
+    if (alerta.show) {
+      (() => {
+        toast.current.show({
+          severity: alerta.error ? "error" : "success",
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta]);
+
+  const eliminar_requisicion = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const estado = location.pathname.includes("anuladas") ? 3 : 2;
+
+      const { data } = await conexion_cliente.delete(
+        `/compras/requisiciones/${RequiState}?estado=${estado}`,
+        config
+      );
+
+      if (data.error) {
+        //ERROR
+        setAlerta({
+          error: true,
+          show: true,
+          message: data.message,
+        });
+        return;
+      }
+
+      //SUCCESS
+      const requisiciones = dataRequisiciones.filter(
+        (requisicion) => requisicion.id_requisicion !== RequiState
+      );
+      setDataRequisiciones(requisiciones);
+      //MOSTRAR ALERTA DE SUCCESS
+      setAlerta({
+        error: false,
+        show: true,
+        message: data.message,
+      });
+      setRequiState({});
+      //CERRAR MODAL
+      setVerEliminarRestaurar(false);
+    } catch (error) {
+      console.log(error);
+      setAlerta({});
+    }
+  };
+
+  const generar_pdf = async (id_requisicion) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await conexion_cliente(
+        `compras/requisiciones/doc/${id_requisicion}`,
+        config
+      );
+
+      setSrcPDF(data);
+      setVerPDF(true);
+      
+    } catch (error) {
+      console.log(error);
+      return
     }
   };
 
@@ -332,9 +428,15 @@ const RequisicionesProvider = ({ children }) => {
     setProductosData,
     editar_requisicion,
     buscar_requisicion,
+    eliminar_requisicion,
+    generar_pdf,
+    srcPDF,
+    verPDF,
+    setVerPDF
   }));
   return (
     <RequisicionesContext.Provider value={obj}>
+      <Toast ref={toast} />
       {children}
     </RequisicionesContext.Provider>
   );

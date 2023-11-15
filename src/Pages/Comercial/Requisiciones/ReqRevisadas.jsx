@@ -10,12 +10,19 @@ import {
 } from "../../../components/Icons/Iconos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
+import ModalPDF from "../../../components/Modales/Requisiciones/ModalPDF";
 
 function ReqRevisadas() {
-  const { dataRequisiciones } = useRequisiciones();
+  const { dataRequisiciones, verPDF, setVerPDF } = useRequisiciones();
+
+  const cerrar = () => {
+    setVerPDF(false)
+  }
 
   const main = () => (
     <>
+      {verPDF && <ModalPDF visible={verPDF} onClose={cerrar} />}
+
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones Revisadas</h1>
@@ -41,11 +48,14 @@ function ReqRevisadas() {
         <div className="rounded-sm w-full flex flex-wrap gap-3">
           {dataRequisiciones.error === false ? (
             <div className="bg-white border w-full my-3 p-3">
-            <p>No hay requisiciones revisadas</p>
-          </div>
+              <p className="text-center">No hay requisiciones revisadas.</p>
+            </div>
           ) : (
             dataRequisiciones.map((requisiciones) => (
-              <CardRequisicion requisiciones={requisiciones} />
+              <CardRequisicion
+                key={requisiciones.id_requisicion}
+                requisiciones={requisiciones}
+              />
             ))
           )}
         </div>

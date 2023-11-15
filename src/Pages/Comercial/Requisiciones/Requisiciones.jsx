@@ -5,11 +5,17 @@ import BLink from "../../../components/Botones/BLink";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
 import useAuth from "../../../hooks/useAuth";
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
 const Requisiciones = () => {
-  const { dataRequisiciones, setRequiAgg, setProductosData } = useRequisiciones();
+  const {
+    dataRequisiciones,
+    setRequiAgg,
+    setProductosData,
+    eliminar_requisicion,
+  } = useRequisiciones();
 
-    const { authUsuario } = useAuth();
+  const { verEliminarRestaurar, authUsuario } = useAuth();
 
   useEffect(() => {
     setRequiAgg({
@@ -31,6 +37,12 @@ const Requisiciones = () => {
 
   const main = () => (
     <>
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"ELIMINAR"}
+          funcion={(e) => eliminar_requisicion(e)}
+        />
+      )}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones</h1>
@@ -47,8 +59,8 @@ const Requisiciones = () => {
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/aprobadas"} tipo={"APROBADO"}>
-              Aprobados
+            <BLink url={"/compras/requisiciones/verificadas"} tipo={"VERIFICADA"}>
+              Verificadas
             </BLink>
           </div>
 
@@ -61,7 +73,7 @@ const Requisiciones = () => {
         <div className="rounded-sm w-full flex flex-wrap gap-3">
           {dataRequisiciones.error === false ? (
             <div className="bg-white border w-full my-3 p-3">
-              <p>No hay requisiciones aprobadas</p>
+              <p className="text-center">No hay requisiciones aprobadas</p>
             </div>
           ) : (
             dataRequisiciones.map((requisiciones) => (

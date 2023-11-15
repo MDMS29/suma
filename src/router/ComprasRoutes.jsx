@@ -12,7 +12,7 @@ const ComprasRoutes = [
     },
     {
         name: "Requisiciones Aprobadas",
-        route: "/compras/requisiciones/aprobadas",
+        route: "/compras/requisiciones/verificadas",
         component: <ReqRevisadas />,
         key: 11
     },

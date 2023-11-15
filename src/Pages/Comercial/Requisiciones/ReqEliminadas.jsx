@@ -5,14 +5,23 @@ import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
+import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
+import useAuth from "../../../hooks/useAuth";
 
 function ReqEliminadas() {
-  const {
-    dataRequisiciones
-  } = useRequisiciones();
+  const { dataRequisiciones, eliminar_requisicion } = useRequisiciones();
+
+  const { verEliminarRestaurar } = useAuth();
+
 
   const main = () => (
     <>
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"RESTAURAR"}
+          funcion={(e) => eliminar_requisicion(e)}
+        />
+      )}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones Eliminadas</h1>
@@ -20,8 +29,8 @@ function ReqEliminadas() {
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/aprobadas"} tipo={"APROBADO"}>
-              Revisados
+            <BLink url={"/compras/requisiciones/verificadas"} tipo={"APROBADO"}>
+              Verficadas
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
@@ -38,11 +47,11 @@ function ReqEliminadas() {
         <div className="rounded-sm w-full flex flex-wrap gap-3">
           {dataRequisiciones.error === false ? (
             <div className="bg-white border w-full my-3 p-3">
-            <p>No hay requisiciones eliminadas.</p>
-          </div>
+              <p className="text-center">No hay requisiciones eliminadas.</p>
+            </div>
           ) : (
             dataRequisiciones.map((requisiciones) => (
-              <CardRequisicion requisiciones={requisiciones} />
+              <CardRequisicion key={requisiciones.id_requisicion} requisiciones={requisiciones} />
             ))
           )}
         </div>
