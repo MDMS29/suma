@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Card } from "primereact/card";
 import { Button as PButton } from "primereact/button";
-import { Edit_Icono, PDF_Icono, Restore_Icono, Trash_Icono } from "../Icons/Iconos";
+import {
+  Edit_Icono,
+  PDF_Icono,
+  Restore_Icono,
+  Trash_Icono,
+} from "../Icons/Iconos";
 import { useNavigate } from "react-router";
 import useRequisiciones from "../../hooks/Compras/useRequisiciones";
 import useAuth from "../../hooks/useAuth";
@@ -27,13 +31,13 @@ const CardRequisicion = ({ requisiciones }) => {
 
   const estilos = {
     INACTIVO:
-      "inline-block bg-red-200 rounded px-3 py-1 text-sm font-semibold text-red-700 mr-2 mb-2",
+      "bg-red-200 rounded px-3 py-1 text-sm font-semibold text-red-700 mr-2 mb-2",
     APROBADA:
-      "inline-block bg-green-200 rounded px-3 py-1 text-sm font-semibold text-green-950 mr-2 mb-2",
+      "bg-green-200 rounded px-3 py-1 text-sm font-semibold text-green-950 mr-2 mb-2",
     PENDIENTE:
-      "inline-block bg-blue-200 rounded px-3 py-1 text-sm font-semibold text-blue-950 mr-2 mb-2",
+      "bg-blue-200 rounded px-3 py-1 text-sm font-semibold text-blue-950 mr-2 mb-2",
     VERIFICADA:
-      "inline-block bg-green-200 rounded px-3 py-1 text-sm font-semibold text-green-950 mr-2 mb-2",
+      "bg-green-200 rounded px-3 py-1 text-sm font-semibold text-green-950 mr-2 mb-2",
   };
 
   const editar_requisicion = async (e, id_requisicion) => {
@@ -50,27 +54,27 @@ const CardRequisicion = ({ requisiciones }) => {
   };
 
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-md w-96">
-      <Card className="md:w-25rem rounded-lg h-60">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center text-sm">
-            {fecha_requisicion.split("T")[0]}
+    <>
+      <div className="w-96 bg-white flex flex-col justify-between px-3 py-4 rounded-lg transition-all hover:shadow-xl">
+        <div className="flex justify-between ">
+          <div className="flex flex-col justify-center">
+            <p>{fecha_requisicion.split("T")[0]}</p>
+            <p className="text-sm">{correo_responsable}</p>
+            <p className="font-bold text-sm">{requisicion}</p>
           </div>
-          <div>
-            <span className={estilos[nombre_estado]}>{nombre_estado}</span>
+          <div className="flex flex-col justify-center">
+            <p className={`${estilos[nombre_estado]}`}>{nombre_estado}</p>
+            <p className="font-bold text-sm text-end">{centro_costo}</p>
+            <p className="font-bold text-sm text-end">{tipo_productos}</p>
           </div>
         </div>
-        <div className="flex justify-between items-center my-2">
-          <div className="flex items-center text-sm">{correo_responsable}</div>
-          <div className="font-bold text-sm">{centro_costo}</div>
+        <hr />
+        <div>
+          <p className="my-2 max-h-12 text-ellipsis overflow-hidden">
+            {comentarios}
+          </p>
         </div>
-        <div className="flex justify-between items-center my-2">
-          <div className="font-bold text-sm">{requisicion}</div>
-          <div className="font-bold text-sm">{tipo_productos}</div>
-        </div>
-        <hr className="w-full" />
-        <p className="my-2">{comentarios}</p>
-        <div className="pt-4 pb-2">
+        <div>
           {id_estado == 2 ? (
             <>
               <PButton
@@ -88,7 +92,7 @@ const CardRequisicion = ({ requisiciones }) => {
                 tooltip="Descargar"
                 tooltipOptions={{ position: "top" }}
                 className="p-button-rounded p-mr-2  mx-1"
-                onClick={(e) => generar_pdf(id_requisicion)}
+                onClick={(e) => generar_pdf({id_requisicion, requisicion})}
               >
                 {PDF_Icono}
               </PButton>
@@ -114,8 +118,8 @@ const CardRequisicion = ({ requisiciones }) => {
             </>
           )}
         </div>
-      </Card>
-    </div>
+      </div>
+    </>
   );
 };
 

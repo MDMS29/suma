@@ -11,14 +11,14 @@ const ComprasRoutes = [
         key: 10
     },
     {
-        name: "Requisiciones Aprobadas",
+        name: "Requisiciones Verificadas",
         route: "/compras/requisiciones/verificadas",
         component: <ReqRevisadas />,
         key: 11
     },
     {
-        name: "Requisiciones Anuladas",
-        route: "/compras/requisiciones/anuladas",
+        name: "Requisiciones Eliminadas",
+        route: "/compras/requisiciones/inactivas",
         component: <ReqEliminadas />,
         key: 12
     },

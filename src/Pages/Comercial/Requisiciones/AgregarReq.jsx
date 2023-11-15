@@ -22,7 +22,6 @@ import useAuth from "../../../hooks/useAuth";
 import { genLlaveAleatoria } from "../../../helpers/utils";
 
 const AgregarReq = () => {
-
   const columns = [
     { field: "nombre_producto", header: "Producto" },
     { field: "unidad", header: "Unidad" },
@@ -46,14 +45,11 @@ const AgregarReq = () => {
     setProductoState,
     productoState,
     editar_requisicion,
-    eliminar_requisicion
+    eliminar_requisicion,
   } = useRequisiciones();
 
-  const {
-    verEliminarRestaurar,
-    authUsuario,
-    setVerEliminarRestaurar
-  } = useAuth();
+  const { verEliminarRestaurar, authUsuario, setVerEliminarRestaurar } =
+    useAuth();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
   const [filteredData, setFilteredData] = useState(productosData);
@@ -255,38 +251,6 @@ const AgregarReq = () => {
     setVerEliminarRestaurar(true);
   };
 
-  //FUNCION QUE SE ACTIVA EN EL MODAL
-  const eliminar_producto_table = () => {
-    if (typeof productoState.id_detalle == "string") {
-      //ESTE NO ESTA EN LA BASE DE DATOS
-      const productos_filtrados = productosData.filter(
-        (producto) => producto.id_detalle !== productoState.id_detalle
-      );
-      setProductosData(productos_filtrados);
-    } else {
-      //ESTA EN LA BASE DE DATOS
-      const productos_actualizado = productosData.map((producto) =>
-        producto.id_detalle === productoState.id_detalle
-          ? { ...productoState, id_estado: 2 }
-          : producto
-      );
-      setProductosData(productos_actualizado);
-    }
-
-    setVerEliminarRestaurar(false);
-
-    setDetalle({
-      id: 0,
-      id_unidad: 0,
-      id_detalle: 0,
-      id_producto: 0,
-      id_estado: 3,
-      nombre_producto: "",
-      cantidad: 0,
-      justificacion: "",
-    });
-  };
-
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -336,13 +300,13 @@ const AgregarReq = () => {
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/anuladas"} tipo={"INACTIVOS"}>
-              Anulados
+            <BLink url={"/compras/requisiciones/eliminadas"} tipo={"INACTIVOS"}>
+              Eliminadas
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
-            <BLink url={"/compras/requisiciones/aprobadas"} tipo={"APROBADO"}>
-              Aprobados
+            <BLink url={"/compras/requisiciones/verificadas"} tipo={"VERIFICADA"}>
+              Verificadas
             </BLink>
           </div>
           <div className="h-full flex justify-center items-center">
@@ -396,6 +360,21 @@ const AgregarReq = () => {
                 />
               </div>
             </div>
+            <div
+              hidden={RequiAgg.id_requisicion == 0 && true}
+              className="flex flex-col max-sm:col-span-2 max-lg:col-span-2"
+            >
+              <label className="text-gray-600 pb-2 font-semibold">
+                No. Requisición{" "}
+              </label>
+              <div className="card flex justify-content-center w-full h-10 bg-gray-100">
+                <InputText
+                  value={RequiAgg.consecutivo}
+                  className="bg-gray-100 px-2 w-32"
+                  disabled
+                />
+              </div>
+            </div>
             <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
               <label className="text-gray-600 pb-2 font-semibold">
                 Fecha <span className="font-bold text-red-900">*</span>
@@ -408,21 +387,6 @@ const AgregarReq = () => {
                   showIcon
                   type="date"
                   className="px-2 w-72 text-gray-500"
-                />
-              </div>
-            </div>
-            <div
-              hidden={RequiAgg.id_requisicion == 0 && true}
-              className="flex flex-col max-sm:col-span-2 max-lg:col-span-2"
-            >
-              <label className="text-gray-600 pb-2 font-semibold">
-                No. Requisición{" "}
-              </label>
-              <div className="card flex justify-content-center w-full h-10 bg-gray-100">
-                <InputText
-                  value={RequiAgg.consecutivo}
-                  className="bg-gray-100"
-                  disabled
                 />
               </div>
             </div>
@@ -478,7 +442,7 @@ const AgregarReq = () => {
                     value={detalle.unidad || ""}
                     name="id_unidad"
                     onChange={(e) => filtar_detalle(e)}
-                    className="bg-gray-100 p-2 w-72"
+                    className="bg-gray-100 p-2 w-32 "
                     disabled
                   />
                 </div>
@@ -493,7 +457,7 @@ const AgregarReq = () => {
                     onChange={(e) => filtar_detalle(e)}
                     name="cantidad"
                     type="number"
-                    className="h-10 p-2 w-72"
+                    className="h-10 p-2 w-32"
                   />
                 </div>
               </div>
@@ -511,7 +475,7 @@ const AgregarReq = () => {
                   />
                 </div>
               </div>
-              <div className="mt-9">
+              <div className="flex items-center mt-4">
                 <Button tipo={"PRINCIPAL"} funcion={(e) => guardar_producto(e)}>
                   Guardar Producto
                 </Button>

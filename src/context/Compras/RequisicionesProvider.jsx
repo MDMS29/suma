@@ -46,6 +46,7 @@ const RequisicionesProvider = ({ children }) => {
 
   useEffect(() => {
     if (location.pathname.includes("requisiciones")) {
+      setDataRequisiciones([])
       const obtener_requisiciones = async () => {
         const token = localStorage.getItem("token");
         const config = {
@@ -54,20 +55,22 @@ const RequisicionesProvider = ({ children }) => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const estado = location.pathname.includes("anuladas")
+        const estado = location.pathname.includes("inactivas")
           ? 2
           : location.pathname.includes("verificadas")
           ? 6
           : 3;
 
         try {
-          const { data } = await conexion_cliente(
-            `/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}`,
-            config
-          );
+          if (authUsuario.id_empresa) {
+            const { data } = await conexion_cliente(
+              `/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}`,
+              config
+            );
 
-          setDataRequisiciones(data);
-          // console.log(data);
+            setDataRequisiciones(data);
+            // console.log(data);
+          }
         } catch (error) {
           setDataRequisiciones([]);
         }
@@ -342,7 +345,7 @@ const RequisicionesProvider = ({ children }) => {
     };
 
     try {
-      const estado = location.pathname.includes("anuladas") ? 3 : 2;
+      const estado = location.pathname.includes("eliminadas") ? 3 : 2;
 
       const { data } = await conexion_cliente.delete(
         `/compras/requisiciones/${RequiState}?estado=${estado}`,
@@ -379,7 +382,7 @@ const RequisicionesProvider = ({ children }) => {
     }
   };
 
-  const generar_pdf = async (id_requisicion) => {
+  const generar_pdf = async ({ id_requisicion, requisicion }) => {
     try {
       const token = localStorage.getItem("token");
       const config = {
@@ -394,12 +397,21 @@ const RequisicionesProvider = ({ children }) => {
         config
       );
 
-      setSrcPDF(data);
+      if (!data) {
+        setAlerta({
+          error: true,
+          show: true,
+          message: "Error al generar el documento PDF",
+        });
+        return;
+      }
+
+      setSrcPDF({ data, requisicion });
       setVerPDF(true);
-      
+      return;
     } catch (error) {
       console.log(error);
-      return
+      return;
     }
   };
 
@@ -432,7 +444,7 @@ const RequisicionesProvider = ({ children }) => {
     generar_pdf,
     srcPDF,
     verPDF,
-    setVerPDF
+    setVerPDF,
   }));
   return (
     <RequisicionesContext.Provider value={obj}>

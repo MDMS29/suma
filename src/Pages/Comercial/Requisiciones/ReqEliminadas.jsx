@@ -7,12 +7,12 @@ import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import useAuth from "../../../hooks/useAuth";
+import Loader from "../../../components/Loader";
 
 function ReqEliminadas() {
   const { dataRequisiciones, eliminar_requisicion } = useRequisiciones();
 
   const { verEliminarRestaurar } = useAuth();
-
 
   const main = () => (
     <>
@@ -24,7 +24,7 @@ function ReqEliminadas() {
       )}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Requisiciones Eliminadas</h1>
+          <h1 className="text-3xl">Requisiciones Inactivas</h1>
           {Req_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
@@ -45,13 +45,20 @@ function ReqEliminadas() {
         </div>
 
         <div className="rounded-sm w-full flex flex-wrap gap-3">
-          {dataRequisiciones.error === false ? (
+          {dataRequisiciones.length == 0 ? (
+            <div className="flex justify-center items-center w-full">
+              <Loader  />
+            </div>
+          ) : dataRequisiciones.error === false ? (
             <div className="bg-white border w-full my-3 p-3">
               <p className="text-center">No hay requisiciones eliminadas.</p>
             </div>
           ) : (
             dataRequisiciones.map((requisiciones) => (
-              <CardRequisicion key={requisiciones.id_requisicion} requisiciones={requisiciones} />
+              <CardRequisicion
+                key={requisiciones.id_requisicion}
+                requisiciones={requisiciones}
+              />
             ))
           )}
         </div>
