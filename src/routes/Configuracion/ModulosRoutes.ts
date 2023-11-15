@@ -14,6 +14,8 @@ _ModulosRouter.route('/')
     .post(_Autorizacion, ModuloController.Insertar_Modulo) //INSERTAR PERFIL
 
 _ModulosRouter.route('/:id_modulo')
-.get(_Autorizacion, ModuloController.Buscar_Modulo)
+    .get(_Autorizacion, ModuloController.Buscar_Modulo)
     .patch(_Autorizacion, ModuloController.Editar_Modulo) //EDITAR PERFIL SEGUN SU ID
     .delete(_Autorizacion, ModuloController.Cambiar_Estado_Modulo) //CAMBIAR ESTADO DEL PERFIL POR ID
+
+export default _ModulosRouter

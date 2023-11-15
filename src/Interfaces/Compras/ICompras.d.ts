@@ -19,3 +19,16 @@ export interface Requisicion_Enc {
     comentarios: string
     det_requisicion: Requisicion_Det[]
 }
+
+export interface Coordenadas_Requisicion {
+    Y?: number,
+    LinesH?: number,
+    lineHeight?: number,
+    item?: number,
+    limitePag?: number,
+    HRectCabePie2?: number,
+    LineasDivCuerpo?: number
+    HRectCabePie?: number,
+    JumLine?: number,
+    LineasDivCabe?: number
+}

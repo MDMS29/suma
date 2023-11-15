@@ -25,3 +25,4 @@ _ProductosRouter.route('/productos-empresa/:id_producto')
 
 _ProductosRouter.get('/productos-empresa/filtro', _Autorizacion, EmpresaController.Buscar_Producto_Empresa)
 
+export default _ProductosRouter

@@ -10,11 +10,12 @@ export const _obtener_requisicion_enc = `
     INNER JOIN public.tbl_tipo_producto ttp ON ttp.id_tipo_producto = tr.id_tipo_producto 
     WHERE
         tr.id_estado = $1 AND tr.id_empresa = $2
+    ORDER BY tr.id_requisicion DESC
 `
 
 export const _buscar_detalle_requisicion = `
     SELECT 
-        trd.id_detalle, trd.id_producto, tp.referencia, tp.descripcion as nombre_producto, tu.unidad,
+        trd.id_detalle, trd.id_producto, tp.referencia, tp.descripcion as nombre_producto, tp.id_unidad, tu.unidad,
         trd.cantidad, trd.justificacion, trd.id_estado
     FROM
         public.tbl_requisicion_detalle trd
@@ -72,16 +73,17 @@ export const _insertar_requisicion_det = `
             nextval('tbl_requisicion_detalle_id_detalle_seq'::regclass), 
             $1,
             $2, $3, $4, 
-            3, now(), $5
+            5, now(), $5
         )
     RETURNING id_detalle;
 `
 
 export const _buscar_requisicion_id = ` 
     SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_centro, tr.id_proceso, tc.centro_costo, tr.comentarios, tr.id_estado, 
+        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.id_proceso, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion, tr.id_empresa, ste.razon_social, tp.proceso, 
-        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion, tr.usuario_revision, tr.fecha_revision
+        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_revision, tr.fecha_revision,
+        tc.correo_responsable, tr.fecha_creacion, tr.usuario_creacion
     FROM
         tbl_requisiciones tr
     INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 
@@ -99,7 +101,7 @@ export const _editar_requisicion_enc = `
     SET 
         id_empresa=$2, id_proceso=$3, id_centro=$4, 
         id_tipo_producto=$5, requisicion=$6, comentarios=$7, 
-        equipo=$8
+        equipo=1, fecha_requisicion=$8
     WHERE 
         id_requisicion=$1;       
 `

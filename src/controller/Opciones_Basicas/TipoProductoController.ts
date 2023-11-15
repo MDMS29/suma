@@ -53,7 +53,7 @@ export default class TipoProductoController {
             const tipos_producto_service = new TiposProductoService()
             const respuesta = await tipos_producto_service.Insertar_Tipo_Producto(req.body, usuario?.usuario)
             if (respuesta?.error) {
-                return res.json(respuesta) //!ERROR
+                return res.status(400).json(respuesta) //!ERROR
             }
 
             return res.status(200).json(respuesta)

@@ -20,7 +20,6 @@ export default class CentroCostoEmpresa {
 
         try {
             const centro_costo_service = new CentroCostoEmpresaService()
-            console.log(proceso)
             if (proceso != undefined) {
                 const respuesta = await centro_costo_service.Obtener_Centros_Costo_Empresa(+estado, +empresa, 'proceso', proceso)
                 if (respuesta?.error) {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import UsuarioService  from '../services/Configuracion/Usuario.service';
+import UsuarioService from '../services/Configuracion/Usuario.service';
 
 export const _Autorizacion = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -29,3 +29,20 @@ export const _Autorizacion = async (req: Request, res: Response, next: NextFunct
         console.error(error);
     }
 };
+
+
+export const _Recoleccion_IP = async (_: Request, __: Response, next: NextFunction) => {
+    try {
+        const data = await fetch('https://ipinfo.io?token=70210017b789f6')
+        const json = await data.json()
+        console.log('------------------------------------------------')
+        console.log('IP Cliente: ' + json.ip)
+        console.log(`Ubicación: ${json.country} ${json.region}/${json.city}`)
+        console.log('Fecha:', new Date(Date.now()))
+        console.log('------------------------------------------------')
+        next()
+    } catch (error) {
+        next()
+        console.log(error)
+    }
+}

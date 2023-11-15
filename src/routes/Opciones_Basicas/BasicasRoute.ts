@@ -85,3 +85,6 @@ _OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
     .get(_Autorizacion, _Centro_Empresa_Controller.Buscar_Centro_Costo) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
     .patch(_Autorizacion, _Centro_Empresa_Controller.Editar_Centro_Costo) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
     .delete(_Autorizacion, _Centro_Empresa_Controller.Cambiar_Estado_Centro) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
+
+
+export default _OpcionesBasicasRouter

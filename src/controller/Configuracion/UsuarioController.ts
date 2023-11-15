@@ -46,8 +46,6 @@ export default class UsuarioController {
 
     public async Obtener_Usuarios(req: Request, res: Response) {
         const { usuario } = req//TOMAR LA INFORMACION DEL MIDDLEWARE
-        // console.log(req.query)
-        // const { estado } = req.body
         const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' })

@@ -18,9 +18,10 @@ _RequisicionesRouter.route('/requisiciones/:id_requisicion')
     .delete(_Autorizacion, EmpresaController.Cambiar_Estado_Requisicion) //CAMBIAR ESTADO DE LA EMPRESA POR ID
 
 _RequisicionesRouter.route('/requisiciones/detalles/:id_requisicion')
-    .delete(_Autorizacion, EmpresaController.Aprobar_Desaprobar_Detalle) //CAMBIAR ESTADO DE LA EMPRESA POR ID
+    .patch(_Autorizacion, EmpresaController.Aprobar_Desaprobar_Detalle) //CAMBIAR ESTADO DE LA EMPRESA POR ID
 
 _RequisicionesRouter.route('/requisiciones/doc/:id_requisicion')
     .get(_Autorizacion, EmpresaController.Generar_PDF_Requisicion)
 // _RequisicionesRouter.get('/productos-empresa/filtro', _Autorizacion, EmpresaController.Buscar_Producto_Empresa)
 
+export default _RequisicionesRouter

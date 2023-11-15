@@ -17,3 +17,5 @@ _RolesRouter.route('/:id_rol')
     .get(_Autorizacion, RolController.Buscar_Rol) //BUSCAR EL ROL SEGUN SU ID
     .patch(_Autorizacion, RolController.Editar_Rol) //EDITAR ROL SEGUN SU ID
     .delete(_Autorizacion, RolController.Cambiar_Estado_Rol) //CAMBIAR ESTADO DEL ROL POR ID
+
+export default _RolesRouter

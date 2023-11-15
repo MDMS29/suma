@@ -123,7 +123,7 @@ export default class QueryRequisiciones {
 
     public async Editar_Requisicion_Enc(id_requisicion: number, requisicion_request: Requisicion_Enc) {
         const client = await pool.connect()
-        const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, comentarios, equipo } = requisicion_request
+        const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, comentarios, fecha_requisicion } = requisicion_request
 
 
         try {
@@ -132,8 +132,8 @@ export default class QueryRequisiciones {
                 [
                     id_requisicion,
                     id_empresa, id_proceso, id_centro,
-                    id_tipo_producto, consecutivo, comentarios,
-                    equipo
+                    id_tipo_producto, consecutivo, comentarios, 
+                    fecha_requisicion
                 ]
             );
             return result
@@ -179,10 +179,10 @@ export default class QueryRequisiciones {
             client.release();
         }
     }
-    public async Cambiar_Estado_Requisicion(id_empresa: number, estado: number) {
+    public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
         const client = await pool.connect()
         try {
-            let result = await client.query(_cambiar_estado_requisicion, [id_empresa, estado]);
+            let result = await client.query(_cambiar_estado_requisicion, [id_requisicion, estado]);
             return result
         } catch (error) {
             console.log(error)

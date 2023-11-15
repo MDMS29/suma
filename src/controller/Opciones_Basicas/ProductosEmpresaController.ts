@@ -98,7 +98,6 @@ export default class ProductosEmpresaController {
 
     public async Editar_Producto_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        console.log(req.body)
         const { id_producto } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO

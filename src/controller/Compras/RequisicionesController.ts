@@ -47,9 +47,9 @@ export default class RequisicionesController {
 
         try {
             const familias_producto_service = new RequisicionesService()
-            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario?.usuario)
+            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario?.nombre_completo)
             if (respuesta?.error) {
-                return res.json(respuesta) //!ERROR
+                return res.status(400).json(respuesta) //!ERROR
             }
 
             return res.status(200).json(respuesta)
@@ -139,10 +139,10 @@ export default class RequisicionesController {
                 return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_APROBADO ? 'Se ha aprobado la requisicion' : 'Se ha anulado la requisicion' })
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se ha inactivado la requisicion' })
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_APROBADO ? 'Error al aprobar la requisicion' : 'Error al anular la requisicion' }) //!ERROR
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Error al restaurar la requisicion' : 'Error al inactivar la requisicion' }) //!ERROR
         }
     }
 
@@ -168,7 +168,8 @@ export default class RequisicionesController {
             return res.send(pdf.data)
         } catch (error) {
             console.log(error)
-            return res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
+            return 
+            // res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
         }
     }
 
@@ -176,6 +177,8 @@ export default class RequisicionesController {
         const { usuario } = req
         const { id_requisicion } = req.params
         const { detalles } = req.body
+
+        console.log(req.body)
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR

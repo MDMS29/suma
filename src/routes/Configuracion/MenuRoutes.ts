@@ -17,3 +17,4 @@ _MenusRouter.route('/:id_menu')
     .patch(_Autorizacion, MenuController.Editar_Menu) //EDITAR SEGUN SU ID
     .delete(_Autorizacion, MenuController.Cambiar_Estado_Menu) //CAMBIAR ESTADO DEL PERFIL POR ID
 
+export default _MenusRouter

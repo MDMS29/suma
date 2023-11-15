@@ -17,3 +17,4 @@ _EmpresasRouter.route('/')
     .patch(_Autorizacion, EmpresaController.Editar_Empresa) //EDITAR SEGUN SU ID
     .delete(_Autorizacion, EmpresaController.Cambiar_Estado_Empresa) //CAMBIAR ESTADO DE LA EMPRESA POR ID
 
+export default _EmpresasRouter

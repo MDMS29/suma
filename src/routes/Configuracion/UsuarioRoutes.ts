@@ -3,7 +3,7 @@ import { _Autorizacion } from "../../middleware/Autorizacion";
 import UsuarioController from "../../controller/Configuracion/UsuarioController";
 
 //DEFINICÍON DE EL ROUTER
-export const _UsuarioRouter = Router();
+const _UsuarioRouter = Router();
 
 //DEFINICIÓN DEL CONTROLADOR DEL USUARIO
 const _UsuarioController = new UsuarioController();
@@ -27,3 +27,5 @@ _UsuarioRouter.route('/:id_usuario')
 _UsuarioRouter.patch('/cambiar_clave/:id_usuario', _Autorizacion, _UsuarioController.Cambiar_Clave_Usuario) //CAMBIAR CONTRASEÑA DEL USUARIO POR ID
 
 _UsuarioRouter.patch('/restablecer_clave/:id_usuario', _Autorizacion, _UsuarioController.Resetear_Clave_Usuario) //RSETEAR LA CLAVE DEL USUARIO CUANDO SE LE HAYA ENVIADO EL CORREO
+
+export default _UsuarioRouter
