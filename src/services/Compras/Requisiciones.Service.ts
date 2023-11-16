@@ -349,7 +349,7 @@ export class RequisicionesService {
                     }
 
                     const textLinesNombre = doc.splitTextToSize(detalle.nombre_producto, 45);
-                    const textLinesJustifi = doc.splitTextToSize(detalle.justificacion, 71);
+                    const textLinesJustifi = doc.splitTextToSize(detalle.justificacion, 70);
 
                     let lastY = Y
 

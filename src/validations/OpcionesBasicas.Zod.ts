@@ -130,11 +130,9 @@ export const ProductosSchema = z.object({
         invalid_type_error: 'El tipo de dato es invalido tipo',
         required_error: 'Seleccione el tipo del producto'
     }),
-    referencia: z.number({
+    referencia: z.string({
         invalid_type_error: 'El tipo de dato es invalido referencia',
         required_error: 'Ingrese la referencia del producto'
-    }).positive({
-        message: "El valor de la referencia debe ser mayor a 0"
     }),
     id_unidad: z.number({
         invalid_type_error: 'El tipo de dato es invalido unidad',

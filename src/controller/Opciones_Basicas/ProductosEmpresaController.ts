@@ -34,6 +34,7 @@ export default class ProductosEmpresaController {
 
     public async Insertar_Producto_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        console.log(req.body)
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
@@ -50,7 +51,7 @@ export default class ProductosEmpresaController {
 
         try {
             const producto_empresa_service = new ProductosEmpresaService()
-            const respuesta = await producto_empresa_service.Insertar_Producto_Empresa(req.body, usuario?.usuario)
+            const respuesta = await producto_empresa_service.Insertar_Producto_Empresa(req.body, usuario?.id_usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -116,7 +117,7 @@ export default class ProductosEmpresaController {
         try {
             const producto_empresa_service = new ProductosEmpresaService()
 
-            const respuesta = await producto_empresa_service.Editar_Producto_Empresa(+id_producto, result.data, usuario?.usuario)
+            const respuesta = await producto_empresa_service.Editar_Producto_Empresa(+id_producto, result.data, usuario?.id_usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
