@@ -68,7 +68,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
             setErrors(errors);
             return
         }
-        if (CentrosAgg.id_proceso === 0) {
+        if (CentrosAgg.id_proceso == 0) {
             errors.id_proceso = "Este campo es obligatorio"
             setErrors(errors);
             return
@@ -125,7 +125,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                         </label>
                         <InputText
                             value={CentrosAgg.codigo}
-                            type="number"
+                            type="text"
                             name="codigo"
                             className={`border-1 h-10 rounded-md w-full px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
                                 }`}
@@ -215,6 +215,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                         <InputText
                             value={CentrosAgg.correo_responsable}
                             type="email"
+                            placeholder='correo@example.com'
                             name="correo_responsable"
                             className={`border-1 h-10 rounded-md px-3 ${errors.correo_responsable ? "border-red-500" : "border-gray-300"
                                 }`}

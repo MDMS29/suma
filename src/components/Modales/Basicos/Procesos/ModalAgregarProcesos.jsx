@@ -24,14 +24,17 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
         if (!procesosAgg.codigo) {
             errors.codigo = "El código es obligatorio";
             setErrors(errors);
+            return
         }
-        if (!codigoRegex.test(procesosAgg.codigo)) {Z
+        if (!codigoRegex.test(procesosAgg.codigo)) {
             errors.codigo = "El código debe contener solo dígitos";
             setErrors(errors);
+            return
         }
         if (procesosAgg.codigo.length > 3) {
             errors.codigo = "El código solo puede tener 3 dígitos";
             setErrors(errors);
+            return
         }
         if (procesosAgg.proceso.trim() === '') {
             errors.proceso = "Este campo es obligatorio"
@@ -106,7 +109,7 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
                         </label>
                         <InputText
                             value={procesosAgg.codigo}
-                            type="number"
+                            type="text"
                             name="codigo"
                             className={`border-1 h-10 rounded-md px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
                                 }`}

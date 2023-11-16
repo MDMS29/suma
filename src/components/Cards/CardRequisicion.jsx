@@ -135,7 +135,7 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
 
             {authUsuario.perfiles?.some((perfil) => perfil.id_perfil == IDS_PERMISOS.PERFIL_GERENTE) &&
               <PButton
-                tooltip="Revisar"
+                tooltip="Verificar"
                 tooltipOptions={{ position: "top" }}
                 className="p-button-rounded p-mr-2  mx-1"
                 onClick={e => revisar_req(e, requisiciones.id_requisicion)}

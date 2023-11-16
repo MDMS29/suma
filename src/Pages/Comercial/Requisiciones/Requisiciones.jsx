@@ -80,19 +80,17 @@ const Requisiciones = () => {
       )}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Requisiciones</h1>
+          <h1 className="text-3xl">Requisiciones Pendientes</h1>
           {Req_Icono}
         </div>
         <div className="bg-white border p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
-            {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== IDS_PERMISOS.PERFIL_GERENTE) &&
               <div className="h-full flex justify-center items-center">
                 <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
                   <i className="pi pi-plus mx-2 font-medium"></i>
                   Agregar
                 </BLink>
               </div>
-            }
           </div>
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>

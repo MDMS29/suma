@@ -25,7 +25,7 @@ const ProductosProvider = ({ children }) => {
         id_marca: 0,
         id_tipo_producto: 0,
         id_unidad: 0,
-        referencia: 0,
+        referencia: "0",
         descripcion: "",
         foto: "",
         precio_costo: 0,

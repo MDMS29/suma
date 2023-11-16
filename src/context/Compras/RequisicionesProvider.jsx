@@ -226,7 +226,7 @@ const RequisicionesProvider = ({ children }) => {
         setAlerta({
           error: false,
           show: true,
-          message: "Requisición verificada con exito",
+          message: `Requisicion ${RequiAgg.consecutivo} verificada con exito`,
         });
         return true;
       }

@@ -43,7 +43,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       id_familia: 0,
       id_marca: 0,
       id_tipo_producto: 0,
-      referencia: 0,
+      referencia: "",
       id_unidad: 0,
       descripcion: "",
       foto: setSelectedImage(""),
@@ -65,7 +65,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       id_familia: productosAgg.id_familia,
       id_marca: productosAgg.id_marca,
       id_tipo_producto: productosAgg.id_tipo_producto,
-      referencia: +productosAgg.referencia,
+      referencia: productosAgg.referencia,
       id_unidad: productosAgg.id_unidad,
       descripcion: productosAgg.descripcion,
       precio_costo: +productosAgg.precio_costo,
@@ -183,7 +183,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
             </label>
             <InputText
               value={productosAgg.referencia}
-              type="number"
+              type="text"
               name="referencia"
               disabled={productosAgg.id_producto !== 0 && "disabled"}
               className={`border-1 h-10 rounded-md px-3 py-2 ${errors.referencia ? "border-red-500" : "border-gray-300"

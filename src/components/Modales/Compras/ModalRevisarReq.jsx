@@ -74,9 +74,12 @@ const ModalRevisarReq = ({ visible, onClose }) => {
         }
     }
 
-
+    const [aprobado, setAprobado] = useState(false)
     const aprobar_todo_cambio = () => {
-        const productosActualizados = productosSeleccionados.map((producto) => ({ ...producto, id_estado: producto.id_estado == 5 ? 4 : 5 }));
+        setAprobado(!aprobado)
+
+        const productosActualizados = productosSeleccionados.map((producto) => ({ ...producto, id_estado: aprobado ? 5 : 4 }));
+
 
         setProductosSeleccionados(productosActualizados);
     };

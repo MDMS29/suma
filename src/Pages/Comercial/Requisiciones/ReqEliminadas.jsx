@@ -36,6 +36,14 @@ function ReqEliminadas() {
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
+            <div className="h-full flex justify-center items-center">
+              <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
+                <i className="pi pi-plus mx-2 font-medium"></i>
+                Agregar
+              </BLink>
+            </div>
+          </div>
+          <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/verificadas"} tipo={"APROBADO"}>
               Verficadas
             </BLink>

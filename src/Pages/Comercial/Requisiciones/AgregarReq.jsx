@@ -125,7 +125,7 @@ const AgregarReq = () => {
     const { name, value } = e.target;
 
     if (name === "id_producto") {
-      if (productosData.some((producto) => producto.id_producto === value)) {
+      if (productosData.some((producto) => producto.id_producto === value && producto.id_estado !== 2)) {
         setDetalle({
           id_detalle: 0,
           id_unidad: 0,
