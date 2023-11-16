@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import Button from "../../../components/Botones/Button";
+import { useState } from "react";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import {
-  Edit_Icono,
-  Req_Icono,
-  Return_Icono,
-  Trash_Icono,
+  Req_Icono
 } from "../../../components/Icons/Iconos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
@@ -54,7 +50,7 @@ function ReqRevisadas() {
             <InputText
               className="h-10 pl-8 rounded-md"
               onChange={(e) => filtrar_requisiciones(e)}
-              placeholder="Buscar"
+              placeholder="Buscar No. Requisicion"
             />
           </span>
         </div>

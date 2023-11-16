@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Button as PButton } from "primereact/button";
+// import { Button as PButton } from "primereact/button";
 import { Req_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import BLink from "../../../components/Botones/BLink";
@@ -41,6 +41,8 @@ const Requisiciones = () => {
     setProductosData([]);
     return;
   }, []);
+
+  
 
   //MOSTRAR ALERTA
   useEffect(() => {
@@ -130,12 +132,10 @@ const Requisiciones = () => {
               {requisicionesFiltradas.length > 0 ? (
                 <>
                   {requisicionesFiltradas.map((requisiciones) => (
-                    <PButton key={requisiciones} onClick={e => revisar_req(e, requisiciones.id_requisicion)}>
                       <CardRequisicion
                         key={requisiciones.id_requisiciones}
                         requisiciones={requisiciones}
                       />
-                    </PButton>
                   ))}
                 </>
               ) : (

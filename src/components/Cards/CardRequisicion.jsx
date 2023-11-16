@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 import { Button as PButton } from "primereact/button";
 import {
@@ -30,6 +31,7 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
     comentarios,
     id_requisicion,
     id_estado,
+    usuario_creacion
   } = requisiciones;
 
   const { setVerEliminarRestaurar } = useAuth();
@@ -65,14 +67,14 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
   };
 
   return (
-    <div className="w-96 bg-white flex flex-col justify-between px-3 py-4 rounded-lg transition-all hover:shadow-xl">
+    <div className="w-96 border bg-white flex flex-col justify-between px-3 py-4 rounded-lg transition-all hover:shadow-xl">
       <div className="flex justify-between ">
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center gap-2">
           <p>{fecha_requisicion.split("T")[0]}</p>
           <p className="text-sm">{correo_responsable}</p>
           <p className="font-bold text-sm">{requisicion}</p>
         </div>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center gap-2">
           <p className={`${estilos[nombre_estado]}`}>{nombre_estado}</p>
           <p className="font-bold text-sm text-end">{centro_costo}</p>
           <p className="font-bold text-sm text-end">{tipo_productos}</p>
@@ -102,34 +104,36 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
               tooltip="Descargar"
               tooltipOptions={{ position: "top" }}
               className="p-button-rounded p-mr-2  mx-1"
-              onClick={(e) => generar_pdf({ id_requisicion, requisicion })}
+              onClick={() => generar_pdf({ id_requisicion, requisicion })}
             >
               {PDF_Icono}
             </PButton>
           </>
         ) : (
           <>
-            {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== IDS_PERMISOS.PERFIL_GERENTE) &&
-              <PButton
-                tooltip="Editar"
-                tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2  mx-1"
-                onClick={e => editar_requisicion(e, id_requisicion)}
-              >
-                {Edit_Icono}
-              </PButton>
+            {authUsuario.id_usuario == usuario_creacion &&
+              <>
+                <PButton
+                  tooltip="Editar"
+                  tooltipOptions={{ position: "top" }}
+                  className="p-button-rounded p-mr-2  mx-1"
+                  onClick={e => editar_requisicion(e, id_requisicion)}
+                >
+                  {Edit_Icono}
+                </PButton>
+
+                <PButton
+                  tooltip="Eliminar"
+                  tooltipOptions={{ position: "top" }}
+                  className="p-button-rounded p-mr-2  mx-1"
+                  onClick={(e) => eliminar_requisicion(e, id_requisicion)}
+                >
+                  {Trash_Icono}
+                </PButton>
+              </>
             }
 
-            <PButton
-              tooltip="Eliminar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2  mx-1"
-              onClick={(e) => eliminar_requisicion(e, id_requisicion)}
-            >
-              {Trash_Icono}
-            </PButton>
-
-            {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== IDS_PERMISOS.PERFIL_GERENTE) &&
+            {authUsuario.perfiles?.some((perfil) => perfil.id_perfil == IDS_PERMISOS.PERFIL_GERENTE) &&
               <PButton
                 tooltip="Revisar"
                 tooltipOptions={{ position: "top" }}

@@ -43,8 +43,7 @@ const AgregarReq = () => {
     setProductosData,
     productoState,
     setProductoState,
-    editar_requisicion,
-    eliminar_requisicion,
+    editar_requisicion
   } = useRequisiciones();
 
   const {

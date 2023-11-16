@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react'
 import useRequisiciones from '../../../hooks/Compras/useRequisiciones';
 import { DataTable } from 'primereact/datatable';
@@ -31,19 +32,24 @@ const ModalRevisarReq = ({ visible, onClose }) => {
     const [visibleColumns, setVisibleColumns] = useState(columns);
     const [filteredData, setFilteredData] = useState(productosData);
     const [productosSeleccionados, setProductosSeleccionados] = useState([]);
-    const [aprobarTodo, setAprobarTodo] = useState(false);
 
     useEffect(() => {
+        setProductosSeleccionados(productosData)
         if (RequiAgg.fecha_requisicion !== "") {
             setRequiAgg({
                 ...RequiAgg,
                 fecha_requisicion: RequiAgg.fecha_requisicion.split("T")[0],
             });
         }
+        setFilteredData(productosData);
+        if (RequiAgg.id_proceso != 0) {
+            obtener_centro_costo(RequiAgg.id_proceso);
+        }
+        if (RequiAgg.id_tipo_producto != 0) {
+            filtar_tipo_requ(RequiAgg.id_tipo_producto);
+        }
     }, [productosData])
-    useEffect(() => {
-        setProductosSeleccionados(productosData)
-    }, [productosData])
+
 
     const filtrar_columnas = (event) => {
         let columnas_seleccionadas = event.value;
@@ -53,23 +59,8 @@ const ModalRevisarReq = ({ visible, onClose }) => {
         setVisibleColumns(columnas_ordenadas_seleccionadas);
     };
 
-    const columna_acciones = (rowData) => (
-        <label
-            className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${rowData.id_estado == 4 || aprobarTodo ? "bg-primaryYellow" : "bg-gray-300"}`}>
-            <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={rowData.id_estado === 4 || aprobarTodo}
-                onChange={() => chk_producto(rowData.id_detalle)}
-                disabled={aprobarTodo && rowData.id_estado === 4}
-            />
-            <span
-                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
-        </label>
-    )
-
     const chk_producto = (rowData) => {
-        const producto_id = rowData;
+        const producto_id = rowData.id_detalle;
         if (productosSeleccionados.find(producto => producto.id_detalle == producto_id)) {
             const [productos] = productosSeleccionados.filter(producto => producto.id_detalle == producto_id)
             if (productos.id_estado == 4) {
@@ -78,22 +69,18 @@ const ModalRevisarReq = ({ visible, onClose }) => {
                 productos.id_estado = 4
             }
             const productosActualizados = productosSeleccionados.map(productoState => productoState.id_detalle == productos.id_detalle ? productos : productoState)
+
             setProductosSeleccionados(productosActualizados)
-        } else {
-            setProductosSeleccionados([...productosSeleccionados], { id_estado: 5 })
         }
     }
-    console.log(productosSeleccionados);
+
 
     const aprobar_todo_cambio = () => {
-        setAprobarTodo(!aprobarTodo);
-        // Actualiza el estado de todos los productos según aprobarTodo
-        const productosActualizados = productosSeleccionados.map((producto) => ({
-            ...producto,
-            id_estado: aprobarTodo ? 5 : 4
-        }));
+        const productosActualizados = productosSeleccionados.map((producto) => ({ ...producto, id_estado: producto.id_estado == 5 ? 4 : 5 }));
+
         setProductosSeleccionados(productosActualizados);
     };
+
 
     const guardar_lista = () => {
         revisar_requisicion(productosSeleccionados)
@@ -101,32 +88,37 @@ const ModalRevisarReq = ({ visible, onClose }) => {
     }
 
     useEffect(() => {
-        setFilteredData(productosData);
-        if (RequiAgg.id_proceso != 0) {
-            obtener_centro_costo(RequiAgg.id_proceso);
-        }
-        if (RequiAgg.id_tipo_producto != 0) {
-            filtar_tipo_requ(RequiAgg.id_tipo_producto);
-        }
-    }, [productosData]);
-
-    useEffect(() => {
         obtener_procesos();
         obtener_tipo_requisicion();
     }, []);
+
+    const columna_acciones = (rowData) => (
+        <label
+            className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${productosSeleccionados.filter(producto => producto.id_detalle == rowData.id_detalle)[0]?.id_estado === 4 ? "bg-primaryYellow" : "bg-gray-300"}`}>
+            <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={productosSeleccionados.filter(producto => producto.id_detalle == rowData.id_detalle)[0]?.id_estado === 4}
+                onChange={() => chk_producto(rowData)}
+            />
+            <span
+                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+        </label>
+    )
+
 
     const header = (
         <>
             <div className='flex gap-3 m-3 items-center'>
                 <span>Aprobar todo</span>
                 <label
-                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${aprobarTodo ? "bg-primaryYellow" : "bg-gray-300"}`}
+                    className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${!productosSeleccionados.some(producto => producto.id_estado == 5) ? "bg-primaryYellow" : "bg-gray-300"}`}
                 >
                     <input
                         type="checkbox"
                         className="sr-only peer"
-                        checked={aprobarTodo}
-                        onChange={aprobar_todo_cambio}
+                        checked={!productosSeleccionados.some(producto => producto.id_estado == 5)}
+                        onChange={() => aprobar_todo_cambio()}
                     />
                     <span className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
                 </label>

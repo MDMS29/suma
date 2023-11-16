@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { NoReq_Icono, Req_Icono, Return_Icono } from "../../../components/Icons/Iconos";
-import Button from "../../../components/Botones/Button";
+import { useState } from "react";
+import { Req_Icono } from "../../../components/Icons/Iconos";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -51,7 +50,7 @@ function ReqEliminadas() {
             <InputText
               className="h-10 pl-8 rounded-md"
               onChange={(e) => filtrar_requisiciones(e)}
-              placeholder="Buscar"
+              placeholder="Buscar No. Requisicion"
             />
           </span>
         </div>

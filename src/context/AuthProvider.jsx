@@ -45,7 +45,6 @@ const AuthProvider = ({ children }) => {
       try {
         const { data } = await conexionCliente('/usuarios/perfil', config)
         setAuthUsuario(data)
-        console.log(data);
         if (data.cm_clave) {
           navigate('/auth/resetear')
         }
