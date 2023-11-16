@@ -20,7 +20,7 @@ export default class RequisicionesController {
 
         try {
             const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Obtener_Requisiciones(+estado, +empresa)
+            const respuesta = await requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -47,7 +47,7 @@ export default class RequisicionesController {
 
         try {
             const familias_producto_service = new RequisicionesService()
-            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario?.nombre_completo)
+            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario?.id_usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -101,7 +101,7 @@ export default class RequisicionesController {
 
         try {
             const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario?.usuario)
+            const respuesta = await requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario?.id_usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }

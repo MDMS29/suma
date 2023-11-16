@@ -17,14 +17,14 @@ app.use('/suma/api/roles', _routes._RolesRouter)
 //DEFINIR RUTA DE LOS MENUS
 app.use('/suma/api/menus', _routes._MenusRouter)
 
-//DEFINIR RUTA DE LOS EMPRESAS
+//DEFINIR RUTA DE LAS EMPRESAS
 app.use('/suma/api/empresas', _routes._EmpresasRouter)
 
 //DEFINIR RUTAS PARA LAS OPCIONES BASICAS
 app.use('/suma/api/opciones-basicas', _routes._OpcionesBasicasRouter)
 
 //DEFINIR RUTAS PARA LOS PRODUCTOS
-app.use('/suma/api/opciones-basicas', _routes._ProductosRouter)
+app.use('/suma/api/opciones-basicas/productos-empresa', _routes._ProductosRouter)
 
 //DEFINIR RUTAS PARA LAS REQUISICIONES
 app.use('/suma/api/compras', _routes._RequisicionesRouter)

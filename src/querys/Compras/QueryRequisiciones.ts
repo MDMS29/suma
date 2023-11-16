@@ -1,22 +1,24 @@
-import { pool } from "../../../config/db";
+import { _DB, pool } from "../../../config/db";
 import {
+    _FA_obtener_requisicion_enc,
+
     _aprobar_desaprobar_detalle,
     _buscar_detalle_id,
     _buscar_detalle_requisicion, _buscar_requisicion_consecutivo, _buscar_requisicion_id,
     _cambiar_estado_requisicion, _editar_requisicion_det, _editar_requisicion_enc,
     _editar_usuario_revision,
-    _insertar_requisicion_det, _insertar_requisicion_enc, _obtener_requisicion_enc
+    _insertar_requisicion_det, _insertar_requisicion_enc
 } from "../../dao/Compras/DaoRequisiciones";
 
 import { Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras';
 
 export default class QueryRequisiciones {
-    public async Obtener_Requisiciones_Enc(estado: number, empresa: number): Promise<any> {
+    public async Obtener_Requisiciones_Enc(estado: string, empresa: number, usuario: string): Promise<any> {
         const client = await pool.connect()
 
         try {
-            let result = await client.query(_obtener_requisicion_enc, [estado, empresa]);
-            return result.rows
+            let result = await _DB.func(_FA_obtener_requisicion_enc, [estado, empresa, usuario]);
+            return result
         } catch (error) {
             console.log(error)
             return
@@ -132,7 +134,7 @@ export default class QueryRequisiciones {
                 [
                     id_requisicion,
                     id_empresa, id_proceso, id_centro,
-                    id_tipo_producto, consecutivo, comentarios, 
+                    id_tipo_producto, consecutivo, comentarios,
                     fecha_requisicion
                 ]
             );

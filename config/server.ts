@@ -16,7 +16,6 @@ declare global {
     }
 }
 
-
 // MIDDLEWARES
 server.disable('x-powered-by');
 server.use(express.json());

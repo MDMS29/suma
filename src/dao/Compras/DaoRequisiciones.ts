@@ -1,17 +1,4 @@
-export const _obtener_requisicion_enc = `
-    SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_proceso, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
-        te.nombre_estado, tr.fecha_requisicion, tc.correo_responsable, te.nombre_estado, tr.id_tipo_producto,
-        ttp.descripcion as tipo_productos
-    FROM
-        tbl_requisiciones tr
-    INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 
-    INNER JOIN seguridad.tbl_estados te ON te.id_estado = tr.id_estado 
-    INNER JOIN public.tbl_tipo_producto ttp ON ttp.id_tipo_producto = tr.id_tipo_producto 
-    WHERE
-        tr.id_estado = $1 AND tr.id_empresa = $2
-    ORDER BY tr.id_requisicion DESC
-`
+export const _FA_obtener_requisicion_enc = 'public.obtener_requisiciones_empresa'
 
 export const _buscar_detalle_requisicion = `
     SELECT 
