@@ -18,9 +18,13 @@ export const Req_Icono = (<svg xmlns="http://www.w3.org/2000/svg" width="24" hei
 
 export const Centro_Icono = (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-badge-dollar-sign"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" /><path d="M12 18V6" /></svg>)
 
+// export const NoReq_Icono = (<svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="#f2c302" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-circle"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>)
+
 export const Add_Icono = (<i className="pi pi-plus mx-2 font-medium"></i>)
 
 export const Rol_Icono = (<img src="/src/components/Icons/rol.png" alt="Logo Rol" width={40} />)
+
+export const NoReq_Icono = (<img src="/src/components/Icons/NoHay.png" alt="Logo Rol" width={200} />)
 
 export const Proceso_Icono = (<img src="/src/components/Icons/proceso.png" alt="Logo Proceso" width={40} />)
 

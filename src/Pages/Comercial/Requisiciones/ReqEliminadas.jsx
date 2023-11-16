@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Req_Icono, Return_Icono } from "../../../components/Icons/Iconos";
+import { NoReq_Icono, Req_Icono, Return_Icono } from "../../../components/Icons/Iconos";
 import Button from "../../../components/Botones/Button";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
@@ -63,7 +63,7 @@ function ReqEliminadas() {
             </div>
           ) : dataRequisiciones.error === false ? (
             <div className="bg-white border w-full my-3 p-3">
-              <p className="text-center">No hay requisiciones eliminadas.</p>
+              <p className="text-2xl text-center">No hay requisiciones inactivas.</p>
             </div>
           ) : (
             <>

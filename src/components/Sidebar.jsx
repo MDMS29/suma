@@ -1,13 +1,19 @@
-
 import { Link, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth.jsx";
 
 const Sidebar = () => {
-  const { cerrar_salir, authModulos, setAuthModulos, authUsuario, open, setOpen } = useAuth();
+  const {
+    cerrar_salir,
+    authModulos,
+    setAuthModulos,
+    authUsuario,
+    open,
+    setOpen,
+  } = useAuth();
 
   const { usuario, nombre_empresa } = authUsuario;
 
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
   const setSubMenuOpen = (index) => {
     setAuthModulos((prevModulos) =>
@@ -22,18 +28,31 @@ const Sidebar = () => {
 
   const toggleSidebarAbierto = () => {
     setOpen(!open);
-    authModulos.map(modulo => modulo.isOpen === true && !open ? modulo.isOpen = false : modulo.isOpen === true)
+    authModulos.map((modulo) =>
+      modulo.isOpen === true && !open
+        ? (modulo.isOpen = false)
+        : modulo.isOpen === true
+    );
   };
 
   return (
     <div className="flex max-sm:absolute relative z-10">
-
-      <div className="h-screen flex border-r shadow-sm bg-white" >
-
-        <div className={` ${open ? "w-auto px-2" : "w-16 max-sm:w-0 z-10"} bg-white overflow-hidden transition-all duration-500 ease-in-out`}>
-
-          <div className={`z-10 absolute ${open ? 'max-sm:left-60 max-sm:top-3 left-60 top-5 xl:hidden lg:hidden md:hidden' : 'hidden '}`}>
-            <button onClick={toggleSidebarAbierto}
+      <div className="h-screen flex border-r shadow-sm bg-white">
+      <div
+          className={` ${
+            open ? "w-auto px-2" : "w-16 max-sm:w-0 z-10"
+          } bg-white overflow-y-auto scrollbar-hidden transition-all duration-500 ease-in-out`}
+          style={{ maxHeight: "100%" }}
+        >
+          <div
+            className={`z-10 absolute ${
+              open
+                ? "max-sm:left-60 max-sm:top-3 left-60 top-5 xl:hidden lg:hidden md:hidden"
+                : "hidden "
+            }`}
+          >
+            <button
+              onClick={toggleSidebarAbierto}
               className="z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-lg drop-shadow-lg flex justify-center items-center hover:bg-amber-500 duration-300"
             >
               <span className="pi pi-bars"></span>
@@ -54,20 +73,18 @@ const Sidebar = () => {
                 </span>
               </div>
             </div>
-            <div
-              onClick={cerrar_salir}
-              className={`${open ? 'w-52' : 'w-9'}  min-sm:${open ? 'flex absolute ' : 'hidden'} md:absolute p-2 m-2 mx-3 overflow-hidden hover:bg-primaryYellow  inset-x-0 bottom-5 flex rounded-md cursor-pointer font-semibold hover:bg-amarillo text-sm`}
-            >
-              <i className="pi pi-sign-out"></i>
-              {open && <span className="ml-2">SALIR</span>}
-            </div>
           </div>
           <ul>
             {authModulos.map((modulo, index) => (
               <div key={modulo.nombre_modulo}>
                 <li
                   onClick={() => setSubMenuOpen(index)}
-                  className={`${pathname.includes(modulo.nombre_modulo.toLowerCase()) && 'bg-primaryYellow'} flex font-semibold rounded-md p-2 mx-2 cursor-pointer hover:bg-primaryYellow text-sm justify-center gap-x-4 ${modulo.gap ? "mt-9" : "mt-2"}`}
+                  className={`${
+                    pathname.includes(modulo.nombre_modulo.toLowerCase()) &&
+                    "bg-primaryYellow"
+                  } flex font-semibold rounded-md p-2 mx-2 cursor-pointer hover:bg-primaryYellow text-sm justify-center gap-x-4 ${
+                    modulo.gap ? "mt-9" : "mt-2"
+                  }`}
                 >
                   <div>
                     {modulo.icono ? (
@@ -80,8 +97,9 @@ const Sidebar = () => {
 
                   {open && modulo.menus && (
                     <i
-                      className={`pi pi-angle-down ml-auto ${modulo.isOpen && "rotate-180"
-                        } `}
+                      className={`pi pi-angle-down ml-auto ${
+                        modulo.isOpen && "rotate-180"
+                      } `}
                     ></i>
                   )}
                 </li>
@@ -92,7 +110,11 @@ const Sidebar = () => {
                       <Link
                         to={subMenuItem.link_menu}
                         key={subMenuItem.link_menu}
-                        className={`${pathname.includes(subMenuItem.nombre_menu.toLowerCase()) && 'bg-gray-300'} flex text-black p-4 my-2 rounded-md cursor-pointer text-center hover:bg-gray-300 text-sm py-1`}
+                        className={`${
+                          pathname.includes(
+                            subMenuItem.nombre_menu.toLowerCase()
+                          ) && "bg-gray-300"
+                        } flex text-black p-4 my-2 rounded-md cursor-pointer text-center hover:bg-gray-300 text-sm py-1`}
                         onClick={() => setOpen(false)}
                       >
                         {subMenuItem.nombre_menu}
@@ -105,7 +127,7 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
 import { Button as PButton } from "primereact/button";
 import { Toast } from "primereact/toast";
-import { Edit_Icono, FliaProd_Icono } from "../../../components/Icons/Iconos";
+import { Centro_Icono, Edit_Icono, FliaProd_Icono } from "../../../components/Icons/Iconos";
 // import ModalAgregarProcesos from "../../../components/Modales/Basicos/Procesos/ModalAgregarProcesos";
 import Button from "../../../components/Botones/Button";
 import { InputText } from "primereact/inputtext";

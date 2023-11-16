@@ -81,7 +81,7 @@ const Requisiciones = () => {
           <h1 className="text-3xl">Requisiciones</h1>
           {Req_Icono}
         </div>
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+        <div className="bg-white border p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
             {authUsuario.perfiles?.some((perfil) => perfil.id_perfil !== IDS_PERMISOS.PERFIL_GERENTE) &&
               <div className="h-full flex justify-center items-center">
@@ -116,14 +116,14 @@ const Requisiciones = () => {
           </span>
         </div>
 
-        <div className="w-full flex flex-wrap gap-3">
+        <div className="w-full py-3 flex flex-wrap gap-3">
           {dataRequisiciones.length == 0 ? (
             <div className="flex justify-center items-center w-full">
               <Loader />
             </div>
           ) : dataRequisiciones.error === false ? (
             <div className="bg-white border w-full my-3 p-3">
-              <p className="text-center">No hay requisiciones aprobadas</p>
+              <p className="text-center">No hay requisiciones pendientes</p>
             </div>
           ) : (
             <>

@@ -64,7 +64,7 @@ export default function Navbar() {
 
 
     return (
-        <div className="h-16 bg-white flex items-center justify-between ">
+        <div className="h-16 bg-white flex items-center justify-between  shadow-sm">
             <div className="ml-5">
                 <button onClick={toggleSidebarAbierto}
                     className="z-90 bottom-10 right-8 bg-primaryYellow w-10 h-10 rounded-lg flex justify-center items-center hover:bg-secundaryYellow duration-300"
