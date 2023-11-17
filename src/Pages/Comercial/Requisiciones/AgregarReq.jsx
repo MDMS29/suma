@@ -43,7 +43,7 @@ const AgregarReq = () => {
     setProductosData,
     productoState,
     setProductoState,
-    editar_requisicion
+    editar_requisicion,
   } = useRequisiciones();
 
   const {
@@ -51,6 +51,7 @@ const AgregarReq = () => {
     authUsuario,
     setVerEliminarRestaurar,
     setAlerta,
+    setErrors,
   } = useAuth();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
@@ -125,12 +126,17 @@ const AgregarReq = () => {
     const { name, value } = e.target;
 
     if (name === "id_producto") {
-      if (productosData.some((producto) => producto.id_producto === value && producto.id_estado !== 2)) {
+      if (
+        productosData.some(
+          (producto) =>
+            producto.id_producto === value && producto.id_estado !== 2
+        )
+      ) {
         setDetalle({
           id_detalle: 0,
           id_unidad: 0,
           id_producto: 0,
-          cantidad: 0,
+          cantidad: "",
           justificacion: "",
           id_estado: 3,
         });
@@ -143,11 +149,25 @@ const AgregarReq = () => {
         return;
       }
     }
+
+    if (name === "cantidad") {
+      if (!/^\d*$/.test(value)) {
+        setAlerta({
+          error: true,
+          show: true,
+          message: "La cantidad debe contener solo dígitos",
+        });
+        setTimeout(() => setAlerta({}), 1500);
+        return;
+      }
+    }
+
     setDetalle((prevDetalle) => {
       let updatedDetalle = {
         ...prevDetalle,
-        [name]: name === "cantidad" ? +value : value,
+        [name]: name === "cantidad" ? value.replace(/\D/g, "") : value,
       };
+
       if (name === "id_producto") {
         const productoSeleccionado = productos.find(
           (producto) => producto.id_producto === +value
@@ -162,6 +182,7 @@ const AgregarReq = () => {
           };
         }
       }
+
       return updatedDetalle;
     });
   };
@@ -190,7 +211,7 @@ const AgregarReq = () => {
         id_producto: 0,
         id_estado: 3,
         nombre_producto: "",
-        cantidad: 0,
+        cantidad: "",
         justificacion: "",
       });
     } else {
@@ -203,13 +224,23 @@ const AgregarReq = () => {
         setTimeout(() => setAlerta({}));
         return;
       }
-      if (detalle.cantidad == 0 && detalle.cantidad < 0) {
+      if (!detalle.cantidad.trim()) {
         setAlerta({
           error: true,
           show: true,
-          message: "Debe ingresar una cantidad valida",
+          message: "Debe ingresar una cantidad",
         });
-        setTimeout(() => setAlerta({}));
+        setTimeout(() => setAlerta({}), 1500);
+        return;
+      }
+    
+      if (detalle.cantidad <= 0) {
+        setAlerta({
+          error: true,
+          show: true,
+          message: "Debe ingresar una cantidad válida",
+        });
+        setTimeout(() => setAlerta({}), 1500);
         return;
       }
       if (detalle.justificacion == "") {
@@ -290,7 +321,6 @@ const AgregarReq = () => {
     setVerEliminarRestaurar(true);
   };
 
-
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -349,7 +379,7 @@ const AgregarReq = () => {
       id_detalle: 0,
       id_producto: 0,
       nombre_producto: "",
-      cantidad: 0,
+      cantidad: "",
       justificacion: "",
     });
   };
@@ -533,7 +563,6 @@ const AgregarReq = () => {
                     value={detalle?.cantidad}
                     onChange={(e) => filtar_detalle(e)}
                     name="cantidad"
-                    type="number"
                     className="h-10 p-2 w-32"
                   />
                 </div>
@@ -561,15 +590,17 @@ const AgregarReq = () => {
                 {detalle.id_detalle !== 0 && (
                   <Button
                     tipo={"CANCELAR"}
-                    funcion={(e) => setDetalle({
-                      id: 0,
-                      id_unidad: 0,
-                      id_detalle: 0,
-                      id_producto: 0,
-                      nombre_producto: "",
-                      cantidad: 0,
-                      justificacion: "",
-                    })}
+                    funcion={(e) =>
+                      setDetalle({
+                        id: 0,
+                        id_unidad: 0,
+                        id_detalle: 0,
+                        id_producto: 0,
+                        nombre_producto: "",
+                        cantidad: "",
+                        justificacion: "",
+                      })
+                    }
                   >
                     Cancelar
                   </Button>
