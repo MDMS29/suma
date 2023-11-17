@@ -40,19 +40,15 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
 
         const regex = /^[a-zA-Z0-9\s]*$/;
         const errors = {};
-
         const codigoRegex = /^[0-9]*$/;
 
-        if (CentrosAgg.codigo.trim() === '') {
-            errors.codigo = "Este campo es obligatorio";
-            setErrors(errors);
-            return
+
+        if (!CentrosAgg.codigo) {
+            errors.codigo = "El codigo es obligatorio";
+        } else if (!codigoRegex.test(CentrosAgg.codigo)) {
+            errors.codigo = "El codigo debe contener solo dígitos";
         }
-        if (!codigoRegex.test(CentrosAgg.codigo)) {
-            errors.marca = "Este campo solo permite numeros";
-            setErrors(errors);
-            return
-        }
+
         if (CentrosAgg.centro_costo.trim() === '') {
             errors.centro_costo = "Este campo es obligatorio"
             setErrors(errors);
@@ -116,7 +112,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
             className="w-full sm:w-full md:w-1/2  lg:w-1/2  xl:w-1/2"
             footer={footerContent}
         >
-            <div className="flex flex-col pt-3 flex-wrap w-full">
+            <div className="flex flex-col pt-3 gap-3 flex-wrap w-full">
                 {/* <div className=""> */}
                 <div className='flex gap-3 flex-wrap '>
                     <div className="flex flex-grow flex-col">
@@ -125,7 +121,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                         </label>
                         <InputText
                             value={CentrosAgg.codigo}
-                            type="text"
+                            type="number"
                             name="codigo"
                             className={`border-1 h-10 rounded-md w-full px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
                                 }`}
@@ -136,7 +132,6 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                                 {errors.codigo}
                             </div>
                         )}
-
                     </div>
 
                     <div className="flex flex-grow flex-col">
@@ -203,31 +198,29 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                             </div>
                         )}
                     </div>
-
                 </div>
 
-
                 {/* <div className="flex gap-3 flex-wrap"> */}
-                    <div className="flex flex-col">
-                        <label className="text-gray-600 pb-2 font-semibold">
-                            Responsable <span className="font-bold text-red-900">*</span>
-                        </label>
-                        <InputText
-                            value={CentrosAgg.correo_responsable}
-                            type="email"
-                            placeholder='correo@example.com'
-                            name="correo_responsable"
-                            className={`border-1 h-10 rounded-md px-3 ${errors.correo_responsable ? "border-red-500" : "border-gray-300"
-                                }`}
-                            onChange={(e) => btn_cambio_campo(e)}
-                        />
-                        {errors.correo_responsable && (
-                            <div className="text-red-600 text-xs">
-                                {errors.correo_responsable}
-                            </div>
-                        )}
+                <div className="flex flex-col">
+                    <label className="text-gray-600 pb-2 font-semibold">
+                        Responsable <span className="font-bold text-red-900">*</span>
+                    </label>
+                    <InputText
+                        value={CentrosAgg.correo_responsable}
+                        type="email"
+                        placeholder='correo@example.com'
+                        name="correo_responsable"
+                        className={`border-1 h-10 rounded-md px-3 ${errors.correo_responsable ? "border-red-500" : "border-gray-300"
+                            }`}
+                        onChange={(e) => btn_cambio_campo(e)}
+                    />
+                    {errors.correo_responsable && (
+                        <div className="text-red-600 text-xs">
+                            {errors.correo_responsable}
+                        </div>
+                    )}
 
-                    </div>
+                </div>
                 {/* </div> */}
             </div>
             {/* </div> */}

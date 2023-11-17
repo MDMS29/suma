@@ -6,7 +6,6 @@ import BLink from "../../../components/Botones/BLink";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
 import useAuth from "../../../hooks/useAuth";
-import { IDS_PERMISOS } from "../../../helpers/constantes.js"
 import ModalRevisarReq from "../../../components/Modales/Compras/ModalRevisarReq.jsx";
 import { Toast } from "primereact/toast";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
@@ -15,13 +14,12 @@ import Loader from "../../../components/Loader";
 const Requisiciones = () => {
   const toast = useRef(null);
   const { verEliminarRestaurar, authUsuario, alerta, setAlerta } = useAuth();
-  const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData } = useRequisiciones();
+  const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData, requisicionesFiltradas, filtrar_requisiciones} = useRequisiciones();
   const [modalVisible, setModalVisible] = useState(false);
 
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
   }
-  const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
 
 
   useEffect(() => {
@@ -59,14 +57,6 @@ const Requisiciones = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
-
-  const filtrar_requisiciones = (e) => {
-    e.preventDefault();
-    const requisiciones = dataRequisiciones.filter((requisicion) =>
-      requisicion.requisicion?.includes(e.target.value)
-    );
-    setRequisicionesFiltradas(requisiciones);
-  };
 
   const main = () => (
     <>
@@ -131,7 +121,7 @@ const Requisiciones = () => {
                 <>
                   {requisicionesFiltradas.map((requisiciones) => (
                       <CardRequisicion
-                        key={requisiciones.id_requisiciones}
+                        key={requisiciones.id_requisicion}
                         requisiciones={requisiciones}
                       />
                   ))}
@@ -140,7 +130,7 @@ const Requisiciones = () => {
                 <>
                   {dataRequisiciones.map((requisiciones) => (
                     <CardRequisicion
-                      key={requisiciones.id_requisiciones}
+                      key={requisiciones.id_requisicion}
                       requisiciones={requisiciones}
                       setModalVisible={setModalVisible}
                     />

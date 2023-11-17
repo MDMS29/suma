@@ -7,7 +7,7 @@ import useAuth from '../../../../hooks/useAuth';
 
 const ModalAgregarProcesos = ({ visible, onClose }) => {
     const { procesosAgg, setProcesosAgg, errors, setErrors, guardar_proceso, editar_proceso } = useProcesos()
-     const { authUsuario } = useAuth()
+    const { authUsuario } = useAuth()
 
     const btn_guardar = async () => {
         const formData = {
@@ -109,7 +109,7 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
                         </label>
                         <InputText
                             value={procesosAgg.codigo}
-                            type="text"
+                            type="number"
                             name="codigo"
                             className={`border-1 h-10 rounded-md px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
                                 }`}

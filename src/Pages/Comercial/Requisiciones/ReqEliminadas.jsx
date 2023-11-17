@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Req_Icono } from "../../../components/Icons/Iconos";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
@@ -9,18 +8,10 @@ import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../components/Loader";
 
 function ReqEliminadas() {
-  const { dataRequisiciones, eliminar_requisicion } = useRequisiciones();
-  const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
+  const { dataRequisiciones, eliminar_requisicion, requisicionesFiltradas, filtrar_requisiciones } = useRequisiciones();
 
   const { verEliminarRestaurar } = useAuth();
 
-  const filtrar_requisiciones = (e) => {
-    e.preventDefault();
-    const requisiciones = dataRequisiciones.filter((requisicion) =>
-      requisicion.requisicion?.includes(e.target.value)
-    );
-    setRequisicionesFiltradas(requisiciones);
-  };
   const main = () => (
     <>
       {verEliminarRestaurar && (
@@ -78,7 +69,7 @@ function ReqEliminadas() {
                 <>
                   {requisicionesFiltradas.map((requisiciones) => (
                     <CardRequisicion
-                      key={requisiciones.id_requisiciones}
+                      key={requisiciones.id_requisicion}
                       requisiciones={requisiciones}
                     />
                   ))}
@@ -87,7 +78,7 @@ function ReqEliminadas() {
                 <>
                   {dataRequisiciones.map((requisiciones) => (
                     <CardRequisicion
-                      key={requisiciones.id_requisiciones}
+                      key={requisiciones.id_requisicion}
                       requisiciones={requisiciones}
                     />
                   ))}

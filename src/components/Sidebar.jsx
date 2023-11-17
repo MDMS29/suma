@@ -3,7 +3,6 @@ import useAuth from "../hooks/useAuth.jsx";
 
 const Sidebar = () => {
   const {
-    cerrar_salir,
     authModulos,
     setAuthModulos,
     authUsuario,

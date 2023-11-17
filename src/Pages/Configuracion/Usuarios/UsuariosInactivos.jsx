@@ -26,7 +26,6 @@ const UsuariosInactivos = () => {
   };
 
   const columns = [
-    { field: "id_usuario", header: "ID" },
     { field: "nombre_completo", header: "Nombre" },
     { field: "usuario", header: "Usuario" },
     { field: "correo", header: "Correo" },

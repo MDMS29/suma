@@ -18,13 +18,24 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
   const { dataFliaPro, obtener_familia_prod } = useFamiliaProd()
   const { dataUnidades, obtener_unidades } = useUnidades()
   const { dataTipoProf, obtener_tipo_producto } = useTipoProd()
-  const { authUsuario } = useAuth()
+  const { authUsuario, setAlerta } = useAuth()
 
   const btn_cambio_producto = (e) => {
     const esBoleano = ['critico', 'inventariable', 'compuesto', 'ficha', 'certificado']
     const value = e.target.value;
-    console.log(e.target.name);
-    setProductosAgg({ ...productosAgg, [e.target.name]: esBoleano.includes(e.target.name) ? Boolean(!productosAgg[e.target.name]) : value });
+    const name = e.target;
+    if (name === "referencia") {
+      if (!/^\d*$/.test(value)) {
+        setAlerta({
+          error: true,
+          show: true,
+          message: "La referencia debe contener solo dígitos",
+        });
+        setTimeout(() => setAlerta({}), 1500);
+        return;
+      }
+    }
+    setProductosAgg({ ...productosAgg, [e.target.name]: esBoleano.includes(e.target.name) ? Boolean(!productosAgg[e.target.name]) : value, [name]: name === "referencia" ? value.replace(/\D/g, "") : value });
   };
 
   const handleImageChange = (e) => {
@@ -83,8 +94,20 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
 
     if (!productosAgg.referencia) {
       errors.referencia = "La referencia es obligatoria";
-    } else if (!codRegex.test(productosAgg.referencia)) {
+      setErrors(errors);
+      return
+    }
+
+    if (!codRegex.test(productosAgg.referencia)) {
       errors.referencia = "La referencia debe contener solo dígitos";
+      setErrors(errors);
+      return
+    }
+
+    if (productosAgg.referencia < 0) {
+      errors.referencia = "La referencia no debe ser negativo";
+      setErrors(errors);
+      return
     }
 
     if (productosAgg.descripcion.trim() === '') {
@@ -114,18 +137,32 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       errors.unidad = "Seleccione una opcion";
       setErrors(errors);
       return
+    }
 
-    }
     if (productosAgg.precio_costo == 0) {
-      errors.precio_costo = "El Precio Costo es obligatorio";
+      errors.precio_costo = "El precio costo es obligatorio";
       setErrors(errors);
       return
     }
+
+    if (productosAgg.precio_costo < 0) {
+      errors.precio_costo = "El precio costo no debe ser negativo";
+      setErrors(errors);
+      return
+    }
+
+    if (productosAgg.precio_venta < 0) {
+      errors.precio_venta = "El precio venta no debe ser negativo";
+      setErrors(errors);
+      return
+    }
+    
     if (productosAgg.precio_venta == 0) {
-      errors.precio_venta = "El Precio Venta es obligatorio";
+      errors.precio_venta = "El precio venta es obligatorio";
       setErrors(errors);
       return
     }
+
 
     try {
       let response
@@ -183,7 +220,6 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
             </label>
             <InputText
               value={productosAgg.referencia}
-              type="text"
               name="referencia"
               disabled={productosAgg.id_producto !== 0 && "disabled"}
               className={`border-1 h-10 rounded-md px-3 py-2 ${errors.referencia ? "border-red-500" : "border-gray-300"

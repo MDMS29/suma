@@ -1,4 +1,3 @@
-import { useState } from "react";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import {
@@ -10,21 +9,12 @@ import ModalPDF from "../../../components/Modales/Requisiciones/ModalPDF";
 import Loader from "../../../components/Loader";
 
 function ReqRevisadas() {
-  const { dataRequisiciones, verPDF, setVerPDF } = useRequisiciones();
-  const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
+  const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones } = useRequisiciones();
 
   const cerrar = () => {
     setVerPDF(false);
   };
 
-
-  const filtrar_requisiciones = (e) => {
-    e.preventDefault();
-    const requisiciones = dataRequisiciones.filter((requisicion) =>
-      requisicion.requisicion?.includes(e.target.value)
-    );
-    setRequisicionesFiltradas(requisiciones);
-  };
   const main = () => (
     <>
       {verPDF && <ModalPDF visible={verPDF} onClose={cerrar} />}
@@ -78,7 +68,7 @@ function ReqRevisadas() {
                 <>
                   {requisicionesFiltradas.map((requisiciones) => (
                     <CardRequisicion
-                      key={requisiciones.id_requisiciones}
+                      key={requisiciones.id_requisicion}
                       requisiciones={requisiciones}
                     />
                   ))}
@@ -87,7 +77,7 @@ function ReqRevisadas() {
                 <>
                   {dataRequisiciones.map((requisiciones) => (
                     <CardRequisicion
-                      key={requisiciones.id_requisiciones}
+                      key={requisiciones.id_requisicion}
                       requisiciones={requisiciones}
                     />
                   ))}

@@ -22,7 +22,6 @@ const Centros = () => {
   const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
   const columns = [
-    { field: "id_centro", header: "ID" },
     { field: "codigo", header: "Codigo" },
     { field: "centro_costo", header: "Centro de Costo" },
     { field: "correo_responsable", header: "Correo" },

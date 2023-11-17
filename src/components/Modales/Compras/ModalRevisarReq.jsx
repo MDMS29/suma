@@ -20,8 +20,6 @@ const ModalRevisarReq = ({ visible, onClose }) => {
 
     const { obtener_procesos } = useProcesos();
 
-
-
     const columns = [
         { field: "nombre_producto", header: "Producto" },
         { field: "unidad", header: "Unidad" },

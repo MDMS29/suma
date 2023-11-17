@@ -71,12 +71,12 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
       <div className="flex justify-between ">
         <div className="flex flex-col justify-center gap-2">
           <p>{fecha_requisicion.split("T")[0]}</p>
-          <p className="text-sm">{correo_responsable}</p>
+          <p className="text-sm w-28 truncate">{correo_responsable}</p>
           <p className="font-bold text-sm">{requisicion}</p>
         </div>
         <div className="flex flex-col justify-center gap-2">
           <p className={`${estilos[nombre_estado]}`}>{nombre_estado}</p>
-          <p className="font-bold text-sm text-end">{centro_costo}</p>
+          <p className="font-bold text-sm text-end w-28 truncate">{centro_costo}</p>
           <p className="font-bold text-sm text-end">{tipo_productos}</p>
         </div>
       </div>

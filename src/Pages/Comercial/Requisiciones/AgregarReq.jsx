@@ -118,6 +118,29 @@ const AgregarReq = () => {
   };
 
   useEffect(() => {
+    setProductosData([]);
+    setDetalle({
+      id_detalle: 0,
+      id_unidad: 0,
+      id_producto: 0,
+      cantidad: "",
+      justificacion: "",
+      id_estado: 3,
+    });
+
+    setRequiAgg({
+      id_requisicion: 0,
+      id_empresa:
+        authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
+      id_proceso: 0,
+      id_centro: 0,
+      id_tipo_producto: 0,
+      consecutivo: "",
+      fecha_requisicion: "",
+      hora_requisicion: "",
+      comentarios: "",
+      equipo: 1,
+    })
     obtener_procesos();
     obtener_tipo_requisicion();
   }, []);
@@ -165,7 +188,7 @@ const AgregarReq = () => {
     setDetalle((prevDetalle) => {
       let updatedDetalle = {
         ...prevDetalle,
-        [name]: name === "cantidad" ? value.replace(/\D/g, "") : value,
+        [name]: name === "cantidad" ? +value.replace(/\D/g, "") : value,
       };
 
       if (name === "id_producto") {
@@ -233,7 +256,7 @@ const AgregarReq = () => {
         setTimeout(() => setAlerta({}), 1500);
         return;
       }
-    
+
       if (detalle.cantidad <= 0) {
         setAlerta({
           error: true,

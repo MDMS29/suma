@@ -1,9 +1,7 @@
-import { useEffect, useRef } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useRef,  createContext, useState, useMemo } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
-import { createContext } from "react";
-import { useState } from "react";
-import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { Toast } from "primereact/toast";
 
@@ -42,6 +40,9 @@ const RequisicionesProvider = ({ children }) => {
   const [verPDF, setVerPDF] = useState(false);
   const [srcPDF, setSrcPDF] = useState(null);
 
+  const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
+
+
   const location = useLocation();
 
   useEffect(() => {
@@ -79,6 +80,20 @@ const RequisicionesProvider = ({ children }) => {
       obtener_requisiciones();
     }
   }, [location.pathname, authUsuario.id_empresa]);
+
+  useEffect(() => {
+    if (alerta.show) {
+      (() => {
+        toast.current.show({
+          severity: alerta.error ? "error" : "success",
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500);
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alerta]);
 
   const obtener_centro_costo = async (id_proceso) => {
     const token = localStorage.getItem("token");
@@ -377,20 +392,6 @@ const RequisicionesProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    if (alerta.show) {
-      (() => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [alerta]);
-
   const eliminar_requisicion = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -473,6 +474,49 @@ const RequisicionesProvider = ({ children }) => {
     }
   };
 
+  
+  
+const filtrar_requisiciones = async(e) => {
+  e.preventDefault();
+
+  try {
+    const token = localStorage.getItem('token')
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    const estado = location.pathname.includes("inactivas")
+    ? 2
+    : location.pathname.includes("verificadas")
+      ? 6
+      : 3;
+
+    const { data } = await conexion_cliente(`/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}&noRequi=${e.target.value}`, config)
+    if(data.error === false){
+      setAlerta({
+        error: true,
+        show: true,
+        message: data.message
+      })
+      setTimeout(()=> setAlerta({}), 1500)
+      return 
+    }
+    setRequisicionesFiltradas(data)
+    return 
+  } catch (error) {
+    console.log(error)
+    setAlerta({
+      error: true,
+      show: true,
+      message: error.response?.data.message
+    });
+  }
+};
+
   const obj = useMemo(() => ({
     dataRequisiciones,
     procesos,
@@ -504,6 +548,8 @@ const RequisicionesProvider = ({ children }) => {
     srcPDF,
     verPDF,
     setVerPDF,
+    filtrar_requisiciones,
+    requisicionesFiltradas
   }));
   return (
     <RequisicionesContext.Provider value={obj}>
