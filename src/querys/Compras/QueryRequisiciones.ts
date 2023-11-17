@@ -2,6 +2,8 @@ import { _DB, pool } from "../../../config/db";
 import {
     _FA_obtener_requisicion_enc,
 
+    _FA_obtener_requisicion_filtro,
+
     _aprobar_desaprobar_detalle,
     _buscar_detalle_id,
     _buscar_detalle_requisicion, _buscar_requisicion_consecutivo, _buscar_requisicion_id,
@@ -18,6 +20,19 @@ export default class QueryRequisiciones {
 
         try {
             let result = await _DB.func(_FA_obtener_requisicion_enc, [estado, empresa, usuario]);
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, tipo: string, valor: string | number): Promise<any> {
+        const client = await pool.connect()
+        try {
+            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, tipo, valor]);
             return result
         } catch (error) {
             console.log(error)
@@ -181,6 +196,7 @@ export default class QueryRequisiciones {
             client.release();
         }
     }
+
     public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
         const client = await pool.connect()
         try {
@@ -207,6 +223,7 @@ export default class QueryRequisiciones {
             client.release();
         }
     }
+
     public async Editar_Usuario_Revi_Requisicion(id_requisicion: any, usuario: string) {
         const client = await pool.connect()
         try {

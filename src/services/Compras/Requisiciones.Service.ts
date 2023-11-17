@@ -17,9 +17,20 @@ export class RequisicionesService {
         this._Query_Usuarios = new QueryUsuario();
     }
 
-    public async Obtener_Requisiciones(estado: string, empresa: number, usuario: string): Promise<any> {
+    public async Obtener_Requisiciones(estado: string, empresa: number, usuario: string, tipoFiltro: string, valor: string | number): Promise<any> {
+        const TIPOS_CONSULTA: any = {
+            noRequi: 'noRequi'
+        }
         try {
-            const requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Enc(estado, empresa, usuario)
+            let requisiciones: any
+            
+            if (TIPOS_CONSULTA[tipoFiltro] == tipoFiltro ) {
+                requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, tipoFiltro, valor)
+                
+            } else {
+                requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Enc(estado, empresa, usuario)
+            }
+
             if (requisiciones?.length <= 0) {
                 return { error: false, message: 'No se han encontrado las requisicion' } //!ERROR
             }

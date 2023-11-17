@@ -1,4 +1,5 @@
 export const _FA_obtener_requisicion_enc = 'public.obtener_requisiciones_empresa'
+export const _FA_obtener_requisicion_filtro = 'public.obtener_requisiciones_empresa_filtro'
 
 export const _buscar_detalle_requisicion = `
     SELECT 
