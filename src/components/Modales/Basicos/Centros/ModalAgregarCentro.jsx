@@ -45,8 +45,8 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
 
         if (!CentrosAgg.codigo) {
             errors.codigo = "El codigo es obligatorio";
-        } else if (!codigoRegex.test(CentrosAgg.codigo)) {
-            errors.codigo = "El codigo debe contener solo dígitos";
+        } else if (!regex.test(CentrosAgg.codigo)) {
+            errors.codigo = "No se permiten caracteres especiales";
         }
 
         if (CentrosAgg.centro_costo.trim() === '') {
@@ -121,7 +121,9 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                         </label>
                         <InputText
                             value={CentrosAgg.codigo}
-                            type="number"
+                            type="text"
+                            disabled={CentrosAgg.id_centro !== 0 && "disabled"}
+                            maxLength={3}
                             name="codigo"
                             className={`border-1 h-10 rounded-md w-full px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
                                 }`}

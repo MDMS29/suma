@@ -21,7 +21,6 @@ const ProcesosProvider = ({ children }) => {
     })
 
     const [errors, setErrors] = useState({
-        codigo: '',
         proceso: ''
     });
     

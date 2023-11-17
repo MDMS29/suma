@@ -82,7 +82,7 @@ const AuthProvider = ({ children }) => {
     CONSULTAR: 'consultar',
     CREAR_EDITAR: 'crear/editar',
     BORRAR: 'borrar',
-    RESTAURAR: 'restaurar'
+    RESTAURAR: 'restaurar',
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

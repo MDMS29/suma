@@ -132,11 +132,15 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // Realiza las validaciones aquí antes de avanzar al siguiente paso
     const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const errors = {};
+    const regex = /^[a-zA-Z0-9\s]*$/;
+
 
     if (step === 1) {
       if (UsuariosAgg.nombre.length < 10 || UsuariosAgg.nombre.length > 30) {
         errors.nombre =
           "El nombre completo debe tener entre 10 y 30 caracteres";
+      } else if (!regex.test(UsuariosAgg.nombre)) {
+        errors.nombre = "No se permiten caracteres especiales";
       }
 
       if (UsuariosAgg.nombre.trim() === '') {
@@ -153,7 +157,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
       if (UsuariosAgg.id_empresa == 0) {
         errors.empresa = "Seleccione una opcion";
-
       }
 
       if (

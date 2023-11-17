@@ -143,6 +143,8 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
                 {Lupa_Icono}
               </PButton>
             }
+
+            
           </>
         )}
       </div>

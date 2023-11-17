@@ -7,7 +7,7 @@ import useAuth from '../../../../hooks/useAuth';
 
 const ModalAgregarProcesos = ({ visible, onClose }) => {
     const { procesosAgg, setProcesosAgg, errors, setErrors, guardar_proceso, editar_proceso } = useProcesos()
-    const { authUsuario } = useAuth()
+    const { authUsuario, setAlerta } = useAuth()
 
     const btn_guardar = async () => {
         const formData = {
@@ -19,22 +19,20 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
 
         const regex = /^[a-zA-Z0-9\s]*$/;
         const errors = {};
-        const codigoRegex = /^[0-9]*$/;
 
         if (!procesosAgg.codigo) {
             errors.codigo = "El código es obligatorio";
             setErrors(errors);
             return
         }
-        if (!codigoRegex.test(procesosAgg.codigo)) {
-            errors.codigo = "El código debe contener solo dígitos";
-            setErrors(errors);
-            return
-        }
-        if (procesosAgg.codigo.length > 3) {
-            errors.codigo = "El código solo puede tener 3 dígitos";
-            setErrors(errors);
-            return
+        if (!regex.test(procesosAgg.codigo)) {
+            setAlerta({
+                error: true,
+                show: true,
+                message: "No se permiten caracteres especiales",
+              });
+              setTimeout(() => setAlerta({}), 1500);
+              return;
         }
         if (procesosAgg.proceso.trim() === '') {
             errors.proceso = "Este campo es obligatorio"
@@ -109,17 +107,13 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
                         </label>
                         <InputText
                             value={procesosAgg.codigo}
-                            type="number"
+                            type="text"
+                            maxLength={3}
                             name="codigo"
                             className={`border-1 h-10 rounded-md px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
                                 }`}
                             onChange={(e) => btn_cambio_proceso(e)}
                         />
-                        {errors.codigo && (
-                            <div className="text-red-600 text-xs">
-                                {errors.codigo}
-                            </div>
-                        )}
                     </div>
                     <div className="flex flex-col">
                         <label className="text-gray-600 pb-2 font-semibold">

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef,  createContext, useState, useMemo } from "react";
+import { useEffect, useRef, createContext, useState, useMemo } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
@@ -15,6 +15,8 @@ const RequisicionesProvider = ({ children }) => {
   const [dataRequisiciones, setDataRequisiciones] = useState([]);
   const [procesos, setProcesos] = useState([]);
   const [RequiState, setRequiState] = useState({});
+  const [permisosReq, setPermisosReq] = useState([])
+
 
   const [RequiAgg, setRequiAgg] = useState({
     id_requisicion: 0,
@@ -474,48 +476,48 @@ const RequisicionesProvider = ({ children }) => {
     }
   };
 
-  
-  
-const filtrar_requisiciones = async(e) => {
-  e.preventDefault();
 
-  try {
-    const token = localStorage.getItem('token')
 
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+  const filtrar_requisiciones = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem('token')
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
       }
-    }
 
-    const estado = location.pathname.includes("inactivas")
-    ? 2
-    : location.pathname.includes("verificadas")
-      ? 6
-      : 3;
+      const estado = location.pathname.includes("inactivas")
+        ? 2
+        : location.pathname.includes("verificadas")
+          ? 6
+          : 3;
 
-    const { data } = await conexion_cliente(`/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}&noRequi=${e.target.value}`, config)
-    if(data.error === false){
+      const { data } = await conexion_cliente(`/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}&noRequi=${e.target.value}`, config)
+      if (data.error === false) {
+        setAlerta({
+          error: true,
+          show: true,
+          message: data.message
+        })
+        setTimeout(() => setAlerta({}), 1500)
+        return
+      }
+      setRequisicionesFiltradas(data)
+      return
+    } catch (error) {
+      console.log(error)
       setAlerta({
         error: true,
         show: true,
-        message: data.message
-      })
-      setTimeout(()=> setAlerta({}), 1500)
-      return 
+        message: error.response?.data.message
+      });
     }
-    setRequisicionesFiltradas(data)
-    return 
-  } catch (error) {
-    console.log(error)
-    setAlerta({
-      error: true,
-      show: true,
-      message: error.response?.data.message
-    });
-  }
-};
+  };
 
   const obj = useMemo(() => ({
     dataRequisiciones,
@@ -549,7 +551,9 @@ const filtrar_requisiciones = async(e) => {
     verPDF,
     setVerPDF,
     filtrar_requisiciones,
-    requisicionesFiltradas
+    requisicionesFiltradas,
+    permisosReq, 
+    setPermisosReq
   }));
   return (
     <RequisicionesContext.Provider value={obj}>
