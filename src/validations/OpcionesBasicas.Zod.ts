@@ -98,7 +98,7 @@ export const CentroEmpresaSchema = z.object({
     consecutivo: z.number({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'El numero consecutivo es requerido'
-    }).positive().int(),
+    }),
     centro_costo: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'El nombre del proceso es requerido'

@@ -44,7 +44,9 @@ export default class CentroCostoEmpresa {
     public async Insertar_Centros_Costo_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         // const { id_familia_producto } = req.params
-        const { id_empresa, id_proceso, codigo, consecutivo, centro_costo, correo_responsable } = req.body
+        console.log(req.body)
+
+        const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
@@ -57,9 +59,6 @@ export default class CentroCostoEmpresa {
         }
         if (!codigo) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el centro' }) //!ERROR
-        }
-        if (!consecutivo || consecutivo <= 0) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar un consecutivo para el centro' }) //!ERROR
         }
         if (!centro_costo) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el centro' }) //!ERROR

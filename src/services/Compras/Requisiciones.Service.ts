@@ -288,7 +288,7 @@ export class RequisicionesService {
             doc.text('Item', 9, LineasDivCuerpo + 7)// (texto, x, y)
             doc.line(22, LineasDivCuerpo, 22, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
-            doc.text('Cod. Producto', 23.5, LineasDivCuerpo + 7)
+            doc.text('Referencia', 27, LineasDivCuerpo + 7)
             doc.line(54, LineasDivCuerpo, 54, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
             doc.text('Nombre', 70, LineasDivCuerpo + 7)
@@ -311,7 +311,7 @@ export class RequisicionesService {
             doc.line(233, LineasDivCuerpo + 6, 233, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
             doc.text('No', 239, LineasDivCuerpo + 10.5)
 
-            doc.text('No. O.C', 263, LineasDivCuerpo + 7)
+            doc.text('No. Orden', 261, LineasDivCuerpo + 7)
             doc.line(293, LineasDivCuerpo, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
             doc.line(5, LineasDivCuerpo + 11.5, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2) LINEA DIVISIORA
@@ -503,7 +503,7 @@ export class RequisicionesService {
                         doc.text('Item', 9, LineasDivCuerpo + 7)// (texto, x, y)
                         doc.line(22, LineasDivCuerpo, 22, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
-                        doc.text('Cod. Producto', 23.5, LineasDivCuerpo + 7)
+                        doc.text('Referencia', 27, LineasDivCuerpo + 7)
                         doc.line(54, LineasDivCuerpo, 54, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
                         doc.text('Nombre', 70, LineasDivCuerpo + 7)
@@ -526,7 +526,7 @@ export class RequisicionesService {
                         doc.line(233, LineasDivCuerpo + 6, 233, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
                         doc.text('No', 239, LineasDivCuerpo + 10.5)
 
-                        doc.text('No. O.C', 263, LineasDivCuerpo + 7)
+                        doc.text('No. Orden', 261, LineasDivCuerpo + 7)
                         doc.line(293, LineasDivCuerpo, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
                         // doc.line(5, LineasDivCuerpo + 11.5, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2) LINEA DIVISIORA
