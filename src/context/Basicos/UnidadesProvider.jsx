@@ -35,6 +35,10 @@ const UnidadesProvider = ({ children }) => {
           `/opciones-basicas/unidades-medida?estado=1&empresa=${authUsuario.id_empresa}`,
           config
         );
+        if(data.error == false){
+          dataUnidades([]);
+          return
+        }
         setDataUnidades(data);
       } catch (error) {
         setDataUnidades([]);

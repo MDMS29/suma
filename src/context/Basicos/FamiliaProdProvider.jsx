@@ -36,16 +36,20 @@ const FamiliaProdProvider = ({ children }) => {
           `/opciones-basicas/familias-productos?estado=${estado}&empresa=${authUsuario.id_empresa}`,
           config
         );
+        if (data.error == false) {
+          setDataFliaPro([]);
+          return;
+        }
         setDataFliaPro(data);
       } catch (error) {
         setDataFliaPro([]);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (location.pathname.includes("familias-productos")) {
-      obtener_familia_prod()
+      obtener_familia_prod();
     }
   }, [location.pathname]);
 
@@ -71,7 +75,7 @@ const FamiliaProdProvider = ({ children }) => {
 
       const { id_familia, referencia, descripcion } = data;
 
-      console.log(data)
+      console.log(data);
 
       setFliaProAgg({
         id_familia,
@@ -79,7 +83,6 @@ const FamiliaProdProvider = ({ children }) => {
         referencia,
         descripcion,
       });
-
     } catch (error) {
       console.error(error);
       throw error;
@@ -104,7 +107,7 @@ const FamiliaProdProvider = ({ children }) => {
       );
 
       if (!data?.error) {
-        setDataFliaPro((dataFliaPro)=>[data, ...dataFliaPro]);
+        setDataFliaPro((dataFliaPro) => [data, ...dataFliaPro]);
         setAlerta({
           error: false,
           show: true,
@@ -116,17 +119,16 @@ const FamiliaProdProvider = ({ children }) => {
           descripcion: "",
         });
         setTimeout(() => setAlerta({}), 1500);
-        return true
+        return true;
       }
 
       setAlerta({
         error: true,
         show: true,
-        message: data.message
-      })
-      setTimeout(() => setAlerta({}), 1500)
+        message: data.message,
+      });
+      setTimeout(() => setAlerta({}), 1500);
       return false;
-
     } catch (error) {
       console.error("Error al guardar la información:", error);
 
@@ -158,9 +160,7 @@ const FamiliaProdProvider = ({ children }) => {
         config
       );
       const flia_pro_actualizados = dataFliaPro.map((fliapro) =>
-        fliapro.id_familia === data.id_familia
-          ? data
-          : fliapro
+        fliapro.id_familia === data.id_familia ? data : fliapro
       );
 
       if (!data?.error) {
@@ -178,16 +178,15 @@ const FamiliaProdProvider = ({ children }) => {
           referencia: "",
           descripcion: "",
         });
-        return true
+        return true;
       }
       setAlerta({
         error: true,
         show: true,
-        message: data.message
-      })
-      setTimeout(() => setAlerta({}), 1500)
+        message: data.message,
+      });
+      setTimeout(() => setAlerta({}), 1500);
       return false;
-
     } catch (error) {
       console.error("Error al guardar la información:", error);
 
@@ -216,7 +215,7 @@ const FamiliaProdProvider = ({ children }) => {
     setErrors,
     buscar_flia_pro,
     guardar_flia_prod,
-    editar_flia_pro
+    editar_flia_pro,
   }));
 
   return (

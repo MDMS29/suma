@@ -48,6 +48,10 @@ const CentrosProvider = ({ children }) => {
               `/opciones-basicas/centro-costo-empresa?estado=${estado}&empresa=${authUsuario.id_empresa}`,
               config
             );
+            if (data.error == false){
+              setDataCentros([]);
+              return
+            }
             setDataCentros(data);
           } catch (error) {
             setDataCentros([]);

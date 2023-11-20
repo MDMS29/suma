@@ -36,6 +36,10 @@ const ProcesosProvider = ({ children }) => {
         if (authUsuario.id_empresa) {
             try {
                 const { data } = await conexion_cliente(`/opciones-basicas/procesos-empresa?empresa=${authUsuario.id_empresa} `, config)
+                if (data.error == false){
+                    setDataProcesos([]);
+                    return
+                }
                 setDataProcesos(data)
             } catch (error) {
                 setDataProcesos([])
