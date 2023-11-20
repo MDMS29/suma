@@ -24,6 +24,8 @@ const AuthProvider = ({ children }) => {
     message: ''
   })
 
+  console.log(authModulos);
+
   const [verEliminarRestaurar, setVerEliminarRestaurar] = useState(false)
 
   useEffect(() => {
@@ -83,6 +85,7 @@ const AuthProvider = ({ children }) => {
     CREAR_EDITAR: 'crear/editar',
     BORRAR: 'borrar',
     RESTAURAR: 'restaurar',
+    REVISAR: 'revisar'
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

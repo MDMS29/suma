@@ -6,7 +6,7 @@ const EmpresasContext = createContext();
 const EmpresasProvider = ({ children }) => {
     const { authUsuario } = useAuth()
     const [dataEmpresas, setDataEmpresas] = useState([])
-    
+
     const obtener_empresas = async () => {
         const token = localStorage.getItem('token')
 
@@ -21,6 +21,10 @@ const EmpresasProvider = ({ children }) => {
         if (authUsuario.id_empresa) {
             try {
                 const { data } = await conexion_cliente(`/empresas?estado=${estado}`, config)
+                if (data.error == false) {
+                    setDataEmpresas([])
+                    return
+                }
                 setDataEmpresas(data)
             } catch (error) {
                 setDataEmpresas([])
@@ -30,7 +34,7 @@ const EmpresasProvider = ({ children }) => {
 
     const obj = useMemo(() => ({
         obtener_empresas,
-        dataEmpresas, 
+        dataEmpresas,
         setDataEmpresas
     }));
 

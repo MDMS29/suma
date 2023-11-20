@@ -70,9 +70,13 @@ const RequisicionesProvider = ({ children }) => {
               `/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}`,
               config
             );
+            console.log(data);
 
+            if (data.error == false) {
+              setDataRequisiciones([]);
+              return
+            }
             setDataRequisiciones(data);
-            // console.log(data);
           }
         } catch (error) {
           setDataRequisiciones([]);
@@ -552,7 +556,7 @@ const RequisicionesProvider = ({ children }) => {
     setVerPDF,
     filtrar_requisiciones,
     requisicionesFiltradas,
-    permisosReq, 
+    permisosReq,
     setPermisosReq
   }));
   return (

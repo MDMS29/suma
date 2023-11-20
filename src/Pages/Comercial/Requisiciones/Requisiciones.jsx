@@ -124,51 +124,48 @@ const Requisiciones = () => {
         </div>
 
         <div className="w-full py-3 flex flex-wrap gap-3">
-          {dataRequisiciones.length == 0 ? (
-            <div className="flex justify-center items-center w-full">
-              <Loader />
-            </div>
+          {dataRequisiciones.length == 0 ? (<div className="bg-white border w-full my-3 p-3">
+            <p className="text-center">No hay requisiciones pendientes</p>
+          </div>
           ) : dataRequisiciones.error === false ? (
-            <div className="bg-white border w-full my-3 p-3">
-              <p className="text-center">No hay requisiciones pendientes</p>
-            </div>
-          ) : (
-            <>
+              <Loader/>
+          ): (
+              <>
               {requisicionesFiltradas.length > 0 ? (
-                <>
-                  {requisicionesFiltradas.map((requisiciones) => (
-                    <CardRequisicion
-                      key={requisiciones.id_requisicion}
-                      requisiciones={requisiciones}
-                    />
-                  ))}
-                </>
-              ) : (
-                <>
-                  {dataRequisiciones.map((requisiciones) => (
-                    <CardRequisicion
-                      key={requisiciones.id_requisicion}
-                      requisiciones={requisiciones}
-                      setModalVisible={setModalVisible}
-                    />
-                  ))}
-                </>
+          <>
+            {requisicionesFiltradas.map((requisiciones) => (
+              <CardRequisicion
+                key={requisiciones.id_requisicion}
+                requisiciones={requisiciones}
+              />
+            ))}
+          </>
+          ) : (
+          <>
+            {dataRequisiciones.map((requisiciones) => (
+              <CardRequisicion
+                key={requisiciones.id_requisicion}
+                requisiciones={requisiciones}
+                setModalVisible={setModalVisible}
+              />
+            ))}
+          </>
               )}
-            </>
+        </>
           )}
-        </div>
       </div>
+    </div>
     </>
   );
-  return <>{
-    permisosReq.length === 0 ?
-      (<Loader />) :
-      (permisosReq.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-        ?
-        (main())
-        :
-        (<Forbidden />))
-  }</>;
+return <>{
+  permisosReq.length === 0 ?
+    (<Loader />) :
+    (permisosReq.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
+      ?
+      (main())
+      :
+      (<Forbidden />))
+}</>;
 };
 
 export default Requisiciones;

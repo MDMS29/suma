@@ -16,11 +16,12 @@ import useAuth from "../../hooks/useAuth.jsx";
 
 
 const CardRequisicion = ({ requisiciones, setModalVisible }) => {
-  const { authUsuario } = useAuth();
+  const { authUsuario, Permisos_DB } = useAuth();
   const navigate = useNavigate();
-
-  const { buscar_requisicion, setRequiState, generar_pdf } = useRequisiciones();
-
+  
+  
+  const { buscar_requisicion, setRequiState, generar_pdf, permisosReq } = useRequisiciones();
+  
   const {
     fecha_requisicion,
     nombre_estado,
@@ -33,7 +34,7 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
     id_estado,
     usuario_creacion
   } = requisiciones;
-
+  
   const { setVerEliminarRestaurar } = useAuth();
 
   const estilos = {
@@ -45,8 +46,8 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
       "bg-blue-200 rounded px-3 py-1 text-sm font-semibold text-blue-950 mr-2 mb-2",
     VERIFICADA:
       "bg-green-200 rounded px-3 py-1 text-sm font-semibold text-green-950 mr-2 mb-2",
-  };
-
+    }; 
+    
   const editar_requisicion = async (e, id_requisicion) => {
     e.preventDefault();
     navigate("/compras/requisiciones/agregar");
@@ -133,18 +134,23 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
               </>
             }
 
-            {authUsuario.perfiles?.some((perfil) => perfil.id_perfil == IDS_PERMISOS.PERFIL_GERENTE) &&
-              <PButton
-                tooltip="Verificar"
-                tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2  mx-1"
-                onClick={e => revisar_req(e, requisiciones.id_requisicion)}
-              >
-                {Lupa_Icono}
-              </PButton>
-            }
+            {
+              authUsuario.perfiles?.some((perfil) => perfil.id_perfil == IDS_PERMISOS.PERFIL_GERENTE) &&
+              permisosReq.filter(
+                (permiso) =>
+                  permiso.permiso.toLowerCase() === Permisos_DB.REVISAR
+              ).length > 0 && (
 
-            
+                <PButton
+                  tooltip="Verificar"
+                  tooltipOptions={{ position: "top" }}
+                  className="p-button-rounded p-mr-2  mx-1"
+                  onClick={e => revisar_req(e, requisiciones.id_requisicion)}
+                >
+                  {Lupa_Icono}
+                </PButton>
+              )
+            }
           </>
         )}
       </div>

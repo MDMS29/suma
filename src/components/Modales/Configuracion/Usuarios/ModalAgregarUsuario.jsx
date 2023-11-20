@@ -43,7 +43,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // console.log(perfilesEdit);
   useEffect(() => {
     if (UsuariosAgg.id_usuario) {
       setPerfilesSeleccionados(perfilesEdit)
@@ -51,7 +50,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permisosEdit, perfilesEdit])
-  console.log(perfilesSeleccionados);
 
   const cerrar_modal = () => {
     onClose();
@@ -200,7 +198,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
-  // console.log(perfilesSeleccionados);
 
   const chk_perfil = (rowData) => {
     const perfil_id = rowData;
@@ -556,6 +553,34 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   body={(rowData) =>
                     rowData.permisos.map((r) => {
                       if (r.nombre === "Restaurar") {
+                        return (
+                          <div key={r.id_rol} className="flex items-center justify-center">
+                            <label
+                              className={`p-checkbox w-10 h-5 cursor-pointer relative rounded-full ${chk_permiso_seleccionado(r) ? "bg-primaryYellow" : "bg-gray-300"
+                                }`}>
+                              <input
+                                type="checkbox"
+                                checked={chk_permiso_seleccionado(r)}
+                                className="sr-only peer"
+                                onChange={() =>
+                                  chk_permiso(r.id_rol_modulo, r.id_rol_modulo)
+                                }
+                              />
+                              <span
+                                className={`w-2/5 h-4/5 bg-white absolute rounded-full left-0.5 top-0.5 peer-checked:left-5 duration-500`}></span>
+                            </label>
+                          </div>
+                        );
+                      }
+                    })
+                  }
+                  style={{ width: "5em" }}
+                />
+                <Column
+                  header="Revisar"
+                  body={(rowData) =>
+                    rowData.permisos.map((r) => {
+                      if (r.nombre === "Revisar") {
                         return (
                           <div key={r.id_rol} className="flex items-center justify-center">
                             <label

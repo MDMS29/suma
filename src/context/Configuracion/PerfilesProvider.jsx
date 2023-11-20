@@ -49,6 +49,10 @@ const PerfilesProvider = ({ children }) => {
             `/perfiles?estado=${estado}`,
             config
           );
+          if (data.error == false) {
+            setDataPerfiles([]);
+            return
+          }
           setDataPerfiles(data);
         } catch (error) {
           setDataPerfiles([]);
@@ -170,7 +174,7 @@ const PerfilesProvider = ({ children }) => {
         config
       );
 
-      setDataPerfiles((dataPerfiles)=>[response.data, ...dataPerfiles]);
+      setDataPerfiles((dataPerfiles) => [response.data, ...dataPerfiles]);
       setAlerta({
         error: false,
         show: true,
