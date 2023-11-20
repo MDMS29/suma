@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = require("../../utils");
+const constants_1 = require("../../helpers/constants");
 const Empresa_service_1 = __importDefault(require("../../services/Configuracion/Empresa.service"));
 class _EmpresaController {
     Obtener_Empresas(req, res) {
@@ -168,11 +168,11 @@ class _EmpresaController {
                 if (respuesta.error) {
                     return res.status(400).json({ error: true, message: respuesta.message }); //!ERROR
                 }
-                return res.status(200).json({ error: false, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado la empresa' : 'Se ha desactivado la empresa' }); //*SUCCESSFUL
+                return res.status(200).json({ error: false, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado la empresa' : 'Se ha desactivado la empresa' }); //*SUCCESSFUL
             }
             catch (error) {
                 console.log(error);
-                return res.status(500).json({ error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar la empresa' : 'Error al desactivar la empresa' }); //!ERROR
+                return res.status(500).json({ error: true, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar la empresa' : 'Error al desactivar la empresa' }); //!ERROR
             }
         });
     }

@@ -15,11 +15,12 @@ const upload = (0, multer_1.default)({ storage });
 exports._ProductosRouter = (0, express_1.Router)();
 //INICIALIZAR CONTROLADOR DE EMPRESA
 const EmpresaController = new ProductosEmpresaController_1.default();
-exports._ProductosRouter.route('/productos-empresa')
+exports._ProductosRouter.route('/')
     .get(Autorizacion_1._Autorizacion, EmpresaController.Obtener_Productos_Empresa) //OBTENER TODOS LAS EMPRESAS
     .post(Autorizacion_1._Autorizacion, upload.single('image'), EmpresaController.Insertar_Producto_Empresa); //CREAR EMPRESA
-exports._ProductosRouter.route('/productos-empresa/:id_producto')
+exports._ProductosRouter.route('/:id_producto')
     .get(Autorizacion_1._Autorizacion, EmpresaController.Buscar_Producto_Empresa) //BUSCAR UNA EMPRESA SEGUN SU ID
     .patch(Autorizacion_1._Autorizacion, upload.single('image'), EmpresaController.Editar_Producto_Empresa) //EDITAR SEGUN SU ID
     .delete(Autorizacion_1._Autorizacion, EmpresaController.Cambiar_Estado_Producto); //CAMBIAR ESTADO DE LA EMPRESA POR ID
-exports._ProductosRouter.get('/productos-empresa/filtro', Autorizacion_1._Autorizacion, EmpresaController.Buscar_Producto_Empresa);
+exports._ProductosRouter.get('/filtro', Autorizacion_1._Autorizacion, EmpresaController.Buscar_Producto_Empresa);
+exports.default = exports._ProductosRouter;

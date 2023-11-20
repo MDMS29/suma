@@ -79,14 +79,14 @@ class ProductosEmpresaService {
             }
         });
     }
-    Buscar_Producto_Filtro(tipo, valor) {
+    Buscar_Producto_Filtro(tipo, valor, empresa_usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             const TIPOS_FILTROS = {
                 tipo_producto: 'tipo_producto',
             };
             try {
                 if (TIPOS_FILTROS.tipo_producto === tipo) {
-                    const producto_empresa = yield this._Query_Productos_Empresa.Buscar_Producto_Filtro(tipo, valor);
+                    const producto_empresa = yield this._Query_Productos_Empresa.Buscar_Producto_Filtro(tipo, valor, empresa_usuario);
                     if (!producto_empresa) {
                         return { error: true, message: 'No se han encontrado los productos' }; //!ERROR
                     }

@@ -5,9 +5,41 @@ import { RequisicionesSchema } from "../../validations/Requisiciones.Zod";
 
 export default class RequisicionesController {
 
+    public async Obtener_Requisiciones_Filtro(req: Request, res: Response) {
+        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { estado, empresa } = req.query as { estado: string, empresa: string, requisicion: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        const { filtros } = req.body
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+        }
+        if (!empresa) {
+            return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
+        }
+        if (!estado) {
+            return res.status(400).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
+        }
+        if (Object.keys(filtros).length === 0) {
+            return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }) //!ERROR
+        }
+
+        try {
+            const requisiciones_service = new RequisicionesService()
+                const respuesta = await requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, filtros)
+                if (respuesta?.error) {
+                    return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
+                }
+
+                return res.status(200).json(respuesta)
+            
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: 'Error al obtener las requisiciones' }) //!ERROR
+        }
+    }
+
     public async Obtener_Requisiciones(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { estado, empresa, noRequi } = req.query as { estado: string, empresa: string, noRequi : string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        const { estado, empresa, requisicion } = req.query as { estado: string, empresa: string, requisicion: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
         }
@@ -20,20 +52,20 @@ export default class RequisicionesController {
 
         try {
             const requisiciones_service = new RequisicionesService()
-            if(noRequi !== undefined){
-                const respuesta = await requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, 'noRequi', noRequi)
+            if (requisicion !== undefined) {
+                const respuesta = await requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, 'requisicion', requisicion)
                 if (respuesta?.error) {
                     return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
                 }
-                
+
                 return res.status(200).json(respuesta)
-            }else{
+            } else {
 
                 const respuesta = await requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, '', '')
                 if (respuesta?.error) {
                     return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
                 }
-                
+
                 return res.status(200).json(respuesta)
             }
         } catch (error) {
@@ -178,7 +210,7 @@ export default class RequisicionesController {
             return res.send(pdf.data)
         } catch (error) {
             console.log(error)
-            return 
+            return
             // res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
         }
     }

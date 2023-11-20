@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const TipoProducto_Service_1 = require("../../services/Opciones_Basicas/TipoProducto.Service");
-const OpcionesBasicas_Zod_1 = require("../../validations/Zod/OpcionesBasicas.Zod");
+const OpcionesBasicas_Zod_1 = require("../../validations/OpcionesBasicas.Zod");
 class TipoProductoController {
     Obtener_Tipos_Producto(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -58,7 +58,7 @@ class TipoProductoController {
                 const tipos_producto_service = new TipoProducto_Service_1.TiposProductoService();
                 const respuesta = yield tipos_producto_service.Insertar_Tipo_Producto(req.body, usuario === null || usuario === void 0 ? void 0 : usuario.usuario);
                 if (respuesta === null || respuesta === void 0 ? void 0 : respuesta.error) {
-                    return res.json(respuesta); //!ERROR
+                    return res.status(400).json(respuesta); //!ERROR
                 }
                 return res.status(200).json(respuesta);
             }

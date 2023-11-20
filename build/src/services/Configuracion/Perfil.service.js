@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PerfilService = void 0;
 const QuerysPerfil_1 = __importDefault(require("../../querys/Configuracion/QuerysPerfil"));
-const utils_1 = require("../../utils");
+const constants_1 = require("../../helpers/constants");
 class PerfilService {
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
@@ -190,7 +190,7 @@ class PerfilService {
             }
             catch (error) {
                 console.log(error);
-                return { error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el perfil' : 'Error al desactivar del perfil' }; //!ERROR
+                return { error: true, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el perfil' : 'Error al desactivar del perfil' }; //!ERROR
             }
         });
     }

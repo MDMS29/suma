@@ -18,3 +18,4 @@ exports._ModulosRouter.route('/:id_modulo')
     .get(Autorizacion_1._Autorizacion, ModuloController.Buscar_Modulo)
     .patch(Autorizacion_1._Autorizacion, ModuloController.Editar_Modulo) //EDITAR PERFIL SEGUN SU ID
     .delete(Autorizacion_1._Autorizacion, ModuloController.Cambiar_Estado_Modulo); //CAMBIAR ESTADO DEL PERFIL POR ID
+exports.default = exports._ModulosRouter;

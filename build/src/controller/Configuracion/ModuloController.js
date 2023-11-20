@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Modulo_service_1 = __importDefault(require("../../services/Configuracion/Modulo.service"));
-const utils_1 = require("../../utils");
-const Configuracion_Zod_1 = require("../../validations/Zod/Configuracion.Zod");
+const constants_1 = require("../../helpers/constants");
+const Configuracion_Zod_1 = require("../../validations/Configuracion.Zod");
 class _ModuloController {
     Obtener_Modulos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -175,11 +175,11 @@ class _ModuloController {
                 if (respuesta.error) {
                     return res.status(400).json({ error: true, message: respuesta.message }); //!ERROR
                 }
-                return res.status(200).json({ error: false, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el modulo' : 'Se ha desactivado el modulo' }); //*SUCCESSFUL
+                return res.status(200).json({ error: false, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el modulo' : 'Se ha desactivado el modulo' }); //*SUCCESSFUL
             }
             catch (error) {
                 console.log(error);
-                return res.status(500).json({ error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el modulo' : 'Error al desactivar del modulo' }); //!ERROR
+                return res.status(500).json({ error: true, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el modulo' : 'Error al desactivar del modulo' }); //!ERROR
             }
         });
     }

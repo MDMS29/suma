@@ -64,3 +64,4 @@ exports._OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
     .get(Autorizacion_1._Autorizacion, _Centro_Empresa_Controller.Buscar_Centro_Costo) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
     .patch(Autorizacion_1._Autorizacion, _Centro_Empresa_Controller.Editar_Centro_Costo) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
     .delete(Autorizacion_1._Autorizacion, _Centro_Empresa_Controller.Cambiar_Estado_Centro); //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
+exports.default = exports._OpcionesBasicasRouter;

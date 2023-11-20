@@ -18,3 +18,4 @@ exports._EmpresasRouter.route('/:id_empresa')
     .get(Autorizacion_1._Autorizacion, EmpresaController.Buscar_Empresa) //BUSCAR UNA EMPRESA SEGUN SU ID
     .patch(Autorizacion_1._Autorizacion, EmpresaController.Editar_Empresa) //EDITAR SEGUN SU ID
     .delete(Autorizacion_1._Autorizacion, EmpresaController.Cambiar_Estado_Empresa); //CAMBIAR ESTADO DE LA EMPRESA POR ID
+exports.default = exports._EmpresasRouter;

@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const QuerysUsuario_1 = __importDefault(require("../../querys/Configuracion/QuerysUsuario"));
-const utils_1 = require("../../utils");
+const utils_1 = require("../../helpers/utils");
 let bcrypt = require('bcrypt');
 class UsuarioService {
     constructor() {

@@ -18,3 +18,4 @@ exports._MenusRouter.route('/:id_menu')
     .get(Autorizacion_1._Autorizacion, MenuController.Buscar_Menu)
     .patch(Autorizacion_1._Autorizacion, MenuController.Editar_Menu) //EDITAR SEGUN SU ID
     .delete(Autorizacion_1._Autorizacion, MenuController.Cambiar_Estado_Menu); //CAMBIAR ESTADO DEL PERFIL POR ID
+exports.default = exports._MenusRouter;

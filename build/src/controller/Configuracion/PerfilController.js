@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports._PerfilController = void 0;
 const Perfil_service_1 = require("../../services/Configuracion/Perfil.service");
-const Configuracion_Zod_1 = require("../../validations/Zod/Configuracion.Zod");
-const utils_1 = require("../../utils");
+const Configuracion_Zod_1 = require("../../validations/Configuracion.Zod");
+const constants_1 = require("../../helpers/constants");
 class _PerfilController {
     Obtener_Perfiles(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -155,11 +155,11 @@ class _PerfilController {
                 if (respuesta.error) {
                     return res.json({ error: true, message: respuesta.message }); //!ERROR
                 }
-                return res.json({ error: false, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el perfil' : 'Se ha desactivado el perfil' }); //*SUCCESSFUL
+                return res.json({ error: false, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el perfil' : 'Se ha desactivado el perfil' }); //*SUCCESSFUL
             }
             catch (error) {
                 console.log(error);
-                return res.json({ error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el perfil' : 'Error al desactivar del perfil' }); //!ERROR
+                return res.json({ error: true, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el perfil' : 'Error al desactivar del perfil' }); //!ERROR
             }
         });
     }

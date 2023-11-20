@@ -108,7 +108,7 @@ class QueryUsuario {
                     return result;
                 }
                 if (usuario !== '') {
-                    let result = yield client.query('SELECT tu.usuario FROM seguridad.tbl_usuario tu WHERE tu.usuario = $1', [usuario]);
+                    let result = yield client.query('SELECT tu.usuario, tu.nombre_completo FROM seguridad.tbl_usuario tu WHERE tu.usuario = $1', [usuario]);
                     return result.rows;
                 }
                 if (correo !== '') {
@@ -205,7 +205,7 @@ class QueryUsuario {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect(); // Obtiene una conexión de la piscina
             try {
-                const result = yield client.query(DaoUsuario_1._EditarUsuario, [id_usuario, id_empresa, UsuarioModificador]);
+                const result = yield client.query(DaoUsuario_1._Editar_Empresa_Usuario, [id_usuario, id_empresa, UsuarioModificador]);
                 return result;
             }
             catch (error) {

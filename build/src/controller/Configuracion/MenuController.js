@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = require("../../utils");
+const constants_1 = require("../../helpers/constants");
 const Menu_service_1 = require("../../services/Configuracion/Menu.service");
-const Configuracion_Zod_1 = require("../../validations/Zod/Configuracion.Zod");
+const Configuracion_Zod_1 = require("../../validations/Configuracion.Zod");
 class _MenuController {
     Obtener_Menus(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -159,11 +159,11 @@ class _MenuController {
                 if (respuesta.error) {
                     return res.status(400).json({ error: true, message: respuesta.message }); //!ERROR
                 }
-                return res.status(200).json({ error: false, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }); //*SUCCESSFUL
+                return res.status(200).json({ error: false, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el menu' : 'Se ha desactivado el menu' }); //*SUCCESSFUL
             }
             catch (error) {
                 console.log(error);
-                return res.status(500).json({ error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el menu' : 'Error al desactivar el menu' }); //!ERROR
+                return res.status(500).json({ error: true, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el menu' : 'Error al desactivar el menu' }); //!ERROR
             }
         });
     }

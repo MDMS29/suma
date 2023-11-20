@@ -104,11 +104,11 @@ class QueryProductosEmpresa {
             }
         });
     }
-    Buscar_Producto_Filtro(tipo, valor) {
+    Buscar_Producto_Filtro(tipo, valor, empresa_usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect();
             try {
-                let result = yield db_1._DB.func(DaoProductosEmpresa_1._FA_obtener_productos_filtro, [tipo, valor]);
+                let result = yield db_1._DB.func(DaoProductosEmpresa_1._FA_obtener_productos_filtro, [tipo, valor, empresa_usuario]);
                 return result;
             }
             catch (error) {

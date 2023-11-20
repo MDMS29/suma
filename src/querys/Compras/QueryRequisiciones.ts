@@ -12,7 +12,7 @@ import {
     _insertar_requisicion_det, _insertar_requisicion_enc
 } from "../../dao/Compras/DaoRequisiciones";
 
-import { Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras';
+import { Filtro_Requisiciones, Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras';
 
 export default class QueryRequisiciones {
     public async Obtener_Requisiciones_Enc(estado: string, empresa: number, usuario: string): Promise<any> {
@@ -29,6 +29,19 @@ export default class QueryRequisiciones {
         }
     }
 
+    public async Obtener_Requisiciones_Filtro2(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>): Promise<any> {
+        const client = await pool.connect()
+        const { centro_costo, requisicion, proceso, tipo_producto } = filtros
+        try {
+            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto]);
+            return result
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
     public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, tipo: string, valor: string | number): Promise<any> {
         const client = await pool.connect()
         try {

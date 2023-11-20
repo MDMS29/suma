@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../index'; // Importa el servidor Express
+import app from '../config/server'; // Importa el servidor Express
 
 describe('Pruebas de la API', () => {
     let server: any; // Declara una variable para mantener una referencia al servidor

@@ -9,14 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const utils_1 = require("../../utils");
+const constants_1 = require("../../helpers/constants");
 const Requisiciones_Service_1 = require("../../services/Compras/Requisiciones.Service");
-const Requisiciones_Zod_1 = require("../../validations/Zod/Requisiciones.Zod");
+const Requisiciones_Zod_1 = require("../../validations/Requisiciones.Zod");
 class RequisicionesController {
     Obtener_Requisiciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-            const { estado, empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+            const { estado, empresa, noRequi } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
                 return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
             }
@@ -28,11 +28,20 @@ class RequisicionesController {
             }
             try {
                 const requisiciones_service = new Requisiciones_Service_1.RequisicionesService();
-                const respuesta = yield requisiciones_service.Obtener_Requisiciones(+estado, +empresa);
-                if (respuesta === null || respuesta === void 0 ? void 0 : respuesta.error) {
-                    return res.status(400).json({ error: true, message: respuesta === null || respuesta === void 0 ? void 0 : respuesta.message }); //!ERROR
+                if (noRequi !== undefined) {
+                    const respuesta = yield requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, 'noRequi', noRequi);
+                    if (respuesta === null || respuesta === void 0 ? void 0 : respuesta.error) {
+                        return res.status(400).json({ error: true, message: respuesta === null || respuesta === void 0 ? void 0 : respuesta.message }); //!ERROR
+                    }
+                    return res.status(200).json(respuesta);
                 }
-                return res.status(200).json(respuesta);
+                else {
+                    const respuesta = yield requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, '', '');
+                    if (respuesta === null || respuesta === void 0 ? void 0 : respuesta.error) {
+                        return res.status(400).json({ error: true, message: respuesta === null || respuesta === void 0 ? void 0 : respuesta.message }); //!ERROR
+                    }
+                    return res.status(200).json(respuesta);
+                }
             }
             catch (error) {
                 console.log(error);
@@ -53,9 +62,9 @@ class RequisicionesController {
             }
             try {
                 const familias_producto_service = new Requisiciones_Service_1.RequisicionesService();
-                const respuesta = yield familias_producto_service.Insertar_Requisicion(req.body, usuario === null || usuario === void 0 ? void 0 : usuario.usuario);
+                const respuesta = yield familias_producto_service.Insertar_Requisicion(req.body, usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario);
                 if (respuesta === null || respuesta === void 0 ? void 0 : respuesta.error) {
-                    return res.json(respuesta); //!ERROR
+                    return res.status(400).json(respuesta); //!ERROR
                 }
                 return res.status(200).json(respuesta);
             }
@@ -106,7 +115,7 @@ class RequisicionesController {
             }
             try {
                 const requisiciones_service = new Requisiciones_Service_1.RequisicionesService();
-                const respuesta = yield requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario === null || usuario === void 0 ? void 0 : usuario.usuario);
+                const respuesta = yield requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario);
                 if (respuesta.error) {
                     return res.status(400).json({ error: respuesta.error, message: respuesta.message });
                 }
@@ -142,11 +151,11 @@ class RequisicionesController {
                 if (familia_estado.error) {
                     return res.status(400).json({ error: true, message: familia_estado.message }); //!ERROR
                 }
-                return res.status(200).json({ error: false, message: +estado == utils_1.EstadosTablas.ESTADO_APROBADO ? 'Se ha aprobado la requisicion' : 'Se ha anulado la requisicion' });
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se ha inactivado la requisicion' });
             }
             catch (error) {
                 console.log(error);
-                return res.status(200).json({ error: false, message: +estado == utils_1.EstadosTablas.ESTADO_APROBADO ? 'Error al aprobar la requisicion' : 'Error al anular la requisicion' }); //!ERROR
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_PENDIENTE ? 'Error al restaurar la requisicion' : 'Error al inactivar la requisicion' }); //!ERROR
             }
         });
     }
@@ -168,12 +177,42 @@ class RequisicionesController {
                 }
                 // Configurar encabezados para el navegador
                 res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'inline; filename=ejemplo.pdf');
-                return res.send(pdf);
+                res.setHeader('Content-Disposition', `inline; filename=Req_${pdf.nombre}.pdf`);
+                return res.send(pdf.data);
             }
             catch (error) {
                 console.log(error);
-                return res.json({ error: true, message: 'Error al generar el documento' }); //!ERROR
+                return;
+                // res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
+            }
+        });
+    }
+    Aprobar_Desaprobar_Detalle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { usuario } = req;
+            const { id_requisicion } = req.params;
+            const { detalles } = req.body;
+            console.log(req.body);
+            if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
+                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+            }
+            if (!id_requisicion) {
+                return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }); //!ERROR
+            }
+            if (detalles.length <= 0) {
+                return res.status(400).json({ error: true, message: 'No hay detalles para calificar' }); //!ERROR
+            }
+            try {
+                const requisiciones_service = new Requisiciones_Service_1.RequisicionesService();
+                const respuesta = yield requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario);
+                if (respuesta.error) {
+                    return res.status(400).json({ error: true, message: respuesta.message }); //!ERROR
+                }
+                return res.json(respuesta);
+            }
+            catch (error) {
+                console.log(error);
+                return res.json({ error: true, message: 'Error calificar los detalles de la requisicion' }); //!ERROR
             }
         });
     }

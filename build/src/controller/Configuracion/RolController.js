@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports._RolController = void 0;
 const Rol_service_1 = require("../../services/Configuracion/Rol.service");
-const utils_1 = require("../../utils");
-const Configuracion_Zod_1 = require("../../validations/Zod/Configuracion.Zod");
+const constants_1 = require("../../helpers/constants");
+const Configuracion_Zod_1 = require("../../validations/Configuracion.Zod");
 class _RolController {
     Obtener_Roles(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -152,11 +152,11 @@ class _RolController {
                 if (respuesta.error) {
                     return res.json({ error: true, message: respuesta.message }); //!ERROR
                 }
-                return res.json({ error: false, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el rol' : 'Se ha desactivado el rol' }); //*SUCCESSFUL
+                return res.json({ error: false, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el rol' : 'Se ha desactivado el rol' }); //*SUCCESSFUL
             }
             catch (error) {
                 console.log(error);
-                return res.json({ error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el rol' : 'Error al desactivar el rol' }); //!ERROR
+                return res.json({ error: true, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el rol' : 'Error al desactivar el rol' }); //!ERROR
             }
         });
     }

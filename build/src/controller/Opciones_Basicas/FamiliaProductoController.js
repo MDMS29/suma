@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const FamiliaProducto_Service_1 = require("../../services/Opciones_Basicas/FamiliaProducto.Service");
-const utils_1 = require("../../utils");
-const OpcionesBasicas_Zod_1 = require("../../validations/Zod/OpcionesBasicas.Zod");
+const constants_1 = require("../../helpers/constants");
+const OpcionesBasicas_Zod_1 = require("../../validations/OpcionesBasicas.Zod");
 class FamiliaProductoController {
     Obtener_Familias_Producto(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -161,11 +161,11 @@ class FamiliaProductoController {
                 if (familia_estado.error) {
                     return res.status(400).json({ error: true, message: familia_estado.message }); //!ERROR
                 }
-                return res.status(200).json({ error: false, message: +estado == utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado la familia' : 'Se ha desactivado la familia' });
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado la familia' : 'Se ha desactivado la familia' });
             }
             catch (error) {
                 console.log(error);
-                return res.status(200).json({ error: false, message: +estado == utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar la familia' : 'Error al desactivar la familia' }); //!ERROR
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar la familia' : 'Error al desactivar la familia' }); //!ERROR
             }
         });
     }

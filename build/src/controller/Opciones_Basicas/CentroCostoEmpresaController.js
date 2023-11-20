@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const CentroCostoEmpresa_Service_1 = require("../../services/Opciones_Basicas/CentroCostoEmpresa.Service");
-const utils_1 = require("../../utils");
-const OpcionesBasicas_Zod_1 = require("../../validations/Zod/OpcionesBasicas.Zod");
+const constants_1 = require("../../helpers/constants");
+const OpcionesBasicas_Zod_1 = require("../../validations/OpcionesBasicas.Zod");
 class CentroCostoEmpresa {
     Obtener_Centros_Costo_Empresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53,7 +53,8 @@ class CentroCostoEmpresa {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             // const { id_familia_producto } = req.params
-            const { id_empresa, id_proceso, codigo, consecutivo, centro_costo, correo_responsable } = req.body;
+            console.log(req.body);
+            const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
                 return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
             }
@@ -65,9 +66,6 @@ class CentroCostoEmpresa {
             }
             if (!codigo) {
                 return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el centro' }); //!ERROR
-            }
-            if (!consecutivo || consecutivo <= 0) {
-                return res.status(400).json({ error: true, message: 'Debe ingresar un consecutivo para el centro' }); //!ERROR
             }
             if (!centro_costo) {
                 return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el centro' }); //!ERROR
@@ -188,11 +186,11 @@ class CentroCostoEmpresa {
                 if (centro_cambio_estado.error) {
                     return res.status(400).json({ error: true, message: centro_cambio_estado.message }); //!ERROR
                 }
-                return res.status(200).json({ error: false, message: +estado == utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el centro de costo' : 'Se ha desactivado el centro de costo' });
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el centro de costo' : 'Se ha desactivado el centro de costo' });
             }
             catch (error) {
                 console.log(error);
-                return res.status(200).json({ error: false, message: +estado == utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el centro de costo' : 'Error al desactivar el centro de costo' }); //!ERROR
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el centro de costo' : 'Error al desactivar el centro de costo' }); //!ERROR
             }
         });
     }

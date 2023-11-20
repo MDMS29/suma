@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const QuerysModulo_1 = __importDefault(require("../../querys/Configuracion/QuerysModulo"));
-const utils_1 = require("../../utils");
+const constants_1 = require("../../helpers/constants");
 class ModuloService {
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
@@ -26,7 +26,7 @@ class ModuloService {
             try {
                 const modulos = yield this._Query_Modulo.Obtener_Modulos(estado);
                 if (!modulos) {
-                    return { error: true, message: `No hay modulos ${estado == utils_1.EstadosTablas.ESTADO_ACTIVO ? 'activos' : 'inactivos'}` }; //!ERROR
+                    return { error: true, message: `No hay modulos ${estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'activos' : 'inactivos'}` }; //!ERROR
                 }
                 return modulos;
             }

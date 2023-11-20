@@ -16,3 +16,4 @@ exports._PerfilesRouter.route('/:id_perfil')
     .get(Autorizacion_1._Autorizacion, PerfilController.Buscar_Perfil)
     .patch(Autorizacion_1._Autorizacion, PerfilController.Editar_Perfil) //EDITAR PERFIL SEGUN SU ID
     .delete(Autorizacion_1._Autorizacion, PerfilController.Cambiar_Estado_Perfil); //CAMBIAR ESTADO DEL PERFIL POR ID
+exports.default = exports._PerfilesRouter;

@@ -13,11 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const index_1 = __importDefault(require("../index")); // Importa el servidor Express
+const server_1 = __importDefault(require("../config/server")); // Importa el servidor Express
 describe('Pruebas de la API', () => {
     let server; // Declara una variable para mantener una referencia al servidor
     beforeAll((done) => {
-        server = index_1.default.listen(0, done); // Inicia el servidor antes de las pruebas
+        server = server_1.default.listen(0, done); // Inicia el servidor antes de las pruebas
     });
     it('debería crear un usuario y devolver un token aleatorio', () => __awaiter(void 0, void 0, void 0, function* () {
         const userData = {
@@ -25,7 +25,7 @@ describe('Pruebas de la API', () => {
             clave: '123123',
             captcha: 'ajskywoincjkasfg21783sjkbc8',
         };
-        const response = yield (0, supertest_1.default)(index_1.default)
+        const response = yield (0, supertest_1.default)(server_1.default)
             .post('/suma/api/usuarios/autenticar_usuario')
             .send(userData);
         expect(response.status).toBe(200); // Verifica el código de estado

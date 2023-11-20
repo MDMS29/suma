@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProcesosEmpresa_Service_1 = require("../../services/Opciones_Basicas/ProcesosEmpresa.Service");
-const OpcionesBasicas_Zod_1 = require("../../validations/Zod/OpcionesBasicas.Zod");
+const OpcionesBasicas_Zod_1 = require("../../validations/OpcionesBasicas.Zod");
 class ProcesosEmpresaController {
     Obtener_Procesos_Empresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

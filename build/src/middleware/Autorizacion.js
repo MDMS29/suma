@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports._Autorizacion = void 0;
+exports._Recoleccion_IP = exports._Autorizacion = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const Usuario_service_1 = __importDefault(require("../services/Configuracion/Usuario.service"));
 const _Autorizacion = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,3 +44,20 @@ const _Autorizacion = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports._Autorizacion = _Autorizacion;
+const _Recoleccion_IP = (_, __, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield fetch('https://ipinfo.io?token=70210017b789f6');
+        const json = yield data.json();
+        console.log('------------------------------------------------');
+        console.log('IP Cliente: ' + json.ip);
+        console.log(`Ubicación: ${json.country} ${json.region}/${json.city}`);
+        console.log('Fecha:', new Date(Date.now()));
+        console.log('------------------------------------------------');
+        next();
+    }
+    catch (error) {
+        next();
+        console.log(error);
+    }
+});
+exports._Recoleccion_IP = _Recoleccion_IP;

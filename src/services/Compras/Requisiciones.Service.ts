@@ -1,11 +1,13 @@
 import QueryRequisiciones from "../../querys/Compras/QueryRequisiciones";
-import { Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras'
+import { Filtro_Requisiciones, Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras'
 
 import { jsPDF } from "jspdf"
 import fs from "fs"
 import { transporter } from "../../../config/mailer";
 import { EstadosTablas } from "../../helpers/constants";
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
+
+
 
 export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
@@ -17,16 +19,32 @@ export class RequisicionesService {
         this._Query_Usuarios = new QueryUsuario();
     }
 
+    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>) {
+        try {
+            if (!Object.keys(filtros)) {
+                return { error: true, message: "No hay existen filtros a realizar" }
+            }
+
+            const requisiciones = this._Query_Requisiciones.Obtener_Requisiciones_Filtro2(estado, empresa, usuario, filtros)
+
+            return requisiciones
+
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: "Error al filtrar las requisiciones" }
+        }
+    }
+
     public async Obtener_Requisiciones(estado: string, empresa: number, usuario: string, tipoFiltro: string, valor: string | number): Promise<any> {
         const TIPOS_CONSULTA: any = {
-            noRequi: 'noRequi'
+            requisicion: 'requisicion'
         }
         try {
             let requisiciones: any
-            
-            if (TIPOS_CONSULTA[tipoFiltro] == tipoFiltro ) {
+
+            if (TIPOS_CONSULTA[tipoFiltro] == tipoFiltro) {
                 requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, tipoFiltro, valor)
-                
+
             } else {
                 requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Enc(estado, empresa, usuario)
             }

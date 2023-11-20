@@ -15,3 +15,4 @@ exports._RolesRouter.route('/:id_rol')
     .get(Autorizacion_1._Autorizacion, RolController.Buscar_Rol) //BUSCAR EL ROL SEGUN SU ID
     .patch(Autorizacion_1._Autorizacion, RolController.Editar_Rol) //EDITAR ROL SEGUN SU ID
     .delete(Autorizacion_1._Autorizacion, RolController.Cambiar_Estado_Rol); //CAMBIAR ESTADO DEL ROL POR ID
+exports.default = exports._RolesRouter;

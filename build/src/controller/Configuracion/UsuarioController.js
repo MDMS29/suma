@@ -13,8 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Usuario_service_1 = __importDefault(require("../../services/Configuracion/Usuario.service"));
-const utils_1 = require("../../utils");
-const Configuracion_Zod_1 = require("../../validations/Zod/Configuracion.Zod");
+const Configuracion_Zod_1 = require("../../validations/Configuracion.Zod");
+const constants_1 = require("../../helpers/constants");
+const utils_1 = require("../../helpers/utils");
 const mailer_1 = require("../../../config/mailer");
 class UsuarioController {
     Autenticar_Usuario(req, res) {
@@ -53,8 +54,6 @@ class UsuarioController {
     Obtener_Usuarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //TOMAR LA INFORMACION DEL MIDDLEWARE
-            // console.log(req.query)
-            // const { estado } = req.body
             const { estado, empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
                 return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' });
@@ -221,11 +220,11 @@ class UsuarioController {
                     return res.status(400).json(busqueda); //!ERROR
                 }
                 //ENVIAR INFORMACION DEPENDIENDO DEL ESTADO
-                return res.status(200).json({ error: false, message: +estado == utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el usuario' : 'Se ha desactivado el usuario' });
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Se ha activado el usuario' : 'Se ha desactivado el usuario' });
             }
             catch (error) {
                 console.log(error);
-                return res.status(500).json({ error: true, message: +estado === utils_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el usuario' : 'Error al desactivar el usuario' }); //!ERROR
+                return res.status(500).json({ error: true, message: +estado === constants_1.EstadosTablas.ESTADO_ACTIVO ? 'Error al activar el usuario' : 'Error al desactivar el usuario' }); //!ERROR
             }
         });
     }

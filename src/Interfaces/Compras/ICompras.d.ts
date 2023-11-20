@@ -32,3 +32,11 @@ export interface Coordenadas_Requisicion {
     JumLine?: number,
     LineasDivCabe?: number
 }
+
+export interface Filtro_Requisiciones {
+    requisicion: string,
+    proceso: string,
+    centro_costo: string,
+    tipo_producto: string,
+    estado: string
+}

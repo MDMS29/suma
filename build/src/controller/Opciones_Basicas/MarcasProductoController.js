@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const MarcaProducto_Service_1 = require("../../services/Opciones_Basicas/MarcaProducto.Service");
-const OpcionesBasicas_Zod_1 = require("../../validations/Zod/OpcionesBasicas.Zod");
+const OpcionesBasicas_Zod_1 = require("../../validations/OpcionesBasicas.Zod");
 class MarcasProductoController {
     Obtener_Marcas_Producto(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

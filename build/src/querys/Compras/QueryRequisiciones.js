@@ -12,12 +12,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../../../config/db");
 const DaoRequisiciones_1 = require("../../dao/Compras/DaoRequisiciones");
 class QueryRequisiciones {
-    Obtener_Requisiciones_Enc(estado, empresa) {
+    Obtener_Requisiciones_Enc(estado, empresa, usuario) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect();
             try {
-                let result = yield client.query(DaoRequisiciones_1._obtener_requisicion_enc, [estado, empresa]);
-                return result.rows;
+                let result = yield db_1._DB.func(DaoRequisiciones_1._FA_obtener_requisicion_enc, [estado, empresa, usuario]);
+                return result;
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    Obtener_Requisiciones_Filtro(estado, empresa, usuario, tipo, valor) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield db_1.pool.connect();
+            try {
+                let result = yield db_1._DB.func(DaoRequisiciones_1._FA_obtener_requisicion_filtro, [estado, empresa, usuario, tipo, valor]);
+                return result;
             }
             catch (error) {
                 console.log(error);
@@ -64,13 +80,12 @@ class QueryRequisiciones {
     Insertar_Requisicion_Enc(requisicion_request, usuario_creacion) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect();
-            const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, fecha_requisicion, hora_requisicion, comentarios, equipo } = requisicion_request;
+            const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, fecha_requisicion, comentarios, equipo } = requisicion_request;
             try {
                 let result = yield client.query(DaoRequisiciones_1._insertar_requisicion_enc, [
                     id_empresa, id_proceso, id_centro,
                     id_tipo_producto, consecutivo, fecha_requisicion,
-                    hora_requisicion, comentarios, equipo,
-                    usuario_creacion
+                    comentarios, equipo, usuario_creacion
                 ]);
                 return result.rows;
             }
@@ -130,13 +145,13 @@ class QueryRequisiciones {
     Editar_Requisicion_Enc(id_requisicion, requisicion_request) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect();
-            const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, comentarios, equipo } = requisicion_request;
+            const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, comentarios, fecha_requisicion } = requisicion_request;
             try {
                 let result = yield client.query(DaoRequisiciones_1._editar_requisicion_enc, [
                     id_requisicion,
                     id_empresa, id_proceso, id_centro,
                     id_tipo_producto, consecutivo, comentarios,
-                    equipo
+                    fecha_requisicion
                 ]);
                 return result;
             }
@@ -174,8 +189,8 @@ class QueryRequisiciones {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect();
             try {
-                let result = yield client.query(DaoRequisiciones_1._buscar_requisicion_id, [id_detalle]);
-                return result.rows;
+                let result = yield client.query(DaoRequisiciones_1._buscar_detalle_id, [id_detalle]);
+                return result.rows[0];
             }
             catch (error) {
                 console.log(error);
@@ -186,11 +201,44 @@ class QueryRequisiciones {
             }
         });
     }
-    Cambiar_Estado_Requisicion(id_empresa, estado) {
+    Cambiar_Estado_Requisicion(id_requisicion, estado) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect();
             try {
-                let result = yield client.query(DaoRequisiciones_1._cambiar_estado_requisicion, [id_empresa, estado]);
+                let result = yield client.query(DaoRequisiciones_1._cambiar_estado_requisicion, [id_requisicion, estado]);
+                return result;
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    Aprobar_Desaprobar_Detalle(detalle) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield db_1.pool.connect();
+            const { id_detalle, id_estado } = detalle;
+            try {
+                const result = yield client.query(DaoRequisiciones_1._aprobar_desaprobar_detalle, [id_detalle, id_estado]);
+                return result;
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    Editar_Usuario_Revi_Requisicion(id_requisicion, usuario) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield db_1.pool.connect();
+            try {
+                const result = yield client.query(DaoRequisiciones_1._editar_usuario_revision, [id_requisicion, usuario]);
                 return result;
             }
             catch (error) {

@@ -1,33 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports._cambiar_estado_requisicion = exports._editar_requisicion_det = exports._editar_requisicion_enc = exports._buscar_requisicion_id = exports._insertar_requisicion_det = exports._insertar_requisicion_enc = exports._buscar_requisicion_consecutivo = exports._buscar_detalle_requisicion = exports._obtener_requisicion_enc = void 0;
-exports._obtener_requisicion_enc = `
-    SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
-        te.nombre_estado, tr.fecha_requisicion, tc.correo_responsable, te.nombre_estado, tr.id_tipo_producto,
-        ttp.descripcion as tipo_productos
-    FROM
-        tbl_requisiciones tr
-    INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 
-    INNER JOIN seguridad.tbl_estados te ON te.id_estado = tr.id_estado 
-    INNER JOIN public.tbl_tipo_producto ttp ON ttp.id_tipo_producto = tr.id_tipo_producto 
-    WHERE
-        tr.id_estado = $1 AND tr.id_empresa = $2
-`;
+exports._editar_usuario_revision = exports._buscar_detalle_id = exports._aprobar_desaprobar_detalle = exports._cambiar_estado_requisicion = exports._editar_requisicion_det = exports._editar_requisicion_enc = exports._buscar_requisicion_id = exports._insertar_requisicion_det = exports._insertar_requisicion_enc = exports._buscar_requisicion_consecutivo = exports._buscar_detalle_requisicion = exports._FA_obtener_requisicion_filtro = exports._FA_obtener_requisicion_enc = void 0;
+exports._FA_obtener_requisicion_enc = 'public.obtener_requisiciones_empresa';
+exports._FA_obtener_requisicion_filtro = 'public.obtener_requisiciones_empresa_filtro';
 exports._buscar_detalle_requisicion = `
     SELECT 
-        trd.id_detalle, trd.id_producto, tp.referencia, tp.descripcion as nombre_producto, tu.unidad,
-        trd.cantidad, trd.justificacion
+        trd.id_detalle, trd.id_producto, tp.referencia, tp.descripcion as nombre_producto, tp.id_unidad, tu.unidad,
+        trd.cantidad, trd.justificacion, trd.id_estado
     FROM
         public.tbl_requisicion_detalle trd
     INNER JOIN public.tbl_productos tp  ON tp.id_producto   = trd.id_producto
     INNER JOIN public.tbl_unidad    tu  ON tu.id_unidad     = tp.id_unidad
     WHERE 
-        trd.id_requisicion = $1 AND trd.id_estado != 2
+        trd.id_requisicion = $1 AND trd.id_estado != 2 
+    ORDER BY trd.id_detalle ASC;
 `;
 exports._buscar_requisicion_consecutivo = `
     SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
+        tr.id_requisicion, tr.requisicion, tr.id_proceso, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion
     FROM
         tbl_requisiciones tr
@@ -51,8 +41,8 @@ exports._insertar_requisicion_enc = `
             nextval('tbl_requisiciones_id_requisicion_seq'::regclass), 
             $1, $2, $3, 
             $4, $5, $6, 
-            $7, $8, $9, 
-            3, now(), $10
+            now(), $7, $8, 
+            3, now(), $9
         )
     RETURNING id_requisicion;
 `;
@@ -70,15 +60,16 @@ exports._insertar_requisicion_det = `
             nextval('tbl_requisicion_detalle_id_detalle_seq'::regclass), 
             $1,
             $2, $3, $4, 
-            1, now(), $5
+            5, now(), $5
         )
     RETURNING id_detalle;
 `;
 exports._buscar_requisicion_id = ` 
     SELECT 
-        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.comentarios, tr.id_estado, 
+        tr.id_requisicion, tr.requisicion, tr.id_centro, tc.centro_costo, tr.id_proceso, tr.comentarios, tr.id_estado, 
         te.nombre_estado, tr.fecha_requisicion, tr.id_empresa, ste.razon_social, tp.proceso, 
-        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_creacion
+        tr.id_tipo_producto, ttp.descripcion as tipo_productos, tr.usuario_revision, tr.fecha_revision,
+        tc.correo_responsable, tr.fecha_creacion, tr.usuario_creacion
     FROM
         tbl_requisiciones tr
     INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro 
@@ -95,7 +86,7 @@ exports._editar_requisicion_enc = `
     SET 
         id_empresa=$2, id_proceso=$3, id_centro=$4, 
         id_tipo_producto=$5, requisicion=$6, comentarios=$7, 
-        equipo=$8
+        equipo=1, fecha_requisicion=$8
     WHERE 
         id_requisicion=$1;       
 `;
@@ -115,4 +106,28 @@ exports._cambiar_estado_requisicion = `
         id_estado=$2
     WHERE 
         id_requisicion=$1;     
+`;
+exports._aprobar_desaprobar_detalle = `
+    UPDATE 
+        public.tbl_requisicion_detalle
+    SET 
+        id_estado=$2
+    WHERE 
+        id_detalle=$1;     
+`;
+exports._buscar_detalle_id = `
+    SELECT 
+        id_detalle, id_requisicion
+    FROM 
+        public.tbl_requisicion_detalle
+    WHERE
+        id_detalle=$1;
+`;
+exports._editar_usuario_revision = `
+    UPDATE 
+        public.tbl_requisiciones
+    SET 
+        usuario_revision=$2, fecha_revision=now()
+    WHERE 
+        id_requisicion=$1;        
 `;
