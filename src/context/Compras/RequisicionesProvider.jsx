@@ -44,6 +44,7 @@ const RequisicionesProvider = ({ children }) => {
 
   const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
 
+  const [cargando, setCargando] = useState(false)
 
   const location = useLocation();
 
@@ -58,27 +59,21 @@ const RequisicionesProvider = ({ children }) => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const estado = location.pathname.includes("inactivas")
-          ? 2
-          : location.pathname.includes("verificadas")
-            ? 6
-            : 3;
-
+        const estado = location.pathname.includes("inactivas") ? 2 : location.pathname.includes("verificadas") ? 6 : 3;
         try {
           if (authUsuario.id_empresa) {
+            setCargando(true)
             const { data } = await conexion_cliente(
               `/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}`,
               config
             );
-
-            if (data.error == false) {
-              setDataRequisiciones([]);
-              return
-            }
+            setCargando(false)
+            
             setDataRequisiciones(data);
           }
         } catch (error) {
           setDataRequisiciones([]);
+          setCargando(false)
         }
       };
 
@@ -198,13 +193,14 @@ const RequisicionesProvider = ({ children }) => {
         setTimeout(() => setAlerta({}), 1500);
         return true;
       }
+
       setAlerta({
         error: true,
         show: true,
         message: data.message,
       });
 
-      setTimeout(() => setAlerta({}), 1500);
+      setTimeout(() => setAlerta({ show: false }), 1500);
       return false;
     } catch (error) {
       setAlerta({
@@ -453,6 +449,12 @@ const RequisicionesProvider = ({ children }) => {
         },
       };
 
+      setAlerta({
+        error: 'info',
+        show: true,
+        message: `Generando documento - ${requisicion}`
+      })
+
       const { data } = await conexion_cliente(
         `compras/requisiciones/doc/${id_requisicion}`,
         config
@@ -466,6 +468,12 @@ const RequisicionesProvider = ({ children }) => {
         });
         return;
       }
+
+      setAlerta({
+        error: false,
+        show: true,
+        message: `Requisicion - ${requisicion} - generada`
+      })
 
       setSrcPDF({ data, requisicion });
       setVerPDF(true);
@@ -553,7 +561,8 @@ const RequisicionesProvider = ({ children }) => {
     filtrar_requisiciones,
     requisicionesFiltradas,
     permisosReq,
-    setPermisosReq
+    setPermisosReq,
+    cargando, setCargando
   }));
   return (
     <RequisicionesContext.Provider value={obj}>

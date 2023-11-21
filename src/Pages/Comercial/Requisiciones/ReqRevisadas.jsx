@@ -10,13 +10,15 @@ import Loader from "../../../components/Loader";
 import useAuth from "../../../hooks/useAuth";
 
 function ReqRevisadas() {
-  const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones, permisosReq } = useRequisiciones();
+  const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones, permisosReq, cargando } = useRequisiciones();
   const { Permisos_DB } = useAuth();
 
 
   const cerrar = () => {
     setVerPDF(false);
   };
+
+
 
   const main = () => (
     <>
@@ -60,12 +62,12 @@ function ReqRevisadas() {
           </span>
         </div>
 
-        <div className="rounded-sm w-full flex flex-wrap gap-3">
-          {dataRequisiciones.length == 0 ? (
+        <div className="w-full py-3 flex flex-wrap gap-3">
+          {cargando ? (
             <div className="flex justify-center items-center w-full">
               <Loader />
             </div>
-          ) : dataRequisiciones.error === false ? (
+          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0 ? (
             <div className="bg-white border w-full my-3 p-3">
               <p className="text-2xl text-center">No hay requisiciones verificadas.</p>
             </div>

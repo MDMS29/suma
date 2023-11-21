@@ -7,7 +7,6 @@ import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
 import useAuth from "../../../hooks/useAuth";
 import ModalRevisarReq from "../../../components/Modales/Compras/Requisiciones/ModalRevisarReq.jsx";
-import { Toast } from "primereact/toast";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden.jsx";
@@ -16,8 +15,8 @@ import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/M
 
 const Requisiciones = () => {
   const toast = useRef(null);
-  const { verEliminarRestaurar, authUsuario, alerta, setAlerta, Permisos_DB, authPermisos } = useAuth();
-  const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData, requisicionesFiltradas, filtrar_requisiciones, permisosReq, setPermisosReq } = useRequisiciones();
+  const { verEliminarRestaurar, authUsuario, alerta, Permisos_DB, authPermisos } = useAuth();
+  const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData, requisicionesFiltradas, filtrar_requisiciones, permisosReq, setPermisosReq, cargando } = useRequisiciones();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalFiltrar, setmodalFiltrar] = useState(false);
 
@@ -57,27 +56,9 @@ const Requisiciones = () => {
     return;
   }, []);
 
-
-
-  //MOSTRAR ALERTA
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? 'error' : 'success',
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [alerta]);
-
   const main = () => (
     <>
-      <Toast ref={toast} />
+      {/* <Toast ref={toast} /> */}
       {modalVisible && <ModalRevisarReq visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
       {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
       {verEliminarRestaurar && (
@@ -139,11 +120,14 @@ const Requisiciones = () => {
         </div>
 
         <div className="w-full py-3 flex flex-wrap gap-3">
-          {dataRequisiciones.length == 0 ? (<div className="bg-white border w-full my-3 p-3">
-            <p className="text-center">No hay requisiciones pendientes</p>
-          </div>
-          ) : dataRequisiciones.error === false ? (
-            <Loader />
+          {cargando ? (
+            <div className="flex justify-center w-full">
+              <Loader />
+            </div>
+          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0 ? (
+            <div className="bg-white border w-full my-3 p-3">
+              <p className="text-center">No hay requisiciones pendientes</p>
+            </div>
           ) : (
             <>
               {requisicionesFiltradas.length > 0 ? (
