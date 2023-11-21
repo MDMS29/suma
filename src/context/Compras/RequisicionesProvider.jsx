@@ -32,6 +32,15 @@ const RequisicionesProvider = ({ children }) => {
     equipo: 1,
   });
 
+  const [ filtro, setFiltro ] = useState({
+    requisicion: "",
+    proceso: 0,
+    centro_costo: 0,
+    tipo_producto: 0,
+    fecha_inicial: "",
+    fecha_final: ""
+  })
+
   const [detalleRequi, setdetalleRequi] = useState();
   const [productoState, setProductoState] = useState({});
   const [centroCostoAgg, setcentroCostoAgg] = useState([]);
@@ -529,6 +538,31 @@ const RequisicionesProvider = ({ children }) => {
       });
     }
   };
+  const filtrar_modal_requi = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const estado = location.pathname.includes("inactivas") ? 2 : location.pathname.includes("verificadas") ? 6 : 3;
+    try {
+      if (authUsuario.id_empresa) {
+        setCargando(true)
+        const { data } = await conexion_cliente(
+          `/compras/requisiciones/filtrar?estado=${estado}&empresa=${authUsuario.id_empresa}`,
+          config
+        );
+        setCargando(false)
+        
+        setDataRequisiciones(data);
+      }
+    } catch (error) {
+      setDataRequisiciones([]);
+      setCargando(false)
+    }
+  };
 
   const obj = useMemo(() => ({
     dataRequisiciones,
@@ -565,7 +599,11 @@ const RequisicionesProvider = ({ children }) => {
     requisicionesFiltradas,
     permisosReq,
     setPermisosReq,
-    cargando, setCargando
+    cargando, 
+    setCargando,
+    filtro,
+    setFiltro,
+    filtrar_modal_requi
   }));
   return (
     <RequisicionesContext.Provider value={obj}>

@@ -303,7 +303,7 @@ const AgregarReq = () => {
 
   const navigate = useNavigate();
 
-  const guardar_requi = async (rowData) => {
+  const guardar_requi = async () => {
     try {
       const formData = {
         id_requisicion: RequiAgg.id_requisicion,
