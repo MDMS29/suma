@@ -3,6 +3,7 @@ import Button from "../../../Botones/Button";
 import { Dropdown } from "primereact/dropdown";
 import useProcesos from "../../../../hooks/Basicos/useProcesos";
 import useRequisiciones from "../../../../hooks/Compras/useRequisiciones";
+import useAuth from "../../../../hooks/useAuth";
 
 const ModalFiltrarReq = ({ visible, onClose }) => {
 
@@ -15,6 +16,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     tipoRequiAgg,
   } = useRequisiciones();
   const { dataProcesos } = useProcesos();
+  const { setAlerta } = useAuth();
 
   const btn_cambio = (e) => {
     // const value = e.target.value;
@@ -38,13 +40,24 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     }
   };
 
+  const consultar = () => {
+
+    setAlerta({
+      error: true,
+      show: true,
+      message: "Este producto ya ha sido agregado",
+    });
+    setTimeout(() => setAlerta({}), 1500);
+    return;
+  }
+
 
   const footerContent = (
     <div className="mt-3">
       <Button
         tipo={'PRINCIPAL'}
-      // funcion={consultar}
-      > Consultar
+        funcion={consultar}
+      > Filtrar
       </Button>
     </div>
   );
