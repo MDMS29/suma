@@ -129,7 +129,7 @@ export default class UsuarioService {
             throw new Error('Error al guardar el usuario') //!ERROR
         } else {
             //!ERROR AL HASHEAR LA CLAVE DEL USUARIO
-            throw new Error('Error al hashear clave de usuario') //!ERROR
+            throw new Error('Error al guardar clave de usuario') //!ERROR
         }
     }
 
@@ -322,11 +322,11 @@ export default class UsuarioService {
     }
 
     public async Cambiar_Estado_Usuario({ usuario, estado }: { usuario: number; estado: string; }) {
-        const busqueda = await this._Query_Usuario.Buscar_Usuario_ID(usuario)
-        if (busqueda.length <= 0) {
-            return { error: true, message: 'No se ha encontrado el usuario' }
-        }
         try {
+            const busqueda = await this._Query_Usuario.Buscar_Usuario_ID(usuario)
+            if (busqueda.length <= 0) {
+                return { error: true, message: 'No se ha encontrado el usuario' }
+            }
             const res = await this._Query_Usuario.Cambiar_Estado_Usuario(usuario, estado)
             if (!res) {
                 return { error: true, message: 'No se pudo cambiar el estado del usuario' }
@@ -372,7 +372,7 @@ export default class UsuarioService {
                         usuario: usuario[0]?.usuario,
                         correo: usuario[0]?.correo
                     },
-                    message: 'Clave cambiada con exito'
+                    message: 'Clave cambiada con éxito'
                 }
             }
 

@@ -34,7 +34,7 @@ export class RequisicionesService {
             }
 
             if (requisiciones?.length <= 0) {
-                return { error: false, message: 'No se han encontrado las requisicion' } //!ERROR
+                return { error: false, message: 'No se han encontrado las requisiciones' } //!ERROR
             }
 
             for (let requisicion_enc of requisiciones) {
@@ -75,7 +75,6 @@ export class RequisicionesService {
 
     public async Insertar_Requisicion(requisicion_request: Requisicion_Enc, usuario_creacion: string) {
         try {
-            //TODO: ARREGLAR VALIDACION DE DATOS
             const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_Consecutivo(requisicion_request)
             if (requisicion_filtrada?.length > 0) {
                 return { error: true, message: 'Ya existe este consecutivo' } //!ERROR
@@ -119,7 +118,7 @@ export class RequisicionesService {
                             <br />
                             <p>Atentamente nos permitimos comunicarle que se ha creado una requisición dentro del Sistema Unificado de Mejora y Autogestión - <b>SUMA</b></p>
                             <p>Consecutivo: <strong> ${nueva_requisicion.requisicion} </strong></p>
-                            <p>Fecha Creacion: <strong> ${nueva_requisicion.fecha_creacion.toLocaleString().split(',')[0]} </strong></p>
+                            <p>Fecha Creación: <strong> ${nueva_requisicion.fecha_creacion.toLocaleString().split(',')[0]} </strong></p>
                             <br />
                             <p>Puede revisar esta requisicion ingresando en nuestro Sistema <a href=${process.env.FRONT_END_URL}>por este link</a></p>
                             <p>Cordialmente,</p>

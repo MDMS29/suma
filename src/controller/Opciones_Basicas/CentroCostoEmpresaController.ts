@@ -49,7 +49,7 @@ export default class CentroCostoEmpresa {
         const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
@@ -58,7 +58,7 @@ export default class CentroCostoEmpresa {
             return res.status(400).json({ error: true, message: 'Debe seleccionar un proceso' }) //!ERROR
         }
         if (!codigo) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el centro' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar un código para el centro' }) //!ERROR
         }
         if (!centro_costo) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el centro' }) //!ERROR
@@ -90,7 +90,7 @@ export default class CentroCostoEmpresa {
         const { usuario } = req
         const { id_centro_costo } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_centro_costo) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el centro de costo' }) //!ERROR
@@ -114,7 +114,7 @@ export default class CentroCostoEmpresa {
         const { id_empresa, id_proceso, codigo, consecutivo, centro_costo, correo_responsable } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
@@ -126,7 +126,7 @@ export default class CentroCostoEmpresa {
             return res.status(400).json({ error: true, message: 'Debe seleccionar un proceso' }) //!ERROR
         }
         if (!codigo) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el proceso' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar un código para el proceso' }) //!ERROR
         }
         if (!consecutivo || consecutivo <= 0) {
             return res.status(400).json({ error: true, message: 'Debe ingresar un consecutivo valido para el centro' }) //!ERROR
@@ -168,7 +168,7 @@ export default class CentroCostoEmpresa {
         const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_centro_costo) {
             return res.status(400).json({ error: true, message: 'No se ha definido el centro' }) //!ERROR

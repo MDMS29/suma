@@ -8,7 +8,7 @@ export default class MarcasProductoController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
 
@@ -32,7 +32,7 @@ export default class MarcasProductoController {
         const { marca } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!marca) {
             return res.status(400).json({ error: true, message: 'Debe asignarle un nombre a la marca' }) //!ERROR
@@ -61,7 +61,7 @@ export default class MarcasProductoController {
         const { usuario } = req
         const { id_marca_producto } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_marca_producto) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la marca' }) //!ERROR

@@ -8,7 +8,7 @@ app.use('/suma/api/usuarios', _routes._UsuarioRouter)
 //DEFINIR RUTA DE LOS PERFILES
 app.use('/suma/api/perfiles', _routes._PerfilesRouter)
 
-//DEFINIR RUTA DE LOS MODULOS
+//DEFINIR RUTA DE LOS MÓDULOS
 app.use('/suma/api/modulos', _routes._ModulosRouter)
 
 //DEFINIR RUTA DE LOS ROLES

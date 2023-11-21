@@ -9,7 +9,7 @@ export const _RequisicionesRouter = Router()
 const EmpresaController = new RequisicionesController()
 
 _RequisicionesRouter.route('/requisiciones/filtrar')
-    .get(_Autorizacion, EmpresaController.Obtener_Requisiciones_Filtro) //OBTENER TODOS LAS REQUISICIONES
+    .post(_Autorizacion, EmpresaController.Obtener_Requisiciones_Filtro) //OBTENER TODOS LAS REQUISICIONES
     
 _RequisicionesRouter.route('/requisiciones')
     .get(_Autorizacion, EmpresaController.Obtener_Requisiciones) //OBTENER TODOS LAS REQUISICIONES

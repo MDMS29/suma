@@ -8,7 +8,7 @@ export default class TipoProductoController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
@@ -35,7 +35,7 @@ export default class TipoProductoController {
         const { id_empresa, descripcion } = req.body
         
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
@@ -67,7 +67,7 @@ export default class TipoProductoController {
         const { usuario } = req
         const { id_tipo_producto } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_tipo_producto) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el tipo de producto' }) //!ERROR
@@ -91,13 +91,13 @@ export default class TipoProductoController {
         const { id_empresa, descripcion } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
         }
         if (!descripcion) {
-            return res.status(400).json({ error: true, message: 'Debe asignarle una descripcion al tipo de producto' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe asignarle una descripción al tipo de producto' }) //!ERROR
         }
 
         const result = TipoProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS

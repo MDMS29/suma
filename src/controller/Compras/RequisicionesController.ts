@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
 import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
-import { RequisicionesSchema } from "../../validations/Requisiciones.Zod";
+import { FiltroRequisicionesSchema, RequisicionesSchema } from "../../validations/Requisiciones.Zod";
 
 export default class RequisicionesController {
 
     public async Obtener_Requisiciones_Filtro(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa } = req.query as { estado: string, empresa: string, requisicion: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
-        const { filtros } = req.body
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
@@ -18,19 +17,30 @@ export default class RequisicionesController {
         if (!estado) {
             return res.status(400).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
         }
-        if (Object.keys(filtros).length === 0) {
+
+        if (!req.body) {
             return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }) //!ERROR
+        }
+
+        if (Object.keys(req.body).length === 0) {
+            return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }) //!ERROR
+        }
+
+        // VALIDACION DE DATOS
+        const result = FiltroRequisicionesSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
             const requisiciones_service = new RequisicionesService()
-                const respuesta = await requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, filtros)
-                if (respuesta?.error) {
-                    return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
-                }
+            const respuesta = await requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, req.body)
+            if (respuesta?.error) {
+                return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
+            }
 
-                return res.status(200).json(respuesta)
-            
+            return res.status(200).json(respuesta)
+
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: true, message: 'Error al obtener las requisiciones' }) //!ERROR
@@ -41,7 +51,7 @@ export default class RequisicionesController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa, requisicion } = req.query as { estado: string, empresa: string, requisicion: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
@@ -78,7 +88,7 @@ export default class RequisicionesController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
         // VALIDACION DE DATOS
@@ -105,7 +115,7 @@ export default class RequisicionesController {
         const { usuario } = req
         const { id_requisicion } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_requisicion) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
@@ -128,7 +138,7 @@ export default class RequisicionesController {
         const { id_requisicion } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
         if (!id_requisicion) {
@@ -165,7 +175,7 @@ export default class RequisicionesController {
         const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_requisicion) {
             return res.status(400).json({ error: true, message: 'No se ha definido la requisicion' }) //!ERROR
@@ -181,7 +191,7 @@ export default class RequisicionesController {
                 return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se ha inactivado la requisicion' })
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se inactivo la requisicion' })
         } catch (error) {
             console.log(error)
             return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Error al restaurar la requisicion' : 'Error al inactivar la requisicion' }) //!ERROR
@@ -192,7 +202,7 @@ export default class RequisicionesController {
         const { usuario } = req
         const { id_requisicion } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_requisicion) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
@@ -223,7 +233,7 @@ export default class RequisicionesController {
         console.log(req.body)
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_requisicion) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR

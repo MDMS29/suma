@@ -15,7 +15,7 @@ export interface Requisicion_Enc {
     id_tipo_producto: number
     fecha_requisicion: Date
     hora_requisicion: string
-    equipo: any  //TODO: PREGUNTAR QUE ES  "EQUIPO"
+    equipo: any 
     comentarios: string
     det_requisicion: Requisicion_Det[]
 }
