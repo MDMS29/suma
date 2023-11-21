@@ -24,8 +24,6 @@ const AuthProvider = ({ children }) => {
     message: ''
   })
 
-  console.log(authModulos);
-
   const [verEliminarRestaurar, setVerEliminarRestaurar] = useState(false)
 
   useEffect(() => {
