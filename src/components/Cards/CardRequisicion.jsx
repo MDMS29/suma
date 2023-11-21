@@ -68,7 +68,7 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
   };
 
   return (
-    <div className="w-4/12 m-x-2 border bg-white flex flex-col justify-between px-3 py-4 rounded-lg transition-all hover:shadow-xl">
+    <div className="w-96 border bg-white flex flex-col justify-between px-3 py-4 rounded-lg transition-all hover:shadow-xl">
       <div className="flex justify-between ">
         <div className="flex flex-col justify-center gap-3">
           <p>{fecha_requisicion.split("T")[0]}</p>

@@ -43,8 +43,8 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     <div className="mt-3">
       <Button
         tipo={'PRINCIPAL'}
-      // funcion={guardar_lista}
-      > Filtrar
+      // funcion={consultar}
+      > Consultar
       </Button>
     </div>
   );

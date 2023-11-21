@@ -140,7 +140,7 @@ const Requisiciones = () => {
           </div>
         </div>
 
-        <div className="w-full py-3 flex flex-wrap gap-y-3">
+        <div className="w-full py-3 flex flex-wrap gap-3">
           {dataRequisiciones.length == 0 ? (<div className="bg-white border w-full my-3 p-3">
             <p className="text-center">No hay requisiciones pendientes</p>
           </div>
