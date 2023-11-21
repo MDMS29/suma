@@ -7,9 +7,12 @@ import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
 import ModalPDF from "../../../components/Modales/Compras/Requisiciones/ModalPDF";
 import Loader from "../../../components/Loader";
+import useAuth from "../../../hooks/useAuth";
 
 function ReqRevisadas() {
-  const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones } = useRequisiciones();
+  const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones, permisosReq } = useRequisiciones();
+  const { Permisos_DB } = useAuth();
+
 
   const cerrar = () => {
     setVerPDF(false);
@@ -25,14 +28,18 @@ function ReqRevisadas() {
           {Req_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          <div className="h-full flex justify-center items-center">
-            <div className="h-full flex justify-center items-center">
-              <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </BLink>
-            </div>
-          </div>
+          {permisosReq.filter(
+            (permiso) =>
+              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+          ).length > 0 && (
+              <div className="h-full flex justify-center items-center">
+                <div className="h-full flex justify-center items-center">
+                  <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
+                    <i className="pi pi-plus mx-2 font-medium"></i>Agregar</BLink>
+                </div>
+              </div>
+            )}
+
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>
               Inactivas

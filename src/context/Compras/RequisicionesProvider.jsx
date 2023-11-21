@@ -70,7 +70,6 @@ const RequisicionesProvider = ({ children }) => {
               `/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}`,
               config
             );
-            console.log(data);
 
             if (data.error == false) {
               setDataRequisiciones([]);
@@ -221,7 +220,6 @@ const RequisicionesProvider = ({ children }) => {
   const revisar_requisicion = async (formData) => {
     const token = localStorage.getItem("token");
 
-    console.log(formData);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -286,7 +284,6 @@ const RequisicionesProvider = ({ children }) => {
         `/compras/requisiciones/${id}`,
         config
       );
-      console.log(data);
 
       if (data?.error) {
         return { error: true, message: data.message };
@@ -327,7 +324,6 @@ const RequisicionesProvider = ({ children }) => {
         id_proceso: id_proceso,
         id_estado: id_estado,
       });
-      console.log(det_requisicion);
       setProductosData(det_requisicion);
     } catch (error) {
       console.error(error);

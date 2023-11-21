@@ -8,9 +8,9 @@ import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../components/Loader";
 
 function ReqEliminadas() {
-  const { dataRequisiciones, eliminar_requisicion, requisicionesFiltradas, filtrar_requisiciones } = useRequisiciones();
+  const { dataRequisiciones, eliminar_requisicion, requisicionesFiltradas, filtrar_requisiciones, permisosReq } = useRequisiciones();
 
-  const { verEliminarRestaurar } = useAuth();
+  const { verEliminarRestaurar, Permisos_DB } = useAuth();
 
   const main = () => (
     <>
@@ -26,14 +26,18 @@ function ReqEliminadas() {
           {Req_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          <div className="h-full flex justify-center items-center">
-            <div className="h-full flex justify-center items-center">
-              <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </BLink>
-            </div>
-          </div>
+          {permisosReq.filter(
+            (permiso) =>
+              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+          ).length > 0 && (
+              <div className="h-full flex justify-center items-center">
+                <div className="h-full flex justify-center items-center">
+                  <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
+                    <i className="pi pi-plus mx-2 font-medium"></i>Agregar</BLink>
+                </div>
+              </div>
+            )}
+
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/verificadas"} tipo={"APROBADO"}>
               Verficadas

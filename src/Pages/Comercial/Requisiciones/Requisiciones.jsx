@@ -86,7 +86,7 @@ const Requisiciones = () => {
           funcion={(e) => eliminar_requisicion(e)}
         />
       )}
-      <div className="w-11/12">
+      <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones Pendientes</h1>
           {Req_Icono}
@@ -99,9 +99,7 @@ const Requisiciones = () => {
               <div className="h-full flex justify-center items-center">
                 <div className="h-full flex justify-center items-center">
                   <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                    <i className="pi pi-plus mx-2 font-medium"></i>
-                    Agregar
-                  </BLink>
+                    <i className="pi pi-plus mx-2 font-medium"></i>Agregar</BLink>
                 </div>
               </div>
             )}

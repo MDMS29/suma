@@ -45,7 +45,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     setAlerta({
       error: true,
       show: true,
-      message: "Este producto ya ha sido agregado",
+      message: "Debe seleccionar al menos un criterio",
     });
     setTimeout(() => setAlerta({}), 1500);
     return;
@@ -85,11 +85,6 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
                 filter className="w-full md:w-14rem rounded-md"
               />
             </div>
-            {/* {errors.marca && (
-              <div className="text-red-600 text-xs">
-                {errors.marca}
-              </div>
-            )} */}
           </div>
           <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
             <label className="text-gray-600 pb-2 font-semibold">
@@ -107,11 +102,6 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
                 filter className="w-full md:w-14rem rounded-md"
               />
             </div>
-            {/* {errors.marca && (
-              <div className="text-red-600 text-xs">
-                {errors.marca}
-              </div>
-            )} */}
           </div>
           <div className="flex flex-col flex-wrap col-span-2">
             <label className="text-gray-600 pb-2 font-bold text-lg">
@@ -147,14 +137,8 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
                   />
                 </div>
               </div>
-
             </div>
 
-            {/* {errors.marca && (
-              <div className="text-red-600 text-xs">
-                {errors.marca}
-              </div>
-            )} */}
           </div>
           <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
             <label className="text-gray-600 pb-2 font-semibold">
