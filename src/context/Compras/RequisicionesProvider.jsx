@@ -538,7 +538,7 @@ const RequisicionesProvider = ({ children }) => {
       });
     }
   };
-  const filtrar_modal_requi = async () => {
+  const filtrar_modal_requi = async (formData) => {
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -546,12 +546,14 @@ const RequisicionesProvider = ({ children }) => {
         Authorization: `Bearer ${token}`,
       },
     };
+    console.log("DATA PROVIDER",formData)
     const estado = location.pathname.includes("inactivas") ? 2 : location.pathname.includes("verificadas") ? 6 : 3;
     try {
       if (authUsuario.id_empresa) {
         setCargando(true)
-        const { data } = await conexion_cliente(
+        const { data } = await conexion_cliente.post(
           `/compras/requisiciones/filtrar?estado=${estado}&empresa=${authUsuario.id_empresa}`,
+          formData,
           config
         );
         setCargando(false)
