@@ -29,11 +29,11 @@ export default class QueryRequisiciones {
         }
     }
 
-    public async Obtener_Requisiciones_Filtro2(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>): Promise<any> {
+    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>): Promise<any> {
         const client = await pool.connect()
-        const { centro_costo, requisicion, proceso, tipo_producto } = filtros
+        const { centro_costo, requisicion, proceso, tipo_producto, fecha_inicial, fecha_final } = filtros
         try {
-            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto]);
+            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto, fecha_inicial != '' ? fecha_inicial : null, fecha_final != '' ? fecha_final : null]);
             return result
         } catch (error) {
             console.log(error)
@@ -42,10 +42,12 @@ export default class QueryRequisiciones {
             client.release();
         }
     }
-    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, tipo: string, valor: string | number): Promise<any> {
+
+    public async Requisiciones_Filtro_Change(estado: string, empresa: number, usuario: string, _: string, valor: string | number): Promise<any> {
         const client = await pool.connect()
         try {
-            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, tipo, valor]);
+            //FILTRO DE LOS DATOS ATRAVES DE --> estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto
+            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, 0, valor, 0, 0, null, null]); 
             return result
         } catch (error) {
             console.log(error)

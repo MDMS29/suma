@@ -35,8 +35,10 @@ export interface Coordenadas_Requisicion {
 
 export interface Filtro_Requisiciones {
     requisicion: string,
-    proceso: string,
-    centro_costo: string,
-    tipo_producto: string,
+    proceso: string | number,
+    centro_costo: string | number,
+    tipo_producto: string | number,
     estado: string
+    fecha_inicial : string
+    fecha_final : string
 }

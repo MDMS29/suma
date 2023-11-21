@@ -19,22 +19,6 @@ export class RequisicionesService {
         this._Query_Usuarios = new QueryUsuario();
     }
 
-    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>) {
-        try {
-            if (!Object.keys(filtros)) {
-                return { error: true, message: "No hay existen filtros a realizar" }
-            }
-
-            const requisiciones = this._Query_Requisiciones.Obtener_Requisiciones_Filtro2(estado, empresa, usuario, filtros)
-
-            return requisiciones
-
-        } catch (error) {
-            console.log(error)
-            return { error: true, message: "Error al filtrar las requisiciones" }
-        }
-    }
-
     public async Obtener_Requisiciones(estado: string, empresa: number, usuario: string, tipoFiltro: string, valor: string | number): Promise<any> {
         const TIPOS_CONSULTA: any = {
             requisicion: 'requisicion'
@@ -43,7 +27,7 @@ export class RequisicionesService {
             let requisiciones: any
 
             if (TIPOS_CONSULTA[tipoFiltro] == tipoFiltro) {
-                requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, tipoFiltro, valor)
+                requisiciones = await this._Query_Requisiciones.Requisiciones_Filtro_Change(estado, empresa, usuario, tipoFiltro, valor)
 
             } else {
                 requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Enc(estado, empresa, usuario)
@@ -66,6 +50,26 @@ export class RequisicionesService {
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cargar las requisiciones' } //!ERROR
+        }
+    }
+
+
+    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>) {
+        try {
+            if (!Object.keys(filtros)) {
+                return { error: true, message: "No hay existen filtros a realizar" }
+            }
+
+            const requisiciones: any = await  this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros)
+            if (requisiciones?.length === 0 || !requisiciones) {
+                return { error: true, message: "No se han encontrado las requisiciones" }
+            }
+
+            return requisiciones
+
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: "Error al filtrar las requisiciones" }
         }
     }
 
