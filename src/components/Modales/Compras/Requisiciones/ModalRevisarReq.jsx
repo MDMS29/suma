@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react'
-import useRequisiciones from '../../../hooks/Compras/useRequisiciones';
+import useRequisiciones from '../../../../hooks/Compras/useRequisiciones';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dialog } from 'primereact/dialog';
-import Button from '../../Botones/Button';
-import useProcesos from '../../../hooks/Basicos/useProcesos';
+import Button from '../../../Botones/Button';
+import useProcesos from '../../../../hooks/Basicos/useProcesos';
 
 const ModalRevisarReq = ({ visible, onClose }) => {
     const {

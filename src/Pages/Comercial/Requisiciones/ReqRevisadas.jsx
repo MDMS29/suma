@@ -5,7 +5,7 @@ import {
 } from "../../../components/Icons/Iconos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
-import ModalPDF from "../../../components/Modales/Requisiciones/ModalPDF";
+import ModalPDF from "../../../components/Modales/Compras/Requisiciones/ModalPDF";
 import Loader from "../../../components/Loader";
 
 function ReqRevisadas() {

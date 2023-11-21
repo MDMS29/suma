@@ -50,8 +50,7 @@ const AgregarReq = () => {
     verEliminarRestaurar,
     authUsuario,
     setVerEliminarRestaurar,
-    setAlerta,
-    setErrors,
+    setAlerta
   } = useAuth();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
