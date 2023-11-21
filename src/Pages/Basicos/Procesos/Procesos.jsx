@@ -1,7 +1,7 @@
 import { MultiSelect } from "primereact/multiselect";
 import { useEffect, useRef, useState } from "react";
 import { Button as PButton } from "primereact/button";
-import { Edit_Icono, Proceso_Icono } from "../../../components/Icons/Iconos";
+import { Add_Icono, Edit_Icono, Proceso_Icono } from "../../../components/Icons/Iconos";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
 import { Toast } from "primereact/toast";
@@ -136,12 +136,9 @@ const Procesos = () => {
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
             <Button
-              tipo={'PRINCIPAL'}
+              tipo={"PRINCIPAL"}
               funcion={(e) => setModalVisible(true, e)}
-            >
-              <i className="pi pi-plus mx-2 font-medium"></i>
-              Agregar
-            </Button>
+            >{Add_Icono} Agregar</Button>
           )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />

@@ -3,8 +3,7 @@ import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
 import { Button as PButton } from "primereact/button";
 import { Toast } from "primereact/toast";
-import { Centro_Icono, Edit_Icono } from "../../../components/Icons/Iconos";
-// import ModalAgregarProcesos from "../../../components/Modales/Basicos/Procesos/ModalAgregarProcesos";
+import { Add_Icono, Centro_Icono, Edit_Icono } from "../../../components/Icons/Iconos";
 import Button from "../../../components/Botones/Button";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -134,22 +133,19 @@ const Centros = () => {
         />
       )}
 
-        <div className="flex justify-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Centro de Costos</h1>
-          {Centro_Icono}
-        </div>
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          {permisosCentros.filter(
-            (permiso) =>
-              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
-          ).length > 0 && (
+      <div className="flex justify-center gap-x-4 m-2 p-3">
+        <h1 className="text-3xl">Centro de Costos</h1>
+        {Centro_Icono}
+      </div>
+      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+        {permisosCentros.filter(
+          (permiso) =>
+            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+        ).length > 0 && (
             <Button
               tipo={"PRINCIPAL"}
               funcion={(e) => setModalVisible(true, e)}
-            >
-              <i className="pi pi-plus mx-2 font-medium"></i>
-              Agregar
-            </Button>
+            >{Add_Icono} Agregar</Button>
           )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
           <i className="pi pi-search" />

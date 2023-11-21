@@ -505,7 +505,7 @@ const RequisicionesProvider = ({ children }) => {
           ? 6
           : 3;
 
-      const { data } = await conexion_cliente(`/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}&noRequi=${e.target.value}`, config)
+      const { data } = await conexion_cliente(`/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}&requisicion=${e.target.value}`, config)
       if (data.error === false) {
         setAlerta({
           error: true,

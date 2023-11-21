@@ -161,12 +161,10 @@ const Roles = () => {
 
                 {
                     permisosRoles.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-                        <Button tipo={'PRINCIPAL'} funcion={(e) => {
-                            setRolAgg({ id_rol: 0, nombre: '', descripcion: '' })
-                            setModalVisible(true, e)
-                        }}>
-                            {Add_Icono} Agregar
-                        </Button>
+                        <Button
+                            tipo={'PRINCIPAL'}
+                            funcion={(e) => setModalVisible(true, e)}
+                        >{Add_Icono} Agregar </Button>
                     )
                 }
                 {

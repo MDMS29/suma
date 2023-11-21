@@ -1,7 +1,7 @@
 import { Button as PButton } from "primereact/button";
 import { MultiSelect } from 'primereact/multiselect';
 import { useEffect, useRef, useState } from 'react'
-import { Edit_Icono, Producto_Icono, Trash_Icono } from '../../../components/Icons/Iconos';
+import { Add_Icono, Edit_Icono, Producto_Icono, Trash_Icono } from '../../../components/Icons/Iconos';
 import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -211,11 +211,9 @@ const Productos = () => {
                         permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
                 ).length > 0 && (
                         <Button
-                            tipo={'PRINCIPAL'}
-                            funcion={(e) => setModalVisible(true, e)}>
-                            <i className="pi pi-plus mx-2 font-medium"></i>
-                            Agregar
-                        </Button>
+                            tipo={"PRINCIPAL"}
+                            funcion={(e) => setModalVisible(true, e)}
+                        >{Add_Icono} Agregar</Button>
                     )}
                 {permisosProductos.filter(
                     (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR

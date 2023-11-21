@@ -4,7 +4,7 @@ import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
-import { Edit_Icono, Marca_Icono } from "../../../components/Icons/Iconos";
+import { Add_Icono, Edit_Icono, Marca_Icono } from "../../../components/Icons/Iconos";
 import { Button as PButton } from "primereact/button";
 import useMarcas from "../../../hooks/Basicos/useMarcas";
 import Loader from "../../../components/Loader";
@@ -16,7 +16,7 @@ import ModalAgregarMarcas from "../../../components/Modales/Basicos/Marcas/Modal
 const Marcas = () => {
   const toast = useRef(null);
 
-  
+
   const columns = [
     { field: "id_marca", header: "ID" },
     { field: "marca", header: "Marca" }
@@ -36,7 +36,7 @@ const Marcas = () => {
     console.log(id_marca);
     await buscar_marca(id_marca)
   }
-  
+
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -136,12 +136,9 @@ const Marcas = () => {
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
               <Button
-                tipo={'PRINCIPAL'}
+                tipo={"PRINCIPAL"}
                 funcion={(e) => setModalVisible(true, e)}
-              >
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </Button>
+              >{Add_Icono} Agregar</Button>
             )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
             <i className="pi pi-search" />

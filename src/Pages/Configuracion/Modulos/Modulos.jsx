@@ -5,7 +5,7 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import { Edit_Icono, Trash_Icono, Menu_Icono } from "../../../components/Icons/Iconos";
+import { Edit_Icono, Trash_Icono, Menu_Icono, Add_Icono } from "../../../components/Icons/Iconos";
 import useModulos from "../../../hooks/Configuracion/useModulos";
 import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../components/Loader";
@@ -103,7 +103,7 @@ const Modulos = () => {
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
-    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
+      columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
@@ -166,14 +166,14 @@ const Modulos = () => {
               {Trash_Icono}
             </PButton>
           )}
-           <PButton
-              tooltip="Asignar Menú"
-              className="p-button-rounded p-mr-2"
-              tooltipOptions={{ position: "top" }}
-              onClick={(e) => modal_asignar_menu(rowData.id_modulo, e)}
-            >
-              {Menu_Icono}
-            </PButton>
+        <PButton
+          tooltip="Asignar Menú"
+          className="p-button-rounded p-mr-2"
+          tooltipOptions={{ position: "top" }}
+          onClick={(e) => modal_asignar_menu(rowData.id_modulo, e)}
+        >
+          {Menu_Icono}
+        </PButton>
       </div>
     );
   };
@@ -208,19 +208,16 @@ const Modulos = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-            <Button
+              <Button
                 tipo={'PRINCIPAL'}
                 funcion={(e) => setModalVisible(true, e)}
-              >
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </Button>
+              >{Add_Icono} Agregar </Button>
             )}
           {permisosModulo.filter(
             (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
           ).length > 0 && (
               <div className="h-full flex justify-center items-center">
-              <BLink
+                <BLink
                   tipo={'INACTIVOS'}
                   url="/configuracion/modulos/inactivos"
                 >
@@ -273,8 +270,8 @@ const Modulos = () => {
       {permisosModulo.length === 0 ? (
         <Loader />
       ) : permisosModulo.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

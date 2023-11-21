@@ -8,6 +8,7 @@ import { InputText } from "primereact/inputtext"
 import {
   Trash_Icono,
   Edit_Icono,
+  Add_Icono,
 } from "../../../components/Icons/Iconos";
 
 import ModalAgregarPerfil from "../../../components/Modales/Configuracion/Perfiles/ModalAgregarPerfil";
@@ -155,10 +156,7 @@ const Perfiles = () => {
               <Button
                 tipo={'PRINCIPAL'}
                 funcion={(e) => setModalVisible(true, e)}
-              >
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </Button>
+              >{Add_Icono} Agregar </Button>
             )
           }
           {

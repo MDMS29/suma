@@ -1,6 +1,7 @@
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import {
+  Add_Icono,
   Req_Icono
 } from "../../../components/Icons/Iconos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -37,7 +38,7 @@ function ReqRevisadas() {
               <div className="h-full flex justify-center items-center">
                 <div className="h-full flex justify-center items-center">
                   <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                    <i className="pi pi-plus mx-2 font-medium"></i>Agregar</BLink>
+                    {Add_Icono} Agregar</BLink>
                 </div>
               </div>
             )}

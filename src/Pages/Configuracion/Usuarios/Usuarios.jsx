@@ -3,7 +3,7 @@ import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import { Key_Icono, Trash_Icono, Edit_Icono } from "../../../components/Icons/Iconos";
+import { Key_Icono, Trash_Icono, Edit_Icono, Add_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 
 // import { Link } from "react-router-dom";
@@ -201,10 +201,7 @@ const Usuarios = () => {
             <Button
               tipo={'PRINCIPAL'}
               funcion={(e) => setModalVisible(true, e)}
-            >
-              <i className="pi pi-plus mx-2 font-medium"></i>
-              Agregar
-            </Button>
+            >{Add_Icono} Agregar </Button>
           )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR

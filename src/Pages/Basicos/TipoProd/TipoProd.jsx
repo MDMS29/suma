@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import useTipoProd from "../../../hooks/Basicos/useTipoProd";
 import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
-import { Edit_Icono, TipoProduc_Icono, UnidadesMedida_Icono } from "../../../components/Icons/Iconos";
+import { Edit_Icono, TipoProduc_Icono, Add_Icono } from "../../../components/Icons/Iconos";
 import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import Loader from "../../../components/Loader";
@@ -134,10 +134,7 @@ const TipoProd = () => {
               <Button
                 tipo={'PRINCIPAL'}
                 funcion={(e) => setModalVisible(true, e)}
-              >
-                <i className="pi pi-plus mx-2 font-medium"></i>
-                Agregar
-              </Button>
+              >{Add_Icono} Agregar </Button>
             )
           }
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
@@ -175,7 +172,7 @@ const TipoProd = () => {
     </>
   )
 
-  return(
+  return (
     <>
       {
         permisosTipoProd.length === 0
