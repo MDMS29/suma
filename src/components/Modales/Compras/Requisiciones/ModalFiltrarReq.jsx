@@ -13,7 +13,6 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     setRequiAgg,
     centroCostoAgg,
     obtener_centro_costo,
-    filtar_tipo_requ,
     tipoRequiAgg,
     obtener_tipo_requisicion,
     filtrar_modal_requi,
@@ -24,8 +23,8 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
   const { setAlerta } = useAuth();
 
   const [fechas, setFechas] = useState({
-    fechaInicio: '',
-    fechaFin: '',
+    fecha_inicial: '',
+    fecha_final: '',
   });
 
   useEffect(() => {
@@ -53,17 +52,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       //ENVIAR POR PARAMETROS DEL ID DEL PROCESO
       obtener_centro_costo(e.target.value);
     }
-  };
-
-  const fecha_inicio = (e) => {
-    const nueva_fecha_inicio = e.target.value;
-
-    setFechas({
-      ...fechas,
-      fechaInicio: nueva_fecha_inicio,
-    });
-
-    if (fechas.fechaFin && nueva_fecha_inicio > fechas.fechaFin) {
+    if (filtro.fecha_inicial && fechas.fecha_final > fechas.fecha_final){
       setAlerta({
         error: true,
         show: true,
@@ -71,29 +60,14 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       });
       setTimeout(() => setAlerta({}), 2000);
       return;
-    } else {
-      setFechas({
-        ...fechas,
-        fechaInicio: nueva_fecha_inicio,
-      });
     }
-  };
-
-  const fecha_fin = (e) => {
-    const nueva_fecha_fin = e.target.value;
-
-    setFechas({
-      ...fechas,
-      fechaFin: nueva_fecha_fin,
-    });
-
-    if (fechas.fechaInicio && nueva_fecha_fin < fechas.fechaInicio) {
+    if (filtro.fecha_final && filtro.fecha_inicial < fechas.fecha_inicial){
       setAlerta({
         error: true,
         show: true,
         message: "La fecha de fin no puede ser menor que la fecha de inicio",
       });
-      setTimeout(() => setAlerta({}), 2500);
+      setTimeout(() => setAlerta({}), 2000);
       return;
     }
   };
@@ -105,9 +79,9 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
         centro_costo: filtro.centro_costo,
         tipo_producto: filtro.tipo_producto,
         fecha_inicial: filtro.fecha_inicial,
-        fecha_fin: filtro.fecha_fin,
+        fecha_final: filtro.fecha_final,
       };
-      if (RequiAgg.id_tipo_producto == 0 && RequiAgg.id_proceso == 0) {
+      if (filtro.id_tipo_producto == 0 && filtro.id_proceso == 0) {
         setAlerta({
           error: true,
           show: true,
@@ -117,7 +91,8 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
         return;
       }
       filtrar_modal_requi(formData)
-      console.log("DATOS DE FILTROS",formData)
+      // console.log("DATOS DE FILTROS",formData)
+      onClose()
   };
 
   const footerContent = (
