@@ -17,7 +17,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     tipoRequiAgg,
     obtener_tipo_requisicion,
     filtrar_modal_requi,
-    filtro
+    filtro, setFiltro
   } = useRequisiciones();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
@@ -29,14 +29,12 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
   });
 
   useEffect(() => {
+    obtener_procesos();
+    obtener_tipo_requisicion();
+
     if (RequiAgg.id_proceso != 0) {
       obtener_centro_costo(RequiAgg.id_proceso);
     }
-    if (RequiAgg.id_tipo_producto != 0) {
-      filtar_tipo_requ(RequiAgg.id_tipo_producto);
-    }
-    obtener_procesos();
-    obtener_tipo_requisicion();
   }, []);
 
   const cerrar_modal = () => {
@@ -49,24 +47,11 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
   };
 
   const btn_cambio = (e) => {
-    // const value = e.target.value;
-    const name = e.target.name;
 
-    setRequiAgg({ ...RequiAgg, [e.target.name]: e.target.value });
-    if (name === "id_proceso") {
+    setFiltro({ ...filtro, [e.target.name]: e.target.value });
+    if (e.target.name === "proceso") {
       //ENVIAR POR PARAMETROS DEL ID DEL PROCESO
       obtener_centro_costo(e.target.value);
-    }
-    if (name === "id_centro") {
-      const centro = centroCostoAgg.filter(
-        (centro) => centro.id_centro == e.target.value
-      )[0]?.consecutivo_centro;
-
-      RequiAgg.consecutivo = centro;
-    }
-    if (name === "id_tipo_producto") {
-      //ENVIAR EL ID DEL TIPO DE PRODUCTO POR PARAMETRO
-      filtar_tipo_requ(e.target.value);
     }
   };
 
@@ -175,10 +160,10 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
             </label>
             <div className="card flex justify-content-center border-1 rounded-md border-gray-300">
               <Dropdown
-                value={filtro.id_tipo_producto}
+                value={filtro.tipo_producto}
                 onChange={(e) => btn_cambio(e)}
                 options={tipoRequiAgg}
-                name="id_tipo_producto"
+                name="tipo_producto"
                 optionLabel="descripcion"
                 optionValue="id_tipo_producto"
                 placeholder="Seleccione Tipo de Requisición"
@@ -200,10 +185,10 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
                 </label>
                 <div className="card flex justify-content-center h-10">
                   <input
-                    name="fecha_requisicion"
+                    name="fecha_inicial"
                     type="date"
                     value={filtro.fecha_inicial}
-                    onChange={fecha_inicio}
+                    onChange={(e) => btn_cambio(e)}
                     className="px-2 w-42 text-gray-500"
                   />
                 </div>
@@ -215,10 +200,10 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
                 </label>
                 <div className="card flex justify-content-center h-10 ">
                   <input
-                    name="fecha_requisicion"
+                    name="fecha_final"
                     type="date"
                     value={filtro.fecha_final}
-                    onChange={fecha_fin}
+                    onChange={(e) => btn_cambio(e)}
                     className="px-2 w-42 text-gray-500"
                   />
                 </div>
@@ -234,7 +219,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
                 value={filtro.proceso}
                 onChange={(e) => btn_cambio(e)}
                 options={dataProcesos}
-                name="id_proceso"
+                name="proceso"
                 optionLabel="proceso"
                 optionValue="id_proceso"
                 placeholder="Seleccione un Proceso"
@@ -252,7 +237,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
                 value={filtro.centro_costo}
                 onChange={(e) => btn_cambio(e)}
                 options={centroCostoAgg}
-                name="id_centro"
+                name="centro_costo"
                 optionLabel="centro_costo"
                 optionValue="id_centro"
                 placeholder="Seleccione un centro de Costos"
