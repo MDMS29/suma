@@ -16,15 +16,16 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     tipoRequiAgg,
     obtener_tipo_requisicion,
     filtrar_modal_requi,
-    filtro, setFiltro
+    filtro,
+    setFiltro,
   } = useRequisiciones();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
   const { setAlerta } = useAuth();
 
   const [fechas, setFechas] = useState({
-    fecha_inicial: '',
-    fecha_final: '',
+    fecha_inicial: "",
+    fecha_final: "",
   });
 
   useEffect(() => {
@@ -38,15 +39,19 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
 
   const cerrar_modal = () => {
     onClose();
+
+    setFiltro({
+      requisicion:"",
+    })
+
     setRequiAgg({
       id_tipo_producto: "",
       id_centro: "",
       id_proceso: "",
-    })
+    });
   };
 
   const btn_cambio = (e) => {
-
     setFiltro({ ...filtro, [e.target.name]: e.target.value });
     if (e.target.name === "proceso") {
       //ENVIAR POR PARAMETROS DEL ID DEL PROCESO
@@ -90,8 +95,9 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       setTimeout(() => setAlerta({}), 1500);
       return;
     }
-    filtrar_modal_requi(formData)
-    onClose()
+    filtrar_modal_requi(formData);
+    // console.log("DATOS DE FILTROS",formData)
+    onClose();
   };
 
   const footerContent = (
@@ -112,15 +118,17 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
             <label className="text-gray-600 pb-2 font-semibold">
-              N. Requisicion <span className="font-bold text-red-900">*</span>
+              No. Requisicion <span className="font-bold text-red-900">*</span>
             </label>
-            <InputText
-              // value={productosAgg.descripcion}
-              type="text"
-              name="descripcion"
-              className="border-1 h-10 rounded-md px-3 py-2 border-gray-300"
-            // onChange={(e) => btn_cambio_producto(e)}
-            />
+            <div className="card flex justify-content-center border-1 rounded-md border-gray-300">
+              <InputText
+                value={filtro?.requisicion}
+                name="requisicion"
+                placeholder="No. requisicion"
+                className="w-full h-10 md:w-14rem rounded-md"
+                onChange={(e) => btn_cambio(e)}
+              />
+            </div>
           </div>
           <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
             <label className="text-gray-600 pb-2 font-semibold">
