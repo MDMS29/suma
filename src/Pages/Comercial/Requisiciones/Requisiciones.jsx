@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Add_Icono, Filter_Icono, Req_Icono } from "../../../components/Icons/Iconos";
+import { Add_Icono, Cancelar_Filtro_Icon, Filter_Icono, Req_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import BLink from "../../../components/Botones/BLink";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -13,17 +13,33 @@ import Button from "../../../components/Botones/Button.jsx";
 import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/ModalFiltrarReq.jsx";
 
 const Requisiciones = () => {
-  const { verEliminarRestaurar, authUsuario, Permisos_DB, authPermisos } = useAuth();
-  const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData, requisicionesFiltradas, filtrar_requisiciones, permisosReq, setPermisosReq, cargando } = useRequisiciones();
+  const {
+    verEliminarRestaurar,
+    authUsuario,
+    Permisos_DB,
+    authPermisos,
+  } = useAuth();
+  const {
+    eliminar_requisicion,
+    dataRequisiciones,
+    setRequiAgg,
+    setProductosData,
+    requisicionesFiltradas,
+    filtrar_requisiciones,
+    permisosReq,
+    setPermisosReq,
+    cargando,
+    setRequisicionesFiltradas,
+  } = useRequisiciones();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalFiltrar, setmodalFiltrar] = useState(false);
 
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
-  }
+  };
   const cambiar_visibilidad_modal_filtrar = () => {
     setmodalFiltrar(!modalFiltrar);
-  }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -33,7 +49,6 @@ const Requisiciones = () => {
     }, 10);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authPermisos]);
-
 
   useEffect(() => {
     setRequiAgg({
@@ -50,6 +65,11 @@ const Requisiciones = () => {
     });
     setProductosData([]);
   }, []);
+
+  const cancelar_filtro = () => {
+    setRequisicionesFiltradas([]);
+  };
+  console.log(requisicionesFiltradas);
 
   const main = () => (
     <>
@@ -73,8 +93,10 @@ const Requisiciones = () => {
           ).length > 0 && (
               <div className="h-full flex justify-center items-center">
                 <div className="h-full flex justify-center items-center">
-                  <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                    {Add_Icono} Agregar</BLink>
+                  <div className="h-full flex justify-center items-center">
+                    <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
+                      {Add_Icono} Agregar</BLink>
+                  </div>
                 </div>
               </div>
             )}
@@ -103,10 +125,13 @@ const Requisiciones = () => {
           </span>
 
           <div className="h-full flex justify-center items-center">
-            <Button
-              tipo={"FILTRAR"}
-              funcion={(e) => setmodalFiltrar(true, e)}
+            <Button tipo={"FILTRAR"} funcion={(e) => setmodalFiltrar(true, e)}
             >{Filter_Icono} Filtrar </Button>
+            {requisicionesFiltradas.length > 0 && (
+              <Button funcion={cancelar_filtro} tipo={"CANCELAR_FILTRO"}>
+                {Cancelar_Filtro_Icon}
+              </Button>
+            )}
           </div>
         </div>
 
@@ -115,7 +140,8 @@ const Requisiciones = () => {
             <div className="flex justify-center w-full">
               <Loader />
             </div>
-          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0 ? (
+          ) : dataRequisiciones.error === false ||
+            dataRequisiciones.length == 0 ? (
             <div className="bg-white border w-full my-3 p-3">
               <p className="text-center">No hay requisiciones pendientes</p>
             </div>
@@ -147,15 +173,19 @@ const Requisiciones = () => {
       </div>
     </>
   );
-  return <>{
-    permisosReq.length === 0 ?
-      (<Loader />) :
-      (permisosReq.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-        ?
-        (main())
-        :
-        (<Forbidden />))
-  }</>;
+  return (
+    <>
+      {permisosReq.length === 0 ? (
+        <Loader />
+      ) : permisosReq.filter(
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
+    </>
+  );
 };
 
 export default Requisiciones;

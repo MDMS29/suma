@@ -96,7 +96,8 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
 
     filtrar_modal_requi(formData);
     // console.log("DATOS DE FILTROS",formData)
-    cerrar_modal()
+    cerrar_modal();
+    
   };
 
   const footerContent = (
