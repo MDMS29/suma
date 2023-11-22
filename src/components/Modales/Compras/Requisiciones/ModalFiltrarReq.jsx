@@ -6,6 +6,7 @@ import useRequisiciones from "../../../../hooks/Compras/useRequisiciones";
 import useAuth from "../../../../hooks/useAuth";
 import { useEffect } from "react";
 import { useState } from "react";
+import { InputText } from "primereact/inputtext";
 
 const ModalFiltrarReq = ({ visible, onClose }) => {
   const {
@@ -16,15 +17,16 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     tipoRequiAgg,
     obtener_tipo_requisicion,
     filtrar_modal_requi,
-    filtro, setFiltro
+    filtro,
+    setFiltro,
   } = useRequisiciones();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
   const { setAlerta } = useAuth();
 
   const [fechas, setFechas] = useState({
-    fecha_inicial: '',
-    fecha_final: '',
+    fecha_inicial: "",
+    fecha_final: "",
   });
 
   useEffect(() => {
@@ -38,21 +40,25 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
 
   const cerrar_modal = () => {
     onClose();
+
+    setFiltro({
+      requisicion:"",
+    })
+
     setRequiAgg({
       id_tipo_producto: "",
-      id_centro:"",
-      id_proceso:"",
-    })
+      id_centro: "",
+      id_proceso: "",
+    });
   };
 
   const btn_cambio = (e) => {
-
     setFiltro({ ...filtro, [e.target.name]: e.target.value });
     if (e.target.name === "proceso") {
       //ENVIAR POR PARAMETROS DEL ID DEL PROCESO
       obtener_centro_costo(e.target.value);
     }
-    if (filtro.fecha_inicial && fechas.fecha_final > fechas.fecha_final){
+    if (filtro.fecha_inicial && fechas.fecha_final > fechas.fecha_final) {
       setAlerta({
         error: true,
         show: true,
@@ -61,7 +67,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       setTimeout(() => setAlerta({}), 2000);
       return;
     }
-    if (filtro.fecha_final && filtro.fecha_inicial < fechas.fecha_inicial){
+    if (filtro.fecha_final && filtro.fecha_inicial < fechas.fecha_inicial) {
       setAlerta({
         error: true,
         show: true,
@@ -73,26 +79,26 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
   };
 
   const consultar = () => {
-      const formData = {
-        requisicion: filtro.requisicion,
-        proceso: filtro.proceso,
-        centro_costo: filtro.centro_costo,
-        tipo_producto: filtro.tipo_producto,
-        fecha_inicial: filtro.fecha_inicial,
-        fecha_final: filtro.fecha_final,
-      };
-      if (filtro.id_tipo_producto == 0 && filtro.id_proceso == 0) {
-        setAlerta({
-          error: true,
-          show: true,
-          message: "Selecciona por lo menos  un criterio",
-        });
-        setTimeout(() => setAlerta({}), 1500);
-        return;
-      }
-      filtrar_modal_requi(formData)
-      // console.log("DATOS DE FILTROS",formData)
-      onClose()
+    const formData = {
+      requisicion: filtro.requisicion,
+      proceso: filtro.proceso,
+      centro_costo: filtro.centro_costo,
+      tipo_producto: filtro.tipo_producto,
+      fecha_inicial: filtro.fecha_inicial,
+      fecha_final: filtro.fecha_final,
+    };
+    if (filtro.id_tipo_producto == 0 && filtro.id_proceso == 0) {
+      setAlerta({
+        error: true,
+        show: true,
+        message: "Selecciona por lo menos  un criterio",
+      });
+      setTimeout(() => setAlerta({}), 1500);
+      return;
+    }
+    filtrar_modal_requi(formData);
+    // console.log("DATOS DE FILTROS",formData)
+    onClose();
   };
 
   const footerContent = (
@@ -115,16 +121,15 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
             <label className="text-gray-600 pb-2 font-semibold">
-              N. Requisicion <span className="font-bold text-red-900">*</span>
+              No. Requisicion <span className="font-bold text-red-900">*</span>
             </label>
             <div className="card flex justify-content-center border-1 rounded-md border-gray-300">
-              <Dropdown
-                name="id_marca"
-                optionLabel="marca"
-                optionValue="id_marca"
-                placeholder="Seleccione"
-                filter
-                className="w-full md:w-14rem rounded-md"
+              <InputText
+                value={filtro?.requisicion}
+                name="requisicion"
+                placeholder="No. requisicion"
+                className="w-full h-10 md:w-14rem rounded-md"
+                onChange={(e) => btn_cambio(e)}
               />
             </div>
           </div>

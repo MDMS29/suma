@@ -546,7 +546,6 @@ const RequisicionesProvider = ({ children }) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    console.log("DATA PROVIDER",formData)
     const estado = location.pathname.includes("inactivas") ? 2 : location.pathname.includes("verificadas") ? 6 : 3;
     try {
       if (authUsuario.id_empresa) {
