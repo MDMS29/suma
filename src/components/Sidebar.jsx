@@ -56,7 +56,7 @@ const Sidebar = () => {
             <img
               src="/src/assets/img/logo-short.png"
               alt="Logo SUMA"
-              className="h-10"
+              className="h-10 px-2"
             />
             <div className={`flex justify-between items-center w-40 ml-3 mr-4`}>
               <div className={`leading-4 ${!open && "invisible"}`}>

@@ -56,27 +56,29 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       //ENVIAR POR PARAMETROS DEL ID DEL PROCESO
       obtener_centro_costo(e.target.value);
     }
-    if (filtro.fecha_inicial && fechas.fecha_final > fechas.fecha_final) {
+  };
+
+  const validarFechas = () => {
+    const fechaInicial = new Date(filtro.fecha_inicial);
+    const fechaFinal = new Date(filtro.fecha_final);
+
+    if (fechaFinal < fechaInicial) {
       setAlerta({
         error: true,
         show: true,
-        message: "La fecha de inicio no puede ser mayor que la fecha de fin",
+        message: "La fecha final no puede ser anterior a la fecha inicial.",
       });
       setTimeout(() => setAlerta({}), 2000);
       return;
     }
-    if (filtro.fecha_final && filtro.fecha_inicial < fechas.fecha_inicial) {
-      setAlerta({
-        error: true,
-        show: true,
-        message: "La fecha de fin no puede ser menor que la fecha de inicio",
-      });
-      setTimeout(() => setAlerta({}), 2000);
-      return;
-    }
+    setAlerta("");
+    return true;
   };
 
   const consultar = async () => {
+    if (!validarFechas()) {
+      return;
+    }
     const formData = {
       requisicion: filtro.requisicion,
       proceso: filtro.proceso,
@@ -85,10 +87,23 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       fecha_inicial: filtro.fecha_inicial,
       fecha_final: filtro.fecha_final,
     };
+    if (filtro.fecha_inicial == 0 ||
+      filtro.fecha_final == 0) {
+
+      setAlerta({
+        error: true,
+        show: true,
+        message: "Debe terminar de llenar la fecha",
+      });
+      setTimeout(() => setAlerta({}), 1500);
+      return;
+    }
     if (
       filtro.tipo_producto == 0 &&
       filtro.proceso == 0 &&
-      filtro.requisicion == 0
+      filtro.requisicion == 0 &&
+      filtro.fecha_inicial == 0 ||
+      filtro.fecha_final == 0
     ) {
       setAlerta({
         error: true,
@@ -100,8 +115,6 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     }
 
     const data_filtrar = await filtrar_modal_requi(formData);
-    // console.log("DATOS DE FILTROS",formData)
-
     console.log(data_filtrar);
     if (!data_filtrar) {
       setAlerta({

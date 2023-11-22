@@ -568,7 +568,7 @@ const RequisicionesProvider = ({ children }) => {
           formData,
           config
         );
-
+        console.log(data);
         setCargando(false);
         setRequisicionesFiltradas(data);
         return data
