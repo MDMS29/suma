@@ -24,7 +24,7 @@ function ReqRevisadas() {
     filtrar_requisiciones,
     permisosReq,
     cargando,
-    setRequisicionesFiltradas
+    setRequisicionesFiltradas,
   } = useRequisiciones();
 
   const { Permisos_DB } = useAuth();
@@ -36,6 +36,7 @@ function ReqRevisadas() {
 
   const cancelar_filtro = () => {
     setRequisicionesFiltradas([]);
+    document.querySelector("#lupa").value = ""
   };
 
   const cerrar = () => {
@@ -87,6 +88,7 @@ function ReqRevisadas() {
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
             <InputText
+              id="lupa"
               className="h-10 pl-8 rounded-md"
               onChange={(e) => filtrar_requisiciones(e)}
               placeholder="Buscar No. Requisicion"
