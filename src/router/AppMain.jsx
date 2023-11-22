@@ -36,17 +36,18 @@ const AppMain = () => {
     rutas = nuevasRutas;
   }, [authModulos]);
 
-
   //VERIFICACION DE RUTAS
   useEffect(() => {
-    if (rutas_usuario.filter(ruta => ruta.route === location.pathname).length === 0) {
-      if (location.pathname !== 'error/no-encontrada') {
-        return navigate('error/no-encontrada')
+    if (
+      rutas_usuario.filter((ruta) => ruta.route === location.pathname)
+        .length === 0
+    ) {
+      if (location.pathname !== "error/no-encontrada") {
+        return navigate("error/no-encontrada");
       } else {
-        return
+        return;
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   return (
@@ -54,15 +55,17 @@ const AppMain = () => {
       {/* Area Autenticacion */}
       <Route path="/auth" element={<AuthLayouth />}>
         {AuthRoutes.map((ruta) => (
-          <Route exact path={ruta?.route} element={ruta?.component} key={ruta?.key} />
+          <Route
+            exact
+            path={ruta?.route}
+            element={ruta?.component}
+            key={ruta?.key}
+          />
         ))}
       </Route>
 
-
       {/* Area Privada */}
       <Route path="/" element={<Layout />}>
-          
-
         <Route path="home" element={<Home />} />
         {rutas.map((ruta) => (
           <Route

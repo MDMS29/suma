@@ -19,7 +19,7 @@ function ReqEliminadas() {
 
   const cambiar_visibilidad_modal_filtrar = () => {
     setmodalFiltrar(!modalFiltrar);
-  }
+  };
 
   const cancelar_filtro = () => {
     setRequisicionesFiltradas([]);
@@ -34,7 +34,12 @@ function ReqEliminadas() {
           funcion={(e) => eliminar_requisicion(e)}
         />
       )}
-      {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
+      {modalFiltrar && (
+        <ModalFiltrarReq
+          visible={modalFiltrar}
+          onClose={cambiar_visibilidad_modal_filtrar}
+        />
+      )}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones Inactivas</h1>
@@ -47,8 +52,12 @@ function ReqEliminadas() {
           ).length > 0 && (
               <div className="h-full flex justify-center items-center">
                 <div className="h-full flex justify-center items-center">
-                  <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                    {Add_Icono} Agregar</BLink>
+                  <BLink
+                    tipo={"PRINCIPAL"}
+                    url={"/compras/requisiciones/agregar"}
+                  >
+                    {Add_Icono} Agregar
+                  </BLink>
                 </div>
               </div>
             )}
@@ -89,7 +98,8 @@ function ReqEliminadas() {
             <div className="flex justify-center items-center w-full">
               <Loader />
             </div>
-          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0  ? (
+          ) : dataRequisiciones.error === false ||
+            dataRequisiciones.length == 0 ? (
             <div className="bg-white border w-full my-3 p-3">
               <p className="text-center">No hay requisiciones inactivas.</p>
             </div>

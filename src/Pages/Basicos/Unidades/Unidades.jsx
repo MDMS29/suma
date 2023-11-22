@@ -1,22 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react'
-import useUnidades from '../../../hooks/Basicos/useUnidades';
-import { Add_Icono, Edit_Icono, UnidadesMedida_Icono } from '../../../components/Icons/Iconos';
-import useAuth from '../../../hooks/useAuth';
-import { MultiSelect } from 'primereact/multiselect';
-import Loader from '../../../components/Loader';
-import Forbidden from '../../Errors/Forbidden';
-import { Toast } from 'primereact/toast';
+import React, { useEffect, useRef, useState } from "react";
+import useUnidades from "../../../hooks/Basicos/useUnidades";
+import {
+  Add_Icono,
+  Edit_Icono,
+  UnidadesMedida_Icono,
+} from "../../../components/Icons/Iconos";
+import useAuth from "../../../hooks/useAuth";
+import { MultiSelect } from "primereact/multiselect";
+import Loader from "../../../components/Loader";
+import Forbidden from "../../Errors/Forbidden";
+import { Toast } from "primereact/toast";
 import { Button as PButton } from "primereact/button";
-import { InputText } from 'primereact/inputtext';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import Button from '../../../components/Botones/Button';
-import ModalAgregarUnidades from '../../../components/Modales/Basicos/Unidades/ModalAgregarUnidades';
+import { InputText } from "primereact/inputtext";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import Button from "../../../components/Botones/Button";
+import ModalAgregarUnidades from "../../../components/Modales/Basicos/Unidades/ModalAgregarUnidades";
 
 const Unidades = () => {
   const toast = useRef(null);
 
-  const { dataUnidades,
+  const {
+    dataUnidades,
     permisosUnidades,
     setPermisosUnidades,
     unidadState,
@@ -24,11 +29,7 @@ const Unidades = () => {
     buscar_unidad,
   } = useUnidades();
 
-  const { authPermisos,
-    Permisos_DB,
-    alerta,
-    setAlerta,
-  } = useAuth()
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
   const columns = [
     { field: "id_unidad", header: "ID" },
@@ -40,10 +41,10 @@ const Unidades = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const editar_unidad = async (e, id_unidad) => {
-    e.preventDefault()
-    setModalVisible(true)
-    await buscar_unidad(id_unidad)
-  }
+    e.preventDefault();
+    setModalVisible(true);
+    await buscar_unidad(id_unidad);
+  };
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -70,10 +71,10 @@ const Unidades = () => {
   useEffect(() => {
     setTimeout(() => {
       if (authPermisos !== undefined) {
-        return setPermisosUnidades(authPermisos)
+        return setPermisosUnidades(authPermisos);
       }
-    }, 10)
-  }, [authPermisos])
+    }, 10);
+  }, [authPermisos]);
 
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
@@ -84,15 +85,15 @@ const Unidades = () => {
     if (alerta.show) {
       const show_alert = () => {
         toast.current.show({
-          severity: alerta.error ? 'error' : 'success',
+          severity: alerta.error ? "error" : "success",
           detail: alerta.message,
           life: 1500,
         });
-        setTimeout(() => setAlerta({}), 1500)
-      }
-      show_alert()
+        setTimeout(() => setAlerta({}), 1500);
+      };
+      show_alert();
     }
-  }, [alerta])
+  }, [alerta]);
 
   const header = (
     <MultiSelect
@@ -105,45 +106,61 @@ const Unidades = () => {
     />
   );
 
-  const columna_acciones = rowData => {
+  const columna_acciones = (rowData) => {
     return (
-      (
-        <div className="text-center flex gap-x-3">
-          {
-            permisosUnidades.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <PButton
-                tooltip="Editar"
-                tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2"
-                onClick={e => editar_unidad(e, rowData.id_unidad)}
-              >{Edit_Icono}</PButton>
-            )}
-        </div>
-      ))
-  }
+      <div className="text-center flex gap-x-3">
+        {permisosUnidades.filter(
+          (permiso) =>
+            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+        ).length > 0 && (
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_unidad(e, rowData.id_unidad)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
+      </div>
+    );
+  };
 
   const main = () => (
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && <ModalAgregarUnidades visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+        {modalVisible && (
+          <ModalAgregarUnidades
+            visible={modalVisible}
+            onClose={cambiar_visibilidad_modal}
+          />
+        )}
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Unidades de Medida</h1>
           {UnidadesMedida_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          {
-            permisosUnidades.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <Button
-                tipo={'PRINCIPAL'}
-                funcion={(e) => setModalVisible(true, e)}
-              >{Add_Icono} Agregar </Button>
-            )
-          }
+          {permisosUnidades.filter(
+            (permiso) =>
+              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+          ).length > 0 && (
+            <Button
+              tipo={"PRINCIPAL"}
+              funcion={(e) => setModalVisible(true, e)}
+            >
+              {Add_Icono} Agregar{" "}
+            </Button>
+          )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
+            <InputText
+              className="h-10 pl-8 rounded-md"
+              placeholder="Buscar"
+              onChange={(e) => buscador(e)}
+              value={searchTerm}
+            />
           </span>
         </div>
 
@@ -174,22 +191,20 @@ const Unidades = () => {
         </div>
       </div>
     </>
-  )
+  );
   return (
     <>
-      {
-        permisosUnidades.length === 0
-          ?
-          (<Loader />)
-          :
-          (permisosUnidades.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosUnidades.length === 0 ? (
+        <Loader />
+      ) : permisosUnidades.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default Unidades
+export default Unidades;

@@ -3,7 +3,11 @@ import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
 import { Button as PButton } from "primereact/button";
 import { Toast } from "primereact/toast";
-import { Add_Icono, Centro_Icono, Edit_Icono } from "../../../components/Icons/Iconos";
+import {
+  Add_Icono,
+  Centro_Icono,
+  Edit_Icono,
+} from "../../../components/Icons/Iconos";
 import Button from "../../../components/Botones/Button";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -16,7 +20,12 @@ import ModalAgregarCentro from "../../../components/Modales/Basicos/Centros/Moda
 const Centros = () => {
   const toast = useRef(null);
 
-  const { dataCentros, permisosCentros, setPermisosCentros, buscar_centro_costo } = useCentros();
+  const {
+    dataCentros,
+    permisosCentros,
+    setPermisosCentros,
+    buscar_centro_costo,
+  } = useCentros();
 
   const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
@@ -110,15 +119,15 @@ const Centros = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <PButton
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={e => editar_centro_costos(e, rowData.id_centro)}
-            >
-              {Edit_Icono}
-            </PButton>
-          )}
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_centro_costos(e, rowData.id_centro)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
       </div>
     );
   };
@@ -142,11 +151,10 @@ const Centros = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <Button
-              tipo={"PRINCIPAL"}
-              funcion={(e) => setModalVisible(true, e)}
-            >{Add_Icono} Agregar</Button>
-          )}
+          <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
+            {Add_Icono} Agregar
+          </Button>
+        )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
           <InputText
@@ -191,8 +199,8 @@ const Centros = () => {
       {permisosCentros?.length === 0 ? (
         <Loader />
       ) : permisosCentros.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

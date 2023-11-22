@@ -8,7 +8,11 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import { Producto_Icono, Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
+import {
+  Producto_Icono,
+  Restore_Icono,
+  Return_Icono,
+} from "../../../components/Icons/Iconos";
 import useProductos from "../../../hooks/Basicos/useProductos";
 import useAuth from "../../../hooks/useAuth";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
@@ -16,8 +20,20 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 const ProductosInactivos = () => {
   const toast = useRef(null);
 
-  const { permisosProductos, dataProductos, eliminar_restablecer_producto, productoState, setProductoState } = useProductos()
-  const { Permisos_DB, alerta, setAlerta, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth();
+  const {
+    permisosProductos,
+    dataProductos,
+    eliminar_restablecer_producto,
+    productoState,
+    setProductoState,
+  } = useProductos();
+  const {
+    Permisos_DB,
+    alerta,
+    setAlerta,
+    setVerEliminarRestaurar,
+    verEliminarRestaurar,
+  } = useAuth();
 
   const columns = [
     { field: "referencia", header: "Referencia" },
@@ -26,7 +42,7 @@ const ProductosInactivos = () => {
     { field: "nombre_familia", header: "Familia" },
     { field: "tipo_producto", header: "Tipo Producto" },
     { field: "unidad", header: "Unidad Medida" },
-    { field: "critico_con", header: "Critico" }
+    { field: "critico_con", header: "Critico" },
   ];
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -73,7 +89,7 @@ const ProductosInactivos = () => {
     if (alerta.show) {
       const show_alert = () => {
         toast.current.show({
-          severity: alerta.error ? 'error' : 'success',
+          severity: alerta.error ? "error" : "success",
           detail: alerta.message,
           life: 1500,
         });
@@ -81,7 +97,6 @@ const ProductosInactivos = () => {
       };
       show_alert();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
 
   const header = (
@@ -98,14 +113,21 @@ const ProductosInactivos = () => {
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminar_restablecer_producto(productoState.id_producto, e)} />}
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"RESTAURAR"}
+          funcion={(e) =>
+            eliminar_restablecer_producto(productoState.id_producto, e)
+          }
+        />
+      )}
 
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Productos Inactivos</h1>
         {Producto_Icono}
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-        <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+        <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>
           {Return_Icono} Regresar
         </Button>
 
@@ -137,43 +159,46 @@ const ProductosInactivos = () => {
           {visibleColumns.map((col) => (
             <Column key={col.field} field={col.field} header={col.header} />
           ))}
-          {/*columna Acciones */}
           <Column
             key="actions"
             style={{ width: "10%" }}
-            body={(rowData) => (
-              permisosProductos.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR).length > 0 ? (
+            body={(rowData) =>
+              permisosProductos.filter(
+                (permiso) =>
+                  permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
+              ).length > 0 ? (
                 <div className="text-center flex gap-x-3">
                   <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    // eslint-disable-next-line no-unused-vars
-                    onClick={e => modal_restaurar_producto(rowData)}
+                    onClick={(e) => modal_restaurar_producto(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>
                 </div>
-              ) : '')}
+              ) : (
+                ""
+              )
+            }
           />
         </DataTable>
       </div>
     </div>
   );
 
-
   return (
     <>
       {permisosProductos.length === 0 ? (
         <Loader />
       ) : permisosProductos.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />
       )}
     </>
-  )
-}
+  );
+};
 
-export default ProductosInactivos
+export default ProductosInactivos;

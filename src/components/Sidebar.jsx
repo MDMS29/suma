@@ -2,13 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth.jsx";
 
 const Sidebar = () => {
-  const {
-    authModulos,
-    setAuthModulos,
-    authUsuario,
-    open,
-    setOpen,
-  } = useAuth();
+  const { authModulos, setAuthModulos, authUsuario, open, setOpen } = useAuth();
 
   const { usuario, nombre_empresa } = authUsuario;
 
@@ -38,15 +32,17 @@ const Sidebar = () => {
     <div className="flex max-sm:absolute relative z-10">
       <div className="h-screen flex border-r shadow-sm bg-white">
         <div
-          className={` ${open ? "w-auto px-2" : "w-16 max-sm:w-0 z-10"
-            } bg-white overflow-y-auto scrollbar-hidden transition-all duration-500 ease-in-out`}
+          className={` ${
+            open ? "w-auto px-2" : "w-16 max-sm:w-0 z-10"
+          } bg-white overflow-y-auto scrollbar-hidden transition-all duration-500 ease-in-out`}
           style={{ maxHeight: "100%" }}
         >
           <div
-            className={`z-10 absolute ${open
-              ? "max-sm:left-60 max-sm:top-3 left-60 top-5 xl:hidden lg:hidden md:hidden"
-              : "hidden "
-              }`}
+            className={`z-10 absolute ${
+              open
+                ? "max-sm:left-60 max-sm:top-3 left-60 top-5 xl:hidden lg:hidden md:hidden"
+                : "hidden "
+            }`}
           >
             <button
               onClick={toggleSidebarAbierto}
@@ -76,10 +72,12 @@ const Sidebar = () => {
               <div key={modulo.nombre_modulo}>
                 <li
                   onClick={() => setSubMenuOpen(index)}
-                  className={`${pathname.includes(modulo.nombre_modulo.toLowerCase()) &&
+                  className={`${
+                    pathname.includes(modulo.nombre_modulo.toLowerCase()) &&
                     "bg-primaryYellow"
-                    } flex font-semibold rounded-md p-2 mx-2 cursor-pointer hover:bg-primaryYellow text-sm justify-center gap-x-4 ${modulo.gap ? "mt-9" : "mt-2"
-                    }`}
+                  } flex font-semibold rounded-md p-2 mx-2 cursor-pointer hover:bg-primaryYellow text-sm justify-center gap-x-4 ${
+                    modulo.gap ? "mt-9" : "mt-2"
+                  }`}
                 >
                   <div>
                     {modulo.icono ? (
@@ -92,8 +90,9 @@ const Sidebar = () => {
 
                   {open && modulo.menus && (
                     <i
-                      className={`pi pi-angle-down ml-auto ${modulo.isOpen && "rotate-180"
-                        } `}
+                      className={`pi pi-angle-down ml-auto ${
+                        modulo.isOpen && "rotate-180"
+                      } `}
                     ></i>
                   )}
                 </li>
@@ -104,10 +103,11 @@ const Sidebar = () => {
                       <Link
                         to={subMenuItem.link_menu}
                         key={subMenuItem.link_menu}
-                        className={`${pathname.includes(
-                          subMenuItem.nombre_menu.toLowerCase()
-                        ) && "bg-gray-300"
-                          } flex text-black p-4 my-2 rounded-md cursor-pointer text-center hover:bg-gray-300 text-sm py-1`}
+                        className={`${
+                          pathname.includes(
+                            subMenuItem.nombre_menu.toLowerCase()
+                          ) && "bg-gray-300"
+                        } flex text-black p-4 my-2 rounded-md cursor-pointer text-center hover:bg-gray-300 text-sm py-1`}
                         onClick={() => setOpen(false)}
                       >
                         {subMenuItem.nombre_menu}

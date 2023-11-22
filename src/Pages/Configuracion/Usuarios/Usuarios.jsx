@@ -3,10 +3,13 @@ import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import { Key_Icono, Trash_Icono, Edit_Icono, Add_Icono } from "../../../components/Icons/Iconos";
+import {
+  Key_Icono,
+  Trash_Icono,
+  Edit_Icono,
+  Add_Icono,
+} from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
-
-// import { Link } from "react-router-dom";
 import { MultiSelect } from "primereact/multiselect";
 import useUsuarios from "../../../hooks/Configuracion/useUsuarios";
 import useAuth from "../../../hooks/useAuth";
@@ -23,7 +26,7 @@ const Usuarios = () => {
   const columns = [
     { field: "nombre_completo", header: "Nombre" },
     { field: "usuario", header: "Usuario" },
-    { field: "correo", header: "Correo" }
+    { field: "correo", header: "Correo" },
   ];
 
   const {
@@ -38,10 +41,17 @@ const Usuarios = () => {
     setPermisosUsuario,
     eliminar_restablecer_usuario,
     resClave,
-    setResClave
+    setResClave,
   } = useUsuarios();
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta, verEliminarRestaurar, setVerEliminarRestaurar } = useAuth();
+  const {
+    authPermisos,
+    Permisos_DB,
+    alerta,
+    setAlerta,
+    verEliminarRestaurar,
+    setVerEliminarRestaurar,
+  } = useAuth();
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -59,7 +69,6 @@ const Usuarios = () => {
         return setPermisosUsuario(authPermisos);
       }
     }, 10);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authPermisos]);
 
   //MOSTRAR ALERTA
@@ -67,7 +76,8 @@ const Usuarios = () => {
     if (alerta.show) {
       const show_alert = () => {
         toast.current.show({
-          severity: alerta.error && !resClave ? "error" : resClave ? "info" : "success",
+          severity:
+            alerta.error && !resClave ? "error" : resClave ? "info" : "success",
           detail: alerta.message,
           life: 1500,
         });
@@ -75,7 +85,6 @@ const Usuarios = () => {
       };
       show_alert();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
 
   const filtrar_columnas = (event) => {
@@ -105,18 +114,18 @@ const Usuarios = () => {
     e.preventDefault();
     setUsuarioState(usuario);
     setVerEliminarRestaurar(true);
-    setResClave(false)
+    setResClave(false);
   };
 
   const btn_restablecer = (e, usuario) => {
     e.preventDefault();
     setVerEliminarRestaurar(true);
     setUsuarioState(usuario);
-    setResClave(true)
+    setResClave(true);
   };
 
   const cambiar_visibilidad_modal = () => {
-    setResClave(false)
+    setResClave(false);
     setPerfilesEdit([]);
     setPermisosEdit([]);
     setModalVisible(!modalVisible);
@@ -146,48 +155,63 @@ const Usuarios = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <PButton
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={(e) => editar_usuario(e, rowData.id_usuario)}
-            >{Edit_Icono}</PButton>
-          )}
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_usuario(e, rowData.id_usuario)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-            <PButton
-              tooltip="Eliminar"
-              className="p-button-rounded p-button-danger p-mr-2"
-              tooltipOptions={{ position: "top" }}
-              onClick={(e) => modal_eliminar_usuario(e, rowData)}
-            >
-              {Trash_Icono}
-            </PButton>
-          )}
+          <PButton
+            tooltip="Eliminar"
+            className="p-button-rounded p-button-danger p-mr-2"
+            tooltipOptions={{ position: "top" }}
+            onClick={(e) => modal_eliminar_usuario(e, rowData)}
+          >
+            {Trash_Icono}
+          </PButton>
+        )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
         ).length > 0 && (
-            <PButton
-              tooltip="Restablecer"
-              className="p-button-rounded p-button-info"
-              tooltipOptions={{ position: "top" }}
-              onClick={(e) => btn_restablecer(e, rowData)}
-            >
-              {Key_Icono}
-            </PButton>
-          )}
+          <PButton
+            tooltip="Restablecer"
+            className="p-button-rounded p-button-info"
+            tooltipOptions={{ position: "top" }}
+            onClick={(e) => btn_restablecer(e, rowData)}
+          >
+            {Key_Icono}
+          </PButton>
+        )}
       </div>
     );
   };
 
   const main = () => (
-
     <div className="w-5/6">
       <Toast ref={toast} />
 
-      {modalVisible && <ModalAgregarUsuario visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
-      {verEliminarRestaurar && <EliminarRestaurar tipo={resClave ? 'RESTABLECER_CLAVE' : 'ELIMINAR'} funcion={e => resClave ? restablecer_usuario_provider(usuarioState.id_usuario, e) : eliminar_restablecer_usuario(usuarioState.id_usuario, e)} />}
+      {modalVisible && (
+        <ModalAgregarUsuario
+          visible={modalVisible}
+          onClose={cambiar_visibilidad_modal}
+        />
+      )}
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={resClave ? "RESTABLECER_CLAVE" : "ELIMINAR"}
+          funcion={(e) =>
+            resClave
+              ? restablecer_usuario_provider(usuarioState.id_usuario, e)
+              : eliminar_restablecer_usuario(usuarioState.id_usuario, e)
+          }
+        />
+      )}
 
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Usuarios</h1>
@@ -198,23 +222,19 @@ const Usuarios = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <Button
-              tipo={'PRINCIPAL'}
-              funcion={(e) => setModalVisible(true, e)}
-            >{Add_Icono} Agregar </Button>
-          )}
+          <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
+            {Add_Icono} Agregar{" "}
+          </Button>
+        )}
         {permisosUsuario.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
         ).length > 0 && (
-            <div className="h-full flex justify-center items-center">
-              <BLink
-                tipo={'INACTIVOS'}
-                url="/configuracion/usuarios/inactivos"
-              >
-                Inactivos
-              </BLink>
-            </div>
-          )}
+          <div className="h-full flex justify-center items-center">
+            <BLink tipo={"INACTIVOS"} url="/configuracion/usuarios/inactivos">
+              Inactivos
+            </BLink>
+          </div>
+        )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
           <InputText
@@ -252,20 +272,19 @@ const Usuarios = () => {
         </DataTable>
       </div>
     </div>
-
   );
 
   return (
     <>
-      {
-        permisosUsuario.length === 0 ?
-          (<Loader />) :
-          (permisosUsuario.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosUsuario.length === 0 ? (
+        <Loader />
+      ) : permisosUsuario.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
   );
 };

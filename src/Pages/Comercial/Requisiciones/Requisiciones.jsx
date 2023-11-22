@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Add_Icono, Cancelar_Filtro_Icon, Filter_Icono, Req_Icono } from "../../../components/Icons/Iconos";
+import {
+  Add_Icono,
+  Cancelar_Filtro_Icon,
+  Filter_Icono,
+  Req_Icono,
+} from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import BLink from "../../../components/Botones/BLink";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -13,12 +18,8 @@ import Button from "../../../components/Botones/Button.jsx";
 import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/ModalFiltrarReq.jsx";
 
 const Requisiciones = () => {
-  const {
-    verEliminarRestaurar,
-    authUsuario,
-    Permisos_DB,
-    authPermisos,
-  } = useAuth();
+  const { verEliminarRestaurar, authUsuario, Permisos_DB, authPermisos } =
+    useAuth();
   const {
     eliminar_requisicion,
     dataRequisiciones,
@@ -47,13 +48,13 @@ const Requisiciones = () => {
         return setPermisosReq(authPermisos);
       }
     }, 10);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authPermisos]);
 
   useEffect(() => {
     setRequiAgg({
       id_requisicion: 0,
-      id_empresa: authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
+      id_empresa:
+        authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
       id_proceso: 0,
       id_centro: 0,
       id_tipo_producto: 0,
@@ -73,8 +74,18 @@ const Requisiciones = () => {
 
   const main = () => (
     <>
-      {modalVisible && <ModalRevisarReq visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
-      {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
+      {modalVisible && (
+        <ModalRevisarReq
+          visible={modalVisible}
+          onClose={cambiar_visibilidad_modal}
+        />
+      )}
+      {modalFiltrar && (
+        <ModalFiltrarReq
+          visible={modalFiltrar}
+          onClose={cambiar_visibilidad_modal_filtrar}
+        />
+      )}
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"ELIMINAR"}
@@ -91,15 +102,19 @@ const Requisiciones = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
+            <div className="h-full flex justify-center items-center">
               <div className="h-full flex justify-center items-center">
                 <div className="h-full flex justify-center items-center">
-                  <div className="h-full flex justify-center items-center">
-                    <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                      {Add_Icono} Agregar</BLink>
-                  </div>
+                  <BLink
+                    tipo={"PRINCIPAL"}
+                    url={"/compras/requisiciones/agregar"}
+                  >
+                    {Add_Icono} Agregar
+                  </BLink>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>
@@ -126,8 +141,9 @@ const Requisiciones = () => {
           </span>
 
           <div className="h-full flex justify-center items-center">
-            <Button tipo={"FILTRAR"} funcion={(e) => setmodalFiltrar(true, e)}
-            >{Filter_Icono} Filtrar </Button>
+            <Button tipo={"FILTRAR"} funcion={(e) => setmodalFiltrar(true, e)}>
+              {Filter_Icono} Filtrar{" "}
+            </Button>
             {requisicionesFiltradas.length > 0 && (
               <Button funcion={cancelar_filtro} tipo={"CANCELAR_FILTRO"}>
                 {Cancelar_Filtro_Icon}
@@ -179,8 +195,8 @@ const Requisiciones = () => {
       {permisosReq.length === 0 ? (
         <Loader />
       ) : permisosReq.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

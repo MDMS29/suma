@@ -2,8 +2,9 @@ import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import {
   Add_Icono,
+  Cancelar_Filtro_Icon,
   Filter_Icono,
-  Req_Icono
+  Req_Icono,
 } from "../../../components/Icons/Iconos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import CardRequisicion from "../../../components/Cards/CardRequisicion";
@@ -15,14 +16,28 @@ import { useState } from "react";
 import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/ModalFiltrarReq";
 
 function ReqRevisadas() {
-  const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones, permisosReq, cargando } = useRequisiciones();
-  const { Permisos_DB } = useAuth();
+  const {
+    dataRequisiciones,
+    verPDF,
+    setVerPDF,
+    requisicionesFiltradas,
+    filtrar_requisiciones,
+    permisosReq,
+    cargando,
+    setRequisicionesFiltradas,
+  } = useRequisiciones();
 
+  const { Permisos_DB } = useAuth();
   const [modalFiltrar, setmodalFiltrar] = useState(false);
 
   const cambiar_visibilidad_modal_filtrar = () => {
     setmodalFiltrar(!modalFiltrar);
-  }
+  };
+
+  const cancelar_filtro = () => {
+    setRequisicionesFiltradas([]);
+    document.querySelector("#lupa").value = ""
+  };
 
   const cerrar = () => {
     setVerPDF(false);
@@ -31,7 +46,12 @@ function ReqRevisadas() {
   const main = () => (
     <>
       {verPDF && <ModalPDF visible={verPDF} onClose={cerrar} />}
-      {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
+      {modalFiltrar && (
+        <ModalFiltrarReq
+          visible={modalFiltrar}
+          onClose={cambiar_visibilidad_modal_filtrar}
+        />
+      )}
 
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
@@ -43,13 +63,17 @@ function ReqRevisadas() {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
+            <div className="h-full flex justify-center items-center">
               <div className="h-full flex justify-center items-center">
-                <div className="h-full flex justify-center items-center">
-                  <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                    {Add_Icono} Agregar</BLink>
-                </div>
+                <BLink
+                  tipo={"PRINCIPAL"}
+                  url={"/compras/requisiciones/agregar"}
+                >
+                  {Add_Icono} Agregar
+                </BLink>
               </div>
-            )}
+            </div>
+          )}
 
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>
@@ -64,6 +88,7 @@ function ReqRevisadas() {
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
             <InputText
+              id="lupa"
               className="h-10 pl-8 rounded-md"
               onChange={(e) => filtrar_requisiciones(e)}
               placeholder="Buscar No. Requisicion"
@@ -71,10 +96,14 @@ function ReqRevisadas() {
           </span>
 
           <div className="h-full flex justify-center items-center">
-            <Button
-              tipo={"FILTRAR"}
-              funcion={(e) => setmodalFiltrar(true, e)}
-            >{Filter_Icono} Filtrar </Button>
+            <Button tipo={"FILTRAR"} funcion={(e) => setmodalFiltrar(true, e)}>
+              {Filter_Icono} Filtrar{" "}
+            </Button>
+            {requisicionesFiltradas.length > 0 && (
+              <Button funcion={cancelar_filtro} tipo={"CANCELAR_FILTRO"}>
+                {Cancelar_Filtro_Icon}
+              </Button>
+            )}
           </div>
         </div>
 
@@ -83,9 +112,12 @@ function ReqRevisadas() {
             <div className="flex justify-center items-center w-full">
               <Loader />
             </div>
-          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0 ? (
+          ) : dataRequisiciones.error === false ||
+            dataRequisiciones.length == 0 ? (
             <div className="bg-white border w-full my-3 p-3">
-              <p className="text-2xl text-center">No hay requisiciones verificadas.</p>
+              <p className="text-2xl text-center">
+                No hay requisiciones verificadas.
+              </p>
             </div>
           ) : (
             <>

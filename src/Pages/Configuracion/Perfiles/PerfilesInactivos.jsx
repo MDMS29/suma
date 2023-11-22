@@ -5,31 +5,31 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
 import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
-import { InputText } from "primereact/inputtext"
-
+import { InputText } from "primereact/inputtext";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
 import useAuth from "../../../hooks/useAuth";
 import usePerfiles from "../../../hooks/Configuracion/usePerfiles";
-
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Button from "../../../components/Botones/Button";
 
 const PerfilesInactivos = () => {
   const toast = useRef(null);
-  const { dataPerfiles,
+  const {
+    dataPerfiles,
     permisosPerfil,
     setPerfilState,
     perfilState,
-    eliminar_restablecer_perfil
+    eliminar_restablecer_perfil,
   } = usePerfiles();
 
-  const { Permisos_DB,
+  const {
+    Permisos_DB,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
     alerta,
-    setAlerta
-  } = useAuth()
+    setAlerta,
+  } = useAuth();
 
   const modal_restaurar_perfil = (perfil) => {
     setVerEliminarRestaurar(true);
@@ -40,15 +40,14 @@ const PerfilesInactivos = () => {
     if (alerta.show) {
       (() => {
         toast.current.show({
-          severity: alerta.error ? 'error' : 'success',
+          severity: alerta.error ? "error" : "success",
           detail: alerta.message,
           life: 1500,
         });
-        setTimeout(() => setAlerta({}), 1500)
-      })()
+        setTimeout(() => setAlerta({}), 1500);
+      })();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [alerta])
+  }, [alerta]);
 
   const columns = [
     { field: "id_perfil", header: "ID" },
@@ -57,24 +56,25 @@ const PerfilesInactivos = () => {
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataPerfiles);
-  // -------------Filtro-------------
+
+  // Filtro
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
-    let columnas_ordenadas_seleccionadas = columns.filter((col) => columnas_seleccionadas.some((sCol) => sCol.field === col.field));
+    let columnas_ordenadas_seleccionadas = columns.filter((col) =>
+      columnas_seleccionadas.some((sCol) => sCol.field === col.field)
+    );
 
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
-  // -------------Buscador-------------
-  const [searchTerm, setSearchTerm] = useState('');
+  // Buscador
+  const [searchTerm, setSearchTerm] = useState("");
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
     const items_filtrados = dataPerfiles.filter((item) => {
-      return (
-        item.nombre_perfil.toLowerCase().includes(value)
-      );
+      return item.nombre_perfil.toLowerCase().includes(value);
     });
     setFilteredData(items_filtrados);
   };
@@ -97,21 +97,31 @@ const PerfilesInactivos = () => {
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {verEliminarRestaurar && <EliminarRestaurar tipo={'RESTAURAR'} funcion={e => eliminar_restablecer_perfil(perfilState.id_perfil, e)} />}
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"RESTAURAR"}
+          funcion={(e) => eliminar_restablecer_perfil(perfilState.id_perfil, e)}
+        />
+      )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Perfiles Inactivos</h1>
         <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>
-          <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+          <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>
             {Return_Icono} Regresar
           </Button>
         </div>
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
-          <InputText className="h-10 pl-8 w-auto rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
+          <InputText
+            className="h-10 pl-8 w-auto rounded-md"
+            placeholder="Buscar"
+            onChange={(e) => buscador(e)}
+            value={searchTerm}
+          />
         </span>
       </div>
 
@@ -132,44 +142,46 @@ const PerfilesInactivos = () => {
           {visibleColumns.map((col) => (
             <Column key={col.field} field={col.field} header={col.header} />
           ))}
-          {/*columna Acciones */}
           <Column
             key="actions"
             style={{ width: "10%" }}
-            body={(rowData) => (
-              permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR).length > 0 ? (
+            body={(rowData) =>
+              permisosPerfil.filter(
+                (permiso) =>
+                  permiso.permiso.toLowerCase() === Permisos_DB.RESTAURAR
+              ).length > 0 ? (
                 <div className="text-center flex gap-x-3">
                   <PButton
                     tooltip="Restaurar"
                     tooltipOptions={{ position: "top" }}
-                    // eslint-disable-next-line no-unused-vars
-                    onClick={e => modal_restaurar_perfil(rowData)}
+                    onClick={(e) => modal_restaurar_perfil(rowData)}
                   >
                     {Restore_Icono}
                   </PButton>
                 </div>
-              ) : '')}
+              ) : (
+                ""
+              )
+            }
           />
         </DataTable>
       </div>
     </div>
-  )
+  );
 
   return (
     <>
-      {
-        permisosPerfil.length === 0
-          ?
-          (<Loader />)
-          :
-          (permisosPerfil.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosPerfil.length === 0 ? (
+        <Loader />
+      ) : permisosPerfil.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
-  )
+  );
 };
 
-export default PerfilesInactivos
+export default PerfilesInactivos;

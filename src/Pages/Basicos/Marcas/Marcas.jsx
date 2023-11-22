@@ -4,7 +4,11 @@ import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
-import { Add_Icono, Edit_Icono, Marca_Icono } from "../../../components/Icons/Iconos";
+import {
+  Add_Icono,
+  Edit_Icono,
+  Marca_Icono,
+} from "../../../components/Icons/Iconos";
 import { Button as PButton } from "primereact/button";
 import useMarcas from "../../../hooks/Basicos/useMarcas";
 import Loader from "../../../components/Loader";
@@ -16,12 +20,12 @@ import ModalAgregarMarcas from "../../../components/Modales/Basicos/Marcas/Modal
 const Marcas = () => {
   const toast = useRef(null);
 
-
   const columns = [
     { field: "id_marca", header: "ID" },
-    { field: "marca", header: "Marca" }
+    { field: "marca", header: "Marca" },
   ];
-  const { dataMarcas, permisosMarcas, setPermisosMarcas, buscar_marca } = useMarcas()
+  const { dataMarcas, permisosMarcas, setPermisosMarcas, buscar_marca } =
+    useMarcas();
   const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,13 +33,11 @@ const Marcas = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(dataMarcas);
 
-
   const editar_marca = async (e, id_marca) => {
-    e.preventDefault()
-    setModalVisible(true)
-    console.log(id_marca);
-    await buscar_marca(id_marca)
-  }
+    e.preventDefault();
+    setModalVisible(true);
+    await buscar_marca(id_marca);
+  };
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -50,9 +52,7 @@ const Marcas = () => {
     setSearchTerm(value);
 
     const items_filtrados = dataMarcas.filter((item) => {
-      return (
-        item.marca.toLowerCase().includes(value)
-      );
+      return item.marca.toLowerCase().includes(value);
     });
     setFilteredData(items_filtrados);
   };
@@ -71,7 +71,6 @@ const Marcas = () => {
         return setPermisosMarcas(authPermisos);
       }
     }, 10);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authPermisos]);
 
   //MOSTRAR ALERTA
@@ -79,16 +78,15 @@ const Marcas = () => {
     if (alerta.show) {
       const show_alert = () => {
         toast.current.show({
-          severity: alerta.error ? 'error' : 'success',
+          severity: alerta.error ? "error" : "success",
           detail: alerta.message,
           life: 1500,
         });
-        setTimeout(() => setAlerta({}), 1500)
-      }
-      show_alert()
+        setTimeout(() => setAlerta({}), 1500);
+      };
+      show_alert();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [alerta])
+  }, [alerta]);
 
   const header = (
     <MultiSelect
@@ -108,13 +106,15 @@ const Marcas = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <PButton
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={e => editar_marca(e, rowData.id_marca)}
-            >{Edit_Icono}</PButton>
-          )}
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_marca(e, rowData.id_marca)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
       </div>
     );
   };
@@ -124,7 +124,12 @@ const Marcas = () => {
       <div className="w-5/6">
         <Toast ref={toast} />
 
-        {modalVisible && <ModalAgregarMarcas visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+        {modalVisible && (
+          <ModalAgregarMarcas
+            visible={modalVisible}
+            onClose={cambiar_visibilidad_modal}
+          />
+        )}
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Marcas</h1>
@@ -135,11 +140,13 @@ const Marcas = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-              <Button
-                tipo={"PRINCIPAL"}
-                funcion={(e) => setModalVisible(true, e)}
-              >{Add_Icono} Agregar</Button>
-            )}
+            <Button
+              tipo={"PRINCIPAL"}
+              funcion={(e) => setModalVisible(true, e)}
+            >
+              {Add_Icono} Agregar
+            </Button>
+          )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
             <InputText
@@ -182,17 +189,17 @@ const Marcas = () => {
 
   return (
     <>
-      {
-        permisosMarcas.length === 0 ?
-          (<Loader />) :
-          (permisosMarcas.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosMarcas.length === 0 ? (
+        <Loader />
+      ) : permisosMarcas.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default Marcas
+export default Marcas;

@@ -10,13 +10,13 @@ const rutas_usuario = [
     name: "Home",
     route: "/home",
     component: <Home />,
-    key: 8
+    key: 8,
   },
   ...AuthRoutes,
   ...AdminRoutes,
   ...ComprasRoutes,
   ...BasicasRoutes,
-  ...ErrorRoutes
+  ...ErrorRoutes,
 ];
 
 export default rutas_usuario;
