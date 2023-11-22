@@ -1,7 +1,6 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 
-
 dotenv.config()
 const whiteList = [process.env.FRONT_END_URL]
 

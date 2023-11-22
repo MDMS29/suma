@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db"
+import { pool } from "../../config/db"
 import {
     _BuscarCodigoModulo, _BuscarIconoModulo, _BuscarModuloID,
     _BuscarModuloNombre, _BuscarRolModulo, _CambiarEstadoModulo, _EditarModulo,

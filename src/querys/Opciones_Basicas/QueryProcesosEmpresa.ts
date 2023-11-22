@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 import {
     _buscar_proceso_codigo, _buscar_proceso_id, _buscar_proceso_nombre, _editar_proceso_empresa, _insertar_proceso_empresa,
     _obtener_procesos_empresa

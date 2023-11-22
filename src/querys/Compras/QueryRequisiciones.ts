@@ -1,4 +1,4 @@
-import { _DB, pool } from "../../../config/db";
+import { _DB, pool } from "../../config/db";
 import {
     _FA_obtener_requisicion_enc,
 

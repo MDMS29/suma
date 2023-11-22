@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 import {
     _buscar_empresa_id, _buscar_empresa_nit, _buscar_razon_social, _cambiar_estado_empresa,
     _editar_empresa, _insertar_empresa, _obtener_empresas

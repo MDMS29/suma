@@ -4,7 +4,7 @@ import { UsuarioLogin } from '../../Interfaces/Configuracion/IConfig';
 import { UsuarioSchema } from '../../validations/Configuracion.Zod';
 import { EstadosTablas } from '../../helpers/constants';
 import { Generar_Llaves_Secretas } from '../../helpers/utils';
-import { transporter } from '../../../config/mailer';
+import { transporter } from '../../config/mailer';
 
 export default class UsuarioController {
     public async Autenticar_Usuario(req: Request, res: Response) {

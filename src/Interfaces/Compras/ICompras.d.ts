@@ -15,7 +15,7 @@ export interface Requisicion_Enc {
     id_tipo_producto: number
     fecha_requisicion: Date
     hora_requisicion: string
-    equipo: any 
+    equipo: any
     comentarios: string
     det_requisicion: Requisicion_Det[]
 }
@@ -39,6 +39,24 @@ export interface Filtro_Requisiciones {
     centro_costo: string | number,
     tipo_producto: string | number,
     estado: string
-    fecha_inicial : string
-    fecha_final : string
+    fecha_inicial: string
+    fecha_final: string
+}
+
+
+/****************  INTERFACES PARA LOS PROVEEDORES  ****************/
+export interface Proveedor {
+    id_tercero?: string
+    id_empresa: string
+    tipo_tercero: string
+    tipo_documento: string
+    documento: string
+    nombre: string
+    direccion: string
+    telefono: string
+    correo: string
+    contacto: string
+    telefono_contacto: string
+    id_estado: string
+    suministros?: []
 }
