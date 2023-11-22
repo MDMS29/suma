@@ -41,9 +41,7 @@ const ModulosProvider = ({ children }) => {
 
   const location = useLocation();
 
-  const cambiar_modulos = (e) => {
-    console.log(e.target.name);
-    console.log(e.target.value);
+  const cambiar_modulos = (e) => { 
     setModulosAgg((prevModulosAgg) => ({
       ...prevModulosAgg,
       [e.target.name]:
@@ -243,8 +241,7 @@ const ModulosProvider = ({ children }) => {
     };
 
     try {
-      const { data } = await conexionCliente.post("/modulos", formData, config);
-      console.log("data back", data);
+      const { data } = await conexionCliente.post("/modulos", formData, config); 
       if (!data?.error) {
         setDataModulos((dataModulos) => [data, ...dataModulos]);
 
@@ -292,8 +289,7 @@ const ModulosProvider = ({ children }) => {
         config
       );
 
-      if (!data?.error) {
-        //lista de menús en el estado
+      if (!data?.error) { 
         setDataMenus([...dataMenus, data]);
 
         setAlerta({
@@ -326,16 +322,14 @@ const ModulosProvider = ({ children }) => {
       },
     };
 
-    try {
-      // Realiza la solicitud PATCH API para editar la información del modulo
+    try { 
       const { data } = await conexionCliente.patch(
         `/modulos/${formData.id_modulo}`,
         formData,
         config
       );
 
-      if (data?.id_modulo) {
-        // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
+      if (data?.id_modulo) { 
         const modulosActualizados = dataModulos.map((modulo) =>
           modulo.id_modulo === data.id_modulo ? data : modulo
         );
@@ -385,8 +379,7 @@ const ModulosProvider = ({ children }) => {
         config
       );
 
-      if (data?.id_menu) {
-        // Actualiza la lista de menús con el menú editado
+      if (data?.id_menu) { 
         const menusActualizados = dataMenus.map((menu) =>
           menu.id_menu === data.id_menu ? data : menu
         );

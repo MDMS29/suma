@@ -72,8 +72,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     }, 10);
   }, [authPermisos]);
   
-  useEffect(() => {
-    // Busca el nombre del módulo en dataMenus
+  useEffect(() => { 
     const moduloEncontrado = dataModulos.find((modulo) => modulo.id_modulo === ModuloState);
     if (moduloEncontrado) {
       setModuloNombre(moduloEncontrado.nombre_modulo);
@@ -157,8 +156,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
       if (response) {
   
         setIsEditing(false);
-  
-        // Limpia los campos del formulario
+   
         setMenusAgg({
           id_menu: 0,
           nombre_menu: "",
@@ -235,9 +233,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
         <div className="flex flex-col items-end mt-3">
           <Button
           tipo={'PRINCIPAL'}
-          funcion={isEditing ? actualizar_menu : menu_guardar}
-            // className="bg-primaryYellow p-2 rounded-md px-3 hover:bg-yellow-500"
-            // onClick={isEditing ? actualizar_menu : menu_guardar}
+          funcion={isEditing ? actualizar_menu : menu_guardar} 
           >
             {isEditing ? "Actualizar" : "Agregar"}
           </Button>

@@ -1,8 +1,4 @@
-import {
-  Add_Icono,
-  Filter_Icono,
-  Req_Icono,
-} from "../../../components/Icons/Iconos";
+import { Add_Icono, Cancelar_Filtro_Icon, Filter_Icono, Req_Icono } from "../../../components/Icons/Iconos";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -15,14 +11,7 @@ import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/M
 import Button from "../../../components/Botones/Button";
 
 function ReqEliminadas() {
-  const {
-    dataRequisiciones,
-    eliminar_requisicion,
-    requisicionesFiltradas,
-    filtrar_requisiciones,
-    cargando,
-    permisosReq,
-  } = useRequisiciones();
+  const { dataRequisiciones, eliminar_requisicion, requisicionesFiltradas, filtrar_requisiciones, cargando, permisosReq, setRequisicionesFiltradas } = useRequisiciones();
 
   const { verEliminarRestaurar, Permisos_DB } = useAuth();
 
@@ -30,6 +19,11 @@ function ReqEliminadas() {
 
   const cambiar_visibilidad_modal_filtrar = () => {
     setmodalFiltrar(!modalFiltrar);
+  };
+
+  const cancelar_filtro = () => {
+    setRequisicionesFiltradas([]);
+    document.querySelector("#lupa").value = ""
   };
 
   const main = () => (
@@ -88,9 +82,13 @@ function ReqEliminadas() {
           </span>
 
           <div className="h-full flex justify-center items-center">
-            <Button tipo={"FILTRAR"} funcion={(e) => setmodalFiltrar(true, e)}>
-              {Filter_Icono} Filtrar{" "}
-            </Button>
+            <Button tipo={"FILTRAR"} funcion={(e) => setmodalFiltrar(true, e)}
+            >{Filter_Icono} Filtrar </Button>
+            {requisicionesFiltradas.length > 0 && (
+              <Button funcion={cancelar_filtro} tipo={"CANCELAR_FILTRO"}>
+                {Cancelar_Filtro_Icon}
+              </Button>
+            )}
           </div>
         </div>
 

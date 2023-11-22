@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { createContext, useEffect, useMemo, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";

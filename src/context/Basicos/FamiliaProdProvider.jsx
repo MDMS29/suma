@@ -75,8 +75,6 @@ const FamiliaProdProvider = ({ children }) => {
 
       const { id_familia, referencia, descripcion } = data;
 
-      console.log(data);
-
       setFliaProAgg({
         id_familia,
         id_empresa: authUsuario.id_empresa,

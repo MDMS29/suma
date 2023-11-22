@@ -70,8 +70,7 @@ const TipoProdProvider = ({ children }) => {
 
       if (data?.error) {
         return { error: true, message: data.message };
-      }
-      // const { id_tipo_producto, descripcion } = data;
+      } 
       setTipoProdAgg(data);
     } catch (error) {
       console.error(error);

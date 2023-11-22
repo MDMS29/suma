@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 
 import React from "react";
 import Button from "../Botones/Button";
@@ -6,7 +6,6 @@ import Button from "../Botones/Button";
 import { Dialog } from "primereact/dialog";
 import useAuth from "../../hooks/useAuth";
 
-// eslint-disable-next-line react/prop-types
 const EliminarRestaurar = ({ tipo, funcion }) => {
     const { verEliminarRestaurar, setVerEliminarRestaurar } = useAuth()
 

@@ -11,7 +11,6 @@ import { Dropdown } from "primereact/dropdown";
 import useAuth from "../../../../hooks/useAuth";
 import useEmpresas from "../../../../hooks/useEmpresas";
 
-// eslint-disable-next-line react/prop-types
 const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   const {
@@ -40,7 +39,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     if (authUsuario.perfiles.some((perfil) => perfil.id_perfil == 1)) {
       obtener_empresas()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -48,7 +46,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       setPerfilesSeleccionados(perfilesEdit)
       setPermisosPorModulo(permisosEdit)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permisosEdit, perfilesEdit])
 
   const cerrar_modal = () => {
@@ -69,7 +66,7 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
 
   const manejo_espacios_blancos = (e) => {
     if (e.key === ' ') {
-      e.preventDefault(); // Evitar la entrada de espacios en blanco
+      e.preventDefault();
     }
   };
 
@@ -104,10 +101,9 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       }
 
       if (response) {
-        onClose(); // Cierra el modal
-        setStep(1); // Vuelve al primer paso
+        onClose();
+        setStep(1);
 
-        // Limpia los campos del formulario
         setUsuariosAgg({
           id_usuario: UsuariosAgg.id_empresa,
           nombre: "",
@@ -121,13 +117,11 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
         setPermisosPorModulo([]);
       }
     } catch (error) {
-      // Maneja los errores si ocurren
       console.error("Error al guardar el usuario:", error.response.data.message);
     }
   };
 
   const btn_siguiente = () => {
-    // Realiza las validaciones aquí antes de avanzar al siguiente paso
     const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const errors = {};
     const regex = /^[a-zA-Z0-9\s]*$/;
@@ -161,11 +155,9 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
         UsuariosAgg.clave.trim() === "" &&
         UsuariosAgg.clave_repetida.trim() === "" && perfilesEdit.length <= 0
       ) {
-        // Para cuando ambos campos están vacíos
         errors.clave = "La clave está vacía";
         errors.clave_repetida = "La confirmación de clave está vacía";
       } else if (UsuariosAgg.clave !== UsuariosAgg.clave_repetida) {
-        // Para cuando las contraseñas no coinciden
         errors.clave = "Las contraseñas no coinciden";
         errors.clave_repetida = "Las contraseñas no coinciden";
       }
@@ -195,7 +187,6 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
     } else if (step === 3) {
       obtener_modulos(perfilesSeleccionados);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
 
@@ -329,11 +320,12 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
               <div className="flex flex-col">
                 <label className="text-gray-600 pb-2 font-semibold">Usuario <span className="font-bold text-red-900">*</span></label>
                 <InputText
+                  disabled={UsuariosAgg.usuario !== "" && "disabled"}
                   value={UsuariosAgg.usuario}
                   type="text"
                   name="usuario"
-                  className={`border-1 p-1 rounded-md h-10 px-3 py-2 ${errors.usuario ? "border-red-500" : "border-gray-300"
-                    }`}
+                  className={`border-1 h-10 rounded-md px-3 py-2 ${errors.usuario ? "border-red-500" : "border-gray-300"
+                    } ${UsuariosAgg.usuario !== "" && "bg-gray-200"}`}
                   onKeyPress={manejo_espacios_blancos}
                   onChange={(e) => btn_cambio_usuario(e)}
                 />

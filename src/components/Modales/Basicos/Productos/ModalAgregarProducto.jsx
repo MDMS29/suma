@@ -38,8 +38,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
     setProductosAgg({ ...productosAgg, [e.target.name]: esBoleano.includes(e.target.name) ? Boolean(!productosAgg[e.target.name]) : value, [name]: name === "referencia" ? value.replace(/\D/g, "") : value });
   };
 
-  const handleImageChange = (e) => {
-    // console.log(e.target.files)
+  const handleImageChange = (e) => { 
     const file = new FileReader()
     file.addEventListener("load", () => {
       setSelectedImage(file.result)
@@ -190,8 +189,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
     obtener_marcas()
     obtener_familia_prod()
     obtener_unidades()
-    obtener_tipo_producto()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    obtener_tipo_producto() 
   }, [])
 
   const footerContent = (

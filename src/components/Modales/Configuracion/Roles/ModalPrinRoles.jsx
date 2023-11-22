@@ -4,11 +4,12 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import useRoles from "../../../../hooks/Configuracion/useRoles";
 import Button from "../../../Botones/Button";
+import useAuth from "../../../../hooks/useAuth";
 
-// eslint-disable-next-line react/prop-types
 const ModalPrinRoles = ({ visible, onClose }) => {
 
   const { errors, setErrors, rolAgg, setRolAgg, guardar_rol, editar_rol } = useRoles();
+  const { setAlerta } = useAuth();
 
   const cerrar_modal = () => {
     setRolAgg({ id_rol: 0, nombre: '', descripcion: '' })
@@ -18,8 +19,8 @@ const ModalPrinRoles = ({ visible, onClose }) => {
 
   const btn_cambio_rol = (e) => {
     const value = e.target.value;
-    setRolAgg({ ...rolAgg, [e.target.name]: e.target.name == "nombre" ? value.replace(/\d/g, '') : value});
-}
+    setRolAgg({ ...rolAgg, [e.target.name]: e.target.name == "nombre" ? value.replace(/\d/g, '') : value });
+  }
   const btn_guardar = async () => {
 
     if (rolAgg.nombre.trim() === '') {
@@ -46,11 +47,11 @@ const ModalPrinRoles = ({ visible, onClose }) => {
       }
 
     } catch (error) {
-      console.log(error)
+      setAlerta({ error: true, show: true, message: 'Error' })
+      setTimeout(() => setAlerta({}), 1500)
     }
   };
 
-  // Botones de Atrás, Siguiente y Guardar del Modal
   const footerContent = (
     <div>
       <Button

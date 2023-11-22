@@ -4,8 +4,7 @@ import conexionCliente from "../config/ConexionCliente";
 
 
 const AuthContext = createContext();
-
-// eslint-disable-next-line react/prop-types
+ 
 const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate()
@@ -59,7 +58,6 @@ const AuthProvider = ({ children }) => {
     autenticar_usuario()
   }, [])
 
-  //CARGAR LOS PERMISOS SEGUN EL MODULO
   useEffect(() => {
     if (authUsuario.id_usuario) {
       const modulos = JSON.parse(localStorage.getItem('modulos'))
@@ -74,7 +72,7 @@ const AuthProvider = ({ children }) => {
     setAuthModulos([])
     localStorage.removeItem('token')
     localStorage.removeItem('modulos')
-    // localStorage.removeItem('_grecaptcha')
+    localStorage.removeItem('_grecaptcha')
     navigate("/auth")
   }
 
@@ -85,8 +83,7 @@ const AuthProvider = ({ children }) => {
     RESTAURAR: 'restaurar',
     REVISAR: 'revisar'
   }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ 
   const obj = useMemo(() => ({
     authUsuario, setAuthUsuario, authModulos, setAuthModulos,
     cerrar_salir, authPermisos, Permisos_DB, alerta, setAlerta,

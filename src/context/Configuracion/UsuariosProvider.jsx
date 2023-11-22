@@ -4,8 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../../hooks/useAuth'
 
 const UsuariosContext = createContext();
-
-// eslint-disable-next-line react/prop-types
+ 
 const UsuariosProvider = ({ children }) => {
 
   const navigate = useNavigate()
@@ -16,8 +15,7 @@ const UsuariosProvider = ({ children }) => {
   const [contraseña, setConstraseña] = useState("")
 
   const [perfilesAgg, setPerfilesAgg] = useState([]);
-  const [modulosAgg, setModulosAgg] = useState([]);
-  // eslint-disable-next-line no-unused-vars
+  const [modulosAgg, setModulosAgg] = useState([]); 
   const [permisosAgg, setPermisosAgg] = useState([]);
 
   const [perfilesEdit, setPerfilesEdit] = useState([])
@@ -164,11 +162,15 @@ const UsuariosProvider = ({ children }) => {
     try {
       const { data } = await conexion_cliente.patch(`usuarios/restablecer_clave/${authUsuario.id_usuario}`, body, config)
       if (data.error) {
-        return console.log(data.message)
+        return
       }
-
     } catch (error) {
-      console.log(error)
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response.data.message
+      })
+      setTimeout(() => setAlerta({}), 1500)
     }
   }
 
@@ -234,8 +236,7 @@ const UsuariosProvider = ({ children }) => {
       },
     };
 
-    try {
-      // Realiza la solicitud POST a la API para guardar la información del usuario
+    try { 
       const { data } = await conexion_cliente.post("/usuarios", formData, config);
       if (!data?.error) {
         setDataUsuarios((dataUsuarios) => [data, ...dataUsuarios])
@@ -317,12 +318,10 @@ const UsuariosProvider = ({ children }) => {
       },
     };
 
-    try {
-      // Realiza la solicitud PATCH API para editar la información del usuario
+    try { 
       const { data } = await conexion_cliente.patch(`/usuarios/${formData.id_usuario}`, formData, config);
 
-      if (data?.usuario) {
-        // ACTUALIZAR STATE, MOSTRAR MENSAJE Y CERRAR MODAL
+      if (data?.usuario) { 
         const usuarios_actualizados = dataUsuarios.map(usuario => usuario.id_usuario === data.usuario.id_usuario ? data.usuario : usuario)
         setDataUsuarios(usuarios_actualizados)
 
@@ -354,8 +353,7 @@ const UsuariosProvider = ({ children }) => {
       setTimeout(() => setAlerta({}), 1500)
     }
   }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ 
   const obj = useMemo(() => ({
     dataUsuarios,
     UsuariosAgg,

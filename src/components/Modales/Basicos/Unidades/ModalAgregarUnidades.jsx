@@ -37,8 +37,7 @@ const ModalAgregarUnidades = ({ visible, onClose }) => {
     const errors = {};
 
     if (UnidadesAgg.unidad.trim() === "") {
-      errors.unidad = "Este campo es obligatorio";
-      console.log("Este campo es obligatorio");
+      errors.unidad = "Este campo es obligatorio"; 
       setErrors(errors);
       return;
     }
