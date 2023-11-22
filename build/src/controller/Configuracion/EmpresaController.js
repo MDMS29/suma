@@ -20,7 +20,7 @@ class _EmpresaController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { estado } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!estado) {
                 return res.status(400).json({ error: true, message: 'No se ha definido el estado' }); //!ERROR
@@ -45,19 +45,19 @@ class _EmpresaController {
             // const { id_modulo } = req.params
             const { nit, razon_social, telefono, direccion, correo } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!nit || nit === "") {
                 return res.status(400).json({ error: true, message: 'Ingrese el nit de la empresa' }); //!ERROR
             }
             if (!razon_social || razon_social === "") {
-                return res.status(400).json({ error: true, message: 'Ingrese la razon social de la empresa' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Ingrese la razón social de la empresa' }); //!ERROR
             }
             if (!telefono || telefono === "") {
-                return res.status(400).json({ error: true, message: 'Ingrese el telefono de la empresa' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Ingrese el teléfono de la empresa' }); //!ERROR
             }
             if (!direccion || direccion === "") {
-                return res.status(400).json({ error: true, message: 'Ingrese la direccion de la empresa' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Ingrese la dirección de la empresa' }); //!ERROR
             }
             if (!correo || correo === "") {
                 return res.status(400).json({ error: true, message: 'Ingrese el correo de la empresa' }); //!ERROR
@@ -81,7 +81,7 @@ class _EmpresaController {
             const { id_empresa } = req.params;
             const { usuario } = req;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }); //!ERROR
@@ -106,7 +106,7 @@ class _EmpresaController {
             const { id_empresa } = req.params;
             const { nit, razon_social, telefono, direccion, correo } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }); //!ERROR
@@ -154,7 +154,7 @@ class _EmpresaController {
             const { id_empresa } = req.params;
             const { estado } = req.query;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.json({ error: true, message: 'No se ha encontrado la empresa' }); //!ERROR

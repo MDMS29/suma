@@ -26,7 +26,7 @@ class UsuarioController {
             if (captcha === '') {
                 return res.status(404).json({ error: true, message: 'Debe realizar el CAPTCHA' }); //!ERROR
             }
-            const result = Configuracion_Zod_1.UsusarioSchema.partial().safeParse(req.body);
+            const result = Configuracion_Zod_1.UsuarioSchema.partial().safeParse(req.body);
             if (!result.success) {
                 return res.status(400).json({ error: true, message: result.error.issues[0].message }); //!ERROR
             }
@@ -37,7 +37,7 @@ class UsuarioController {
                     usuario,
                     clave
                 });
-                //VERFICICARIÓN DE DATOS RETORNADOS
+                //VERIFICACIÓN DE DATOS RETORNADOS
                 if (!val) {
                     //RESPUESTA AL CLIENTE
                     return res.status(401).json({ error: true, message: 'Usuario o contraseña invalido' }); //!ERROR
@@ -56,7 +56,7 @@ class UsuarioController {
             const { usuario } = req; //TOMAR LA INFORMACION DEL MIDDLEWARE
             const { estado, empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' });
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' });
             }
             if (!estado) {
                 return res.status(403).json({ error: true, message: 'No se ha encontrado el estado' });
@@ -83,7 +83,7 @@ class UsuarioController {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //TOMAR LA INFORMACION DEL MIDDLEWARE
             if (!usuario.id_usuario) {
-                return res.status(401).send({ error: true, message: 'Inicie sesion para continuar' });
+                return res.status(401).send({ error: true, message: 'Inicie sesión para continuar' });
             }
             return res.status(200).json(usuario); //ENVIAR LA INFORMACION DEL MIDDLEWARE
         });
@@ -112,9 +112,9 @@ class UsuarioController {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             if (!((_a = req.usuario) === null || _a === void 0 ? void 0 : _a.id_usuario)) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
-                return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }); //!ERROR
+                return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }); //!ERROR
             }
-            const result = Configuracion_Zod_1.UsusarioSchema.safeParse(req.body); //VALIDACION DE LOS DATOS CON LA LIBRERIA ZOD
+            const result = Configuracion_Zod_1.UsuarioSchema.safeParse(req.body); //VALIDACION DE LOS DATOS CON LA LIBRERIA ZOD
             if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
                 return res.status(404).json({ error: true, message: result.error.issues[0].message }); //!ERROR
             }
@@ -147,7 +147,7 @@ class UsuarioController {
             const { id_usuario } = req.params; //OBTENER EL ID DEL USUARIO POR PARAMETROS
             //VALIDACION DE DATOS
             if (!((_a = req.usuario) === null || _a === void 0 ? void 0 : _a.id_usuario)) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
-                return res.status(400).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }); //!Error
+                return res.status(400).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }); //!Error
             }
             if (!id_usuario) { //VALIDAR QUE SI SE HA ENVIADO UN ID
                 return res.status(400).json({ error: true, message: "Usuario no definido" }); //!ERROR
@@ -162,7 +162,7 @@ class UsuarioController {
             if ((roles === null || roles === void 0 ? void 0 : roles.length) <= 0) { //VALIDAR QUE SI SE ESTEN AGREGANDO ROLES
                 return res.status(400).json({ error: true, message: "Debe asignarle permisos al usuario" }); //!ERROR
             }
-            const result = Configuracion_Zod_1.UsusarioSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+            const result = Configuracion_Zod_1.UsuarioSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
             if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
                 return res.json({ error: true, message: result.error.issues[0].message }); //!ERROR
             }
@@ -198,7 +198,7 @@ class UsuarioController {
             const { id_usuario } = req.params; //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
             let { estado } = req.query; //OBTENER EL ESTADO QUE TENDRA EL USUARIO
             if (!((_a = req.usuario) === null || _a === void 0 ? void 0 : _a.id_usuario)) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
-                return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }); //!ERROR
+                return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }); //!ERROR
             }
             if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
                 return res.status(400).json({ error: true, message: "Usuario no definido" });
@@ -233,7 +233,7 @@ class UsuarioController {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_usuario } = req.params; //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
             if (!((_a = req.usuario) === null || _a === void 0 ? void 0 : _a.id_usuario)) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
-                return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }); //!ERROR
+                return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }); //!ERROR
             }
             if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
                 return res.status(400).json({ error: true, message: "Usuario no definido" }); //!ERROR
@@ -261,7 +261,7 @@ class UsuarioController {
                             <p>Usuario: <strong>${(_d = Usuario_Change.data_usuario) === null || _d === void 0 ? void 0 : _d.usuario}</strong></p>
                             <p>Nueva Clave: <strong>${(_e = Usuario_Change.data_usuario) === null || _e === void 0 ? void 0 : _e.clave}</strong></p>
                             <br />
-                            <p>En caso de no haber solicitado este cambio, ponganse en contacto con nuestro equipo de soporte.</p>
+                            <p>En caso de no haber solicitado este cambio, pónganse en contacto con nuestro equipo de soporte.</p>
                             <p>Cordialmente,</p>
                             <br />
                             <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
@@ -285,7 +285,7 @@ class UsuarioController {
             const { id_usuario } = req.params; //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
             const { clave } = req.body; //OBTENER LA NUEVA CLAVE DEL USUARIO
             if (!((_a = req.usuario) === null || _a === void 0 ? void 0 : _a.id_usuario)) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
-                return res.status(401).json({ error: true, message: "Debe inicar sesión para realizar esta acción" }); //!ERROR
+                return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }); //!ERROR
             }
             if (!id_usuario) { //VALIDAR SI SE ESTA ENVIANDO UN ID VALIDO
                 return res.status(400).json({ error: true, message: "Usuario no definido" }); //!ERROR

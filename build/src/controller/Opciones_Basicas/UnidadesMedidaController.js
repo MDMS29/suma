@@ -17,7 +17,7 @@ class UnidadesMedidaController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { estado, empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }); //!ERROR
@@ -45,7 +45,7 @@ class UnidadesMedidaController {
             // const { id_modulo } = req.params
             const { id_empresa, unidad } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la empresa' }); //!ERROR
@@ -76,7 +76,7 @@ class UnidadesMedidaController {
             const { usuario } = req;
             const { id_unidad } = req.params;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_unidad) {
                 return res.json({ error: true, message: 'No se ha encontrado la unidad de medida' }); //!ERROR
@@ -101,7 +101,7 @@ class UnidadesMedidaController {
             const { id_unidad } = req.params;
             const { id_empresa, unidad } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la empresa' }); //!ERROR

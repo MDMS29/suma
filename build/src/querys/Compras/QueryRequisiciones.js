@@ -28,11 +28,29 @@ class QueryRequisiciones {
             }
         });
     }
-    Obtener_Requisiciones_Filtro(estado, empresa, usuario, tipo, valor) {
+    Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const client = yield db_1.pool.connect();
+            const { centro_costo, requisicion, proceso, tipo_producto, fecha_inicial, fecha_final } = filtros;
+            try {
+                let result = yield db_1._DB.func(DaoRequisiciones_1._FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto, fecha_inicial != '' ? fecha_inicial : null, fecha_final != '' ? fecha_final : null]);
+                return result;
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+            finally {
+                client.release();
+            }
+        });
+    }
+    Requisiciones_Filtro_Change(estado, empresa, usuario, _, valor) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = yield db_1.pool.connect();
             try {
-                let result = yield db_1._DB.func(DaoRequisiciones_1._FA_obtener_requisicion_filtro, [estado, empresa, usuario, tipo, valor]);
+                //FILTRO DE LOS DATOS ATRAVES DE --> estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto
+                let result = yield db_1._DB.func(DaoRequisiciones_1._FA_obtener_requisicion_filtro, [estado, empresa, usuario, 0, valor, 0, 0, null, null]);
                 return result;
             }
             catch (error) {

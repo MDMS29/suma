@@ -15,7 +15,7 @@ export interface Requisicion_Enc {
     id_tipo_producto: number
     fecha_requisicion: Date
     hora_requisicion: string
-    equipo: any  //TODO: PREGUNTAR QUE ES  "EQUIPO"
+    equipo: any 
     comentarios: string
     det_requisicion: Requisicion_Det[]
 }
@@ -31,4 +31,14 @@ export interface Coordenadas_Requisicion {
     HRectCabePie?: number,
     JumLine?: number,
     LineasDivCabe?: number
+}
+
+export interface Filtro_Requisiciones {
+    requisicion: string,
+    proceso: string | number,
+    centro_costo: string | number,
+    tipo_producto: string | number,
+    estado: string
+    fecha_inicial : string
+    fecha_final : string
 }

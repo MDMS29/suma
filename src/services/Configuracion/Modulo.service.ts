@@ -13,7 +13,7 @@ export default class ModuloService {
         try {
             const modulos = await this._Query_Modulo.Obtener_Modulos(estado)
             if (!modulos) {
-                return { error: true, message: `No hay modulos ${estado == EstadosTablas.ESTADO_ACTIVO ? 'activos' : 'inactivos'}` } //!ERROR
+                return { error: true, message: `No hay módulos ${estado == EstadosTablas.ESTADO_ACTIVO ? 'activos' : 'inactivos'}` } //!ERROR
             }
             return modulos
         } catch (error) {

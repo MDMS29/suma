@@ -2,7 +2,7 @@ import { Router } from "express";
 import { _Autorizacion } from "../../middleware/Autorizacion";
 import UsuarioController from "../../controller/Configuracion/UsuarioController";
 
-//DEFINICÍON DE EL ROUTER
+//DEFINICIÓN DEL ROUTER
 const _UsuarioRouter = Router();
 
 //DEFINICIÓN DEL CONTROLADOR DEL USUARIO

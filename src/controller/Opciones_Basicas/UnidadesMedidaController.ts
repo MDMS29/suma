@@ -8,7 +8,7 @@ export default class UnidadesMedidaController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
@@ -37,7 +37,7 @@ export default class UnidadesMedidaController {
         const { id_empresa, unidad } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa' }) //!ERROR
@@ -69,7 +69,7 @@ export default class UnidadesMedidaController {
         const { usuario } = req
         const { id_unidad } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_unidad) {
             return res.json({ error: true, message: 'No se ha encontrado la unidad de medida' }) //!ERROR
@@ -94,7 +94,7 @@ export default class UnidadesMedidaController {
         const { id_empresa, unidad } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa' }) //!ERROR

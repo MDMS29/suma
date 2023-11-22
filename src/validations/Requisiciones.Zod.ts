@@ -7,15 +7,15 @@ export const RequisicionesSchema = z.object({
     }).int(),
     id_proceso: z.number({
         invalid_type_error: "Tipo del proceso es invalido",
-        required_error: "Seleccione un proceso para la requisicion"
+        required_error: "Seleccione un proceso para la requisición"
     }).int(),
     id_centro: z.number({
         invalid_type_error: "Tipo del centro es invalido",
-        required_error: "Seleccione un centro para la requisicion"
+        required_error: "Seleccione un centro para la requisición"
     }).int(),
     id_tipo_producto: z.number({
         invalid_type_error: "Valor del tipo de producto es invalido",
-        required_error: "Seleccione un tipo de producto para la requisicion"
+        required_error: "Seleccione un tipo de producto para la requisición"
     }).int(),
     consecutivo: z.string({
         invalid_type_error: "Tipo del comentarios es invalido",
@@ -37,8 +37,35 @@ export const RequisicionesSchema = z.object({
         }),
         justificacion: z.optional(
             z.string({
-                invalid_type_error: "Tipo de la justificacion es invalida"
+                invalid_type_error: "Tipo de la justificación es invalida"
             })
         ),
     }).array()
+})
+
+export const FiltroRequisicionesSchema = z.object({
+    requisicion: z.string({
+        invalid_type_error: "Tipo de dato para el numero de requisición es invalido",
+        required_error: "Seleccione un centro de costo"
+    }),
+    proceso: z.number({
+        invalid_type_error: "Tipo de dato del proceso es invalido",
+        required_error: "Seleccione un tipo de producto para la requisición"
+    }).int(),
+    centro_costo: z.number({
+        invalid_type_error: "Tipo de dato del centro es invalido",
+        required_error: "Seleccione un centro para la requisición"
+    }).int(),
+    tipo_producto: z.number({
+        invalid_type_error: "Tipo de dato del tipo de producto es invalido",
+        required_error: "Seleccione un proceso para la requisición"
+    }).int(),
+    fecha_inicial:  z.string({
+        invalid_type_error: "Tipo de dato para la fecha inicial es invalido",
+        required_error: "Seleccione un centro de costo"
+    }),
+    fecha_final:  z.string({
+        invalid_type_error: "Tipo de dato para la fecha final es invalido",
+        required_error: "Seleccione un centro de costo"
+    })
 })

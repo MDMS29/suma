@@ -17,7 +17,7 @@ class ProcesosEmpresaController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }); //!ERROR
@@ -42,13 +42,13 @@ class ProcesosEmpresaController {
             // const { id_familia_producto } = req.params
             const { id_empresa, codigo, proceso } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }); //!ERROR
             }
             if (!codigo) {
-                return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el proceso' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Debe ingresar un código para el proceso' }); //!ERROR
             }
             if (!proceso) {
                 return res.status(400).json({ error: true, message: 'Debe ingresar el nombre del proceso' }); //!ERROR
@@ -76,7 +76,7 @@ class ProcesosEmpresaController {
             const { usuario } = req;
             const { id_proceso } = req.params;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_proceso) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado el proceso' }); //!ERROR
@@ -101,7 +101,7 @@ class ProcesosEmpresaController {
             const { id_proceso } = req.params;
             const { id_empresa, codigo, proceso } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }); //!ERROR
@@ -110,7 +110,7 @@ class ProcesosEmpresaController {
                 return res.status(400).json({ error: true, message: 'No se ha definido el proceso' }); //!ERROR
             }
             if (!codigo) {
-                return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el proceso' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Debe ingresar un código para el proceso' }); //!ERROR
             }
             if (!proceso) {
                 return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el proceso' }); //!ERROR

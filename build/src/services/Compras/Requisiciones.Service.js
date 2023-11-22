@@ -28,18 +28,18 @@ class RequisicionesService {
     Obtener_Requisiciones(estado, empresa, usuario, tipoFiltro, valor) {
         return __awaiter(this, void 0, void 0, function* () {
             const TIPOS_CONSULTA = {
-                noRequi: 'noRequi'
+                requisicion: 'requisicion'
             };
             try {
                 let requisiciones;
                 if (TIPOS_CONSULTA[tipoFiltro] == tipoFiltro) {
-                    requisiciones = yield this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, tipoFiltro, valor);
+                    requisiciones = yield this._Query_Requisiciones.Requisiciones_Filtro_Change(estado, empresa, usuario, tipoFiltro, valor);
                 }
                 else {
                     requisiciones = yield this._Query_Requisiciones.Obtener_Requisiciones_Enc(estado, empresa, usuario);
                 }
                 if ((requisiciones === null || requisiciones === void 0 ? void 0 : requisiciones.length) <= 0) {
-                    return { error: false, message: 'No se han encontrado las requisicion' }; //!ERROR
+                    return { error: false, message: 'No se han encontrado las requisiciones' }; //!ERROR
                 }
                 for (let requisicion_enc of requisiciones) {
                     const det_requisicion = yield this._Query_Requisiciones.Buscar_Detalle_Requisicion(requisicion_enc.id_requisicion);
@@ -56,10 +56,27 @@ class RequisicionesService {
             }
         });
     }
+    Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!Object.keys(filtros)) {
+                    return { error: true, message: "No hay existen filtros a realizar" };
+                }
+                const requisiciones = yield this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros);
+                if ((requisiciones === null || requisiciones === void 0 ? void 0 : requisiciones.length) === 0 || !requisiciones) {
+                    return { error: true, message: "No se han encontrado las requisiciones" };
+                }
+                return requisiciones;
+            }
+            catch (error) {
+                console.log(error);
+                return { error: true, message: "Error al filtrar las requisiciones" };
+            }
+        });
+    }
     Insertar_Requisicion(requisicion_request, usuario_creacion) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                //TODO: ARREGLAR VALIDACION DE DATOS
                 const requisicion_filtrada = yield this._Query_Requisiciones.Buscar_Requisicion_Consecutivo(requisicion_request);
                 if ((requisicion_filtrada === null || requisicion_filtrada === void 0 ? void 0 : requisicion_filtrada.length) > 0) {
                     return { error: true, message: 'Ya existe este consecutivo' }; //!ERROR
@@ -99,7 +116,7 @@ class RequisicionesService {
                             <br />
                             <p>Atentamente nos permitimos comunicarle que se ha creado una requisición dentro del Sistema Unificado de Mejora y Autogestión - <b>SUMA</b></p>
                             <p>Consecutivo: <strong> ${nueva_requisicion.requisicion} </strong></p>
-                            <p>Fecha Creacion: <strong> ${nueva_requisicion.fecha_creacion.toLocaleString().split(',')[0]} </strong></p>
+                            <p>Fecha Creación: <strong> ${nueva_requisicion.fecha_creacion.toLocaleString().split(',')[0]} </strong></p>
                             <br />
                             <p>Puede revisar esta requisicion ingresando en nuestro Sistema <a href=${process.env.FRONT_END_URL}>por este link</a></p>
                             <p>Cordialmente,</p>

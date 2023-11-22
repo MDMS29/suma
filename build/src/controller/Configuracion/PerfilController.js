@@ -19,7 +19,7 @@ class _PerfilController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { estado } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!estado) {
                 return res.status(404).json({ error: true, message: 'No se ha definido el estado' }); //!ERROR
@@ -44,7 +44,7 @@ class _PerfilController {
             const { usuario } = req;
             // const { perfiles } = req.body
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!req.body || req.body.length <= 0) {
                 return res.status(404).json({ error: true, message: 'Debe asignar perfiles' }); //!ERROR
@@ -60,7 +60,7 @@ class _PerfilController {
             }
             catch (error) {
                 console.log(error);
-                return res.status(500).json({ error: true, message: 'Error al cargar los modulos del perfil' }); //!ERROR
+                return res.status(500).json({ error: true, message: 'Error al cargar los módulos del perfil' }); //!ERROR
             }
         });
     }
@@ -69,7 +69,7 @@ class _PerfilController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { nombre_perfil, modulos } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!nombre_perfil || nombre_perfil === "") {
                 return res.status(404).json({ error: true, message: 'Debe ingresar un nombre al perfil' }); //!ERROR
@@ -101,7 +101,7 @@ class _PerfilController {
             const { id_perfil } = req.params;
             const { nombre_perfil, modulos } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_perfil) {
                 return res.status(404).json({ error: true, message: 'No se ha encontrado el perfil' }); //!ERROR
@@ -141,7 +141,7 @@ class _PerfilController {
             const { id_perfil } = req.params;
             const { estado } = req.query;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_perfil) {
                 return res.json({ error: true, message: 'No se ha encontrado el perfil' }); //!ERROR
@@ -168,7 +168,7 @@ class _PerfilController {
             const { id_perfil } = req.params;
             const { usuario } = req;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_perfil) {
                 return res.json({ error: true, message: 'No se ha encontrado el perfil' }); //!ERROR

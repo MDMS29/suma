@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const Autorizacion_1 = require("../../middleware/Autorizacion");
 const UsuarioController_1 = __importDefault(require("../../controller/Configuracion/UsuarioController"));
-//DEFINICÍON DE EL ROUTER
+//DEFINICIÓN DEL ROUTER
 const _UsuarioRouter = (0, express_1.Router)();
 //DEFINICIÓN DEL CONTROLADOR DEL USUARIO
 const _UsuarioController = new UsuarioController_1.default();

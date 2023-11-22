@@ -37,7 +37,6 @@ class FamiliaProductoService {
     Insertar_Familia_Producto(familia_producto_request, usuario_creacion) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                //TODO: ARREGLAR VALIDACION DE DATOS
                 const familia_filtrada = yield this._Query_Familia_Producto.Buscar_Familia_Producto(familia_producto_request);
                 if ((familia_filtrada === null || familia_filtrada === void 0 ? void 0 : familia_filtrada.length) > 0) {
                     return { error: true, message: 'Ya existe esta familia de producto' }; //!ERROR

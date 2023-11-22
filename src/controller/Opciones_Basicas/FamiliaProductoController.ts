@@ -9,7 +9,7 @@ export default class FamiliaProductoController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
@@ -38,7 +38,7 @@ export default class FamiliaProductoController {
         const { id_empresa, referencia, descripcion } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
@@ -47,7 +47,7 @@ export default class FamiliaProductoController {
             return res.status(400).json({ error: true, message: 'Debe ingresar una referencia para la familia' }) //!ERROR
         }
         if (!descripcion) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion para la familia' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar una descripción para la familia' }) //!ERROR
         }
 
         const result = FamiliaProductoSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
@@ -73,7 +73,7 @@ export default class FamiliaProductoController {
         const { usuario } = req
         const { id_familia_producto } = req.params
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_familia_producto) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la familia' }) //!ERROR
@@ -97,7 +97,7 @@ export default class FamiliaProductoController {
         const { id_empresa, referencia, descripcion } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_empresa) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
@@ -142,7 +142,7 @@ export default class FamiliaProductoController {
         const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_familia_producto) {
             return res.status(400).json({ error: true, message: 'No se ha definido la familia' }) //!ERROR

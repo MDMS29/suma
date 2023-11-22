@@ -13,12 +13,50 @@ const constants_1 = require("../../helpers/constants");
 const Requisiciones_Service_1 = require("../../services/Compras/Requisiciones.Service");
 const Requisiciones_Zod_1 = require("../../validations/Requisiciones.Zod");
 class RequisicionesController {
+    Obtener_Requisiciones_Filtro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+            const { estado, empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+            if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
+            }
+            if (!empresa) {
+                return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }); //!ERROR
+            }
+            if (!estado) {
+                return res.status(400).json({ error: true, message: 'No se ha definido el estado' }); //!ERROR
+            }
+            if (!req.body) {
+                return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }); //!ERROR
+            }
+            if (Object.keys(req.body).length === 0) {
+                return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }); //!ERROR
+            }
+            // VALIDACION DE DATOS
+            const result = Requisiciones_Zod_1.FiltroRequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+            if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+                return res.status(400).json({ error: true, message: result.error.issues[0].message }); //!ERROR
+            }
+            try {
+                const requisiciones_service = new Requisiciones_Service_1.RequisicionesService();
+                const respuesta = yield requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, req.body);
+                if (respuesta === null || respuesta === void 0 ? void 0 : respuesta.error) {
+                    return res.status(400).json({ error: true, message: respuesta === null || respuesta === void 0 ? void 0 : respuesta.message }); //!ERROR
+                }
+                return res.status(200).json(respuesta);
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).json({ error: true, message: 'Error al obtener las requisiciones' }); //!ERROR
+            }
+        });
+    }
     Obtener_Requisiciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-            const { estado, empresa, noRequi } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+            const { estado, empresa, requisicion } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }); //!ERROR
@@ -28,8 +66,8 @@ class RequisicionesController {
             }
             try {
                 const requisiciones_service = new Requisiciones_Service_1.RequisicionesService();
-                if (noRequi !== undefined) {
-                    const respuesta = yield requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, 'noRequi', noRequi);
+                if (requisicion !== undefined) {
+                    const respuesta = yield requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, 'requisicion', requisicion);
                     if (respuesta === null || respuesta === void 0 ? void 0 : respuesta.error) {
                         return res.status(400).json({ error: true, message: respuesta === null || respuesta === void 0 ? void 0 : respuesta.message }); //!ERROR
                     }
@@ -53,7 +91,7 @@ class RequisicionesController {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             // VALIDACION DE DATOS
             const result = Requisiciones_Zod_1.RequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
@@ -79,7 +117,7 @@ class RequisicionesController {
             const { usuario } = req;
             const { id_requisicion } = req.params;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_requisicion) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }); //!ERROR
@@ -103,7 +141,7 @@ class RequisicionesController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { id_requisicion } = req.params;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_requisicion) {
                 return res.status(404).json({ error: true, message: 'No se ha encontrado la requisicion' }); //!ERROR
@@ -137,7 +175,7 @@ class RequisicionesController {
             const { id_requisicion } = req.params;
             const { estado } = req.query;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_requisicion) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la requisicion' }); //!ERROR
@@ -151,7 +189,7 @@ class RequisicionesController {
                 if (familia_estado.error) {
                     return res.status(400).json({ error: true, message: familia_estado.message }); //!ERROR
                 }
-                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se ha inactivado la requisicion' });
+                return res.status(200).json({ error: false, message: +estado == constants_1.EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se inactivo la requisicion' });
             }
             catch (error) {
                 console.log(error);
@@ -164,7 +202,7 @@ class RequisicionesController {
             const { usuario } = req;
             const { id_requisicion } = req.params;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_requisicion) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }); //!ERROR
@@ -194,7 +232,7 @@ class RequisicionesController {
             const { detalles } = req.body;
             console.log(req.body);
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_requisicion) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }); //!ERROR

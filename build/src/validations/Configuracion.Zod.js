@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MenuSchema = exports.RolesSchema = exports.ModulosSchema = exports.PerfilesSchema = exports.UsusarioSchema = void 0;
+exports.MenuSchema = exports.RolesSchema = exports.ModulosSchema = exports.PerfilesSchema = exports.UsuarioSchema = void 0;
 const zod_1 = __importDefault(require("zod"));
 // VALIDACION PARA LOS VALORES DEL USUARIO
-exports.UsusarioSchema = zod_1.default.object({
+exports.UsuarioSchema = zod_1.default.object({
     id_usuario: zod_1.default.number().int().optional(),
     id_empresa: zod_1.default.number({
         invalid_type_error: 'Valor de la empresa invalida',
@@ -18,28 +18,28 @@ exports.UsusarioSchema = zod_1.default.object({
         message: 'No se permiten caracteres especiales'
     }),
     usuario: zod_1.default.string().min(5, {
-        message: 'El usuario debe tener minimo 5 caracteres'
+        message: 'El usuario debe tener mínimo 5 caracteres'
     }).max(50, {
-        message: 'El usuario debe tener maximo 50 caracteres'
+        message: 'El usuario debe tener máximo 50 caracteres'
     }),
     correo: zod_1.default.string().email({
         message: 'Tipo de correo invalido'
     }),
     clave: zod_1.default.string({
-        invalid_type_error: 'La clave debe ser alfa numerica',
+        invalid_type_error: 'La clave debe ser alfa numérica',
         required_error: 'Debe ingresar una clave'
     }),
     roles: zod_1.default.object({
         id_rol: zod_1.default.number({
             invalid_type_error: 'Seleccione un permiso existente',
-            required_error: 'El usuario debe tener minimo un permiso'
+            required_error: 'El usuario debe tener mínimo un permiso'
         }),
         id_estado: zod_1.default.number()
     }).array(),
     perfiles: zod_1.default.object({
         id_perfil: zod_1.default.number({
             invalid_type_error: 'Seleccione un perfil existente',
-            required_error: 'El usuario debe tener minimo un permiso'
+            required_error: 'El usuario debe tener mínimo un permiso'
         }),
         nombre_perfil: zod_1.default.optional(zod_1.default.string()),
         estado_perfil: zod_1.default.number()
@@ -72,7 +72,7 @@ exports.PerfilesSchema = zod_1.default.object({
 exports.ModulosSchema = zod_1.default.object({
     cod_modulo: zod_1.default.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'El codigo del modulo es requerido'
+        required_error: 'El código del modulo es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     }),
@@ -111,7 +111,7 @@ exports.RolesSchema = zod_1.default.object({
     }),
     descripcion: zod_1.default.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'La descripcion del rol es requerido'
+        required_error: 'La descripción del rol es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     })

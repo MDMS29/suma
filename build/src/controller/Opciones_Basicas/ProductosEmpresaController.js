@@ -18,7 +18,7 @@ class ProductosEmpresaController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { estado, empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }); //!ERROR
@@ -45,7 +45,7 @@ class ProductosEmpresaController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             console.log(req.body);
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!req.body.foto) {
                 req.body.foto = constants_1._Foto_Default;
@@ -74,7 +74,7 @@ class ProductosEmpresaController {
             const { id_producto } = req.params;
             const { tipo } = req.query;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_producto) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado el producto' }); //!ERROR
@@ -107,7 +107,7 @@ class ProductosEmpresaController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { id_producto } = req.params;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!req.body.foto) {
                 req.body.foto = constants_1._Foto_Default;
@@ -140,7 +140,7 @@ class ProductosEmpresaController {
             const { id_producto } = req.params;
             const { estado } = req.query;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_producto) {
                 return res.status(400).json({ error: true, message: 'No se ha definido el producto' }); //!ERROR

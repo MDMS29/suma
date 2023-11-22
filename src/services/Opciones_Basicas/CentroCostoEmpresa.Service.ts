@@ -41,7 +41,7 @@ export class CentroCostoEmpresaService {
 
             const proceso_filtrado_codigo: any = await this._Query_Centro_Costo_Empresa.Buscar_Centro_Codigo(centro_costo_request)
             if (proceso_filtrado_codigo?.length > 0) {
-                return { error: true, message: 'Ya existe este codigo' } //!ERROR
+                return { error: true, message: 'Ya existe este código' } //!ERROR
             }
             const centro_filtrado_nombre: any = await this._Query_Centro_Costo_Empresa.Buscar_Centro_Nombre(centro_costo_request)
             if (centro_filtrado_nombre?.length > 0) {

@@ -26,7 +26,7 @@ class ModuloService {
             try {
                 const modulos = yield this._Query_Modulo.Obtener_Modulos(estado);
                 if (!modulos) {
-                    return { error: true, message: `No hay modulos ${estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'activos' : 'inactivos'}` }; //!ERROR
+                    return { error: true, message: `No hay módulos ${estado == constants_1.EstadosTablas.ESTADO_ACTIVO ? 'activos' : 'inactivos'}` }; //!ERROR
                 }
                 return modulos;
             }

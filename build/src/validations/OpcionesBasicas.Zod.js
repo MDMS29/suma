@@ -54,7 +54,7 @@ exports.FamiliaProductoSchema = zod_1.default.object({
     }),
     descripcion: zod_1.default.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'La descripcion de la familia es requerida'
+        required_error: 'La descripción de la familia es requerida'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     })
@@ -67,7 +67,7 @@ exports.ProcesoEmpresaSchema = zod_1.default.object({
     }),
     codigo: zod_1.default.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'El codigo del proceso es requerido'
+        required_error: 'El código del proceso es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     }),
@@ -90,7 +90,7 @@ exports.CentroEmpresaSchema = zod_1.default.object({
     }),
     codigo: zod_1.default.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'El codigo del proceso es requerido'
+        required_error: 'El código del proceso es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     }),

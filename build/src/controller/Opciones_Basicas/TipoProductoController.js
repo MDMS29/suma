@@ -17,7 +17,7 @@ class TipoProductoController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { empresa } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }); //!ERROR
@@ -42,7 +42,7 @@ class TipoProductoController {
             // const { id_modulo } = req.params
             const { id_empresa, descripcion } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }); //!ERROR
@@ -73,7 +73,7 @@ class TipoProductoController {
             const { usuario } = req;
             const { id_tipo_producto } = req.params;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_tipo_producto) {
                 return res.status(400).json({ error: true, message: 'No se ha encontrado el tipo de producto' }); //!ERROR
@@ -98,13 +98,13 @@ class TipoProductoController {
             const { id_tipo_producto } = req.params;
             const { id_empresa, descripcion } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_empresa) {
                 return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }); //!ERROR
             }
             if (!descripcion) {
-                return res.status(400).json({ error: true, message: 'Debe asignarle una descripcion al tipo de producto' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Debe asignarle una descripción al tipo de producto' }); //!ERROR
             }
             const result = OpcionesBasicas_Zod_1.TipoProductoSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
             if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA

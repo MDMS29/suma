@@ -135,7 +135,7 @@ class UsuarioService {
             }
             else {
                 //!ERROR AL HASHEAR LA CLAVE DEL USUARIO
-                throw new Error('Error al hashear clave de usuario'); //!ERROR
+                throw new Error('Error al guardar clave de usuario'); //!ERROR
             }
         });
     }
@@ -328,11 +328,11 @@ class UsuarioService {
     }
     Cambiar_Estado_Usuario({ usuario, estado }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const busqueda = yield this._Query_Usuario.Buscar_Usuario_ID(usuario);
-            if (busqueda.length <= 0) {
-                return { error: true, message: 'No se ha encontrado el usuario' };
-            }
             try {
+                const busqueda = yield this._Query_Usuario.Buscar_Usuario_ID(usuario);
+                if (busqueda.length <= 0) {
+                    return { error: true, message: 'No se ha encontrado el usuario' };
+                }
                 const res = yield this._Query_Usuario.Cambiar_Estado_Usuario(usuario, estado);
                 if (!res) {
                     return { error: true, message: 'No se pudo cambiar el estado del usuario' };
@@ -376,7 +376,7 @@ class UsuarioService {
                             usuario: (_c = usuario[0]) === null || _c === void 0 ? void 0 : _c.usuario,
                             correo: (_d = usuario[0]) === null || _d === void 0 ? void 0 : _d.correo
                         },
-                        message: 'Clave cambiada con exito'
+                        message: 'Clave cambiada con éxito'
                     };
                 }
                 //SI SE RESTABLECE LA CLAVE DEL USUARIO

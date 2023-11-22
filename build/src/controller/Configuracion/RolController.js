@@ -19,7 +19,7 @@ class _RolController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { estado } = req.query; //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!estado) {
                 return res.status(404).json({ error: true, message: 'No se ha definido el estado' }); //!ERROR
@@ -43,13 +43,13 @@ class _RolController {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { nombre, descripcion } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!nombre || nombre === "") {
                 return res.status(400).json({ error: true, message: 'Debe ingresar un nombre al rol' }); //!ERROR
             }
             if (!descripcion || descripcion === "") {
-                return res.status(400).json({ error: true, message: 'Debe ingresar una descripcion al rol' }); //!ERROR
+                return res.status(400).json({ error: true, message: 'Debe ingresar una descripción al rol' }); //!ERROR
             }
             const zod_validacion = Configuracion_Zod_1.RolesSchema.safeParse(req.body);
             if (!zod_validacion.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
@@ -74,7 +74,7 @@ class _RolController {
             const { id_rol } = req.params;
             const { usuario } = req;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_rol) {
                 return res.json({ error: true, message: 'No se ha encontrado el rol' }); //!ERROR
@@ -138,7 +138,7 @@ class _RolController {
             const { id_rol } = req.params;
             const { estado } = req.query;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
-                return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }); //!ERROR
+                return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             if (!id_rol) {
                 return res.json({ error: true, message: 'No se ha encontrado el rol' }); //!ERROR

@@ -1,7 +1,7 @@
 import z from 'zod'
 
 // VALIDACION PARA LOS VALORES DEL USUARIO
-export const UsusarioSchema = z.object({
+export const UsuarioSchema = z.object({
     id_usuario: z.number().int().optional(),
     id_empresa: z.number({
         invalid_type_error: 'Valor de la empresa invalida',
@@ -13,28 +13,28 @@ export const UsusarioSchema = z.object({
         message: 'No se permiten caracteres especiales'
     }),
     usuario: z.string().min(5, {
-        message: 'El usuario debe tener minimo 5 caracteres'
+        message: 'El usuario debe tener mínimo 5 caracteres'
     }).max(50, {
-        message: 'El usuario debe tener maximo 50 caracteres'
+        message: 'El usuario debe tener máximo 50 caracteres'
     }),
     correo: z.string().email({
         message: 'Tipo de correo invalido'
     }),
     clave: z.string({
-        invalid_type_error: 'La clave debe ser alfa numerica',
+        invalid_type_error: 'La clave debe ser alfa numérica',
         required_error: 'Debe ingresar una clave'
     }),
     roles: z.object({
         id_rol: z.number({
             invalid_type_error: 'Seleccione un permiso existente',
-            required_error: 'El usuario debe tener minimo un permiso'
+            required_error: 'El usuario debe tener mínimo un permiso'
         }),
         id_estado: z.number()
     }).array(),
     perfiles: z.object({
         id_perfil: z.number({
             invalid_type_error: 'Seleccione un perfil existente',
-            required_error: 'El usuario debe tener minimo un permiso'
+            required_error: 'El usuario debe tener mínimo un permiso'
         }),
         nombre_perfil: z.optional(z.string()),
         estado_perfil: z.number()
@@ -69,7 +69,7 @@ export const PerfilesSchema = z.object({
 export const ModulosSchema = z.object({
     cod_modulo: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'El codigo del modulo es requerido'
+        required_error: 'El código del modulo es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     }),
@@ -109,7 +109,7 @@ export const RolesSchema = z.object({
     }),
     descripcion: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'La descripcion del rol es requerido'
+        required_error: 'La descripción del rol es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     })

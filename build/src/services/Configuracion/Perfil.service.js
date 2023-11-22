@@ -42,7 +42,7 @@ class PerfilService {
                 for (let res of respuesta) {
                     const modulos = yield this._Query_Perfil.Modulos_Perfil(res.id_perfil);
                     if (!modulos) {
-                        return res.json({ error: true, message: 'No se han podido cargar los modulos del perfil' }); //!ERROR
+                        return res.json({ error: true, message: 'No se han podido cargar los módulos del perfil' }); //!ERROR
                     }
                     res.modulos = modulos;
                 }
@@ -100,7 +100,7 @@ class PerfilService {
                     //INVOCAR FUNCION PARA INSERTAR LOS MODULOS DEL PERFIL
                     const modulos = yield this._Query_Perfil.Insertar_Modulo_Perfil(respuesta[0].id_perfil, modulo.id_modulo);
                     if (!modulos) {
-                        return { error: true, message: 'Error al insetar los modulos del perfil' }; //!ERROR
+                        return { error: true, message: 'Error al insertar los modulos del perfil' }; //!ERROR
                     }
                 }
                 //INVOCAR FUNCION PARA BUSCAR EL PERFIL POR ID
@@ -165,18 +165,17 @@ class PerfilService {
                         return { error: true, message: 'Error al editar el modulo' }; //!ERROR
                     }
                     // PREVENIR QUE EL PERFIL QUEDE SIN MODULOS
-                    //TODO: SOLUCIONAR.
-                    // const modulos = await this._Query_Perfil.Modulos_Perfil(id_perfil)
-                    // if (modulos.length == 0) {
-                    //     modulo.id_estado = 1
-                    //     const Modulos_Editar = await this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo)
-                    //     if (!Modulos_Editar) {
-                    //         return { error: true, message: 'Error al editar el modulo' } //!ERROR
-                    //     }
-                    // }
+                    const modulos = yield this._Query_Perfil.Modulos_Perfil(id_perfil);
+                    if (modulos.length == 0) {
+                        modulo.id_estado = 1;
+                        const Modulos_Editar = yield this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo);
+                        if (!Modulos_Editar) {
+                            return { error: true, message: 'Error al editar el modulo' }; //!ERROR
+                        }
+                    }
                 }
             }
-            return { error: false, message: 'Modulos del perfil editados con exito' }; //!ERROR
+            return { error: false, message: 'Modulos del perfil editados con éxito' }; //!ERROR
         });
     }
     Cambiar_Estado_Perfil(id_perfil, estado) {

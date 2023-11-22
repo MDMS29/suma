@@ -9,7 +9,7 @@ export default class ProductosEmpresaController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!empresa) {
             return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
@@ -37,7 +37,7 @@ export default class ProductosEmpresaController {
         console.log(req.body)
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
         if(!req.body.foto){
@@ -68,7 +68,7 @@ export default class ProductosEmpresaController {
         const { id_producto } = req.params
         const { tipo } = req.query
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(400).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_producto) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el producto' }) //!ERROR
@@ -102,7 +102,7 @@ export default class ProductosEmpresaController {
         const { id_producto } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
         if(!req.body.foto){
@@ -139,7 +139,7 @@ export default class ProductosEmpresaController {
         const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_producto) {
             return res.status(400).json({ error: true, message: 'No se ha definido el producto' }) //!ERROR

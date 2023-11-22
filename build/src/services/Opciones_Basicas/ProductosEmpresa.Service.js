@@ -37,7 +37,6 @@ class ProductosEmpresaService {
     Insertar_Producto_Empresa(producto_empresa_request, usuario_creacion) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                //TODO: ARREGLAR VALIDACION DE DATOS
                 const familia_filtrada_nombre = yield this._Query_Productos_Empresa.Buscar_Producto_Nombre(producto_empresa_request);
                 if ((familia_filtrada_nombre === null || familia_filtrada_nombre === void 0 ? void 0 : familia_filtrada_nombre.length) > 0) {
                     return { error: true, message: 'Ya existe este nombre de producto' }; //!ERROR

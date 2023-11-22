@@ -53,7 +53,7 @@ export const FamiliaProductoSchema = z.object({
     }),
     descripcion: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'La descripcion de la familia es requerida'
+        required_error: 'La descripción de la familia es requerida'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     })
@@ -67,7 +67,7 @@ export const ProcesoEmpresaSchema = z.object({
     }),
     codigo: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'El codigo del proceso es requerido'
+        required_error: 'El código del proceso es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     }),
@@ -91,7 +91,7 @@ export const CentroEmpresaSchema = z.object({
     }),
     codigo: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
-        required_error: 'El codigo del proceso es requerido'
+        required_error: 'El código del proceso es requerido'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
     }),

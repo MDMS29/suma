@@ -8,7 +8,7 @@ export default class _ModuloController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!estado) {
             return res.status(400).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
@@ -24,7 +24,7 @@ export default class _ModuloController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al obtener los modulos' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al obtener los módulos' }) //!ERROR
         }
     }
 
@@ -33,13 +33,13 @@ export default class _ModuloController {
         const { cod_modulo, nombre_modulo, icono, roles } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!nombre_modulo || nombre_modulo === "") {
             return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el modulo' }) //!ERROR
         }
         if (!cod_modulo || cod_modulo === "") {
-            return res.status(400).json({ error: true, message: 'Debe ingresar un codigo para el modulo' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe ingresar un código para el modulo' }) //!ERROR
         }
         if (!icono || icono === "") {
             return res.status(400).json({ error: true, message: 'Debe ingresar un icono para el modulo' }) //!ERROR
@@ -49,7 +49,7 @@ export default class _ModuloController {
         }
         const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
         if (rol?.length <= 0) {
-            return res.status(400).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
+            return res.status(400).json({ error: true, message: "Para realizar una acción diferente debe seleccionar 'consultar'" }) //!ERROR
         }
 
         const result: any = ModulosSchema.safeParse(req.body)
@@ -68,7 +68,7 @@ export default class _ModuloController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al obtener los modulos' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al obtener los módulos' }) //!ERROR
         }
     }
 
@@ -76,7 +76,7 @@ export default class _ModuloController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_modulo } = req.params //EXTRAER LA INFORMACION DEL MODULO A CREAR
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_modulo || !+id_modulo) {
             return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
@@ -102,13 +102,13 @@ export default class _ModuloController {
         const { cod_modulo, nombre_modulo, icono, roles } = req.body //EXTRAER LA INFORMACION DEL MODULO A CREAR
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_modulo) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el modulo' }) //!ERROR
         }
         if (!cod_modulo || cod_modulo === "") {
-            return res.status(400).json({ error: true, message: 'No se ha definido el codigo del modulo' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'No se ha definido el código del modulo' }) //!ERROR
         }
         if (!nombre_modulo || nombre_modulo === "") {
             return res.status(400).json({ error: true, message: 'No se ha definido el nombre del modulo' }) //!ERROR
@@ -121,7 +121,7 @@ export default class _ModuloController {
         }
         const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
         if (rol?.length <= 0) {
-            return res.status(400).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
+            return res.status(400).json({ error: true, message: "Para realizar una acción diferente debe seleccionar 'consultar'" }) //!ERROR
         }
 
         // VALIDACIONES CON LIBRERIA ZOD
@@ -155,7 +155,7 @@ export default class _ModuloController {
         const { estado } = req.query as { estado: string }
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_modulo) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el modulo' }) //!ERROR

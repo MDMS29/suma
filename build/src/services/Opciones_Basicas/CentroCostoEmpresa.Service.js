@@ -51,7 +51,7 @@ class CentroCostoEmpresaService {
             try {
                 const proceso_filtrado_codigo = yield this._Query_Centro_Costo_Empresa.Buscar_Centro_Codigo(centro_costo_request);
                 if ((proceso_filtrado_codigo === null || proceso_filtrado_codigo === void 0 ? void 0 : proceso_filtrado_codigo.length) > 0) {
-                    return { error: true, message: 'Ya existe este codigo' }; //!ERROR
+                    return { error: true, message: 'Ya existe este código' }; //!ERROR
                 }
                 const centro_filtrado_nombre = yield this._Query_Centro_Costo_Empresa.Buscar_Centro_Nombre(centro_costo_request);
                 if ((centro_filtrado_nombre === null || centro_filtrado_nombre === void 0 ? void 0 : centro_filtrado_nombre.length) > 0) {

@@ -6,11 +6,11 @@ import { MenuSchema } from "../../validations/Configuracion.Zod";
 export default class _MenuController {
 
     public async Obtener_Menus(req: Request, res: Response) {
-        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
         const { id_modulo } = req.params
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_modulo) {
             return res.status(400).json({ error: true, message: 'No se ha definido el modulo a consultar' }) //!ERROR
@@ -34,12 +34,12 @@ export default class _MenuController {
     }
 
     public async Insertar_Menu(req: Request, res: Response) {
-        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
         const { id_modulo } = req.params
         const { nombre_menu, link_menu } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_modulo) {
             return res.status(400).json({ error: true, message: 'No se ha definido el modulo' }) //!ERROR
@@ -74,7 +74,7 @@ export default class _MenuController {
         const { id_menu } = req.params
         const { usuario } = req
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_menu) {
             return res.json({ error: true, message: 'No se ha encontrado el menu' }) //!ERROR
@@ -98,7 +98,7 @@ export default class _MenuController {
         const { id_menu } = req.params
         const { nombre_menu, link_menu } = req.body
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_menu) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
@@ -139,7 +139,7 @@ export default class _MenuController {
         const { id_menu } = req.params
         const { estado } = req.query as { estado: string }
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
-            return res.status(401).json({ error: true, message: 'Inicie sesion para continuar' }) //!ERROR
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
         if (!id_menu) {
             return res.json({ error: true, message: 'No se ha encontrado el menu' }) //!ERROR
