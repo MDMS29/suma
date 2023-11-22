@@ -6,7 +6,6 @@ import { Toast } from "primereact/toast";
 import Button from "../../../Botones/Button";
 import useModulos from "../../../../hooks/Configuracion/useModulos";
 
-// eslint-disable-next-line react/prop-types
 const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   const {
     ModulosAgg,

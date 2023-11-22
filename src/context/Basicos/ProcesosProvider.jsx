@@ -128,7 +128,7 @@ const ProcesosProvider = ({ children }) => {
                 message: error.data?.message
             })
             setTimeout(() => setAlerta({}), 1500)
-            throw error; // Puedes lanzar una excepción en caso de error
+            throw error;  
         }
     }
 

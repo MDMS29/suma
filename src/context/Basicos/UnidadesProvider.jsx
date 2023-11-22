@@ -72,10 +72,7 @@ const UnidadesProvider = ({ children }) => {
         return { error: true, message: data.message };
       }
 
-      const { id_unidad, unidad } = data;
-
-      console.log(data)
-
+      const { id_unidad, unidad } = data; 
       setUnidadesAgg({
         id_unidad,
         unidad: unidad,
@@ -196,7 +193,7 @@ const UnidadesProvider = ({ children }) => {
       });
 
       setTimeout(() => setAlerta({}), 1500);
-      throw error; // Puedes lanzar una excepción en caso de error
+      throw error; 
     }
   };
 

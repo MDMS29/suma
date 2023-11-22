@@ -25,7 +25,7 @@ const ProductosProvider = ({ children }) => {
         id_marca: 0,
         id_tipo_producto: 0,
         id_unidad: 0,
-        referencia: "0",
+        referencia: "",
         descripcion: "",
         foto: "",
         precio_costo: 0,
@@ -107,8 +107,7 @@ const ProductosProvider = ({ children }) => {
                     show: true,
                     message: 'Producto creado con exito'
                 })
-                setTimeout(() => setAlerta({}), 1500)
-                // addNewRecord()
+                setTimeout(() => setAlerta({}), 1500) 
                 return true
             }
             setAlerta({
@@ -179,7 +178,6 @@ const ProductosProvider = ({ children }) => {
 
         try {
             const { data } = await conexion_cliente(`/opciones-basicas/productos-empresa/${id}`, config);
-            // console.log(data);
             if (data?.error) {
                 return { error: true, message: data.message }
             }
@@ -236,7 +234,6 @@ const ProductosProvider = ({ children }) => {
 
         try {
             const { data } = await conexion_cliente.patch(`/opciones-basicas/productos-empresa/${formData.id_producto}`, formData, config);
-            console.log(formData);
             if (!data?.error) {
                 const productos_actualizados = dataProductos.map((producto) =>
                     producto.id_producto === data.id_producto

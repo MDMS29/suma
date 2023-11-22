@@ -4,8 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../../hooks/useAuth'
 
 const PerfilesContext = createContext();
-
-// eslint-disable-next-line react/prop-types
+ 
 const PerfilesProvider = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation();
@@ -198,7 +197,7 @@ const PerfilesProvider = ({ children }) => {
       })
 
       setTimeout(() => setAlerta({}), 1500)
-      throw error; // Puedes lanzar una excepción en caso de error
+      throw error;  
     }
   };
 
@@ -242,7 +241,7 @@ const PerfilesProvider = ({ children }) => {
       })
 
       setTimeout(() => setAlerta({}), 1500)
-      throw error; // Puedes lanzar una excepción en caso de error
+      throw error;  
     }
   }
 

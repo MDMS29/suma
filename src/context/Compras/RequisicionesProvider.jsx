@@ -58,6 +58,7 @@ const RequisicionesProvider = ({ children }) => {
   useEffect(() => {
     if (location.pathname.includes("requisiciones")) {
       setDataRequisiciones([]);
+      setRequisicionesFiltradas([]);
       const obtener_requisiciones = async () => {
         const token = localStorage.getItem("token");
         const config = {
@@ -69,8 +70,8 @@ const RequisicionesProvider = ({ children }) => {
         const estado = location.pathname.includes("inactivas")
           ? 2
           : location.pathname.includes("verificadas")
-          ? 6
-          : 3;
+            ? 6
+            : 3;
         try {
           if (authUsuario.id_empresa) {
             setCargando(true);
@@ -103,7 +104,6 @@ const RequisicionesProvider = ({ children }) => {
         setTimeout(() => setAlerta({}), 1500);
       })();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alerta]);
 
   const obtener_centro_costo = async (id_proceso) => {
@@ -126,7 +126,15 @@ const RequisicionesProvider = ({ children }) => {
         return;
       }
       setcentroCostoAgg(data);
-    } catch (error) {}
+    } catch (error) {
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response?.data.message,
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+    }
   };
 
   const filtar_tipo_requ = async (id_tipo_req) => {
@@ -149,7 +157,15 @@ const RequisicionesProvider = ({ children }) => {
         return;
       }
       setproductos(data);
-    } catch (error) {}
+    } catch (error) {
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response?.data.message,
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+    }
   };
 
   const obtener_tipo_requisicion = async () => {
@@ -242,7 +258,6 @@ const RequisicionesProvider = ({ children }) => {
       );
 
       if (!data?.error) {
-        //SUCCESS
         const requisiciones = dataRequisiciones.filter(
           (requisicion) =>
             requisicion.id_requisicion !== RequiAgg.id_requisicion
@@ -421,7 +436,6 @@ const RequisicionesProvider = ({ children }) => {
       );
 
       if (data.error) {
-        //ERROR
         setAlerta({
           error: true,
           show: true,
@@ -429,23 +443,18 @@ const RequisicionesProvider = ({ children }) => {
         });
         return;
       }
-
-      //SUCCESS
       const requisiciones = dataRequisiciones.filter(
         (requisicion) => requisicion.id_requisicion !== RequiState
       );
       setDataRequisiciones(requisiciones);
-      //MOSTRAR ALERTA DE SUCCESS
       setAlerta({
         error: false,
         show: true,
         message: data.message,
       });
       setRequiState({});
-      //CERRAR MODAL
       setVerEliminarRestaurar(false);
     } catch (error) {
-      console.log(error);
       setAlerta({});
     }
   };
@@ -490,7 +499,6 @@ const RequisicionesProvider = ({ children }) => {
       setVerPDF(true);
       return;
     } catch (error) {
-      console.log(error);
       return;
     }
   };
@@ -511,13 +519,14 @@ const RequisicionesProvider = ({ children }) => {
       const estado = location.pathname.includes("inactivas")
         ? 2
         : location.pathname.includes("verificadas")
-        ? 6
-        : 3;
+          ? 6
+          : 3;
 
       const { data } = await conexion_cliente(
-        `/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}&noRequi=${e.target.value}`,
+        `/compras/requisiciones?estado=${estado}&empresa=${authUsuario.id_empresa}&requisicion=${e.target.value}`,
         config
       );
+      console.log(data);
       if (data.error === false) {
         setAlerta({
           error: true,
@@ -530,7 +539,6 @@ const RequisicionesProvider = ({ children }) => {
       setRequisicionesFiltradas(data);
       return;
     } catch (error) {
-      console.log(error);
       setAlerta({
         error: true,
         show: true,
@@ -538,6 +546,7 @@ const RequisicionesProvider = ({ children }) => {
       });
     }
   };
+
   const filtrar_modal_requi = async (formData) => {
     const token = localStorage.getItem("token");
     const config = {
@@ -549,8 +558,8 @@ const RequisicionesProvider = ({ children }) => {
     const estado = location.pathname.includes("inactivas")
       ? 2
       : location.pathname.includes("verificadas")
-      ? 6
-      : 3;
+        ? 6
+        : 3;
     try {
       if (authUsuario.id_empresa) {
         setCargando(true);

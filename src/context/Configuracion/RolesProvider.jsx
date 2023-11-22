@@ -4,8 +4,7 @@ import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
 
 const RolesContext = createContext();
-
-// eslint-disable-next-line react/prop-types
+ 
 const RolesProvider = ({ children }) => {
   const location = useLocation()
 
@@ -197,8 +196,7 @@ const RolesProvider = ({ children }) => {
       return false
     }
   }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ 
   const obj = useMemo(() => ({
     dataRoles, permisosRoles, setPermisosRoles, errors, setErrors,
     rolAgg, setRolAgg, guardar_rol, buscar_rol, editar_rol, eliminar_rol
