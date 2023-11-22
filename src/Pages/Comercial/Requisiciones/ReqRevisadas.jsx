@@ -2,6 +2,7 @@ import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import {
   Add_Icono,
+  Filter_Icono,
   Req_Icono
 } from "../../../components/Icons/Iconos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -9,6 +10,7 @@ import CardRequisicion from "../../../components/Cards/CardRequisicion";
 import ModalPDF from "../../../components/Modales/Compras/Requisiciones/ModalPDF";
 import Loader from "../../../components/Loader";
 import useAuth from "../../../hooks/useAuth";
+import Button from "../../../components/Botones/Button";
 
 function ReqRevisadas() {
   const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones, permisosReq, cargando } = useRequisiciones();
@@ -61,6 +63,13 @@ function ReqRevisadas() {
               placeholder="Buscar No. Requisicion"
             />
           </span>
+
+          <div className="h-full flex justify-center items-center">
+            <Button
+              tipo={"FILTRAR"}
+              funcion={(e) => setmodalFiltrar(true, e)}
+            >{Filter_Icono} Filtrar </Button>
+          </div>
         </div>
 
         <div className="w-full py-3 flex flex-wrap gap-3">

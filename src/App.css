@@ -12,17 +12,17 @@
 
 @font-face {
     font-family: Cocogoose-light;
-    src: url("./fonts/Cocogoose/Cocogoose Light.ttf");
+    src: url("./assets/fonts/Cocogoose/Cocogoose Light.ttf");
 }
 
 @font-face {
     font-family: Sans-Semibold;
-    src: url("./fonts/OpenSans/OpenSans SemiBold.ttf");
+    src: url("./assets/fonts/OpenSans/OpenSans SemiBold.ttf");
 }
 
 @font-face {
     font-family: Sans-Medium;
-    src: url("./fonts/OpenSans/OpenSans Medium.ttf");
+    src: url("./assets/fonts/OpenSans/OpenSans Medium.ttf");
 }
 
 :root {

@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-// import { Button as PButton } from "primereact/button";
-import { Add_Icono, Req_Icono } from "../../../components/Icons/Iconos";
+import { useEffect, useState } from "react";
+import { Add_Icono, Filter_Icono, Req_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import BLink from "../../../components/Botones/BLink";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -14,8 +13,7 @@ import Button from "../../../components/Botones/Button.jsx";
 import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/ModalFiltrarReq.jsx";
 
 const Requisiciones = () => {
-  const toast = useRef(null);
-  const { verEliminarRestaurar, authUsuario, alerta, Permisos_DB, authPermisos } = useAuth();
+  const { verEliminarRestaurar, authUsuario, Permisos_DB, authPermisos } = useAuth();
   const { eliminar_requisicion, dataRequisiciones, setRequiAgg, setProductosData, requisicionesFiltradas, filtrar_requisiciones, permisosReq, setPermisosReq, cargando } = useRequisiciones();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalFiltrar, setmodalFiltrar] = useState(false);
@@ -112,10 +110,7 @@ const Requisiciones = () => {
             <Button
               tipo={"FILTRAR"}
               funcion={(e) => setmodalFiltrar(true, e)}
-            >
-              <i className="pi pi-filter"></i>
-              Filtrar
-            </Button>
+            >{Filter_Icono} Filtrar </Button>
           </div>
         </div>
 

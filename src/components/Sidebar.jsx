@@ -37,18 +37,16 @@ const Sidebar = () => {
   return (
     <div className="flex max-sm:absolute relative z-10">
       <div className="h-screen flex border-r shadow-sm bg-white">
-      <div
-          className={` ${
-            open ? "w-auto px-2" : "w-16 max-sm:w-0 z-10"
-          } bg-white overflow-y-auto scrollbar-hidden transition-all duration-500 ease-in-out`}
+        <div
+          className={` ${open ? "w-auto px-2" : "w-16 max-sm:w-0 z-10"
+            } bg-white overflow-y-auto scrollbar-hidden transition-all duration-500 ease-in-out`}
           style={{ maxHeight: "100%" }}
         >
           <div
-            className={`z-10 absolute ${
-              open
-                ? "max-sm:left-60 max-sm:top-3 left-60 top-5 xl:hidden lg:hidden md:hidden"
-                : "hidden "
-            }`}
+            className={`z-10 absolute ${open
+              ? "max-sm:left-60 max-sm:top-3 left-60 top-5 xl:hidden lg:hidden md:hidden"
+              : "hidden "
+              }`}
           >
             <button
               onClick={toggleSidebarAbierto}
@@ -58,11 +56,11 @@ const Sidebar = () => {
             </button>
           </div>
 
-          <div className="flex p-2 mx-1">
+          <div className="flex pt-2 mx-1">
             <img
-              src="/src/img/logo-suma.jpeg"
+              src="/src/assets/img/logo-short.png"
               alt="Logo SUMA"
-              className="h-10 rounded-full"
+              className="h-10"
             />
             <div className={`flex justify-between items-center w-40 ml-3 mr-4`}>
               <div className={`leading-4 ${!open && "invisible"}`}>
@@ -78,12 +76,10 @@ const Sidebar = () => {
               <div key={modulo.nombre_modulo}>
                 <li
                   onClick={() => setSubMenuOpen(index)}
-                  className={`${
-                    pathname.includes(modulo.nombre_modulo.toLowerCase()) &&
+                  className={`${pathname.includes(modulo.nombre_modulo.toLowerCase()) &&
                     "bg-primaryYellow"
-                  } flex font-semibold rounded-md p-2 mx-2 cursor-pointer hover:bg-primaryYellow text-sm justify-center gap-x-4 ${
-                    modulo.gap ? "mt-9" : "mt-2"
-                  }`}
+                    } flex font-semibold rounded-md p-2 mx-2 cursor-pointer hover:bg-primaryYellow text-sm justify-center gap-x-4 ${modulo.gap ? "mt-9" : "mt-2"
+                    }`}
                 >
                   <div>
                     {modulo.icono ? (
@@ -96,9 +92,8 @@ const Sidebar = () => {
 
                   {open && modulo.menus && (
                     <i
-                      className={`pi pi-angle-down ml-auto ${
-                        modulo.isOpen && "rotate-180"
-                      } `}
+                      className={`pi pi-angle-down ml-auto ${modulo.isOpen && "rotate-180"
+                        } `}
                     ></i>
                   )}
                 </li>
@@ -109,11 +104,10 @@ const Sidebar = () => {
                       <Link
                         to={subMenuItem.link_menu}
                         key={subMenuItem.link_menu}
-                        className={`${
-                          pathname.includes(
-                            subMenuItem.nombre_menu.toLowerCase()
-                          ) && "bg-gray-300"
-                        } flex text-black p-4 my-2 rounded-md cursor-pointer text-center hover:bg-gray-300 text-sm py-1`}
+                        className={`${pathname.includes(
+                          subMenuItem.nombre_menu.toLowerCase()
+                        ) && "bg-gray-300"
+                          } flex text-black p-4 my-2 rounded-md cursor-pointer text-center hover:bg-gray-300 text-sm py-1`}
                         onClick={() => setOpen(false)}
                       >
                         {subMenuItem.nombre_menu}
