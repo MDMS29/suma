@@ -1,7 +1,11 @@
 import { MultiSelect } from "primereact/multiselect";
 import { useEffect, useRef, useState } from "react";
 import { Button as PButton } from "primereact/button";
-import { Add_Icono, Edit_Icono, Proceso_Icono } from "../../../components/Icons/Iconos";
+import {
+  Add_Icono,
+  Edit_Icono,
+  Proceso_Icono,
+} from "../../../components/Icons/Iconos";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
 import { Toast } from "primereact/toast";
@@ -13,30 +17,32 @@ import useProcesos from "../../../hooks/Basicos/useProcesos";
 import useAuth from "../../../hooks/useAuth";
 import ModalAgregarProcesos from "../../../components/Modales/Basicos/Procesos/ModalAgregarProcesos";
 
-
 const Procesos = () => {
   const toast = useRef(null);
 
   const columns = [
     { field: "codigo", header: "Codigo" },
-    { field: "proceso", header: "Proceso" }
+    { field: "proceso", header: "Proceso" },
   ];
 
-  const { dataProcesos, buscar_proceso, setPermisosProcesos, permisosProcesos } = useProcesos()
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth()
-
+  const {
+    dataProcesos,
+    buscar_proceso,
+    setPermisosProcesos,
+    permisosProcesos,
+  } = useProcesos();
+  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [modalVisible, setModalVisible] = useState(false);
   const [filteredData, setFilteredData] = useState(dataProcesos);
   const [searchTerm, setSearchTerm] = useState("");
 
-
   const editar_proceso = async (e, id_proceso) => {
-    e.preventDefault()
-    setModalVisible(true)
-    await buscar_proceso(id_proceso)
-  }
+    e.preventDefault();
+    setModalVisible(true);
+    await buscar_proceso(id_proceso);
+  };
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -52,8 +58,7 @@ const Procesos = () => {
 
     const items_filtrados = dataProcesos.filter((item) => {
       return (
-        item.codigo.includes(value),
-        item.proceso.toLowerCase().includes(value)
+        item.codigo.includes(value), item.proceso.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
@@ -73,7 +78,6 @@ const Procesos = () => {
         return setPermisosProcesos(authPermisos);
       }
     }, 10);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authPermisos]);
 
   //MOSTRAR ALERTA
@@ -81,16 +85,15 @@ const Procesos = () => {
     if (alerta.show) {
       const show_alert = () => {
         toast.current.show({
-          severity: alerta.error ? 'error' : 'success',
+          severity: alerta.error ? "error" : "success",
           detail: alerta.message,
           life: 1500,
         });
-        setTimeout(() => setAlerta({}), 1500)
-      }
-      show_alert()
+        setTimeout(() => setAlerta({}), 1500);
+      };
+      show_alert();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [alerta])
+  }, [alerta]);
 
   const header = (
     <MultiSelect
@@ -110,13 +113,15 @@ const Procesos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <PButton
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={e => editar_proceso(e, rowData.id_proceso)}
-            >{Edit_Icono}</PButton>
-          )}
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_proceso(e, rowData.id_proceso)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
       </div>
     );
   };
@@ -124,7 +129,12 @@ const Procesos = () => {
   const main = () => (
     <div className="w-5/6">
       <Toast ref={toast} />
-      {modalVisible && <ModalAgregarProcesos visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+      {modalVisible && (
+        <ModalAgregarProcesos
+          visible={modalVisible}
+          onClose={cambiar_visibilidad_modal}
+        />
+      )}
 
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Procesos</h1>
@@ -135,11 +145,10 @@ const Procesos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <Button
-              tipo={"PRINCIPAL"}
-              funcion={(e) => setModalVisible(true, e)}
-            >{Add_Icono} Agregar</Button>
-          )}
+          <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
+            {Add_Icono} Agregar
+          </Button>
+        )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
           <InputText
@@ -181,17 +190,17 @@ const Procesos = () => {
 
   return (
     <>
-      {
-        permisosProcesos.length === 0 ?
-          (<Loader />) :
-          (permisosProcesos.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosProcesos.length === 0 ? (
+        <Loader />
+      ) : permisosProcesos.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default Procesos
+export default Procesos;

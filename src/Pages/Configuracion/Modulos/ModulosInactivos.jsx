@@ -23,6 +23,7 @@ const ModulosInactivos = () => {
     eliminar_restablecer_modulo,
     ModuloState,
   } = useModulos();
+
   const {
     Permisos_DB,
     verEliminarRestaurar,
@@ -30,18 +31,18 @@ const ModulosInactivos = () => {
     setAlerta,
     alerta,
   } = useAuth();
-  
+
   const mostrar_modal_eliminar = (modulo) => {
     setVerEliminarRestaurar(true);
     setModuloState(modulo);
   };
-  
+
   const columns = [
     { field: "id_modulo", header: "ID" },
     { field: "nombre_modulo", header: "Nombre" },
     { field: "icono", header: "Icono" },
   ];
-  
+
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataModulos);
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,7 +50,7 @@ const ModulosInactivos = () => {
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
-    columnas_seleccionadas.some((sCol) => sCol.field === col.field)
+      columnas_seleccionadas.some((sCol) => sCol.field === col.field)
     );
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
@@ -72,14 +73,14 @@ const ModulosInactivos = () => {
     if (alerta.show) {
       (() => {
         toast.current.show({
-          severity: alerta.error ? 'error' : 'success',
+          severity: alerta.error ? "error" : "success",
           detail: alerta.message,
           life: 1500,
         });
-        setTimeout(() => setAlerta({}), 1500)
-      })()
+        setTimeout(() => setAlerta({}), 1500);
+      })();
     }
-  }, [alerta])
+  }, [alerta]);
 
   const header = (
     <MultiSelect
@@ -107,7 +108,7 @@ const ModulosInactivos = () => {
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>
-          <Button tipo={'PRINCIPAL'} funcion={e => window.history.back()}>
+          <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>
             {Return_Icono} Regresar
           </Button>
         </div>
@@ -140,7 +141,6 @@ const ModulosInactivos = () => {
           {visibleColumns.map((col) => (
             <Column key={col.field} field={col.field} header={col.header} />
           ))}
-          {/*columna Acciones */}
           <Column
             key="actions"
             style={{ width: "10%" }}

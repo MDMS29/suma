@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 
 const ModalFiltrarReq = ({ visible, onClose }) => {
   const {
-    RequiAgg, 
+    RequiAgg,
     centroCostoAgg,
     obtener_centro_costo,
     tipoRequiAgg,
@@ -45,8 +45,8 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       centro_costo: 0,
       tipo_producto: 0,
       fecha_inicial: "",
-      fecha_final: ""
-    }) 
+      fecha_final: "",
+    });
   };
 
   const btn_cambio = (e) => {
@@ -84,7 +84,11 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       fecha_inicial: filtro.fecha_inicial,
       fecha_final: filtro.fecha_final,
     };
-    if (filtro.tipo_producto == 0 && filtro.proceso == 0 && filtro.requisicion == 0) {
+    if (
+      filtro.tipo_producto == 0 &&
+      filtro.proceso == 0 &&
+      filtro.requisicion == 0
+    ) {
       setAlerta({
         error: true,
         show: true,
@@ -95,14 +99,15 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     }
 
     filtrar_modal_requi(formData);
-    // console.log("DATOS DE FILTROS",formData)
     cerrar_modal();
-    
   };
 
   const footerContent = (
     <div className="mt-3">
-      <Button tipo={"PRINCIPAL"} funcion={consultar}> Consultar </Button>
+      <Button tipo={"PRINCIPAL"} funcion={consultar}>
+        {" "}
+        Consultar{" "}
+      </Button>
     </div>
   );
 

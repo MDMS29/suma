@@ -1,27 +1,23 @@
-/* eslint-disable react/prop-types */
-
 import { Button as PButton } from "primereact/button";
 import {
   Edit_Icono,
   PDF_Icono,
   Restore_Icono,
   Trash_Icono,
-  Lupa_Icono
+  Lupa_Icono,
 } from "../Icons/Iconos";
 import { useNavigate } from "react-router";
 import useRequisiciones from "../../hooks/Compras/useRequisiciones";
-import { IDS_PERMISOS } from "../../helpers/constantes.js"
+import { IDS_PERMISOS } from "../../helpers/constantes.js";
 import useAuth from "../../hooks/useAuth.jsx";
-
-
 
 const CardRequisicion = ({ requisiciones, setModalVisible }) => {
   const { authUsuario, Permisos_DB } = useAuth();
   const navigate = useNavigate();
-  
-  
-  const { buscar_requisicion, setRequiState, generar_pdf, permisosReq } = useRequisiciones();
-  
+
+  const { buscar_requisicion, setRequiState, generar_pdf, permisosReq } =
+    useRequisiciones();
+
   const {
     fecha_requisicion,
     nombre_estado,
@@ -32,9 +28,9 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
     comentarios,
     id_requisicion,
     id_estado,
-    usuario_creacion
+    usuario_creacion,
   } = requisiciones;
-  
+
   const { setVerEliminarRestaurar } = useAuth();
 
   const estilos = {
@@ -46,8 +42,8 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
       "bg-blue-200 rounded px-3 py-1 text-sm font-semibold text-blue-950 mr-2 mb-2",
     VERIFICADA:
       "bg-green-200 rounded px-3 py-1 text-sm font-semibold text-green-950 mr-2 mb-2",
-    }; 
-    
+  };
+
   const editar_requisicion = async (e, id_requisicion) => {
     e.preventDefault();
     navigate("/compras/requisiciones/agregar");
@@ -77,15 +73,15 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
         </div>
         <div className="flex flex-col justify-center gap-2">
           <p className={`${estilos[nombre_estado]}`}>{nombre_estado}</p>
-          <p className="font-bold text-sm text-end w-28 truncate">{centro_costo}</p>
+          <p className="font-bold text-sm text-end w-28 truncate">
+            {centro_costo}
+          </p>
           <p className="font-bold text-sm text-end">{tipo_productos}</p>
         </div>
       </div>
       <hr />
       <div>
-        <p className="my-2 max-h-12 truncate">
-          {comentarios}
-        </p>
+        <p className="my-2 max-h-12 truncate">{comentarios}</p>
       </div>
       <div>
         {id_estado == 2 ? (
@@ -112,13 +108,13 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
           </>
         ) : (
           <>
-            {authUsuario.id_usuario == usuario_creacion &&
+            {authUsuario.id_usuario == usuario_creacion && (
               <>
                 <PButton
                   tooltip="Editar"
                   tooltipOptions={{ position: "top" }}
                   className="p-button-rounded p-mr-2  mx-1"
-                  onClick={e => editar_requisicion(e, id_requisicion)}
+                  onClick={(e) => editar_requisicion(e, id_requisicion)}
                 >
                   {Edit_Icono}
                 </PButton>
@@ -132,25 +128,24 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
                   {Trash_Icono}
                 </PButton>
               </>
-            }
+            )}
 
-            {
-              authUsuario.perfiles?.some((perfil) => perfil.id_perfil == IDS_PERMISOS.PERFIL_GERENTE) &&
+            {authUsuario.perfiles?.some(
+              (perfil) => perfil.id_perfil == IDS_PERMISOS.PERFIL_GERENTE
+            ) &&
               permisosReq.filter(
                 (permiso) =>
                   permiso.permiso.toLowerCase() === Permisos_DB.REVISAR
               ).length > 0 && (
-
                 <PButton
                   tooltip="Verificar"
                   tooltipOptions={{ position: "top" }}
                   className="p-button-rounded p-mr-2  mx-1"
-                  onClick={e => revisar_req(e, requisiciones.id_requisicion)}
+                  onClick={(e) => revisar_req(e, requisiciones.id_requisicion)}
                 >
                   {Lupa_Icono}
                 </PButton>
-              )
-            }
+              )}
           </>
         )}
       </div>

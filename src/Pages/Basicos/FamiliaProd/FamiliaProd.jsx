@@ -1,6 +1,10 @@
 import useFamiliaProd from "../../../hooks/Basicos/useFamiliaProd";
 import useAuth from "../../../hooks/useAuth";
-import { Add_Icono, Edit_Icono, FliaProd_Icono } from "../../../components/Icons/Iconos";
+import {
+  Add_Icono,
+  Edit_Icono,
+  FliaProd_Icono,
+} from "../../../components/Icons/Iconos";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
 import Button from "../../../components/Botones/Button";
@@ -16,12 +20,8 @@ import ModalAgregarFliaPro from "../../../components/Modales/Basicos/Familia Pro
 const FamiliaProd = () => {
   const toast = useRef(null);
 
-  const {
-    dataFliaPro,
-    permisosFliaPro,
-    setPermisosFliaPro,
-    buscar_flia_pro
-  } = useFamiliaProd();
+  const { dataFliaPro, permisosFliaPro, setPermisosFliaPro, buscar_flia_pro } =
+    useFamiliaProd();
 
   const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
@@ -59,8 +59,10 @@ const FamiliaProd = () => {
     setSearchTerm(value);
 
     const items_filtrados = dataFliaPro.filter((item) => {
-      return item.referencia.toLowerCase().includes(value) ||
-        item.descripcion.toLowerCase().includes(value);
+      return (
+        item.referencia.toLowerCase().includes(value) ||
+        item.descripcion.toLowerCase().includes(value)
+      );
     });
     setFilteredData(items_filtrados);
   };
@@ -103,45 +105,61 @@ const FamiliaProd = () => {
     />
   );
 
-  const columna_acciones = rowData => {
+  const columna_acciones = (rowData) => {
     return (
-      (
-        <div className="text-center flex gap-x-3">
-          {
-            permisosFliaPro.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <PButton
-                tooltip="Editar"
-                tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2"
-                onClick={e => editar_flia_pro(e, rowData.id_familia)}
-              >{Edit_Icono}</PButton>
-            )}
-        </div>
-      ))
-  }
+      <div className="text-center flex gap-x-3">
+        {permisosFliaPro.filter(
+          (permiso) =>
+            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+        ).length > 0 && (
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_flia_pro(e, rowData.id_familia)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
+      </div>
+    );
+  };
 
   const main = () => (
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && <ModalAgregarFliaPro visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+        {modalVisible && (
+          <ModalAgregarFliaPro
+            visible={modalVisible}
+            onClose={cambiar_visibilidad_modal}
+          />
+        )}
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Familia de Productos</h1>
           {FliaProd_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          {
-            permisosFliaPro.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <Button
-                tipo={"PRINCIPAL"}
-                funcion={(e) => setModalVisible(true, e)}
-              >{Add_Icono} Agregar</Button>
-            )
-          }
+          {permisosFliaPro.filter(
+            (permiso) =>
+              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+          ).length > 0 && (
+            <Button
+              tipo={"PRINCIPAL"}
+              funcion={(e) => setModalVisible(true, e)}
+            >
+              {Add_Icono} Agregar
+            </Button>
+          )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
+            <InputText
+              className="h-10 pl-8 rounded-md"
+              placeholder="Buscar"
+              onChange={(e) => buscador(e)}
+              value={searchTerm}
+            />
           </span>
         </div>
 
@@ -172,25 +190,21 @@ const FamiliaProd = () => {
         </div>
       </div>
     </>
-  )
-
-
+  );
 
   return (
     <>
-      {
-        permisosFliaPro.length === 0
-          ?
-          (<Loader />)
-          :
-          (permisosFliaPro.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosFliaPro.length === 0 ? (
+        <Loader />
+      ) : permisosFliaPro.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default FamiliaProd
+export default FamiliaProd;

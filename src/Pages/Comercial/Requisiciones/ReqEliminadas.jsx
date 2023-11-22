@@ -1,4 +1,8 @@
-import { Add_Icono, Filter_Icono, Req_Icono } from "../../../components/Icons/Iconos";
+import {
+  Add_Icono,
+  Filter_Icono,
+  Req_Icono,
+} from "../../../components/Icons/Iconos";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -11,7 +15,14 @@ import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/M
 import Button from "../../../components/Botones/Button";
 
 function ReqEliminadas() {
-  const { dataRequisiciones, eliminar_requisicion, requisicionesFiltradas, filtrar_requisiciones, cargando, permisosReq } = useRequisiciones();
+  const {
+    dataRequisiciones,
+    eliminar_requisicion,
+    requisicionesFiltradas,
+    filtrar_requisiciones,
+    cargando,
+    permisosReq,
+  } = useRequisiciones();
 
   const { verEliminarRestaurar, Permisos_DB } = useAuth();
 
@@ -19,7 +30,7 @@ function ReqEliminadas() {
 
   const cambiar_visibilidad_modal_filtrar = () => {
     setmodalFiltrar(!modalFiltrar);
-  }
+  };
 
   const main = () => (
     <>
@@ -29,7 +40,12 @@ function ReqEliminadas() {
           funcion={(e) => eliminar_requisicion(e)}
         />
       )}
-      {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
+      {modalFiltrar && (
+        <ModalFiltrarReq
+          visible={modalFiltrar}
+          onClose={cambiar_visibilidad_modal_filtrar}
+        />
+      )}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones Inactivas</h1>
@@ -40,13 +56,17 @@ function ReqEliminadas() {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
+            <div className="h-full flex justify-center items-center">
               <div className="h-full flex justify-center items-center">
-                <div className="h-full flex justify-center items-center">
-                  <BLink tipo={"PRINCIPAL"} url={"/compras/requisiciones/agregar"}>
-                    {Add_Icono} Agregar</BLink>
-                </div>
+                <BLink
+                  tipo={"PRINCIPAL"}
+                  url={"/compras/requisiciones/agregar"}
+                >
+                  {Add_Icono} Agregar
+                </BLink>
               </div>
-            )}
+            </div>
+          )}
 
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/verificadas"} tipo={"APROBADO"}>
@@ -68,10 +88,9 @@ function ReqEliminadas() {
           </span>
 
           <div className="h-full flex justify-center items-center">
-            <Button
-              tipo={"FILTRAR"}
-              funcion={(e) => setmodalFiltrar(true, e)}
-            >{Filter_Icono} Filtrar </Button>
+            <Button tipo={"FILTRAR"} funcion={(e) => setmodalFiltrar(true, e)}>
+              {Filter_Icono} Filtrar{" "}
+            </Button>
           </div>
         </div>
 
@@ -80,7 +99,8 @@ function ReqEliminadas() {
             <div className="flex justify-center items-center w-full">
               <Loader />
             </div>
-          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0 ? (
+          ) : dataRequisiciones.error === false ||
+            dataRequisiciones.length == 0 ? (
             <div className="bg-white border w-full my-3 p-3">
               <p className="text-center">No hay requisiciones inactivas.</p>
             </div>

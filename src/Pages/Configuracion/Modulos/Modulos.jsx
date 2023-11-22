@@ -5,7 +5,12 @@ import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import { Edit_Icono, Trash_Icono, Menu_Icono, Add_Icono } from "../../../components/Icons/Iconos";
+import {
+  Edit_Icono,
+  Trash_Icono,
+  Menu_Icono,
+  Add_Icono,
+} from "../../../components/Icons/Iconos";
 import useModulos from "../../../hooks/Configuracion/useModulos";
 import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../components/Loader";
@@ -45,7 +50,7 @@ const Modulos = () => {
     obtener_menus,
     eliminar_restablecer_menu,
     MenuState,
-    setTextoBotonIcon
+    setTextoBotonIcon,
   } = useModulos();
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -90,7 +95,7 @@ const Modulos = () => {
   const editar_modulo = async (e, id_modulo) => {
     e.preventDefault();
     setModalVisible(true);
-    setTextoBotonIcon("Cambiar")
+    setTextoBotonIcon("Cambiar");
     await buscar_modulo(id_modulo);
   };
 
@@ -124,7 +129,7 @@ const Modulos = () => {
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
-    setTextoBotonIcon("Seleccionar")
+    setTextoBotonIcon("Seleccionar");
   };
 
   const header = (
@@ -145,27 +150,27 @@ const Modulos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-            <PButton
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={(e) => editar_modulo(e, rowData.id_modulo)}
-            >
-              {Edit_Icono}
-            </PButton>
-          )}
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_modulo(e, rowData.id_modulo)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
         {permisosModulo.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-            <PButton
-              tooltip="Eliminar"
-              className="p-button-rounded p-button-danger p-mr-2"
-              tooltipOptions={{ position: "top" }}
-              onClick={(e) => mostrar_modal_eliminar(e, rowData)}
-            >
-              {Trash_Icono}
-            </PButton>
-          )}
+          <PButton
+            tooltip="Eliminar"
+            className="p-button-rounded p-button-danger p-mr-2"
+            tooltipOptions={{ position: "top" }}
+            onClick={(e) => mostrar_modal_eliminar(e, rowData)}
+          >
+            {Trash_Icono}
+          </PButton>
+        )}
         <PButton
           tooltip="Asignar Menú"
           className="p-button-rounded p-mr-2"
@@ -195,7 +200,11 @@ const Modulos = () => {
         {verEliminarRestaurar && (
           <EliminarRestaurar
             tipo={"ELIMINAR"}
-            funcion={(e) => MenuState?.id_menu ? eliminar_restablecer_menu(MenuState.id_menu, e) : eliminar_restablecer_modulo(ModuloState.id_modulo, e)}
+            funcion={(e) =>
+              MenuState?.id_menu
+                ? eliminar_restablecer_menu(MenuState.id_menu, e)
+                : eliminar_restablecer_modulo(ModuloState.id_modulo, e)
+            }
           />
         )}
 
@@ -208,23 +217,22 @@ const Modulos = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-              <Button
-                tipo={'PRINCIPAL'}
-                funcion={(e) => setModalVisible(true, e)}
-              >{Add_Icono} Agregar </Button>
-            )}
+            <Button
+              tipo={"PRINCIPAL"}
+              funcion={(e) => setModalVisible(true, e)}
+            >
+              {Add_Icono} Agregar{" "}
+            </Button>
+          )}
           {permisosModulo.filter(
             (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
           ).length > 0 && (
-              <div className="h-full flex justify-center items-center">
-                <BLink
-                  tipo={'INACTIVOS'}
-                  url="/configuracion/modulos/inactivos"
-                >
-                  Inactivos
-                </BLink>
-              </div>
-            )}
+            <div className="h-full flex justify-center items-center">
+              <BLink tipo={"INACTIVOS"} url="/configuracion/modulos/inactivos">
+                Inactivos
+              </BLink>
+            </div>
+          )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
             <InputText
@@ -270,8 +278,8 @@ const Modulos = () => {
       {permisosModulo.length === 0 ? (
         <Loader />
       ) : permisosModulo.filter(
-        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-      ).length > 0 ? (
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

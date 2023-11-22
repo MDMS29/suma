@@ -17,7 +17,6 @@ import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import useAuth from "../../../hooks/useAuth";
-
 import { genLlaveAleatoria } from "../../../helpers/utils";
 import { useNavigate } from "react-router";
 
@@ -50,7 +49,7 @@ const AgregarReq = () => {
     verEliminarRestaurar,
     authUsuario,
     setVerEliminarRestaurar,
-    setAlerta
+    setAlerta,
   } = useAuth();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
@@ -139,7 +138,7 @@ const AgregarReq = () => {
       hora_requisicion: "",
       comentarios: "",
       equipo: 1,
-    })
+    });
     obtener_procesos();
     obtener_tipo_requisicion();
   }, []);
@@ -224,7 +223,6 @@ const AgregarReq = () => {
         detalle.id_detalle = genLlaveAleatoria();
         // Agrega un nuevo detalle
         setProductosData([...productosData, detalle]);
-        // setCounterId((prev) => prev + 1);
       }
 
       setDetalle({
@@ -329,11 +327,7 @@ const AgregarReq = () => {
         navigate("/compras/requisiciones");
       }
     } catch (error) {
-      console.error("Error al guardar la requisición:", error);
-
-      if (error.response) {
-        console.error("Detalles del error:", error.response.data);
-      }
+      return
     }
   };
 
@@ -670,7 +664,6 @@ const AgregarReq = () => {
             <Button tipo={"PRINCIPAL"} funcion={guardar_requi}>
               {RequiAgg.id_requisicion !== 0 ? "Actualizar" : "Guardar"}
             </Button>
-            {/* no sirve */}
           </div>
         </div>
       </div>

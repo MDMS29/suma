@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import useTipoProd from "../../../hooks/Basicos/useTipoProd";
 import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
-import { Edit_Icono, TipoProduc_Icono, Add_Icono } from "../../../components/Icons/Iconos";
+import {
+  Edit_Icono,
+  TipoProduc_Icono,
+  Add_Icono,
+} from "../../../components/Icons/Iconos";
 import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import Loader from "../../../components/Loader";
@@ -101,45 +105,61 @@ const TipoProd = () => {
     />
   );
 
-  const columna_acciones = rowData => {
+  const columna_acciones = (rowData) => {
     return (
-      (
-        <div className="text-center flex gap-x-3">
-          {
-            permisosTipoProd.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <PButton
-                tooltip="Editar"
-                tooltipOptions={{ position: "top" }}
-                className="p-button-rounded p-mr-2"
-                onClick={e => editar_tipo_prod(e, rowData.id_tipo_producto)}
-              >{Edit_Icono}</PButton>
-            )}
-        </div>
-      ))
-  }
+      <div className="text-center flex gap-x-3">
+        {permisosTipoProd.filter(
+          (permiso) =>
+            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+        ).length > 0 && (
+          <PButton
+            tooltip="Editar"
+            tooltipOptions={{ position: "top" }}
+            className="p-button-rounded p-mr-2"
+            onClick={(e) => editar_tipo_prod(e, rowData.id_tipo_producto)}
+          >
+            {Edit_Icono}
+          </PButton>
+        )}
+      </div>
+    );
+  };
 
   const main = () => (
     <>
       <div className="w-5/6">
         <Toast ref={toast} />
-        {modalVisible && <ModalAgregarTipoProd visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
+        {modalVisible && (
+          <ModalAgregarTipoProd
+            visible={modalVisible}
+            onClose={cambiar_visibilidad_modal}
+          />
+        )}
 
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Tipo de Productos</h1>
           {TipoProduc_Icono}
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          {
-            permisosTipoProd.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR).length > 0 && (
-              <Button
-                tipo={'PRINCIPAL'}
-                funcion={(e) => setModalVisible(true, e)}
-              >{Add_Icono} Agregar </Button>
-            )
-          }
+          {permisosTipoProd.filter(
+            (permiso) =>
+              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+          ).length > 0 && (
+            <Button
+              tipo={"PRINCIPAL"}
+              funcion={(e) => setModalVisible(true, e)}
+            >
+              {Add_Icono} Agregar{" "}
+            </Button>
+          )}
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
-            <InputText className="h-10 pl-8 rounded-md" placeholder="Buscar" onChange={e => buscador(e)} value={searchTerm} />
+            <InputText
+              className="h-10 pl-8 rounded-md"
+              placeholder="Buscar"
+              onChange={(e) => buscador(e)}
+              value={searchTerm}
+            />
           </span>
         </div>
 
@@ -170,23 +190,21 @@ const TipoProd = () => {
         </div>
       </div>
     </>
-  )
+  );
 
   return (
     <>
-      {
-        permisosTipoProd.length === 0
-          ?
-          (<Loader />)
-          :
-          (permisosTipoProd.filter(permiso => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR).length > 0
-            ?
-            (main())
-            :
-            (<Forbidden />))
-      }
+      {permisosTipoProd.length === 0 ? (
+        <Loader />
+      ) : permisosTipoProd.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
     </>
-  )
+  );
 };
 
 export default TipoProd;
