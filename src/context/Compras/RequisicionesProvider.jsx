@@ -20,8 +20,7 @@ const RequisicionesProvider = ({ children }) => {
 
   const [RequiAgg, setRequiAgg] = useState({
     id_requisicion: 0,
-    id_empresa:
-      authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
+    id_empresa: authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
     id_proceso: 0,
     id_centro: 0,
     id_tipo_producto: 0,

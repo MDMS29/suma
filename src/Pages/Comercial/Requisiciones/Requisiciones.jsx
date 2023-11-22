@@ -25,7 +25,6 @@ const Requisiciones = () => {
     setmodalFiltrar(!modalFiltrar);
   }
 
-
   useEffect(() => {
     setTimeout(() => {
       if (authPermisos !== undefined) {
@@ -39,8 +38,7 @@ const Requisiciones = () => {
   useEffect(() => {
     setRequiAgg({
       id_requisicion: 0,
-      id_empresa:
-        authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
+      id_empresa: authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
       id_proceso: 0,
       id_centro: 0,
       id_tipo_producto: 0,
@@ -51,12 +49,10 @@ const Requisiciones = () => {
       equipo: 1,
     });
     setProductosData([]);
-    return;
   }, []);
 
   const main = () => (
     <>
-      {/* <Toast ref={toast} /> */}
       {modalVisible && <ModalRevisarReq visible={modalVisible} onClose={cambiar_visibilidad_modal} />}
       {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
       {verEliminarRestaurar && (

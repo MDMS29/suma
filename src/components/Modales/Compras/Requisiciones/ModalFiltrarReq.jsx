@@ -9,8 +9,7 @@ import { useState, useEffect } from "react";
 
 const ModalFiltrarReq = ({ visible, onClose }) => {
   const {
-    RequiAgg,
-    setRequiAgg,
+    RequiAgg, 
     centroCostoAgg,
     obtener_centro_costo,
     tipoRequiAgg,
@@ -41,14 +40,13 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     onClose();
 
     setFiltro({
-      requisicion:"",
-    })
-
-    setRequiAgg({
-      id_tipo_producto: "",
-      id_centro: "",
-      id_proceso: "",
-    });
+      requisicion: "",
+      proceso: 0,
+      centro_costo: 0,
+      tipo_producto: 0,
+      fecha_inicial: "",
+      fecha_final: ""
+    }) 
   };
 
   const btn_cambio = (e) => {
@@ -86,7 +84,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       fecha_inicial: filtro.fecha_inicial,
       fecha_final: filtro.fecha_final,
     };
-    if (filtro.id_tipo_producto == 0 && filtro.id_proceso == 0) {
+    if (filtro.tipo_producto == 0 && filtro.proceso == 0 && filtro.requisicion == 0) {
       setAlerta({
         error: true,
         show: true,
@@ -95,9 +93,10 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       setTimeout(() => setAlerta({}), 1500);
       return;
     }
+
     filtrar_modal_requi(formData);
     // console.log("DATOS DE FILTROS",formData)
-    onClose();
+    cerrar_modal()
   };
 
   const footerContent = (
@@ -122,10 +121,10 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
             </label>
             <div className="card flex justify-content-center border-1 rounded-md border-gray-300">
               <InputText
-                value={filtro?.requisicion}
+                value={filtro.requisicion}
                 name="requisicion"
                 placeholder="No. requisicion"
-                className="w-full h-10 md:w-14rem rounded-md"
+                className="w-full h-10 px-2 md:w-14rem rounded-md"
                 onChange={(e) => btn_cambio(e)}
               />
             </div>

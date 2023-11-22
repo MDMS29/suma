@@ -1,4 +1,4 @@
-import { Add_Icono, Req_Icono } from "../../../components/Icons/Iconos";
+import { Add_Icono, Filter_Icono, Req_Icono } from "../../../components/Icons/Iconos";
 import BLink from "../../../components/Botones/BLink";
 import { InputText } from "primereact/inputtext";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
@@ -6,11 +6,20 @@ import CardRequisicion from "../../../components/Cards/CardRequisicion";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import useAuth from "../../../hooks/useAuth";
 import Loader from "../../../components/Loader";
+import { useState } from "react";
+import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/ModalFiltrarReq";
+import Button from "../../../components/Botones/Button";
 
 function ReqEliminadas() {
   const { dataRequisiciones, eliminar_requisicion, requisicionesFiltradas, filtrar_requisiciones, cargando, permisosReq } = useRequisiciones();
 
   const { verEliminarRestaurar, Permisos_DB } = useAuth();
+
+  const [modalFiltrar, setmodalFiltrar] = useState(false);
+
+  const cambiar_visibilidad_modal_filtrar = () => {
+    setmodalFiltrar(!modalFiltrar);
+  }
 
   const main = () => (
     <>
@@ -20,6 +29,7 @@ function ReqEliminadas() {
           funcion={(e) => eliminar_requisicion(e)}
         />
       )}
+      {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones Inactivas</h1>
@@ -56,6 +66,13 @@ function ReqEliminadas() {
               placeholder="Buscar No. Requisicion"
             />
           </span>
+
+          <div className="h-full flex justify-center items-center">
+            <Button
+              tipo={"FILTRAR"}
+              funcion={(e) => setmodalFiltrar(true, e)}
+            >{Filter_Icono} Filtrar </Button>
+          </div>
         </div>
 
         <div className="rounded-sm w-full flex flex-wrap gap-3">

@@ -11,21 +11,27 @@ import ModalPDF from "../../../components/Modales/Compras/Requisiciones/ModalPDF
 import Loader from "../../../components/Loader";
 import useAuth from "../../../hooks/useAuth";
 import Button from "../../../components/Botones/Button";
+import { useState } from "react";
+import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/ModalFiltrarReq";
 
 function ReqRevisadas() {
   const { dataRequisiciones, verPDF, setVerPDF, requisicionesFiltradas, filtrar_requisiciones, permisosReq, cargando } = useRequisiciones();
   const { Permisos_DB } = useAuth();
 
+  const [modalFiltrar, setmodalFiltrar] = useState(false);
+
+  const cambiar_visibilidad_modal_filtrar = () => {
+    setmodalFiltrar(!modalFiltrar);
+  }
 
   const cerrar = () => {
     setVerPDF(false);
   };
 
-
-
   const main = () => (
     <>
       {verPDF && <ModalPDF visible={verPDF} onClose={cerrar} />}
+      {modalFiltrar && <ModalFiltrarReq visible={modalFiltrar} onClose={cambiar_visibilidad_modal_filtrar} />}
 
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
