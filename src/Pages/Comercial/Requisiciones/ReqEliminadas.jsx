@@ -66,6 +66,7 @@ function ReqEliminadas() {
           <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
             <i className="pi pi-search" />
             <InputText
+              id="lupa"
               className="h-10 pl-8 rounded-md"
               onChange={(e) => filtrar_requisiciones(e)}
               placeholder="Buscar No. Requisicion"
@@ -88,7 +89,7 @@ function ReqEliminadas() {
             <div className="flex justify-center items-center w-full">
               <Loader />
             </div>
-          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0 ? (
+          ) : dataRequisiciones.error === false || dataRequisiciones.length == 0  ? (
             <div className="bg-white border w-full my-3 p-3">
               <p className="text-center">No hay requisiciones inactivas.</p>
             </div>

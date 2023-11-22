@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 
 const ModalFiltrarReq = ({ visible, onClose }) => {
   const {
-    RequiAgg, 
+    RequiAgg,
     centroCostoAgg,
     obtener_centro_costo,
     tipoRequiAgg,
@@ -17,6 +17,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     filtrar_modal_requi,
     filtro,
     setFiltro,
+
   } = useRequisiciones();
 
   const { obtener_procesos, dataProcesos } = useProcesos();
@@ -46,7 +47,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       tipo_producto: 0,
       fecha_inicial: "",
       fecha_final: ""
-    }) 
+    })
   };
 
   const btn_cambio = (e) => {
@@ -75,7 +76,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     }
   };
 
-  const consultar = () => {
+  const consultar = async () => {
     const formData = {
       requisicion: filtro.requisicion,
       proceso: filtro.proceso,
@@ -88,16 +89,26 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       setAlerta({
         error: true,
         show: true,
-        message: "Selecciona por lo menos  un criterio",
+        message: "Selecciona por lo menos un criterio",
       });
       setTimeout(() => setAlerta({}), 1500);
       return;
     }
 
-    filtrar_modal_requi(formData);
+    const data_filtrar = await filtrar_modal_requi(formData);
     // console.log("DATOS DE FILTROS",formData)
+
+    console.log(data_filtrar);
+    if (!data_filtrar) {
+      setAlerta({
+        error: true,
+        show: true,
+        message: "No se encontraron resultados",
+      });
+      setTimeout(() => setAlerta({}), 1500);
+      return;
+    }
     cerrar_modal();
-    
   };
 
   const footerContent = (

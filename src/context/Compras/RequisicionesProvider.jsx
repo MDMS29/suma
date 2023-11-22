@@ -571,6 +571,7 @@ const RequisicionesProvider = ({ children }) => {
 
         setCargando(false);
         setRequisicionesFiltradas(data);
+        return data
       }
     } catch (error) {
       setRequisicionesFiltradas([]);
