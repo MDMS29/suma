@@ -320,12 +320,12 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
               <div className="flex flex-col">
                 <label className="text-gray-600 pb-2 font-semibold">Usuario <span className="font-bold text-red-900">*</span></label>
                 <InputText
-                  disabled={UsuariosAgg.usuario !== "" && "disabled"}
+                  disabled={UsuariosAgg.id_usuario !== 0 && "disabled"}
                   value={UsuariosAgg.usuario}
                   type="text"
                   name="usuario"
                   className={`border-1 h-10 rounded-md px-3 py-2 ${errors.usuario ? "border-red-500" : "border-gray-300"
-                    } ${UsuariosAgg.usuario !== "" && "bg-gray-200"}`}
+                    } ${UsuariosAgg.id_usuario !== 0 && "bg-gray-200"}`}
                   onKeyPress={manejo_espacios_blancos}
                   onChange={(e) => btn_cambio_usuario(e)}
                 />

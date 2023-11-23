@@ -96,30 +96,25 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       setErrors(errors);
       return
     }
-
     if (!codRegex.test(productosAgg.referencia)) {
       errors.referencia = "La referencia debe contener solo dígitos";
       setErrors(errors);
       return
     }
-
     if (productosAgg.referencia < 0) {
       errors.referencia = "La referencia no debe ser negativo";
       setErrors(errors);
       return
     }
-
     if (productosAgg.descripcion.trim() === '') {
       errors.descripcion = "El Nombre es obligatorio";
       setErrors(errors);
       return
     }
-
     if (productosAgg.id_marca == 0) {
       errors.marca = "Seleccione una opcion";
       setErrors(errors);
       return
-
     }
     if (productosAgg.id_familia == 0) {
       errors.familia = "Seleccione una opcion";
@@ -130,39 +125,32 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
       errors.tipo_producto = "Seleccione una opcion";
       setErrors(errors);
       return
-
     }
     if (productosAgg.id_unidad == 0) {
       errors.unidad = "Seleccione una opcion";
       setErrors(errors);
       return
     }
-
     if (productosAgg.precio_costo == 0) {
       errors.precio_costo = "El precio costo es obligatorio";
       setErrors(errors);
       return
     }
-
     if (productosAgg.precio_costo < 0) {
       errors.precio_costo = "El precio costo no debe ser negativo";
       setErrors(errors);
       return
     }
-
     if (productosAgg.precio_venta < 0) {
       errors.precio_venta = "El precio venta no debe ser negativo";
       setErrors(errors);
       return
     }
-    
     if (productosAgg.precio_venta == 0) {
       errors.precio_venta = "El precio venta es obligatorio";
       setErrors(errors);
       return
     }
-
-
     try {
       let response
       if (productosAgg.id_producto !== 0) {
@@ -175,7 +163,7 @@ const ModalAgregarProducto = ({ visible, onClose }) => {
         cerrar_modal()
       }
     } catch (error) {
-      console.error("Error al guardar el usuario:", error.response);
+      console.error("Error al guardar el producto:", error.response);
     }
   }
 

@@ -89,8 +89,6 @@ const CentrosProvider = ({ children }) => {
 
   const guardar_centro_costo = async (formData) => {
     const token = localStorage.getItem("token");
-
-    formData.consecutivo = +formData.consecutivo
     formData.id_empresa = authUsuario.id_empresa
 
     const config = {

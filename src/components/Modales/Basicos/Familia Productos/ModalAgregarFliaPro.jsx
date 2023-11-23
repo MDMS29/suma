@@ -64,7 +64,7 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       }
     } catch (error) {
       console.error(
-        "Error al guardar el tipo de producto:",
+        "Error al guardar la familia del producto:",
         error.response.message
       );
     }

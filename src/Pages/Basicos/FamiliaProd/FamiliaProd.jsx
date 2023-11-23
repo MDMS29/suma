@@ -26,7 +26,6 @@ const FamiliaProd = () => {
   const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
   const columns = [
-    { field: "id_familia", header: "ID" },
     { field: "referencia", header: "Referencia de Producto" },
     { field: "descripcion", header: "Descripcion" },
   ];
