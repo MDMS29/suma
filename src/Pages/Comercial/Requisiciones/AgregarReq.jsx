@@ -462,7 +462,7 @@ const AgregarReq = () => {
                   optionValue="id_proceso"
                   placeholder="Seleccione un Proceso"
                   filter
-                  className="w-72 md:w-14rem"
+                  className="w-64 md:w-14rem"
                 />
               </div>
             </div>
@@ -482,7 +482,7 @@ const AgregarReq = () => {
                   optionValue="id_centro"
                   placeholder="Seleccione un centro de Costos"
                   filter
-                  className="w-72 md:w-14rem"
+                  className="w-64 md:w-14rem"
                 />
               </div>
             </div>
@@ -531,7 +531,7 @@ const AgregarReq = () => {
                   optionValue="id_tipo_producto"
                   placeholder="Seleccione Tipo de Requisición"
                   filter
-                  className="md:w-14rem w-72"
+                  className="md:w-14rem w-64"
                 />
               </div>
             </div>
@@ -552,7 +552,7 @@ const AgregarReq = () => {
                     optionValue="id_producto"
                     placeholder="Seleccione"
                     filter
-                    className="md:w-14rem w-72"
+                    className="md:w-14rem w-64"
                   />
                 </div>
               </div>
