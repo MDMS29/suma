@@ -3,6 +3,7 @@ import AgregarReq from "../Pages/Comercial/Requisiciones/AgregarReq";
 import ReqRevisadas from "../Pages/Comercial/Requisiciones/ReqRevisadas";
 import ReqEliminadas from "../Pages/Comercial/Requisiciones/ReqEliminadas";
 import Proveedores from "../Pages/Comercial/Proveedores/Proveedores";
+import AgregarProv from "../Pages/Comercial/Proveedores/AgregarProv";
 
 const ComprasRoutes = [
   {
@@ -38,7 +39,7 @@ const ComprasRoutes = [
   {
     name: "Agregar Proveedores",
     route: "/compras/proveedores/agregar",
-    component: <AgregarReq />,
+    component: <AgregarProv />,
     key: 15,
   },
 ];
