@@ -152,7 +152,7 @@ const Requisiciones = () => {
           </div>
         </div>
 
-        <div className="w-full py-3 flex flex-wrap gap-3">
+        <div className="w-full justify-center py-3 flex flex-wrap gap-3">
           {cargando ? (
             <div className="flex justify-center w-full">
               <Loader />

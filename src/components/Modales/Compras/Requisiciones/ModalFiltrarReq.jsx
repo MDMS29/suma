@@ -23,11 +23,6 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
   const { obtener_procesos, dataProcesos } = useProcesos();
   const { setAlerta } = useAuth();
 
-  const [fechas, setFechas] = useState({
-    fecha_inicial: "",
-    fecha_final: "",
-  });
-
   useEffect(() => {
     obtener_procesos();
     obtener_tipo_requisicion();
@@ -87,22 +82,11 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       fecha_inicial: filtro.fecha_inicial,
       fecha_final: filtro.fecha_final,
     };
-    if (filtro.fecha_inicial == 0 ||
-      filtro.fecha_final == 0) {
-
-      setAlerta({
-        error: true,
-        show: true,
-        message: "Debe terminar de llenar la fecha",
-      });
-      setTimeout(() => setAlerta({}), 1500);
-      return;
-    }
     if (
       filtro.tipo_producto == 0 &&
       filtro.proceso == 0 &&
       filtro.requisicion == 0 &&
-      filtro.fecha_inicial == 0 ||
+      filtro.fecha_inicial == 0 &&
       filtro.fecha_final == 0
     ) {
       setAlerta({

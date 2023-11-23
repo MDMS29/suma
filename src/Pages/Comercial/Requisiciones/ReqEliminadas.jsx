@@ -93,7 +93,7 @@ function ReqEliminadas() {
           </div>
         </div>
 
-        <div className="rounded-sm w-full flex flex-wrap gap-3">
+        <div className="rounded-sm w-full justify-center flex flex-wrap gap-3">
           {cargando ? (
             <div className="flex justify-center items-center w-full">
               <Loader />
