@@ -77,13 +77,11 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   };
 
   const handleGuardar = async () => {
+    
     const errors = {};
 
-    const codModuloRegex = /^[0-9]*$/;
     if (!ModulosAgg.cod_modulo) {
       errors.cod_modulo = "El código del módulo es obligatorio";
-    } else if (!codModuloRegex.test(ModulosAgg.cod_modulo)) {
-      errors.cod_modulo = "El código del módulo debe contener solo dígitos";
     }
     const nombreModuloRegex = /^[A-Za-z\s]*$/;
 
@@ -222,12 +220,13 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                 Código del Módulo
               </label>
               <InputText
-                type="number"
+                type="text"
                 value={ModulosAgg.cod_modulo}
                 name="cod_modulo"
+                disabled={ModulosAgg.id_modulo !==0 && "disabled"}
                 className={`border-1 h-10 rounded-md px-3 py-2 ${
                   errors.cod_modulo ? "border-red-500" : "border-gray-300"
-                }`}
+                } ${ModulosAgg.id_modulo !== 0 && "bg-gray-200"}`}
                 onChange={(e) => cambiar_modulos(e, "cod_modulo")}
                 onKeyDown={(e) => prevencion_de_espacios(e, "cod_modulo")}
               />

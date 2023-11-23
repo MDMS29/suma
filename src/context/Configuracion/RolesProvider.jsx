@@ -188,6 +188,7 @@ const RolesProvider = ({ children }) => {
       setAlerta({ error: false, show: true, message: data.message })
       setTimeout(() => setAlerta({}), 1500)
       setVerEliminarRestaurar(false)
+      setRolAgg({ id_rol: 0, nombre: '', descripcion: '' })
       return true
 
     } catch (error) {
