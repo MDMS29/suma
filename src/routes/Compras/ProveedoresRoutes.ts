@@ -10,11 +10,11 @@ const _ProveedoresController = new ProveedoresController()
 
 _ProveedoresRouter.route('/')
     .get(_Autorizacion, _ProveedoresController.Obtener_Proveedores) //OBTENER TODOS LAS REQUISICIONES
-//     .post(_Autorizacion, _ProveedoresController.Insertar_Requisicion) //CREAR REQUISICION
+    .post(_Autorizacion, _ProveedoresController.Insertar_Proveedor) //CREAR REQUISICION
 
-// _ProveedoresRouter.route('/requisiciones/:id_requisicion')
-//     .get(_Autorizacion, _ProveedoresController.Buscar_Requisicion) //BUSCAR UNA REQUISICION SEGUN SU ID
-//     .patch(_Autorizacion, _ProveedoresController.Editar_Requisicion) //EDITAR SEGUN SU ID
+_ProveedoresRouter.route('/:id_proveedor')
+    .get(_Autorizacion, _ProveedoresController.Buscar_Proveedor) //BUSCAR UNA REQUISICION SEGUN SU ID
+    .patch(_Autorizacion, _ProveedoresController.Editar_Proveedor) //EDITAR SEGUN SU ID
 //     .delete(_Autorizacion, _ProveedoresController.Cambiar_Estado_Requisicion) //CAMBIAR ESTADO DE LA REQUISICION POR ID
 
 export default _ProveedoresRouter

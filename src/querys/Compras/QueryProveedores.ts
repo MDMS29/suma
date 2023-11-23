@@ -1,18 +1,13 @@
-import { _DB, pool } from "../../config/db";
-import { _obtener_proveedores } from "../../dao/Compras/DaoProveedores";
+import { pool } from "../../config/db";
+import { _buscar_correo_proveedor, _buscar_documento_proveedor, _buscar_proveedor_id, _editar_suministro, _insertar_proveedor, _insertar_suministro_proveedor, _obtener_proveedores } from "../../dao/Compras/DaoProveedores";
 import {
-
-    _FA_obtener_requisicion_filtro,
-
     _aprobar_desaprobar_detalle,
     _buscar_detalle_id,
-    _buscar_detalle_requisicion, _buscar_requisicion_consecutivo, _buscar_requisicion_id,
-    _cambiar_estado_requisicion, _editar_requisicion_det, _editar_requisicion_enc,
-    _editar_usuario_revision,
-    _insertar_requisicion_det, _insertar_requisicion_enc
+     _cambiar_estado_requisicion, _editar_requisicion_enc,
+    _editar_usuario_revision
 } from "../../dao/Compras/DaoRequisiciones";
 
-import { Filtro_Requisiciones, Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras';
+import { Tercero } from '../../Interfaces/Compras/ICompras';
 
 export default class QueryProveedores {
     public async Obtener_Proveedores(estado: string, empresa: string): Promise<any> {
@@ -29,55 +24,13 @@ export default class QueryProveedores {
         }
     }
 
-    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>): Promise<any> {
-        const client = await pool.connect()
-        const { centro_costo, requisicion, proceso, tipo_producto, fecha_inicial, fecha_final } = filtros
-        try {
-            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto, fecha_inicial != '' ? fecha_inicial : null, fecha_final != '' ? fecha_final : null]);
-            return result
-        } catch (error) {
-            console.log(error)
-            return
-        } finally {
-            client.release();
-        }
-    }
-
-    public async Requisiciones_Filtro_Change(estado: string, empresa: number, usuario: string, _: string, valor: string | number): Promise<any> {
-        const client = await pool.connect()
-        try {
-            //FILTRO DE LOS DATOS ATRAVES DE --> estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto
-            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, 0, valor, 0, 0, null, null]); 
-            return result
-        } catch (error) {
-            console.log(error)
-            return
-        } finally {
-            client.release();
-        }
-    }
-
-    public async Buscar_Detalle_Requisicion(id_requisicion: number) {
+    public async Buscar_Proveedor_Documento(proveedor_request: Tercero) {
         const client = await pool.connect()
 
-        try {
-            let result = await client.query(_buscar_detalle_requisicion, [id_requisicion])
-            return result.rows
-        } catch (error) {
-            console.log(error)
-            return
-        } finally {
-            client.release()
-        }
-    }
-
-    public async Buscar_Requisicion_Consecutivo(requisicion_request: Requisicion_Enc) {
-        const client = await pool.connect()
-
-        const { consecutivo } = requisicion_request
+        const { id_tipo_documento, documento } = proveedor_request
 
         try {
-            let result = await client.query(_buscar_requisicion_consecutivo, [consecutivo]);
+            let result = await client.query(_buscar_documento_proveedor, [documento, id_tipo_documento]);
             return result.rows
         } catch (error) {
             console.log(error)
@@ -87,17 +40,35 @@ export default class QueryProveedores {
         }
     }
 
-    public async Insertar_Requisicion_Enc(requisicion_request: Requisicion_Enc, usuario_creacion: string) {
+    public async Buscar_Proveedor_Correo(proveedor_request: Tercero) {
         const client = await pool.connect()
-        const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, fecha_requisicion, comentarios, equipo } = requisicion_request
+
+        const { correo } = proveedor_request
+
+        try {
+            let result = await client.query(_buscar_correo_proveedor, [correo]);
+            return result.rows
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Insertar_Proveedor(proveedor_request: Tercero, usuario_creacion: string) {
+        const client = await pool.connect()
+
+        const { id_empresa, id_tipo_tercero, id_tipo_documento, documento, nombre, direccion, telefono, correo, contacto, telefono_contacto } = proveedor_request
 
         try {
             let result = await client.query(
-                _insertar_requisicion_enc,
+                _insertar_proveedor,
                 [
-                    id_empresa, id_proceso, id_centro,
-                    id_tipo_producto, consecutivo, fecha_requisicion,
-                    comentarios, equipo, usuario_creacion
+                    id_empresa, id_tipo_tercero, id_tipo_documento,
+                    documento, nombre, direccion,
+                    telefono, correo, contacto,
+                    telefono_contacto, 1, usuario_creacion
                 ]
             );
             return result.rows
@@ -109,17 +80,15 @@ export default class QueryProveedores {
         }
     }
 
-    public async Insertar_Requisicion_Det(requisicion_det_request: any, id_requisicion_enc: number, usuario_creacion: string) {
+    public async Insertar_Sumnistro(suministro: { id_tipo_producto: number }, id_tercero: number) {
         const client = await pool.connect()
-        const { id_producto, cantidad, justificacion } = requisicion_det_request
+        const { id_tipo_producto } = suministro
 
         try {
             let result = await client.query(
-                _insertar_requisicion_det,
+                _insertar_suministro_proveedor,
                 [
-                    id_requisicion_enc,
-                    id_producto, cantidad, justificacion,
-                    usuario_creacion
+                    id_tercero, id_tipo_producto
                 ]
             );
             return result.rows
@@ -131,20 +100,12 @@ export default class QueryProveedores {
         }
     }
 
-    public async Buscar_Requisicion_ID(id_requisicion: number) {
+    public async Buscar_Proveedor_ID(id_proveedor: number) {
         const client = await pool.connect()
 
         try {
-            let result: any = await client.query(_buscar_requisicion_id, [id_requisicion]);
-            if (result.rows.length > 0) {
-                let detalle = await client.query(_buscar_detalle_requisicion, [result.rows[0].id_requisicion])
-                if (!detalle.rows) {
-                    return
-                }
-                result.rows[0].det_requisicion = detalle.rows
-            }
-
-            return result.rows[0]
+            let result: any = await client.query(_buscar_proveedor_id, [id_proveedor]);
+            return result.rows
         } catch (error) {
             console.log(error)
             return
@@ -153,19 +114,21 @@ export default class QueryProveedores {
         }
     }
 
-    public async Editar_Requisicion_Enc(id_requisicion: number, requisicion_request: Requisicion_Enc) {
+    public async Editar_Proveedor(id_proveedor: number, proveedor_request: Tercero) {
         const client = await pool.connect()
-        const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, comentarios, fecha_requisicion } = requisicion_request
+
+        const { id_empresa, id_tipo_tercero, id_tipo_documento, documento, nombre, direccion, telefono, correo, contacto, telefono_contacto } = proveedor_request
 
 
         try {
             let result = await client.query(
                 _editar_requisicion_enc,
                 [
-                    id_requisicion,
-                    id_empresa, id_proceso, id_centro,
-                    id_tipo_producto, consecutivo, comentarios,
-                    fecha_requisicion
+                    id_proveedor,
+                    id_empresa, id_tipo_tercero, id_tipo_documento,
+                    documento, nombre, direccion,
+                    telefono, correo, contacto,
+                    telefono_contacto
                 ]
             );
             return result
@@ -176,17 +139,30 @@ export default class QueryProveedores {
             client.release();
         }
     }
-    public async Editar_Requisicion_Det(requisicion_det_request: Requisicion_Det, usuario_modificacion: string) {
+
+    public async Buscar_Suministro_Proveedor(suministro: { id_suministro: number }, id_proveedor: number) {
         const client = await pool.connect()
-        const { id_detalle, id_producto, cantidad, justificacion, id_estado } = requisicion_det_request
+
+        try {
+            let result: any = await client.query(_buscar_detalle_id, [id_proveedor, suministro.id_suministro]);
+            return result.rows[0]
+        } catch (error) {
+            console.log(error)
+            return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Editar_Suministro_Proveedor(suministro: { id_suministro: number, id_estado:number }) {
+        const client = await pool.connect()
+        const { id_suministro, id_estado } = suministro
 
         try {
             let result = await client.query(
-                _editar_requisicion_det,
+                _editar_suministro,
                 [
-                    id_detalle,
-                    id_producto, cantidad, justificacion,
-                    id_estado, usuario_modificacion
+                    id_suministro, id_estado
                 ]
             );
             return result.rows
@@ -198,19 +174,6 @@ export default class QueryProveedores {
         }
     }
 
-    public async Buscar_Detalle_ID(id_detalle: number) {
-        const client = await pool.connect()
-
-        try {
-            let result: any = await client.query(_buscar_detalle_id, [id_detalle]);
-            return result.rows[0]
-        } catch (error) {
-            console.log(error)
-            return
-        } finally {
-            client.release();
-        }
-    }
 
     public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
         const client = await pool.connect()

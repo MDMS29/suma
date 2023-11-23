@@ -45,11 +45,11 @@ export interface Filtro_Requisiciones {
 
 
 /****************  INTERFACES PARA LOS PROVEEDORES  ****************/
-export interface Proveedor {
-    id_tercero?: string
-    id_empresa: string
-    tipo_tercero: string
-    tipo_documento: string
+export interface Tercero {
+    id_tercero?: number
+    id_empresa: number
+    id_tipo_tercero: number
+    id_tipo_documento: number
     documento: string
     nombre: string
     direccion: string
@@ -57,6 +57,6 @@ export interface Proveedor {
     correo: string
     contacto: string
     telefono_contacto: string
-    id_estado: string
+    id_estado: number
     suministros?: []
 }

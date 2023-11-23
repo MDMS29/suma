@@ -1,17 +1,17 @@
-import { Proveedor, Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras'
+import { Tercero } from '../../Interfaces/Compras/ICompras'
 import QueryProveedores from "../../querys/Compras/QueryProveedores";
 
 
 
 export class ProveedoresService {
-    private _Query_Requisiciones: QueryProveedores;
+    private _Query_Proveedores: QueryProveedores;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
-        this._Query_Requisiciones = new QueryProveedores();
+        this._Query_Proveedores = new QueryProveedores();
     }
 
-    private ReduceProveedores(result: Proveedor[], proveedores: Proveedor[]) {
+    private ReduceProveedores(result: Tercero[], proveedores: Tercero[]) {
         proveedores?.forEach((proveedor: any) => {
             const esProveedor = result.find((existe: any) => existe.id_tercero === proveedor.id_tercero);
             if (!esProveedor) {
@@ -20,7 +20,7 @@ export class ProveedoresService {
         });
         return result;
     }
-    private ReduceSuministros(result: Proveedor[], proveedor: Proveedor) {
+    private ReduceSuministros(result: Tercero[], proveedor: Tercero) {
         proveedor.suministros?.forEach((suministro: any) => {
             const esSuministro = result.find((existe: any) => existe.id_tipo_producto === suministro.id_tipo_producto);
             if (!esSuministro && suministro.id_tercero == proveedor.id_tercero) {
@@ -32,7 +32,7 @@ export class ProveedoresService {
 
     public async Obtener_Proveedores(estado: string, empresa: string): Promise<any> {
         try {
-            let proveedores = await this._Query_Requisiciones.Obtener_Proveedores(estado, empresa)
+            let proveedores = await this._Query_Proveedores.Obtener_Proveedores(estado, empresa)
             if (proveedores?.length <= 0) {
                 return { error: false, message: 'No se han encontrado proveedores' } //!ERROR
             }
@@ -41,6 +41,7 @@ export class ProveedoresService {
             let array_suministros = []
             for (let proveedor of proveedores) {
                 array_suministros.push({
+                    id_suministro: proveedor.id_suministro,
                     id_tercero: proveedor.id_tercero_suministro,
                     id_tipo_producto: proveedor.id_tipo_producto,
                     tipo_producto: proveedor.tipo_producto
@@ -63,93 +64,126 @@ export class ProveedoresService {
         }
     }
 
-    public async Insertar_Requisicion(requisicion_request: Requisicion_Enc, usuario_creacion: string) {
+    public async Insertar_Proveedor(proveedor_request: Tercero, usuario_creacion: string) {
         try {
-            const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_Consecutivo(requisicion_request)
-            if (requisicion_filtrada?.length > 0) {
-                return { error: true, message: 'Ya existe este consecutivo' } //!ERROR
+            const documento_proveedor_filtro: any = await this._Query_Proveedores.Buscar_Proveedor_Documento(proveedor_request)
+            if (documento_proveedor_filtro?.length > 0) {
+                return { error: true, message: 'Ya existe este numero de documento' } //!ERROR
             }
 
-            // INSERTAR ENCABEZADO DE LA REQUISICION
-            const requisicion_enc = await this._Query_Requisiciones.Insertar_Requisicion_Enc(requisicion_request, usuario_creacion)
-            if (!requisicion_enc) {
-                return { error: true, message: 'No se ha podido crear la requisicion' } //!ERROR
+            const correo_proveedor_filtro: any = await this._Query_Proveedores.Buscar_Proveedor_Correo(proveedor_request)
+            if (correo_proveedor_filtro?.length > 0) {
+                return { error: true, message: 'Ya existe este correo' } //!ERROR
             }
 
-            // INSERTAR DETALLES DE LA REQUISICION
-            const { det_requisicion } = requisicion_request
-            if (det_requisicion) {
-                let detalle: Requisicion_Det
-                for (detalle of det_requisicion) {
-                    const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, requisicion_enc[0].id_requisicion, usuario_creacion)
-                    if (!requisicion_det) {
-                        return { error: true, message: `Error al insertar el producto ${detalle.id_producto}` } //!ERROR
+
+
+            // INSERTAR EL PROVEEDOR
+            const proveedor_insert = await this._Query_Proveedores.Insertar_Proveedor(proveedor_request, usuario_creacion)
+            if (!proveedor_insert) {
+                return { error: true, message: 'No se ha podido crear el proveedor' } //!ERROR
+            }
+
+            // INSERTAR SUMINISTROS PARA EL PROVEEDOR
+            if (proveedor_request.suministros) {
+                for (let suministro of proveedor_request.suministros) {
+                    const suministro_editado = await this._Query_Proveedores.Insertar_Sumnistro(suministro, proveedor_insert[0].id_tercero)
+                    if (!suministro_editado) {
+                        return { error: true, message: `Error al guardar el suministro` } //!ERROR
                     }
                 }
             } else {
-                return { error: true, message: `Error al crear la requisicion ${requisicion_request.consecutivo}` } //!ERROR
+                return { error: true, message: `Error al crear el proveedor` } //!ERROR
             }
 
-            // EN ESTE ESPACIO DE LINEA SE EJECUTA UN TRIGGER PARA AUMENTAR EL CONSECUTIVO DEL CENTRO UTILIZADO
-
-            const nueva_requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(requisicion_enc[0].id_requisicion)
-            if (!nueva_requisicion) {
-                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+            //BUSCAR EL PROVEEDOR CREADO
+            let proveedor = await this._Query_Proveedores.Buscar_Proveedor_ID(proveedor_insert[0].id_tercero)
+            if (!proveedor) {
+                return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
             }
 
-            return nueva_requisicion
+            //GUARDAR LOS SUMINISTROS DEL PROVEEDORES
+            let array_suministros = []
+            for (let proveedor_s of proveedor) {
+                array_suministros.push({
+                    id_suministro: proveedor_s.id_suministro,
+                    id_tercero: proveedor_s.id_tercero_suministro,
+                    id_tipo_producto: proveedor_s.id_tipo_producto,
+                    tipo_producto: proveedor_s.tipo_producto
+                })
+                proveedor_s.suministros = array_suministros
+            }
+            //REDUCIR LOS PROVEEDORES PARA IGNORAR LOS REPETIDOS
+            proveedor = this.ReduceProveedores([], proveedor)
+
+            return proveedor
         } catch (error) {
             console.log(error)
-            return { error: true, message: `Error al crear la requisicion ${requisicion_request.consecutivo}` } //!ERROR
+            return { error: true, message: `Error al crear el proveedor` } //!ERROR
         }
     }
 
-    public async Buscar_Requisicion(id_requisicion: number): Promise<any> {
+    public async Buscar_Proveedor(id_proveedor: number): Promise<any> {
         try {
-            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
-            if (!requisicion) {
+            let proveedor = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
+            if (!proveedor) {
                 return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
             }
-            return requisicion
+
+
+            //GUARDAR LOS SUMINISTROS DEL PROVEEDORES
+            let array_suministros = []
+            for (let proveedor_s of proveedor) {
+                array_suministros.push({
+                    id_suministro: proveedor_s.id_suministro,
+                    id_tercero: proveedor_s.id_tercero_suministro,
+                    id_tipo_producto: proveedor_s.id_tipo_producto,
+                    tipo_producto: proveedor_s.tipo_producto
+                })
+                proveedor_s.suministros = array_suministros
+            }
+            //REDUCIR LOS PROVEEDORES PARA IGNORAR LOS REPETIDOS
+            proveedor = this.ReduceProveedores([], proveedor)
+
+            return proveedor
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al encontrar la requisicion' }
         }
     }
 
-    public async Editar_Requisicion(id_requisicion: number, requisicion_request: Requisicion_Enc, usuario_modificacion: string) {
+    public async Editar_Proveedor(id_proveedor: number, proveedor_request: Tercero) {
         try {
-            const respuesta: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            const correo_proveedor_filtro: any = await this._Query_Proveedores.Buscar_Proveedor_Correo(proveedor_request)
 
-            if (!respuesta) {
-                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+            if (!correo_proveedor_filtro) {
+                return { error: true, message: 'Este correo ya existe' } //!ERROR
             }
 
-            const req_enc = await this._Query_Requisiciones.Editar_Requisicion_Enc(id_requisicion, requisicion_request)
-            if (req_enc?.rowCount != 1) {
+            const proveedor_editado = await this._Query_Proveedores.Editar_Proveedor(id_proveedor, proveedor_request)
+            if (proveedor_editado?.rowCount != 1) {
                 return { error: true, message: 'Error al actualizar la requisicion' } //!ERROR
             }
 
-            const { det_requisicion } = requisicion_request
-            if (det_requisicion) {
-                let detalle: Requisicion_Det
-                for (detalle of det_requisicion) {
-                    if (typeof detalle.id_detalle !== 'string') {
+            if (proveedor_request.suministros) {
+                for (let suministro of proveedor_request.suministros) {
+                    const suministro_encontrado = await this._Query_Proveedores.Buscar_Suministro_Proveedor(suministro, id_proveedor)
+                    if (suministro_encontrado.length !== 0) {
                         // EDITAR DETALLE
-                        const requisicion_det = await this._Query_Requisiciones.Editar_Requisicion_Det(detalle, usuario_modificacion)
+                        const requisicion_det = await this._Query_Proveedores.Editar_Suministro_Proveedor(suministro)
                         if (!requisicion_det) {
-                            return { error: true, message: `Error al editar el detalle ${detalle.id_producto}` } //!ERROR
+                            return { error: true, message: `Error al editar el suministro` } //!ERROR
                         }
                     } else {
                         // INSERTAR DETALLE
-                        const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, id_requisicion, usuario_modificacion)
-                        if (!requisicion_det) {
-                            return { error: true, message: `Error al crear el detalle ${detalle.id_producto}` } //!ERROR
+                        const nuevo_suministro = await this._Query_Proveedores.Insertar_Sumnistro(suministro, id_proveedor)
+                        if (!nuevo_suministro) {
+                            return { error: true, message: `Error al crear el suministro` } //!ERROR
                         }
                     }
                 }
             } else {
-                return { error: true, message: `Error al editar la requisicion ${requisicion_request.consecutivo}` } //!ERROR
+                return { error: true, message: `Error al editar el proveedor` } //!ERROR
             }
 
             return { error: false, message: '' } //*SUCCESSFUL
@@ -161,12 +195,12 @@ export class ProveedoresService {
 
     public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
         try {
-            const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            const requisicion_filtrada: any = await this._Query_Proveedores.Buscar_Proveedor_ID(id_requisicion)
             if (requisicion_filtrada?.length <= 0) {
                 return { error: true, message: 'No se ha encontrado esta la requisicion' } //!ERROR
             }
 
-            const requisicion = await this._Query_Requisiciones.Cambiar_Estado_Requisicion(id_requisicion, estado)
+            const requisicion = await this._Query_Proveedores.Cambiar_Estado_Requisicion(id_requisicion, estado)
             if (requisicion?.rowCount != 1) {
                 return { error: true, message: 'Error al cambiar el estado de la requisicion' } //!ERROR
             }

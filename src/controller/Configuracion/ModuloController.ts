@@ -20,7 +20,7 @@ export default class _ModuloController {
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
-
+            
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
