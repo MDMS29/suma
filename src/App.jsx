@@ -19,6 +19,7 @@ import { ProcesosProvider } from "./context/Basicos/ProcesosProvider.jsx";
 import { CentrosProvider } from "./context/Basicos/CentrosProvider.jsx";
 import { ProductosProvider } from "./context/Basicos/ProductosProvider.jsx";
 import { RequisicionesProvider } from "./context/Compras/RequisicionesProvider.jsx";
+import { ProveedoresProvider } from "./context/Compras/ProveedoresProvider.jsx";
 
 const App = () => {
   return (
@@ -38,7 +39,9 @@ const App = () => {
                               <ProcesosProvider>
                                 <CentrosProvider>
                                   <RequisicionesProvider>
-                                    <AppMain />
+                                    <ProveedoresProvider>
+                                      <AppMain />
+                                    </ProveedoresProvider>
                                   </RequisicionesProvider>
                                 </CentrosProvider>
                               </ProcesosProvider>

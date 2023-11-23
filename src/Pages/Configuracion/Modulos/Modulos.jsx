@@ -26,8 +26,8 @@ const Modulos = () => {
 
   const columns = [
     { field: "cod_modulo", header: "Codigo" },
-    { field: "nombre_modulo", header: "Nombre" },
     { field: "icono", header: "Icono" },
+    { field: "nombre_modulo", header: "Nombre" },
   ];
 
   const {
@@ -150,27 +150,27 @@ const Modulos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <PButton
-            tooltip="Editar"
-            tooltipOptions={{ position: "top" }}
-            className="p-button-rounded p-mr-2"
-            onClick={(e) => editar_modulo(e, rowData.id_modulo)}
-          >
-            {Edit_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Editar"
+              tooltipOptions={{ position: "top" }}
+              className="p-button-rounded p-mr-2"
+              onClick={(e) => editar_modulo(e, rowData.id_modulo)}
+            >
+              {Edit_Icono}
+            </PButton>
+          )}
         {permisosModulo.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-          <PButton
-            tooltip="Eliminar"
-            className="p-button-rounded p-button-danger p-mr-2"
-            tooltipOptions={{ position: "top" }}
-            onClick={(e) => mostrar_modal_eliminar(e, rowData)}
-          >
-            {Trash_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Eliminar"
+              className="p-button-rounded p-button-danger p-mr-2"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => mostrar_modal_eliminar(e, rowData)}
+            >
+              {Trash_Icono}
+            </PButton>
+          )}
         <PButton
           tooltip="Asignar Menú"
           className="p-button-rounded p-mr-2"
@@ -184,39 +184,38 @@ const Modulos = () => {
   };
 
   const main = () => (
-    <>
-      <div className="w-5/6">
-        <Toast ref={toast} />
+    <div className="w-5/6">
+      <Toast ref={toast} />
 
-        {modalVisible && (
-          <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />
-        )}
-        {modalAsignarMenuVisible && (
-          <ModalAsignarMenu
-            visible={modalAsignarMenuVisible}
-            onClose={() => setModalAsignarMenuVisible(false)}
-          />
-        )}
-        {verEliminarRestaurar && (
-          <EliminarRestaurar
-            tipo={"ELIMINAR"}
-            funcion={(e) =>
-              MenuState?.id_menu
-                ? eliminar_restablecer_menu(MenuState.id_menu, e)
-                : eliminar_restablecer_modulo(ModuloState.id_modulo, e)
-            }
-          />
-        )}
+      {modalVisible && (
+        <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />
+      )}
+      {modalAsignarMenuVisible && (
+        <ModalAsignarMenu
+          visible={modalAsignarMenuVisible}
+          onClose={() => setModalAsignarMenuVisible(false)}
+        />
+      )}
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"ELIMINAR"}
+          funcion={(e) =>
+            MenuState?.id_menu
+              ? eliminar_restablecer_menu(MenuState.id_menu, e)
+              : eliminar_restablecer_modulo(ModuloState.id_modulo, e)
+          }
+        />
+      )}
 
-        <div className="flex justify-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Modulos</h1>
-          <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
-        </div>
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          {permisosModulo.filter(
-            (permiso) =>
-              permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
-          ).length > 0 && (
+      <div className="flex justify-center gap-x-4 m-2 p-3">
+        <h1 className="text-3xl">Modulos</h1>
+        <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
+      </div>
+      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+        {permisosModulo.filter(
+          (permiso) =>
+            permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
+        ).length > 0 && (
             <Button
               tipo={"PRINCIPAL"}
               funcion={(e) => setModalVisible(true, e)}
@@ -224,53 +223,52 @@ const Modulos = () => {
               {Add_Icono} Agregar{" "}
             </Button>
           )}
-          {permisosModulo.filter(
-            (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-          ).length > 0 && (
+        {permisosModulo.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 && (
             <div className="h-full flex justify-center items-center">
               <BLink tipo={"INACTIVOS"} url="/configuracion/modulos/inactivos">
                 Inactivos
               </BLink>
             </div>
           )}
-          <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
-            <i className="pi pi-search" />
-            <InputText
-              className="h-10 pl-8 rounded-md"
-              placeholder="Buscar"
-              onChange={(e) => buscador(e)}
-              value={searchTerm}
-            />
-          </span>
-        </div>
-
-        <div className="card">
-          <DataTable
-            className="custom-datatable"
-            stripedRows
-            value={filteredData}
-            paginator={true}
-            rows={5}
-            header={header}
-            emptyMessage="No se han encontrado resultados"
-            rowsPerPageOptions={[5, 10, 25, 50]}
-            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            currentPageReportTemplate="{first} to {last} of {totalRecords}"
-            tableStyle={{ minWidth: "50rem" }}
-          >
-            {visibleColumns.map((col) => (
-              <Column key={col.field} field={col.field} header={col.header} />
-            ))}
-
-            <Column
-              key="actions"
-              style={{ width: "10%" }}
-              body={(rowData) => columna_acciones(rowData)}
-            />
-          </DataTable>
-        </div>
+        <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
+          <i className="pi pi-search" />
+          <InputText
+            className="h-10 pl-8 rounded-md"
+            placeholder="Buscar"
+            onChange={(e) => buscador(e)}
+            value={searchTerm}
+          />
+        </span>
       </div>
-    </>
+
+      <div className="card">
+        <DataTable
+          className="custom-datatable"
+          stripedRows
+          value={filteredData}
+          paginator={true}
+          rows={5}
+          header={header}
+          emptyMessage="No se han encontrado resultados"
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          tableStyle={{ minWidth: "50rem" }}
+        >
+          {visibleColumns.map((col) => (
+            <Column key={col.field} field={col.field} header={col.header} />
+          ))}
+
+          <Column
+            key="actions"
+            style={{ width: "10%" }}
+            body={(rowData) => columna_acciones(rowData)}
+          />
+        </DataTable>
+      </div>
+    </div>
   );
 
   return (
@@ -278,8 +276,8 @@ const Modulos = () => {
       {permisosModulo.length === 0 ? (
         <Loader />
       ) : permisosModulo.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

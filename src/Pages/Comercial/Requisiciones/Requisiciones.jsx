@@ -102,19 +102,13 @@ const Requisiciones = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-            <div className="h-full flex justify-center items-center">
-              <div className="h-full flex justify-center items-center">
-                <div className="h-full flex justify-center items-center">
-                  <BLink
-                    tipo={"PRINCIPAL"}
-                    url={"/compras/requisiciones/agregar"}
-                  >
-                    {Add_Icono} Agregar
-                  </BLink>
-                </div>
-              </div>
-            </div>
-          )}
+              <BLink
+                tipo={"PRINCIPAL"}
+                url={"/compras/requisiciones/agregar"}
+              >
+                {Add_Icono} Agregar
+              </BLink>
+            )}
 
           <div className="h-full flex justify-center items-center">
             <BLink url={"/compras/requisiciones/inactivas"} tipo={"INACTIVOS"}>
@@ -195,8 +189,8 @@ const Requisiciones = () => {
       {permisosReq.length === 0 ? (
         <Loader />
       ) : permisosReq.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

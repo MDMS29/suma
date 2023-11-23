@@ -118,91 +118,89 @@ const RolesInactivos = () => {
         {permisosRoles.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-          <PButton
-            tooltip="Eliminar"
-            className="p-button-rounded p-button-danger p-mr-2"
-            tooltipOptions={{ position: "top" }}
-            onClick={(e) => mostrar_modal_eliminar(rowData)}
-          >
-            {Restore_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Eliminar"
+              className="p-button-rounded p-button-danger p-mr-2"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => mostrar_modal_eliminar(rowData)}
+            >
+              {Restore_Icono}
+            </PButton>
+          )}
       </div>
     );
   };
 
   const main = () => (
-    <>
-      <div className="w-5/6">
-        <Toast ref={toast} />
-        {verEliminarRestaurar && (
-          <EliminarRestaurar
-            tipo={"RESTAURAR"}
-            funcion={(e) => eliminar_rol(rolAgg.id_rol, e)}
-          />
-        )}
+    <div className="w-5/6">
+      <Toast ref={toast} />
+      {verEliminarRestaurar && (
+        <EliminarRestaurar
+          tipo={"RESTAURAR"}
+          funcion={(e) => eliminar_rol(rolAgg.id_rol, e)}
+        />
+      )}
 
-        <div className="flex justify-center items-center gap-x-4 m-2 p-3">
-          <h1 className="text-3xl">Roles Inactivos</h1>
-          {Rol_Icono}
-        </div>
-        <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
-          <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>
-            {Return_Icono} Regresar
-          </Button>
-
-          <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
-            <i className="pi pi-search" />
-            <InputText
-              className="h-10 pl-8 rounded-md"
-              placeholder="Buscar"
-              onChange={(e) => buscador(e)}
-              value={searchTerm}
-            />
-          </span>
-        </div>
-
-        <div className="card">
-          <DataTable
-            className="custom-datatable"
-            stripedRows
-            value={filteredData}
-            paginator={true}
-            rows={5}
-            header={header}
-            emptyMessage="No se han encontrado resultados"
-            rowsPerPageOptions={[5, 10, 25, 50]}
-            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            currentPageReportTemplate="{first} to {last} of {totalRecords}"
-            tableStyle={{ minWidth: "50rem" }}
-          >
-            {visibleColumns.map(
-              (col) =>
-                col.field !== "id_estado" && (
-                  <Column
-                    key={col.field}
-                    field={col.field}
-                    header={col.header}
-                  />
-                )
-            )}
-
-            <Column
-              key="estado"
-              field="id_estado"
-              header="Estado"
-              body={(rowData) => estadoTexto(rowData.id_estado)}
-            />
-
-            <Column
-              key="actions"
-              style={{ width: "10%" }}
-              body={(rowData) => columna_acciones(rowData)}
-            />
-          </DataTable>
-        </div>
+      <div className="flex justify-center items-center gap-x-4 m-2 p-3">
+        <h1 className="text-3xl">Roles Inactivos</h1>
+        {Rol_Icono}
       </div>
-    </>
+      <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
+        <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>
+          {Return_Icono} Regresar
+        </Button>
+
+        <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
+          <i className="pi pi-search" />
+          <InputText
+            className="h-10 pl-8 rounded-md"
+            placeholder="Buscar"
+            onChange={(e) => buscador(e)}
+            value={searchTerm}
+          />
+        </span>
+      </div>
+
+      <div className="card">
+        <DataTable
+          className="custom-datatable"
+          stripedRows
+          value={filteredData}
+          paginator={true}
+          rows={5}
+          header={header}
+          emptyMessage="No se han encontrado resultados"
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          tableStyle={{ minWidth: "50rem" }}
+        >
+          {visibleColumns.map(
+            (col) =>
+              col.field !== "id_estado" && (
+                <Column
+                  key={col.field}
+                  field={col.field}
+                  header={col.header}
+                />
+              )
+          )}
+
+          <Column
+            key="estado"
+            field="id_estado"
+            header="Estado"
+            body={(rowData) => estadoTexto(rowData.id_estado)}
+          />
+
+          <Column
+            key="actions"
+            style={{ width: "10%" }}
+            body={(rowData) => columna_acciones(rowData)}
+          />
+        </DataTable>
+      </div>
+    </div>
   );
 
   return (
@@ -210,8 +208,8 @@ const RolesInactivos = () => {
       {permisosRoles.length === 0 ? (
         <Loader />
       ) : permisosRoles.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

@@ -77,11 +77,11 @@ const ModulosProvider = ({ children }) => {
             `/modulos?estado=${estado}`,
             config
           );
-
           if (data.error == false) {
             setDataModulos([]);
             return
           }
+          setDataModulos(data)
 
         } catch (error) {
           setDataModulos([]);
