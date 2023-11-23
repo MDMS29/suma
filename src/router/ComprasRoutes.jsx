@@ -4,6 +4,7 @@ import ReqRevisadas from "../Pages/Comercial/Requisiciones/ReqRevisadas";
 import ReqEliminadas from "../Pages/Comercial/Requisiciones/ReqEliminadas";
 import Proveedores from "../Pages/Comercial/Proveedores/Proveedores";
 import AgregarProv from "../Pages/Comercial/Proveedores/AgregarProv";
+import ProveedoresInactivos from "../Pages/Comercial/Proveedores/ProveedoresInactivos";
 
 const ComprasRoutes = [
   {
@@ -41,6 +42,12 @@ const ComprasRoutes = [
     route: "/compras/proveedores/agregar",
     component: <AgregarProv />,
     key: 15,
+  },
+  {
+    name: "Proveedores Inactivos",
+    route: "/compras/proveedores/inactivos",
+    component: <ProveedoresInactivos />,
+    key: 16,
   },
 ];
 

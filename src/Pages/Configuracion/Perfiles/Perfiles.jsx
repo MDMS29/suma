@@ -81,6 +81,10 @@ const Perfiles = () => {
     setFilteredData(items_filtrados);
   };
 
+  const cambiar_visibilidad_modal = () => {
+    setModalVisible(!modalVisible);
+  };
+
   useEffect(() => {
     setFilteredData(dataPerfiles);
   }, [dataPerfiles]);
@@ -93,10 +97,6 @@ const Perfiles = () => {
     }, 10);
   }, [authPermisos]);
 
-  const cambiar_visibilidad_modal = () => {
-    setModalVisible(!modalVisible);
-  };
-  //MOSTRAR ALERTA
   useEffect(() => {
     if (alerta.show) {
       const show_alert = () => {
