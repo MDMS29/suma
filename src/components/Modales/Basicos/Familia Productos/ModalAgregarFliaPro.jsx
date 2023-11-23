@@ -1,19 +1,17 @@
-import useFamiliaProd from "../../../../hooks/Basicos/useFamiliaProd"
+import useFamiliaProd from "../../../../hooks/Basicos/useFamiliaProd";
 import useAuth from "../../../../hooks/useAuth";
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
 import Button from "../../../Botones/Button";
 
-
 function ModalAgregarFliaPro({ visible, onClose }) {
-
   const {
     errors,
     setErrors,
     FliaProAgg,
     setFliaProAgg,
     guardar_flia_prod,
-    editar_flia_pro
+    editar_flia_pro,
   } = useFamiliaProd();
 
   const { authUsuario } = useAuth();
@@ -24,10 +22,10 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       id_empresa: authUsuario.id_empresa,
       referencia: "",
       descripcion: "",
-    })
+    });
     setErrors({});
     onClose();
-  }
+  };
 
   const btn_guardar = async () => {
     const formData = {
@@ -39,23 +37,17 @@ function ModalAgregarFliaPro({ visible, onClose }) {
 
     const regex = /^[a-zA-Z0-9\s]*$/;
     const errors = {};
-    const refeRegex = /^[0-9]*$/;
-
-    if (!refeRegex.test(FliaProAgg.referencia)) {
-      errors.refePro = "La referencia debe contener solo dígitos";
-      setErrors(errors);
-    }
 
     if (!regex.test(FliaProAgg.descripcion)) {
       errors.fliaPro = "No se permiten caracteres especiales";
       setErrors(errors);
-      return
+      return;
     }
 
-    if (FliaProAgg.descripcion.trim() === '') {
-      errors.fliaPro = "Este campo es obligatorio"
+    if (FliaProAgg.descripcion.trim() === "") {
+      errors.fliaPro = "Este campo es obligatorio";
       setErrors(errors);
-      return
+      return;
     }
 
     try {
@@ -95,6 +87,7 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       </Button>
     </div>
   );
+  console.log(FliaProAgg.referencia)
 
   return (
     <Dialog
@@ -118,10 +111,12 @@ function ModalAgregarFliaPro({ visible, onClose }) {
             </label>
             <InputText
               value={FliaProAgg.referencia}
-              type="number"
+              disabled={FliaProAgg.id_familia !== 0 && "disabled"}
+              type="text"
               name="referencia"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.refePro ? "border-red-500" : "border-gray-300"
-                }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${
+                errors.refePro ? "border-red-500" : "border-gray-300"
+              } `}
               onChange={(e) => btn_cambio_flia_pro(e)}
             />
             {errors.refePro && (
@@ -136,19 +131,19 @@ function ModalAgregarFliaPro({ visible, onClose }) {
               value={FliaProAgg.descripcion}
               type="text"
               name="descripcion"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.fliaPro ? "border-red-500" : "border-gray-300"
-                }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${
+                errors.fliaPro ? "border-red-500" : "border-gray-300"
+              }`}
               onChange={(e) => btn_cambio_flia_pro(e)}
             />
             {errors.fliaPro && (
               <div className="text-red-600 text-xs">{errors.fliaPro}</div>
             )}
-
           </div>
         </div>
       </div>
     </Dialog>
-  )
+  );
 }
 
-export default ModalAgregarFliaPro
+export default ModalAgregarFliaPro;
