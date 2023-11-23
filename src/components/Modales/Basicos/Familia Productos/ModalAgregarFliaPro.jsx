@@ -64,7 +64,7 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       }
     } catch (error) {
       console.error(
-        "Error al guardar el tipo de producto:",
+        "Error al guardar la familia del producto:",
         error.response.message
       );
     }
@@ -116,7 +116,7 @@ function ModalAgregarFliaPro({ visible, onClose }) {
               name="referencia"
               className={`border-1 h-10 rounded-md px-3 py-2 ${
                 errors.refePro ? "border-red-500" : "border-gray-300"
-              }`}
+              } ${FliaProAgg.id_familia !== 0 && "bg-gray-200"}`}
               onChange={(e) => btn_cambio_flia_pro(e)}
             />
             {errors.refePro && (
