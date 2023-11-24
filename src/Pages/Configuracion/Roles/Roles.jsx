@@ -23,8 +23,7 @@ import {
 const Roles = () => {
   const toast = useRef(null);
 
-  const columns = [
-    { field: "id_rol", header: "ID" },
+  const columns = [ 
     { field: "nombre", header: "Nombre" },
     { field: "descripcion", header: "Descripcion" },
   ];
@@ -61,8 +60,7 @@ const Roles = () => {
       if (authPermisos !== undefined) return setPermisosRoles(authPermisos);
     }, 10);
   }, [authPermisos]);
-
-  //MOSTRAR ALERTA
+ 
   useEffect(() => {
     if (alerta.show) {
       (() => {

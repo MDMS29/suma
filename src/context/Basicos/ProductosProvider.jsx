@@ -107,7 +107,7 @@ const ProductosProvider = ({ children }) => {
                     show: true,
                     message: 'Producto creado con exito'
                 })
-                setTimeout(() => setAlerta({}), 1500) 
+                setTimeout(() => setAlerta({}), 1500)
                 return true
             }
             setAlerta({

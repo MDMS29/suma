@@ -94,7 +94,6 @@ const AgregarReq = () => {
 
     setRequiAgg({ ...RequiAgg, [e.target.name]: e.target.value });
     if (name === "id_proceso") {
-      //ENVIAR POR PARAMETROS DEL ID DEL PROCESO
       obtener_centro_costo(e.target.value);
     }
     if (name === "id_centro") {
@@ -105,7 +104,6 @@ const AgregarReq = () => {
       RequiAgg.consecutivo = centro;
     }
     if (name === "id_tipo_producto") {
-      //ENVIAR EL ID DEL TIPO DE PRODUCTO POR PARAMETRO
       filtar_tipo_requ(e.target.value);
     }
     if (name === "fecha_requisicion") {
@@ -221,7 +219,6 @@ const AgregarReq = () => {
         setEditing(false);
       } else {
         detalle.id_detalle = genLlaveAleatoria();
-        // Agrega un nuevo detalle
         setProductosData([...productosData, detalle]);
       }
 
@@ -278,7 +275,6 @@ const AgregarReq = () => {
   const editar_lista_producto = (rowData) => {
     setEditing(true);
 
-    // Llena los campos de entrada con el detalle seleccionado
     setDetalle({
       id_detalle: rowData.id_detalle,
       id_unidad: rowData.id_unidad,
@@ -372,13 +368,11 @@ const AgregarReq = () => {
   };
   const eliminar_producto_table = () => {
     if (typeof productoState.id_detalle == "string") {
-      //ESTE NO ESTA EN LA BASE DE DATOS
       const productos_filtrados = productosData.filter(
         (producto) => producto.id_detalle !== productoState.id_detalle
       );
       setProductosData(productos_filtrados);
     } else {
-      //ESTA EN LA BASE DE DATOS
       const productos_actualizado = productosData.map((producto) =>
         producto.id_detalle === productoState.id_detalle
           ? { ...producto, id_estado: 2 }
@@ -462,7 +456,7 @@ const AgregarReq = () => {
                   optionValue="id_proceso"
                   placeholder="Seleccione un Proceso"
                   filter
-                  className="w-72 md:w-14rem"
+                  className="w-64 md:w-14rem"
                 />
               </div>
             </div>
@@ -482,7 +476,7 @@ const AgregarReq = () => {
                   optionValue="id_centro"
                   placeholder="Seleccione un centro de Costos"
                   filter
-                  className="w-72 md:w-14rem"
+                  className="w-64 md:w-14rem"
                 />
               </div>
             </div>
@@ -531,7 +525,7 @@ const AgregarReq = () => {
                   optionValue="id_tipo_producto"
                   placeholder="Seleccione Tipo de Requisición"
                   filter
-                  className="md:w-14rem w-72"
+                  className="md:w-14rem w-64"
                 />
               </div>
             </div>
@@ -552,7 +546,7 @@ const AgregarReq = () => {
                     optionValue="id_producto"
                     placeholder="Seleccione"
                     filter
-                    className="md:w-14rem w-72"
+                    className="md:w-14rem w-64"
                   />
                 </div>
               </div>

@@ -30,9 +30,9 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
                 error: true,
                 show: true,
                 message: "No se permiten caracteres especiales",
-              });
-              setTimeout(() => setAlerta({}), 1500);
-              return;
+            });
+            setTimeout(() => setAlerta({}), 1500);
+            return;
         }
         if (procesosAgg.proceso.trim() === '') {
             errors.proceso = "Este campo es obligatorio"
@@ -107,11 +107,12 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
                         </label>
                         <InputText
                             value={procesosAgg.codigo}
+                            disabled={procesosAgg.id_proceso !== 0 && "disabled"}
                             type="text"
                             maxLength={3}
                             name="codigo"
                             className={`border-1 h-10 rounded-md px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
-                                }`}
+                                } ${procesosAgg.id_proceso !== 0 && "bg-gray-200"}`}
                             onChange={(e) => btn_cambio_proceso(e)}
                         />
                     </div>

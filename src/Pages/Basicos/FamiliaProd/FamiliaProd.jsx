@@ -26,7 +26,6 @@ const FamiliaProd = () => {
   const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
 
   const columns = [
-    { field: "id_familia", header: "ID" },
     { field: "referencia", header: "Referencia de Producto" },
     { field: "descripcion", header: "Descripcion" },
   ];
@@ -78,8 +77,7 @@ const FamiliaProd = () => {
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
   };
-
-  //MOSTRAR ALERTA
+ 
   useEffect(() => {
     if (alerta.show) {
       const show_alert = () => {

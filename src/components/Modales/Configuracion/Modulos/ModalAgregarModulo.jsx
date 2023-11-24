@@ -76,8 +76,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     }
   };
 
-  const handleGuardar = async () => {
-    
+  const btn_guardar = async () => {
     const errors = {};
 
     if (!ModulosAgg.cod_modulo) {
@@ -117,7 +116,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
       };
 
       let response;
-
       if (ModulosAgg.id_modulo !== 0) {
         response = await editar_modulo(formData);
       } else {
@@ -135,7 +133,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
         setrolesporModulo([]);
       }
     } catch (error) {
-      console.error("Error al guardar el módulo:", error);
+      console.error("Error al guardar el modulo:", error);
     }
   };
 
@@ -181,7 +179,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
 
   const footerContent = (
     <div>
-      <Button tipo={"PRINCIPAL"} funcion={handleGuardar}>
+      <Button tipo={"PRINCIPAL"} funcion={btn_guardar}>
         {ModulosAgg.id_modulo !== 0 ? "Actualizar" : "Guardar"}
       </Button>
     </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext"
 import { Add_Icono, Edit_Icono, Trash_Icono } from "../../../components/Icons/Iconos"
 import BLink from "../../../components/Botones/BLink"
@@ -19,7 +19,7 @@ const Proveedores = () => {
 
 
     const { dataProveedores, permisosProveedor, setPermisosProveedor, buscar_proveedor, proveedorState, setProveedorState, eliminar_restablecer_proveedor } = useProveedores()
-    const { authPermisos, Permisos_DB, alerta, setAlerta, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth()
+    const { authPermisos, Permisos_DB, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth()
 
     const columns = [
         { field: "nombre", header: "Nombre" },
@@ -129,7 +129,7 @@ const Proveedores = () => {
                 <EliminarRestaurar
                     tipo={"ELIMINAR"}
                     funcion={(e) =>
-                        eliminar_restablecer_proveedor(proveedorState.id_proveedor, e)
+                        eliminar_restablecer_proveedor(proveedorState.id_tercero, e)
                     }
                 />
             )}

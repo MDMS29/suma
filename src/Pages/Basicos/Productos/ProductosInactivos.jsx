@@ -84,7 +84,6 @@ const ProductosInactivos = () => {
     setProductoState(producto);
   };
 
-  //MOSTRAR ALERTA
   useEffect(() => {
     if (alerta.show) {
       const show_alert = () => {

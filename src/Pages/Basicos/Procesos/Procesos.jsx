@@ -79,8 +79,7 @@ const Procesos = () => {
       }
     }, 10);
   }, [authPermisos]);
-
-  //MOSTRAR ALERTA
+ 
   useEffect(() => {
     if (alerta.show) {
       const show_alert = () => {

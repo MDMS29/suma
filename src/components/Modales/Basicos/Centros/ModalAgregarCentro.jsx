@@ -26,6 +26,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
             id_empresa: authUsuario.id_empresa,
             codigo: "",
             centro_costo: "",
+            consecutivo: 0,
             correo_responsable: "",
         });
         setErrors({});
@@ -33,8 +34,8 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
 
     const btn_cambio_campo = (e) => {
         const value = e.target.value;
-        setCentrosAgg({ ...CentrosAgg, [e.target.name]: e.target.name.includes(['correo_responsable', 'codigo']) ? value.replace(/\d/g, '') : value });
-            };
+            setCentrosAgg({ ...CentrosAgg, [e.target.name]: e.target.name.includes(["consecutivo"]) && !isNaN(value) ? parseInt(value, 10) : value });
+    };
 
     const btn_guardar = async () => {
 
@@ -89,7 +90,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
             }
 
         } catch (error) {
-            console.error("Error al guardar la marca:", error);
+            console.error("Error al guardar el centro:", error);
         }
         setErrors({});
     }
@@ -113,7 +114,6 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
             footer={footerContent}
         >
             <div className="flex flex-col pt-3 gap-3 flex-wrap w-full">
-                {/* <div className=""> */}
                 <div className='flex gap-3 flex-wrap '>
                     <div className="flex flex-grow flex-col">
                         <label className="text-gray-600 pb-2 font-semibold">
@@ -126,7 +126,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                             maxLength={3}
                             name="codigo"
                             className={`border-1 h-10 rounded-md w-full px-3 ${errors.codigo ? "border-red-500" : "border-gray-300"
-                                }`}
+                                } ${CentrosAgg.id_centro !== 0 && "bg-gray-200"}`}
                             onChange={(e) => btn_cambio_campo(e)}
                         />
                         {errors.codigo && (
@@ -165,8 +165,8 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
                             # Consecutivo <span className="font-bold text-red-900">*</span>
                         </label>
                         <InputText
+                            type='number'
                             value={CentrosAgg.consecutivo}
-                            type="number"
                             name="consecutivo"
                             className={`border-1 h-10 rounded-md px-3 ${errors.consecutivo ? "border-red-500" : "border-gray-300"
                                 }`}
