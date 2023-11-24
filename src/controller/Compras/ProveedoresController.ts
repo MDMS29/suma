@@ -28,7 +28,7 @@ export default class ProveedoresController {
 
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al obtener las requisiciones' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al obtener los proveedores' }) //!ERROR
         }
     }
 
@@ -55,7 +55,7 @@ export default class ProveedoresController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: `Error al crear la requisicion ${req.body.consecutivo}` }) //!ERROR
+            return res.status(500).json({ error: true, message: `Error al crear el proveedor ${req.body.nombre}` }) //!ERROR
         }
     }
 
@@ -77,7 +77,7 @@ export default class ProveedoresController {
             return res.json(respuesta) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return res.json({ error: true, message: 'Error al encontrar la requisicion' }) //!ERROR
+            return res.json({ error: true, message: 'Error al encontrar el proveedor' }) //!ERROR
         }
     }
 
@@ -108,7 +108,7 @@ export default class ProveedoresController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al editar el proveedor' }) //!ERROR
         }
     }
 
