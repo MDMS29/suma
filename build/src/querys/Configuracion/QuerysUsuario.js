@@ -8,10 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = require("../../../config/db");
+const db_1 = require("../../config/db");
 const DaoUsuario_1 = require("../../dao/Configuracion/DaoUsuario");
-let bcrypt = require('bcrypt');
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class QueryUsuario {
     Autenticar_Usuario({ usuario, clave }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -20,7 +23,7 @@ class QueryUsuario {
                 const result = yield db_1._DB.func(DaoUsuario_1._FALoginUsuario, [usuario]);
                 if (result.length !== 0) {
                     //COMPARACIÓN DE LAS CLAVES HASHEADAS
-                    const matches = yield bcrypt.compare(clave, result[0].clave);
+                    const matches = yield bcryptjs_1.default.compare(clave, result[0].clave);
                     if (matches) {
                         return result;
                     }

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = require("../../../config/db");
+const db_1 = require("../../config/db");
 const DaoRequisiciones_1 = require("../../dao/Compras/DaoRequisiciones");
 class QueryRequisiciones {
     Obtener_Requisiciones_Enc(estado, empresa, usuario) {

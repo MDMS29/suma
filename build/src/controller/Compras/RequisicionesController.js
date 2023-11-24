@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const constants_1 = require("../../helpers/constants");
 const Requisiciones_Service_1 = require("../../services/Compras/Requisiciones.Service");
-const Requisiciones_Zod_1 = require("../../validations/Requisiciones.Zod");
+const Compras_Zod_1 = require("../../validations/Compras.Zod");
 class RequisicionesController {
     Obtener_Requisiciones_Filtro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -33,7 +33,7 @@ class RequisicionesController {
                 return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }); //!ERROR
             }
             // VALIDACION DE DATOS
-            const result = Requisiciones_Zod_1.FiltroRequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+            const result = Compras_Zod_1.FiltroRequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
             if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
                 return res.status(400).json({ error: true, message: result.error.issues[0].message }); //!ERROR
             }
@@ -94,7 +94,7 @@ class RequisicionesController {
                 return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
             // VALIDACION DE DATOS
-            const result = Requisiciones_Zod_1.RequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+            const result = Compras_Zod_1.RequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
             if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
                 return res.status(400).json({ error: true, message: result.error.issues[0].message }); //!ERROR
             }
@@ -147,7 +147,7 @@ class RequisicionesController {
                 return res.status(404).json({ error: true, message: 'No se ha encontrado la requisicion' }); //!ERROR
             }
             // VALIDACION DE DATOS
-            const result = Requisiciones_Zod_1.RequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+            const result = Compras_Zod_1.RequisicionesSchema.safeParse(req.body); //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
             if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
                 return res.status(400).json({ error: true, message: result.error.issues[0].message }); //!ERROR
             }
@@ -159,13 +159,13 @@ class RequisicionesController {
                 }
                 const response = yield requisiciones_service.Buscar_Requisicion(+id_requisicion);
                 if (!response) {
-                    return res.status(400).json({ error: true, message: 'Error al editar la familia' }); //!ERROR
+                    return res.status(400).json({ error: true, message: 'Error al editar la requisicion' }); //!ERROR
                 }
                 return res.status(200).json(response); //*SUCCESSFUL
             }
             catch (error) {
                 console.log(error);
-                return res.status(500).json({ error: true, message: 'Error al editar la familia' }); //!ERROR
+                return res.status(500).json({ error: true, message: 'Error al editar la requisicion' }); //!ERROR
             }
         });
     }
@@ -220,8 +220,8 @@ class RequisicionesController {
             }
             catch (error) {
                 console.log(error);
+                res.json({ error: true, message: 'Error al generar el documento' }); //!ERROR
                 return;
-                // res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
             }
         });
     }
