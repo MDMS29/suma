@@ -38,7 +38,11 @@ const MarcasProvider = ({ children }) => {
         }
         if (authUsuario.id_empresa) {
             try {
-                const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/`, config)
+                const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/`, config);
+            if (data.error == false) {
+                    setDataMarcas([])
+                    return
+                }
                 setDataMarcas(data)
             } catch (error) {
                 setDataMarcas([])
