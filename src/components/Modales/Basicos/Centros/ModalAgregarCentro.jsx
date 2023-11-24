@@ -34,7 +34,7 @@ const ModalAgregarCentro = ({ visible, onClose }) => {
     const btn_cambio_campo = (e) => {
         const value = e.target.value;
         setCentrosAgg({ ...CentrosAgg, [e.target.name]: e.target.name.includes(['correo_responsable', 'codigo']) ? value.replace(/\d/g, '') : value });
-    };
+            };
 
     const btn_guardar = async () => {
 

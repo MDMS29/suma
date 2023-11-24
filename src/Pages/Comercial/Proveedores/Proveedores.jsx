@@ -15,7 +15,6 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
 
 const Proveedores = () => {
-    const toast = useRef(null);
     const navigate = useNavigate();
 
 
@@ -80,20 +79,6 @@ const Proveedores = () => {
             }
         }, 10);
     }, [authPermisos]);
-
-    useEffect(() => {
-        if (alerta.show) {
-            const show_alert = () => {
-                toast.current.show({
-                    severity: alerta.error ? "error" : "success",
-                    detail: alerta.message,
-                    life: 1500,
-                });
-                setTimeout(() => setAlerta({}), 1500);
-            };
-            show_alert();
-        }
-    }, [alerta]);
 
     const header = (
         <MultiSelect
