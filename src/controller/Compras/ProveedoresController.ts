@@ -28,7 +28,7 @@ export default class ProveedoresController {
 
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al obtener los proveedores' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al obtener las requisiciones' }) //!ERROR
         }
     }
 
@@ -55,7 +55,7 @@ export default class ProveedoresController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: `Error al crear el proveedor ${req.body.nombre}` }) //!ERROR
+            return res.status(500).json({ error: true, message: `Error al crear la requisicion ${req.body.consecutivo}` }) //!ERROR
         }
     }
 
@@ -77,7 +77,7 @@ export default class ProveedoresController {
             return res.json(respuesta) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return res.json({ error: true, message: 'Error al encontrar el proveedor' }) //!ERROR
+            return res.json({ error: true, message: 'Error al encontrar la requisicion' }) //!ERROR
         }
     }
 
@@ -108,7 +108,7 @@ export default class ProveedoresController {
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al editar el proveedor' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
         }
     }
 
@@ -134,7 +134,7 @@ export default class ProveedoresController {
                 return res.status(400).json({ error: true, message: proveedor_estado.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha restaurado el proveedor' : 'Se ha inactivado el proveedor' })
+            return res.status(200).json({ error: false, message: proveedor_estado.message })
         } catch (error) {
             console.log(error)
             return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Error al restaurar el proveedor' : 'Error al inactivar el proveedor' }) //!ERROR
