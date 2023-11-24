@@ -20,6 +20,7 @@ export class ProveedoresService {
         });
         return result;
     }
+
     private ReduceSuministros(result: Tercero[], proveedor: Tercero) {
         proveedor.suministros?.forEach((suministro: any) => {
             const esSuministro = result.find((existe: any) => existe.id_tipo_producto === suministro.id_tipo_producto);
@@ -102,7 +103,7 @@ export class ProveedoresService {
                 return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
             }
 
-            //GUARDAR LOS SUMINISTROS DEL PROVEEDORES
+            //GUARDAR LOS SUMINISTROS DEL PROVEEDOR
             let array_suministros = []
             for (let proveedor_s of proveedor) {
                 array_suministros.push({
@@ -137,6 +138,7 @@ export class ProveedoresService {
                 array_suministros.push({
                     id_suministro: proveedor_s.id_suministro,
                     id_tercero: proveedor_s.id_tercero_suministro,
+                    id_estado: proveedor_s.estado_suministro,
                     id_tipo_producto: proveedor_s.id_tipo_producto,
                     tipo_producto: proveedor_s.tipo_producto
                 })
@@ -155,8 +157,7 @@ export class ProveedoresService {
     public async Editar_Proveedor(id_proveedor: number, proveedor_request: Tercero) {
         try {
             const correo_proveedor_filtro: any = await this._Query_Proveedores.Buscar_Proveedor_Correo(proveedor_request)
-
-            if (!correo_proveedor_filtro) {
+            if (correo_proveedor_filtro?.length > 0 && correo_proveedor_filtro.filter((correo: any) => correo.id_tercero !== id_proveedor).length > 0) {
                 return { error: true, message: 'Este correo ya existe' } //!ERROR
             }
 
@@ -186,29 +187,49 @@ export class ProveedoresService {
                 return { error: true, message: `Error al editar el proveedor` } //!ERROR
             }
 
-            return { error: false, message: '' } //*SUCCESSFUL
+            //BUSCAR EL PROVEEDOR CREADO
+            let proveedor = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
+            if (!proveedor) {
+                return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
+            }
+
+            //GUARDAR LOS SUMINISTROS DEL PROVEEDOR
+            let array_suministros = []
+            for (let proveedor_s of proveedor) {
+                array_suministros.push({
+                    id_suministro: proveedor_s.id_suministro,
+                    id_tercero: proveedor_s.id_tercero_suministro,
+                    id_tipo_producto: proveedor_s.id_tipo_producto,
+                    tipo_producto: proveedor_s.tipo_producto
+                })
+                proveedor_s.suministros = array_suministros
+            }
+            //REDUCIR LOS PROVEEDORES PARA IGNORAR LOS REPETIDOS
+            proveedor = this.ReduceProveedores([], proveedor)
+
+            return proveedor
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar la requisicion' } //!ERROR
+            return { error: true, message: 'Error al editar el proveedor' } //!ERROR
         }
     }
 
-    public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
+    public async Cambiar_Estado_Proveedor(id_proveedor: number, estado: number) {
         try {
-            const requisicion_filtrada: any = await this._Query_Proveedores.Buscar_Proveedor_ID(id_requisicion)
-            if (requisicion_filtrada?.length <= 0) {
-                return { error: true, message: 'No se ha encontrado esta la requisicion' } //!ERROR
+            const proveedor_filtradp: any = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
+            if (proveedor_filtradp?.length <= 0) {
+                return { error: true, message: 'No se ha encontrado este proveedor' } //!ERROR
             }
 
-            const requisicion = await this._Query_Proveedores.Cambiar_Estado_Requisicion(id_requisicion, estado)
+            const requisicion = await this._Query_Proveedores.Cambiar_Estado_Proveedor(id_proveedor, estado)
             if (requisicion?.rowCount != 1) {
-                return { error: true, message: 'Error al cambiar el estado de la requisicion' } //!ERROR
+                return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR
             }
 
             return { error: false, message: '' } //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cambiar el estado de la requisicion' } //!ERROR
+            return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR
         }
     }
 

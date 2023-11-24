@@ -4,7 +4,7 @@ export const _obtener_proveedores = `
         t.documento, t.nombre, t.direccion, t.telefono, t.correo, t.contacto, 
         t.tel_contacto, t.id_estado, t.fecha_registro, t.usuario_creacion,
         ttp.id_tipo_producto, ttp.descripcion as tipo_producto, tts.id_tercero as id_tercero_suministro,
-        td.tipo_doc, tts.id_suministro
+        td.tipo_doc, tts.id_suministro, tts.id_estado as estado_suministro
     FROM 
         public.tbl_terceros t
     LEFT JOIN tbl_tipo_doc td ON td.id_tipo_doc = t.id_tipo_doc
@@ -13,6 +13,7 @@ export const _obtener_proveedores = `
     WHERE 
         t.id_estado = $1 AND 
         t.id_empresa = $2 AND 
+        tts.id_estado != 2 AND
         t.id_tipo_tercero = 2;
 `
 
@@ -76,7 +77,7 @@ export const _buscar_proveedor_id = `
         t.documento, t.nombre, t.direccion, t.telefono, t.correo, t.contacto, 
         t.tel_contacto, t.id_estado,
         ttp.id_tipo_producto, ttp.descripcion as tipo_producto, tts.id_tercero as id_tercero_suministro,
-        td.tipo_doc, tts.id_suministro
+        td.tipo_doc, tts.id_suministro, tts.id_estado as estado_suministro
     FROM 
         public.tbl_terceros t
     LEFT JOIN tbl_tipo_doc td ON td.id_tipo_doc = t.id_tipo_doc
@@ -84,25 +85,45 @@ export const _buscar_proveedor_id = `
     LEFT JOIN tbl_tipo_producto ttp ON ttp.id_tipo_producto = tts.id_tipo_producto
     WHERE 
         t.id_tercero = $1 AND 
+        tts.id_estado != 2 AND
         t.id_tipo_tercero = 2;
+`
+
+export const _buscar_suministro_proveedor = `
+    SELECT 
+        * 
+    FROM 
+        public.tbl_tipo_suministro tts 
+    WHERE 
+        tts.id_tercero = $1 AND 
+        tts.id_suministro = $2 
 `
 
 export const _editar_proveedor = `
     UPDATE 
         public.tbl_terceros
     SET 
-        id_empresa=$1, id_tipo_tercero=$2, id_tipo_doc=$3, 
-        documento=$4, nombre=$5, direccion=$6, 
-        telefono=$7, correo=$8, contacto=$9, 
-        tel_contacto=$10
+        id_empresa=$2, id_tipo_tercero=$3, id_tipo_doc=$4, 
+        documento=$5, nombre=$6, direccion=$7, 
+        telefono=$8, correo=$9, contacto=$10, 
+        tel_contacto=$11
     WHERE 
         id_tercero=$1;
 `
 
 export const _editar_suministro = `
-            UPDATE 
-                public.tbl_tipo_suministro 
-            SET
-                id_estado= $2
-            WHERE id_suministro = $1
+    UPDATE 
+        public.tbl_tipo_suministro 
+    SET
+        id_estado= $2
+    WHERE id_suministro = $1
+`
+
+export const _cambiar_estado_proveedor = `
+    UPDATE 
+        public.tbl_terceros
+    SET 
+        id_estado = $2
+    WHERE 
+        id_tercero=$1;
 `

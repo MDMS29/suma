@@ -119,6 +119,10 @@ export const TercerosSchema = z.object({
         required_error: "Debe ingresar un estado para el proveedor"
     }),
     suministros: z.array(z.object({
+        id_suministro: z.number({
+            invalid_type_error: "Tipo de dato para el suministro es invalido",
+            required_error: "Ingrese un suministro para el proveedor"
+        }),
         id_tipo_producto: z.number({
             invalid_type_error: "Tipo de dato para el servicio es invalido",
             required_error: "Ingrese un servicio para el proveedor"
@@ -127,6 +131,8 @@ export const TercerosSchema = z.object({
             invalid_type_error: "Tipo de dato para el estado del suministro es invalido",
             required_error: "Ingrese un estado para el suministro"
         })
-    })).optional(),
+    })).nonempty({
+        message: "Ingrese suministros para el proveedor"
+    }),
 });
 

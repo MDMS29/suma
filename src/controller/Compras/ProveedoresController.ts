@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
-import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
 import { TercerosSchema } from "../../validations/Compras.Zod";
 import { ProveedoresService } from "../../services/Compras/Proveedores.Service";
 
@@ -84,12 +83,12 @@ export default class ProveedoresController {
 
     public async Editar_Proveedor(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { id_requisicion } = req.params
+        const { id_proveedor } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
-        if (!id_requisicion) {
+        if (!id_proveedor) {
             return res.status(400).json({ error: true, message: 'No se ha encontrado este proveedor' }) //!ERROR
         }
 
@@ -101,7 +100,7 @@ export default class ProveedoresController {
 
         try {
             const proveedores_service = new ProveedoresService()
-            const respuesta = await proveedores_service.Editar_Proveedor(+id_requisicion, req.body)
+            const respuesta = await proveedores_service.Editar_Proveedor(+id_proveedor, req.body)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -113,32 +112,32 @@ export default class ProveedoresController {
         }
     }
 
-    public async Cambiar_Estado_Requisicion(req: Request, res: Response) {
+    public async Cambiar_Estado_Proveedor(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { id_requisicion } = req.params
+        const { id_proveedor } = req.params
         const { estado } = req.query
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
-        if (!id_requisicion) {
-            return res.status(400).json({ error: true, message: 'No se ha definido la requisicion' }) //!ERROR
+        if (!id_proveedor) {
+            return res.status(400).json({ error: true, message: 'No se ha definido el proveedor' }) //!ERROR
         }
         if (!estado) {
             return res.status(400).json({ error: true, message: 'No se ha definido un estado a cambiar' }) //!ERROR
         }
 
         try {
-            const requisiciones_service = new RequisicionesService()
-            const familia_estado = await requisiciones_service.Cambiar_Estado_Requisicion(+id_requisicion, +estado)
-            if (familia_estado.error) {
-                return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
+            const proveedor_request = new ProveedoresService()
+            const proveedor_estado = await proveedor_request.Cambiar_Estado_Proveedor(+id_proveedor, +estado)
+            if (proveedor_estado.error) {
+                return res.status(400).json({ error: true, message: proveedor_estado.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se inactivo la requisicion' })
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha restaurado el proveedor' : 'Se ha inactivado el proveedor' })
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Error al restaurar la requisicion' : 'Error al inactivar la requisicion' }) //!ERROR
+            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Error al restaurar el proveedor' : 'Error al inactivar el proveedor' }) //!ERROR
         }
     }
 
