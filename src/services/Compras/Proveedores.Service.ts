@@ -129,9 +129,8 @@ export class ProveedoresService {
         try {
             let proveedor = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
             if (!proveedor) {
-                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+                return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
             }
-
 
             //GUARDAR LOS SUMINISTROS DEL PROVEEDORES
             let array_suministros = []
