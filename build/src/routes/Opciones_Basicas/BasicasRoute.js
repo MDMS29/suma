@@ -12,6 +12,7 @@ const MarcasProductoController_1 = __importDefault(require("../../controller/Opc
 const FamiliaProductoController_1 = __importDefault(require("../../controller/Opciones_Basicas/FamiliaProductoController"));
 const ProcesosEmpresaController_1 = __importDefault(require("../../controller/Opciones_Basicas/ProcesosEmpresaController"));
 const CentroCostoEmpresaController_1 = __importDefault(require("../../controller/Opciones_Basicas/CentroCostoEmpresaController"));
+const ParametrosController_1 = __importDefault(require("../../controller/Opciones_Basicas/Parametrizadas/ParametrosController"));
 exports._OpcionesBasicasRouter = (0, express_1.Router)();
 //INICIALIZAR CONTROLADORES
 const _Unidad_Medida_Controller = new UnidadesMedidaController_1.default();
@@ -20,6 +21,7 @@ const _Marca_Producto_Controller = new MarcasProductoController_1.default();
 const _Familia_Producto_Controller = new FamiliaProductoController_1.default();
 const _Proceso_Empresa_Controller = new ProcesosEmpresaController_1.default();
 const _Centro_Empresa_Controller = new CentroCostoEmpresaController_1.default();
+const _Parametros_Controller = new ParametrosController_1.default();
 /* UNIDADES DE MEDIDAD PARA LOS PRODUCTOS */
 exports._OpcionesBasicasRouter.route('/unidades-medida')
     .get(Autorizacion_1._Autorizacion, _Unidad_Medida_Controller.Obtener_Unidades_Medida) //OBTENER TODOS LAS UNIDADES DE MEDIDA
@@ -64,4 +66,6 @@ exports._OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
     .get(Autorizacion_1._Autorizacion, _Centro_Empresa_Controller.Buscar_Centro_Costo) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
     .patch(Autorizacion_1._Autorizacion, _Centro_Empresa_Controller.Editar_Centro_Costo) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
     .delete(Autorizacion_1._Autorizacion, _Centro_Empresa_Controller.Cambiar_Estado_Centro); //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
+exports._OpcionesBasicasRouter.route('/tipos-documento')
+    .get(Autorizacion_1._Autorizacion, _Parametros_Controller.Obtener_Tipos_Documento); //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
 exports.default = exports._OpcionesBasicasRouter;

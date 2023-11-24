@@ -52,8 +52,6 @@ class CentroCostoEmpresa {
     Insertar_Centros_Costo_Empresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-            // const { id_familia_producto } = req.params
-            console.log(req.body);
             const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body;
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
                 return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
@@ -119,7 +117,8 @@ class CentroCostoEmpresa {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario } = req; //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
             const { id_centro_costo } = req.params;
-            const { id_empresa, id_proceso, codigo, consecutivo, centro_costo, correo_responsable } = req.body;
+            const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body;
+            console.log('editando centro...', req.body);
             if (!(usuario === null || usuario === void 0 ? void 0 : usuario.id_usuario)) { //VALIDACIONES DE QUE ESTE LOGUEADO
                 return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }); //!ERROR
             }
@@ -134,9 +133,6 @@ class CentroCostoEmpresa {
             }
             if (!codigo) {
                 return res.status(400).json({ error: true, message: 'Debe ingresar un código para el proceso' }); //!ERROR
-            }
-            if (!consecutivo || consecutivo <= 0) {
-                return res.status(400).json({ error: true, message: 'Debe ingresar un consecutivo valido para el centro' }); //!ERROR
             }
             if (!centro_costo) {
                 return res.status(400).json({ error: true, message: 'Debe ingresar un nombre para el centro' }); //!ERROR

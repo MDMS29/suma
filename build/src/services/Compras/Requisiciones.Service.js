@@ -16,7 +16,7 @@ exports.RequisicionesService = void 0;
 const QueryRequisiciones_1 = __importDefault(require("../../querys/Compras/QueryRequisiciones"));
 const jspdf_1 = require("jspdf");
 const fs_1 = __importDefault(require("fs"));
-const mailer_1 = require("../../../config/mailer");
+const mailer_1 = require("../../config/mailer");
 const constants_1 = require("../../helpers/constants");
 const QuerysUsuario_1 = __importDefault(require("../../querys/Configuracion/QuerysUsuario"));
 class RequisicionesService {

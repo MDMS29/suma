@@ -165,14 +165,15 @@ class PerfilService {
                         return { error: true, message: 'Error al editar el modulo' }; //!ERROR
                     }
                     // PREVENIR QUE EL PERFIL QUEDE SIN MODULOS
-                    const modulos = yield this._Query_Perfil.Modulos_Perfil(id_perfil);
-                    if (modulos.length == 0) {
-                        modulo.id_estado = 1;
-                        const Modulos_Editar = yield this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo);
-                        if (!Modulos_Editar) {
-                            return { error: true, message: 'Error al editar el modulo' }; //!ERROR
-                        }
-                    }
+                    //TODO: ARREGLAR FUNCION PROBANDO DESDE EL FRONT
+                    // const modulos = await this._Query_Perfil.Modulos_Perfil(id_perfil)
+                    // if (modulos.length == 0) {
+                    //     modulo.id_estado = 1
+                    //     const Modulos_Editar = await this._Query_Perfil.Editar_Modulo_Perfil(id_perfil, modulo)
+                    //     if (!Modulos_Editar) {
+                    //         return { error: true, message: 'Error al editar el modulo' } //!ERROR
+                    //     }
+                    // }
                 }
             }
             return { error: false, message: 'Modulos del perfil editados con éxito' }; //!ERROR
