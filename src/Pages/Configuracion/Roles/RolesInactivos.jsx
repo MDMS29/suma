@@ -58,8 +58,7 @@ const RolesInactivos = () => {
       if (authPermisos !== undefined) return setPermisosRoles(authPermisos);
     }, 10);
   }, [authPermisos]);
-
-  //MOSTRAR ALERTA
+ 
   useEffect(() => {
     if (alerta.show) {
       (() => {

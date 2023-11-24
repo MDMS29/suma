@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext"
 import { Add_Icono, Edit_Icono, Trash_Icono } from "../../../components/Icons/Iconos"
 import BLink from "../../../components/Botones/BLink"
@@ -15,12 +15,11 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
 
 const Proveedores = () => {
-    const toast = useRef(null);
     const navigate = useNavigate();
 
 
     const { dataProveedores, permisosProveedor, setPermisosProveedor, buscar_proveedor, proveedorState, setProveedorState, eliminar_restablecer_proveedor } = useProveedores()
-    const { authPermisos, Permisos_DB, alerta, setAlerta, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth()
+    const { authPermisos, Permisos_DB, setVerEliminarRestaurar, verEliminarRestaurar } = useAuth()
 
     const columns = [
         { field: "nombre", header: "Nombre" },
@@ -81,19 +80,7 @@ const Proveedores = () => {
         }, 10);
     }, [authPermisos]);
 
-    useEffect(() => {
-        if (alerta.show) {
-            const show_alert = () => {
-                toast.current.show({
-                    severity: alerta.error ? "error" : "success",
-                    detail: alerta.message,
-                    life: 1500,
-                });
-                setTimeout(() => setAlerta({}), 1500);
-            };
-            show_alert();
-        }
-    }, [alerta]);
+
 
     const header = (
         <MultiSelect
@@ -144,7 +131,7 @@ const Proveedores = () => {
                 <EliminarRestaurar
                     tipo={"ELIMINAR"}
                     funcion={(e) =>
-                        eliminar_restablecer_proveedor(proveedorState.id_proveedor, e)
+                        eliminar_restablecer_proveedor(proveedorState.id_tercero, e)
                     }
                 />
             )}

@@ -24,7 +24,7 @@ const Marcas = () => {
   ];
   const { dataMarcas, permisosMarcas, setPermisosMarcas, buscar_marca } =
     useMarcas();
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const { authPermisos, Permisos_DB } = useAuth();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -70,20 +70,7 @@ const Marcas = () => {
       }
     }, 10);
   }, [authPermisos]);
- 
-  // useEffect(() => {
-  //   if (alerta.show) {
-  //     const show_alert = () => {
-  //       toast.current.show({
-  //         severity: alerta.error ? "error" : "success",
-  //         detail: alerta.message,
-  //         life: 1500,
-  //       });
-  //       setTimeout(() => setAlerta({}), 1500);
-  //     };
-  //     show_alert();
-  //   }
-  // }, [alerta]);
+  
 
   const header = (
     <MultiSelect

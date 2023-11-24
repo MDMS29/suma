@@ -11,8 +11,7 @@ import Button from "../../../components/Botones/Button";
 import BLink from "../../../components/Botones/BLink";
 
 const AgregarProv = () => {
-  const main = () => (
-    <>
+  const main = () => ( 
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl ">
@@ -150,8 +149,7 @@ const AgregarProv = () => {
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </div> 
   );
 
   return <>{main()}</>;

@@ -56,8 +56,7 @@ const PerfilesInactivos = () => {
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataPerfiles);
-
-  // Filtro
+ 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -66,8 +65,7 @@ const PerfilesInactivos = () => {
 
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
-
-  // Buscador
+ 
   const [searchTerm, setSearchTerm] = useState("");
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();

@@ -77,8 +77,7 @@ const FamiliaProd = () => {
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
   };
-
-  //MOSTRAR ALERTA
+ 
   useEffect(() => {
     if (alerta.show) {
       const show_alert = () => {
