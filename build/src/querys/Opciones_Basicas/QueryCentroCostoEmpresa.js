@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = require("../../../config/db");
+const db_1 = require("../../config/db");
 const DaoCentroCostoEmpresa_1 = require("../../dao/Opciones_Basicas/DaoCentroCostoEmpresa");
 class QueryCentroCostoEmpresa {
     Obtener_Centros_Costo_Empresa(estado, empresa) {

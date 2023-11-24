@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = require("../../../config/db");
+const db_1 = require("../../config/db");
 const DaoUnidadesMedida_1 = require("../../dao/Opciones_Basicas/DaoUnidadesMedida");
 class QueryUnidadesMedida {
     Obtener_Unidades_Medida(_, id_empresa) {

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const db_1 = require("../../../config/db");
+const db_1 = require("../../config/db");
 const DaoFamiliaProducto_1 = require("../../dao/Opciones_Basicas/DaoFamiliaProducto");
 class QueryFamiliaProducto {
     Obtener_Familias_Producto(estado, empresa) {
