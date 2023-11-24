@@ -320,6 +320,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                           : "bg-gray-300"} ${rol.id_rol == 1 && "cursor-not-allowed"} `}
                     >
                       <input
+                        disabled={rol.id_rol == 1 ? "disabled" : ""}
                         type="checkbox"
                         checked={rol.id_rol == 1 ? true : fncChkPermiso(rol)}
                         className="sr-only peer"
