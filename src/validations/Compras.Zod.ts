@@ -122,7 +122,7 @@ export const TercerosSchema = z.object({
         id_suministro: z.number({
             invalid_type_error: "Tipo de dato para el suministro es invalido",
             required_error: "Ingrese un suministro para el proveedor"
-        }),
+        }).optional(),
         id_tipo_producto: z.number({
             invalid_type_error: "Tipo de dato para el servicio es invalido",
             required_error: "Ingrese un servicio para el proveedor"

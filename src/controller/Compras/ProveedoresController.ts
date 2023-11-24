@@ -134,7 +134,7 @@ export default class ProveedoresController {
                 return res.status(400).json({ error: true, message: proveedor_estado.message }) //!ERROR
             }
 
-            return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha restaurado el proveedor' : 'Se ha inactivado el proveedor' })
+            return res.status(200).json({ error: false, message: proveedor_estado.message })
         } catch (error) {
             console.log(error)
             return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? 'Error al restaurar el proveedor' : 'Error al inactivar el proveedor' }) //!ERROR
