@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
 import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
-import { FiltroRequisicionesSchema, RequisicionesSchema } from "../../validations/Requisiciones.Zod";
+import { FiltroRequisicionesSchema, RequisicionesSchema } from "../../validations/Compras.Zod";
 
 export default class RequisicionesController {
 
@@ -35,6 +35,7 @@ export default class RequisicionesController {
         try {
             const requisiciones_service = new RequisicionesService()
             const respuesta = await requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, req.body)
+
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }

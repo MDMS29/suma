@@ -2,7 +2,7 @@ import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 import { PerfilUsuario, UsuarioLogin } from '../../Interfaces/Configuracion/IConfig'
 import { Generar_JWT } from "../../helpers/utils";
 
-let bcrypt = require('bcrypt')
+import bcrypt from "bcryptjs";
 
 export default class UsuarioService {
     private _Query_Usuario: QueryUsuario;

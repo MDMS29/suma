@@ -6,6 +6,7 @@ import MarcasProductoController from "../../controller/Opciones_Basicas/MarcasPr
 import FamiliaProductoController from "../../controller/Opciones_Basicas/FamiliaProductoController";
 import ProcesosEmpresaController from "../../controller/Opciones_Basicas/ProcesosEmpresaController";
 import CentroCostoEmpresa from "../../controller/Opciones_Basicas/CentroCostoEmpresaController";
+import ParametrosController from "../../controller/Opciones_Basicas/Parametrizadas/ParametrosController";
 
 export const _OpcionesBasicasRouter = Router()
 
@@ -16,6 +17,7 @@ const _Marca_Producto_Controller = new MarcasProductoController()
 const _Familia_Producto_Controller = new FamiliaProductoController()
 const _Proceso_Empresa_Controller = new ProcesosEmpresaController()
 const _Centro_Empresa_Controller = new CentroCostoEmpresa()
+const _Parametros_Controller = new ParametrosController()
 
 
 
@@ -86,5 +88,8 @@ _OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
     .patch(_Autorizacion, _Centro_Empresa_Controller.Editar_Centro_Costo) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
     .delete(_Autorizacion, _Centro_Empresa_Controller.Cambiar_Estado_Centro) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
 
+
+_OpcionesBasicasRouter.route('/tipos-documento')
+    .get(_Autorizacion, _Parametros_Controller.Obtener_Tipos_Documento) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
 
 export default _OpcionesBasicasRouter

@@ -3,7 +3,7 @@ import { Filtro_Requisiciones, Requisicion_Det, Requisicion_Enc } from '../../In
 
 import { jsPDF } from "jspdf"
 import fs from "fs"
-import { transporter } from "../../../config/mailer";
+import { transporter } from "../../config/mailer";
 import { EstadosTablas } from "../../helpers/constants";
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 
