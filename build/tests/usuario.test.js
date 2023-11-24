@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const server_1 = __importDefault(require("../config/server")); // Importa el servidor Express
+const server_1 = __importDefault(require("../src/config/server")); // Importa el servidor Express
 describe('Pruebas de la API', () => {
     let server; // Declara una variable para mantener una referencia al servidor
     beforeAll((done) => {

@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const QuerysUsuario_1 = __importDefault(require("../../querys/Configuracion/QuerysUsuario"));
 const utils_1 = require("../../helpers/utils");
-let bcrypt = require('bcrypt');
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 class UsuarioService {
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
@@ -106,7 +106,7 @@ class UsuarioService {
             if (clave) {
                 //HASHEAR CLAVE DEL USUARIO
                 const saltRounds = 10;
-                const hash = yield bcrypt.hash(clave, saltRounds);
+                const hash = yield bcryptjs_1.default.hash(clave, saltRounds);
                 RequestUsuario.clave = hash;
                 //FUNCIOÓN PARA REGISTRAR LA INFORMACIÓN PRINCIPAL DEL USUARIO 
                 const respuesta = yield this._Query_Usuario.Insertar_Usuario(RequestUsuario, UsuarioCreador);
@@ -251,13 +251,13 @@ class UsuarioService {
                     Clave_Editada = clave;
                 }
                 else {
-                    let matchPass = yield bcrypt.compare(RequestUsuario.clave, clave); //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
+                    let matchPass = yield bcryptjs_1.default.compare(RequestUsuario.clave, clave); //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
                     if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
                         Clave_Editada = clave;
                     }
                     else { //SI SON DIFERENTES HASHEA LA NUEVA CLAVE
                         const saltRounds = 10;
-                        const hash = yield bcrypt.hash(RequestUsuario.clave, saltRounds);
+                        const hash = yield bcryptjs_1.default.hash(RequestUsuario.clave, saltRounds);
                         Clave_Editada = hash;
                     }
                 }
@@ -353,13 +353,13 @@ class UsuarioService {
                 const usuario = yield this._Query_Usuario.Buscar_Usuario_ID(id_usuario);
                 //SI SE VA A ENVIAR LA CLAVE DEL USUARIO POR CORREO
                 if (cm_clave) {
-                    let matchPass = yield bcrypt.compare(clave, (_a = usuario[0]) === null || _a === void 0 ? void 0 : _a.clave); //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
+                    let matchPass = yield bcryptjs_1.default.compare(clave, (_a = usuario[0]) === null || _a === void 0 ? void 0 : _a.clave); //COMPARA LA CLAVE ENVIADA DEL USUARIO CON LA DE LA BASE DE DATOS
                     if (matchPass) { //SI SON IGUALES DEJA LA NORMAL
                         return { error: true, message: 'Las clave no puede ser igual a la ya existente' }; //!ERROR
                     }
                     else { //SI SON DIFERENTES HASHEA LA NUEVA CLAVE
                         const saltRounds = 10;
-                        const hash = yield bcrypt.hash(clave, saltRounds);
+                        const hash = yield bcryptjs_1.default.hash(clave, saltRounds);
                         _Nueva_Clave = hash;
                     }
                     const res = yield this._Query_Usuario.Cambiar_Clave_Usuario(id_usuario, _Nueva_Clave, cm_clave);
@@ -381,7 +381,7 @@ class UsuarioService {
                 }
                 //SI SE RESTABLECE LA CLAVE DEL USUARIO
                 const saltRounds = 10;
-                const hash = yield bcrypt.hash(clave, saltRounds);
+                const hash = yield bcryptjs_1.default.hash(clave, saltRounds);
                 if (!hash) {
                     console.error(hash); //!ERROR
                 }

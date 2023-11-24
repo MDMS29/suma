@@ -16,7 +16,7 @@ const Usuario_service_1 = __importDefault(require("../../services/Configuracion/
 const Configuracion_Zod_1 = require("../../validations/Configuracion.Zod");
 const constants_1 = require("../../helpers/constants");
 const utils_1 = require("../../helpers/utils");
-const mailer_1 = require("../../../config/mailer");
+const mailer_1 = require("../../config/mailer");
 class UsuarioController {
     Autenticar_Usuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
