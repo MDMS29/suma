@@ -161,12 +161,12 @@ export default class RequisicionesController {
 
             const response = await requisiciones_service.Buscar_Requisicion(+id_requisicion)
             if (!response) {
-                return res.status(400).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
+                return res.status(400).json({ error: true, message: 'Error al editar la requisicion' }) //!ERROR
             }
             return res.status(200).json(response) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al editar la requisicion' }) //!ERROR
         }
     }
 
@@ -221,8 +221,8 @@ export default class RequisicionesController {
             return res.send(pdf.data)
         } catch (error) {
             console.log(error)
+            res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
             return
-            // res.json({ error: true, message: 'Error al generar el documento' }) //!ERROR
         }
     }
 
