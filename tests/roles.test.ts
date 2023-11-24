@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../config/server';
+import app from '../src/config/server';
 
 
 describe('Pruebas de la API', () => {

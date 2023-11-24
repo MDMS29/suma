@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 
 import {
     _buscar_unidad_medida, _buscar_unidad_medida_id, _editar_unidad_medida, _insertar_unidad_medida, _obtener_unidades_medida

@@ -1,4 +1,4 @@
-import { pool, _DB } from "../../../config/db";
+import { pool, _DB } from "../../config/db";
 
 import {
     _buscar_producto_id, _buscar_producto_nombre, _buscar_producto_referencia,

@@ -1,4 +1,4 @@
-import { _DB, pool } from "../../../config/db";
+import { _DB, pool } from "../../config/db";
 
 import {
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
@@ -10,14 +10,15 @@ import {
 } from "../../dao/Configuracion/DaoUsuario";
 
 import {
-    UsuarioLogin, ModulosUsuario, MenusModulos, PermisosModulos
+    ModulosUsuario, MenusModulos, PermisosModulos
 } from '../../Interfaces/Configuracion/IConfig'
 
-let bcrypt = require('bcrypt')
+import bcrypt from "bcryptjs";
+
 
 export default class QueryUsuario {
 
-    public async Autenticar_Usuario({ usuario, clave }: Omit<UsuarioLogin, 'captcha'>) {
+    public async Autenticar_Usuario({ usuario, clave }: any) {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
             const result = await _DB.func(_FALoginUsuario, [usuario])

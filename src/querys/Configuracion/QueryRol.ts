@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 
 import {
     _BuscarRolID, _BuscarRolNombre, _CambiarEstadoRol, _EditarRol,

@@ -7,6 +7,7 @@ import  _EmpresasRouter  from './Configuracion/EmpresaRoutes';
 import  _OpcionesBasicasRouter  from './Opciones_Basicas/BasicasRoute';
 import  _ProductosRouter  from './Opciones_Basicas/ProductosRoute';
 import  _RequisicionesRouter  from './Compras/RequisicionesRoutes';
+import  _ProveedoresRouter  from './Compras/ProveedoresRoutes';
 
 export {
     _UsuarioRouter,
@@ -17,5 +18,6 @@ export {
     _EmpresasRouter,
     _OpcionesBasicasRouter,
     _ProductosRouter,
-    _RequisicionesRouter
+    _RequisicionesRouter,
+    _ProveedoresRouter
 }

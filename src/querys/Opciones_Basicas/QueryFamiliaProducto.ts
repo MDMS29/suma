@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 import {
     _buscar_familia_descripcion, _buscar_familia_producto, _buscar_familia_producto_id,
     _cambiar_estado_familia, _editar_familia_producto, _insertar_familia_producto, _obtener_familias_producto

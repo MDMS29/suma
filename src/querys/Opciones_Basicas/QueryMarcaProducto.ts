@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 
 import {
     _buscar_marca_producto, _buscar_marca_producto_id, _editar_marca_producto, _insertar_marca_producto, _obtener_marcas_producto

@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 import {
     _BuscarMenuID, _BuscarMenuNombre, _CambiarEstadoMenu,
     _EditarMenu, _InsertarMenu, _ObtenerUltimoIDMenu, _Obtener_Menu

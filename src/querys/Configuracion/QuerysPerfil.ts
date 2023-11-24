@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db";
+import { pool } from "../../config/db";
 import {
     _ObtenerPerfiles, _ObtenerModulosPerfil, _InsertarPerfil,
     _InsertarModuloPerfil, _BuscarPerfilID, _PermisosModulosPerfil,
