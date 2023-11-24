@@ -1,4 +1,5 @@
 import { Tercero } from '../../Interfaces/Compras/ICompras'
+import { EstadosTablas } from '../../helpers/constants';
 import QueryProveedores from "../../querys/Compras/QueryProveedores";
 
 
@@ -226,7 +227,7 @@ export class ProveedoresService {
                 return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR
             }
 
-            return { error: false, message: '' } //*SUCCESSFUL
+            return { error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? `Se ha restaurado el proveedor '${proveedor_filtradp[0].nombre}'` : `Se ha inactivado el proveedor '${proveedor_filtradp[0].nombre}'` }
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR
