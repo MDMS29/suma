@@ -67,7 +67,7 @@ export const _insertar_suministro_proveedor = `
         VALUES 
         (
             nextval('tbl_tipo_suministro_id_suministro_seq'::regclass),
-            $1, $2
+            $1, $2, 1
         )
         RETURNING id_suministro;
 `
