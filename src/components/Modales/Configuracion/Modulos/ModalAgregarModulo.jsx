@@ -26,6 +26,7 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     { id_rol: 1, id_estado: 1 },
   ]);
 
+
   const [searchTerm, setSearchTerm] = useState("");
   const [ventanaIcon, setVentanaIcon] = useState();
   const [iconos, setIconos] = useState([]);
@@ -190,10 +191,12 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     setTextoBotonIcon("Cambiar");
   };
 
-  const manejar_opcion_modulos =(e)=>{
+  const manejar_opcion_modulos = (e) => {
     cambiar_modulos(e)
     setVentanaIcon(false)
   }
+
+  console.log(rolesporModulo);
 
   return (
     <Dialog
@@ -221,10 +224,9 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                 type="text"
                 value={ModulosAgg.cod_modulo}
                 name="cod_modulo"
-                disabled={ModulosAgg.id_modulo !==0 && "disabled"}
-                className={`border-1 h-10 rounded-md px-3 py-2 ${
-                  errors.cod_modulo ? "border-red-500" : "border-gray-300"
-                } ${ModulosAgg.id_modulo !== 0 && "bg-gray-200"}`}
+                disabled={ModulosAgg.id_modulo !== 0 && "disabled"}
+                className={`border-1 h-10 rounded-md px-3 py-2 ${errors.cod_modulo ? "border-red-500" : "border-gray-300"
+                  } ${ModulosAgg.id_modulo !== 0 && "bg-gray-200"}`}
                 onChange={(e) => cambiar_modulos(e, "cod_modulo")}
                 onKeyDown={(e) => prevencion_de_espacios(e, "cod_modulo")}
               />
@@ -255,22 +257,19 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                   />
                   <hr />
                   <div
-                    className={` ${
-                      filteredData.length > 0
-                        ? "grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-3"
-                        : "flex h-auto"
-                    } p-2 overflow-auto`}
+                    className={` ${filteredData.length > 0
+                      ? "grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-3"
+                      : "flex h-auto"
+                      } p-2 overflow-auto`}
                   >
                     {Array.isArray(filteredData) && filteredData.length > 0 ? (
                       filteredData.map((icono) => (
                         <button
                           value={icono.name}
-                          className={`pi ${
-                            icono.name
-                          } hover:bg-gray-100 border-2 w-8 h-8 rounded-md ${
-                            icono.name == ModulosAgg.icono &&
+                          className={`pi ${icono.name
+                            } hover:bg-gray-100 border-2 w-8 h-8 rounded-md ${icono.name == ModulosAgg.icono &&
                             "border-blue-400 bg-gray-200"
-                          }`}
+                            }`}
                           onClick={manejar_opcion_modulos}
                           name="icono"
                           key={icono.name}
@@ -296,9 +295,8 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
             <InputText
               value={ModulosAgg.nombre_modulo}
               name="nombre_modulo"
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.nombre_modulo ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`border-1 h-10 rounded-md px-3 py-2 ${errors.nombre_modulo ? "border-red-500" : "border-gray-300"
+                }`}
               onChange={(e) => cambiar_modulos(e)}
             />
             {errors.nombre_modulo && (
@@ -314,12 +312,12 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
                 <div key={rol.id}>
                   <>
                     <label
-                      className={`p-checkbox w-10 h-5 relative rounded-full ${
-                        fncChkPermiso(rol) || rol.id_rol == 1
-                          ? "bg-primaryYellow"
-                          : "bg-gray-300"} ${rol.id_rol == 1 && "cursor-not-allowed"} `}
+                      className={`p-checkbox w-10 h-5 relative rounded-full ${fncChkPermiso(rol) || rol.id_rol == 1
+                        ? "bg-primaryYellow"
+                        : "bg-gray-300"} ${rol.id_rol == 1 && "cursor-not-allowed"} `}
                     >
                       <input
+                        disabled={rol.id_rol == 1 ? "disabled" : ""}
                         type="checkbox"
                         checked={rol.id_rol == 1 ? true : fncChkPermiso(rol)}
                         className="sr-only peer"

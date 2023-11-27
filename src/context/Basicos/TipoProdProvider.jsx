@@ -35,6 +35,7 @@ const TipoProdProvider = ({ children }) => {
           `/opciones-basicas/tipos-producto?estado=1&empresa=${authUsuario.id_empresa}`,
           config
         );
+        
         if (data.error == false){
           setDataTipoProf([]);
           return

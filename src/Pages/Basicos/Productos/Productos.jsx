@@ -102,8 +102,7 @@ const Productos = () => {
   const descargarExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Productos");
-
-    // Definir las columnas que deseas incluir
+ 
     const columnasIncluidas = [
       "referencia",
       "nombre_producto",
@@ -119,17 +118,14 @@ const Productos = () => {
       "ficha_con",
       "certificado_con",
     ];
-
-    // Añadir encabezados de columna
+ 
     worksheet.addRow(columnasIncluidas);
-
-    // Añadir datos
+ 
     filteredData.forEach((obj) => {
       const rowValues = columnasIncluidas.map((columna) => obj[columna]);
       worksheet.addRow(rowValues);
     });
-
-    // Descargar el archivo
+ 
     workbook.xlsx.writeBuffer().then((buffer) => {
       const blob = new Blob([buffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -153,8 +149,7 @@ const Productos = () => {
       }
     }, 10);
   }, [authPermisos]);
-
-  //MOSTRAR ALERTA
+ 
   useEffect(() => {
     if (alerta.show) {
       const show_alert = () => {

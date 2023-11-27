@@ -24,6 +24,7 @@ const UsuariosInactivos = () => {
     permisosUsuario,
     eliminar_restablecer_usuario,
   } = useUsuarios();
+
   const {
     alerta,
     setAlerta,
@@ -46,7 +47,7 @@ const UsuariosInactivos = () => {
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataUsuarios);
-  // Filtro
+
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -56,7 +57,6 @@ const UsuariosInactivos = () => {
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
-  // Buscador
   const [searchTerm, setSearchTerm] = useState("");
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
@@ -178,8 +178,8 @@ const UsuariosInactivos = () => {
       {permisosUsuario.length === 0 ? (
         <Loader />
       ) : permisosUsuario.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

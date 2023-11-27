@@ -79,7 +79,6 @@ const TipoProd = () => {
     setModalVisible(!modalVisible);
   };
 
-  //MOSTRAR ALERTA
   useEffect(() => {
     if (alerta.show) {
       const show_alert = () => {

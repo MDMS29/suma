@@ -39,6 +39,10 @@ const MarcasProvider = ({ children }) => {
         if (authUsuario.id_empresa) {
             try {
                 const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/`, config)
+                if (data.error == false) {
+                    setDataMarcas([])
+                    return
+                }
                 setDataMarcas(data)
             } catch (error) {
                 setDataMarcas([])
@@ -90,7 +94,7 @@ const MarcasProvider = ({ children }) => {
             const { data } = await conexion_cliente.post("/opciones-basicas/marcas-productos", formData, config
             );
             if (!data?.error) {
-                setDataMarcas((dataMarcas)=> [data, ...dataMarcas]);
+                setDataMarcas((dataMarcas) => [data, ...dataMarcas]);
                 setAlerta({
                     error: false,
                     show: true,
@@ -119,7 +123,7 @@ const MarcasProvider = ({ children }) => {
                 message: error.data?.message
             })
             setTimeout(() => setAlerta({}), 1500)
-            throw error;  
+            throw error;
         }
     }
 
@@ -168,7 +172,7 @@ const MarcasProvider = ({ children }) => {
                 message: error.response.data.message
             })
             setTimeout(() => setAlerta({}), 1500)
-            throw error;  
+            throw error;
         }
     }
 
