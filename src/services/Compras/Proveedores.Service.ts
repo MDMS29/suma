@@ -132,7 +132,6 @@ export class ProveedoresService {
                 return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
             }
 
-
             //GUARDAR LOS SUMINISTROS DEL PROVEEDORES
             let array_suministros = []
             for (let proveedor_s of proveedor) {
