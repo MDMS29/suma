@@ -62,7 +62,7 @@ export class ProveedoresService {
             return proveedores
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cargar las requisiciones' } //!ERROR
+            return { error: true, message: 'Error al cargar los proveedores' } //!ERROR
         }
     }
 
@@ -129,7 +129,7 @@ export class ProveedoresService {
         try {
             let proveedor = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
             if (!proveedor) {
-                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+                return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
             }
 
 
@@ -148,10 +148,10 @@ export class ProveedoresService {
             //REDUCIR LOS PROVEEDORES PARA IGNORAR LOS REPETIDOS
             proveedor = this.ReduceProveedores([], proveedor)
 
-            return proveedor
+            return proveedor[0]
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al encontrar la requisicion' }
+            return { error: true, message: 'Error al encontrar el proveedor' }
         }
     }
 
@@ -164,13 +164,14 @@ export class ProveedoresService {
 
             const proveedor_editado = await this._Query_Proveedores.Editar_Proveedor(id_proveedor, proveedor_request)
             if (proveedor_editado?.rowCount != 1) {
-                return { error: true, message: 'Error al actualizar la requisicion' } //!ERROR
+                return { error: true, message: 'Error al actualizar el proveedor' } //!ERROR
             }
 
             if (proveedor_request.suministros) {
                 for (let suministro of proveedor_request.suministros) {
                     const suministro_encontrado = await this._Query_Proveedores.Buscar_Suministro_Proveedor(suministro, id_proveedor)
-                    if (suministro_encontrado.length !== 0) {
+                    console.log('173 - suministro encontrado', suministro_encontrado)
+                    if (suministro_encontrado) {
                         // EDITAR DETALLE
                         const requisicion_det = await this._Query_Proveedores.Editar_Suministro_Proveedor(suministro)
                         if (!requisicion_det) {

@@ -60,7 +60,7 @@ export class RequisicionesService {
                 return { error: true, message: "No hay existen filtros a realizar" }
             }
 
-            const requisiciones: any = await  this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros)
+            const requisiciones: any = await this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros)
             if (requisiciones?.length === 0 || !requisiciones) {
                 return { error: true, message: "No se han encontrado las requisiciones" }
             }
@@ -244,7 +244,8 @@ export class RequisicionesService {
             doc.rect(5, 5, 288, 30); // (x, y, ancho, alto)
 
             // CABECERA - IZQUIERDA
-            const imageData = fs.readFileSync('src/helpers/imgs/logo_empresa.png')
+            const imageData = fs.readFileSync('resources/logo_empresa.png')
+
             doc.addImage(imageData, 'PNG', 6.5, 10, 95, 13.5) // (dataImage, format, x, y, ancho, alto)
             doc.line(105, 5, 105, 42) //(x1, y1, x2, y2)
 
