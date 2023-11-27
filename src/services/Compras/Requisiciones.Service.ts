@@ -4,7 +4,7 @@ import { Filtro_Requisiciones, Requisicion_Det, Requisicion_Enc } from '../../In
 import { jsPDF } from "jspdf"
 import fs from "fs"
 import { transporter } from "../../config/mailer";
-import { EstadosTablas, Opciones_Host } from "../../helpers/constants";
+import { EstadosTablas } from "../../helpers/constants";
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 
 
@@ -244,13 +244,8 @@ export class RequisicionesService {
             doc.rect(5, 5, 288, 30); // (x, y, ancho, alto)
 
             // CABECERA - IZQUIERDA
-            let imageData: any
-            if (process.env.OPTION_HOST == Opciones_Host.PRODUCTION) {
-                imageData = fs.readFileSync('./resources/logo_empresa.png')
-            }else{
-                imageData = fs.readFileSync('src/helpers/imgs/logo_empresa.png')
-            }
-            
+            const imageData = fs.readFileSync('resources/logo_empresa.png')
+
             doc.addImage(imageData, 'PNG', 6.5, 10, 95, 13.5) // (dataImage, format, x, y, ancho, alto)
             doc.line(105, 5, 105, 42) //(x1, y1, x2, y2)
 
