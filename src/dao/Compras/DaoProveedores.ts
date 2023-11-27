@@ -62,7 +62,7 @@ export const _insertar_suministro_proveedor = `
         INSERT INTO public.tbl_tipo_suministro
         (
             id_suministro,
-            id_tercero, id_tipo_producto
+            id_tercero, id_tipo_producto, id_estado
         )
         VALUES 
         (
