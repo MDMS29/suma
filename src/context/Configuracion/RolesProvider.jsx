@@ -111,6 +111,7 @@ const RolesProvider = ({ children }) => {
       }
 
       setRolAgg(data)
+      console.log(rolAgg)
       return
 
     } catch (error) {

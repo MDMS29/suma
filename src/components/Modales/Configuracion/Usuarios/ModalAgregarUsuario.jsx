@@ -150,6 +150,12 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
       if (UsuariosAgg.id_empresa == 0) {
         errors.empresa = "Seleccione una opcion";
       }
+      if ( UsuariosAgg.clave.length < 8 || UsuariosAgg.clave.length > 12) {
+        errors.clave = "la clave debe tener entre 8 y 12 caracteres";
+      }
+      if ( UsuariosAgg.clave_repetida.length < 8 || UsuariosAgg.clave_repetida.length > 12) {
+        errors.clave_repetida = "la clave debe tener entre 8 y 12 caracteres";
+      }
 
       if (
         UsuariosAgg.clave.trim() === "" &&
@@ -376,6 +382,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   value={UsuariosAgg.clave}
                   type="password"
                   name="clave"
+                  minLength={8}
+                  maxLength={12}
                   className={`border-1 p-1 rounded-md h-10 px-3 py-2 ${errors.clave ? "border-red-500" : "border-gray-300"
                     }`}
                   onChange={(e) => btn_cambio_usuario(e)}
@@ -390,6 +398,8 @@ const ModalAgregarUsuarios = ({ visible, onClose }) => {
                   value={UsuariosAgg.clave_repetida}
                   type="password"
                   name="clave_repetida"
+                  minLength={8}
+                  maxLength={12}
                   className={`border-1 p-1 rounded-md h-10 px-3 py-2 ${errors.clave_repetida ? "border-red-500" : "border-gray-300"
                     }`}
                   onChange={(e) => btn_cambio_usuario(e)}

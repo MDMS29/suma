@@ -28,8 +28,6 @@ const PerfilesProvider = ({ children }) => {
     nombre_perfil: "",
   });
 
-
-
   useEffect(() => {
     if (location.pathname.includes('perfiles')) {
 
@@ -188,8 +186,6 @@ const PerfilesProvider = ({ children }) => {
       setTimeout(() => setAlerta({}), 1500)
 
     } catch (error) {
-      console.error("Error al guardar la información:", error);
-
       setAlerta({
         error: true,
         show: true,
@@ -229,7 +225,6 @@ const PerfilesProvider = ({ children }) => {
         id_perfil: 0,
         nombre_perfil: ""
       });
-
 
     } catch (error) {
       console.error("Error al guardar la información:", error);

@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth";
 import conexionCliente from "../config/ConexionCliente";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from "react-router-dom";
-
+import img_login from "../assets/images/img_login.png"
 import { InputText } from "primereact/inputtext";
 
 const Login = () => {
@@ -94,6 +94,8 @@ const Login = () => {
                 placeholder="Contraseña"
                 onChange={(e) => setClave(e.target.value)}
                 value={clave}
+                // minLength={8}
+                maxLength={12}
                 className=" focus:outline-none focus:ring-2 focus:ring-yellow-200 border rounded-l-lg px-3 py-2"
               />
               <span className="p-inputgroup-addon rounded-r-lg">
@@ -120,7 +122,7 @@ const Login = () => {
         </div>
         <div className=" rounded-r-lg w-full  md:w-1/2 lg:w-1/2 xl:w-1/2 hidden md:block">
           <img
-            src="/src/assets/img/img_login.png"
+            src={img_login}
             alt="Mascota Devitech"
             className="h-full rounded-r-lg"
           />
