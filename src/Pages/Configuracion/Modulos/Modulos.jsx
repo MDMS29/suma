@@ -26,8 +26,8 @@ const Modulos = () => {
 
   const columns = [
     { field: "cod_modulo", header: "Codigo" },
-    { field: "icono", header: "Icono" },
     { field: "nombre_modulo", header: "Nombre" },
+    { field: "icono", header: "Icono" },
   ];
 
   const {

@@ -29,7 +29,7 @@ const AgregarProv = () => {
             </BLink>
           </div>
         </div>
-        <div className="bg-white border my-3 p-3 rounded-sm w-full">
+        <div className="bg-white border py-8 rounded-sm w-full">
           <div className="px-40 grid grid-cols-2 gap-4">
             <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
               <label className="text-gray-600 pb-2 font-semibold">

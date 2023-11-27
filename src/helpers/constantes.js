@@ -1,3 +1,3 @@
 export const IDS_PERMISOS = {
-    PERFIL_GERENTE: 46
+    PERFIL_GERENTE: 1
   }

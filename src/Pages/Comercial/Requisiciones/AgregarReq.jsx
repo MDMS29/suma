@@ -647,7 +647,7 @@ const AgregarReq = () => {
             <label className="text-gray-600 pb-2 font-semibold">
               Observaciones <span className="font-bold text-red-900">*</span>
             </label>
-            <Mention
+            <Mention 
               value={RequiAgg.comentarios}
               onChange={(e) => btn_cambio(e)}
               name="comentarios"
