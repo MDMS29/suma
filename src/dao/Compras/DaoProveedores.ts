@@ -73,9 +73,9 @@ export const _insertar_suministro_proveedor = `
 `
 export const _buscar_proveedor_id = `
     SELECT DISTINCT
-        t.id_tercero, t.id_empresa, t.id_tipo_tercero, t.id_tipo_doc, 
+        t.id_tercero, t.id_empresa, t.id_tipo_tercero, t.id_tipo_doc as id_tipo_documento, 
         t.documento, t.nombre, t.direccion, t.telefono, t.correo, t.contacto, 
-        t.tel_contacto, t.id_estado,
+        t.tel_contacto as telefono_contacto, t.id_estado,
         ttp.id_tipo_producto, ttp.descripcion as tipo_producto, tts.id_tercero as id_tercero_suministro,
         td.tipo_doc, tts.id_suministro, tts.id_estado as estado_suministro
     FROM 

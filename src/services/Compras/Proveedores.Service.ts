@@ -147,7 +147,7 @@ export class ProveedoresService {
             //REDUCIR LOS PROVEEDORES PARA IGNORAR LOS REPETIDOS
             proveedor = this.ReduceProveedores([], proveedor)
 
-            return proveedor
+            return proveedor[0]
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al encontrar el proveedor' }
