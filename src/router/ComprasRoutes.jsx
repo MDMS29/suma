@@ -5,6 +5,9 @@ import ReqEliminadas from "../Pages/Comercial/Requisiciones/ReqEliminadas";
 import Proveedores from "../Pages/Comercial/Proveedores/Proveedores";
 import AgregarProv from "../Pages/Comercial/Proveedores/AgregarProv";
 import ProveedoresInactivos from "../Pages/Comercial/Proveedores/ProveedoresInactivos";
+// import Proveedores from "../Pages/Comercial/Proveedores/Proveedores";
+// import AgregarProv from "../Pages/Comercial/Proveedores/AgregarProv";
+// import ProveedoresInactivos from "../Pages/Comercial/Proveedores/ProveedoresInactivos";
 
 const ComprasRoutes = [
   {
