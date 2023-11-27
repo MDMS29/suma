@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth.jsx";
+import logo_short from "../assets/images/logo-short.png"
 
 const Sidebar = () => {
   const { authModulos, setAuthModulos, authUsuario, open, setOpen } = useAuth();
@@ -54,7 +55,7 @@ const Sidebar = () => {
 
           <div className="flex pt-2 mx-1">
             <img
-              src="/src/assets/img/logo-short.png"
+              src={logo_short}
               alt="Logo SUMA"
               className="h-10 px-2"
             />

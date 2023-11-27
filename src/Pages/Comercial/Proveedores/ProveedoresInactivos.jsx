@@ -3,7 +3,7 @@ import { Button as PButton } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { useEffect, useState, useRef } from "react";
 import Button from "../../../components/Botones/Button";
-import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
+import { Restore_Icono, Return_Icono, Proveedores_Icon, } from "../../../components/Icons/Iconos";
 import useProveedores from "../../../hooks/Compras/useProveedores";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -16,8 +16,7 @@ import Forbidden from "../../Errors/forbidden";
 const ProveedoresInactivos = () => {
   const toast = useRef(null);
   const { dataProveedores, permisosProveedor, proveedorState, setProveedorState, eliminar_restablecer_proveedor } = useProveedores()
-  const { Permisos_DB, setVerEliminarRestaurar, verEliminarRestaurar, alerta,
-    setAlerta } = useAuth()
+  const { Permisos_DB, setVerEliminarRestaurar, verEliminarRestaurar  } = useAuth()
 
   const columns = [
     { field: "nombre", header: "Nombre" },
@@ -57,21 +56,7 @@ const ProveedoresInactivos = () => {
   const modal_restaurar_proveedor = (proveedor) => {
     setVerEliminarRestaurar(true);
     setProveedorState(proveedor);
-  };
-
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
+  }; 
 
   useEffect(() => {
     setFilteredData(dataProveedores);
@@ -101,7 +86,7 @@ const ProveedoresInactivos = () => {
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Proveedores Inactivos</h1>
-        <i className="pi pi-users" style={{ fontSize: "2rem" }}></i>
+        {Proveedores_Icon}
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>

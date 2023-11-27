@@ -264,7 +264,6 @@ const UsuariosProvider = ({ children }) => {
       })
 
       setTimeout(() => setAlerta({}), 1500)
-
     }
   };
 
