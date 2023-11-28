@@ -1,15 +1,16 @@
-import { 
+import {
   Proveedores_Icon,
   Return_Icono,
   Subir_Archi_Icon,
 } from "../../../components/Icons/Iconos";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import Button from "../../../components/Botones/Button"; 
+import Button from "../../../components/Botones/Button";
 import useProveedores from "../../../hooks/Compras/useProveedores";
 import useAuth from "../../../hooks/useAuth";
-import { useEffect } from "react"; 
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { IDS_PERMISOS } from "../../../helpers/constantes.js";
 
 const AgregarProv = () => {
   const {
@@ -26,7 +27,7 @@ const AgregarProv = () => {
     setTipoProdSeleccionados,
   } = useProveedores();
 
-  const { authUsuario, setAlerta } = useAuth();
+  const { setAlerta, authUsuario } = useAuth();
 
   useEffect(() => {
     obtener_tipo_documento();
@@ -86,7 +87,7 @@ const AgregarProv = () => {
         return;
       }
     }
-  }; 
+  };
 
   const navigate = useNavigate();
 
@@ -266,7 +267,7 @@ const AgregarProv = () => {
         },
       ]);
     }
-  }; 
+  };
 
   useEffect(() => {
     if (proveedorAgg.id_tercero) {
@@ -321,6 +322,15 @@ const AgregarProv = () => {
                   value={proveedorAgg.id_tipo_documento}
                   onChange={btn_cambio}
                   options={tipoDocAgg}
+                  disabled={
+                    proveedorAgg.id_tercero !== 0 &&
+                    authUsuario.perfiles?.some(
+                      (perfil) =>
+                        perfil.id_perfil !== IDS_PERMISOS.PERFIL_ADMINISTRADOR
+                    )
+                      ? true
+                      : false
+                  }
                   name="id_tipo_documento"
                   optionLabel="tipo_doc"
                   optionValue="id_tipo_doc"
@@ -337,7 +347,16 @@ const AgregarProv = () => {
               <div className="card flex justify-content-center w-full">
                 <InputText
                   value={proveedorAgg?.documento}
-                  onChange={btn_cambio}
+                  onChange={btn_cambio} 
+                  disabled={
+                    proveedorAgg.id_tercero !== 0 &&
+                    authUsuario.perfiles?.some(
+                      (perfil) =>
+                        perfil.id_perfil !== IDS_PERMISOS.PERFIL_ADMINISTRADOR
+                    )
+                      ? true
+                      : false
+                  }
                   name="documento"
                   className="h-10 px-2"
                 />

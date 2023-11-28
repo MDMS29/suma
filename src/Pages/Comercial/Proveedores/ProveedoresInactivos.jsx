@@ -19,9 +19,9 @@ const ProveedoresInactivos = () => {
   const { Permisos_DB, setVerEliminarRestaurar, verEliminarRestaurar  } = useAuth()
 
   const columns = [
-    { field: "nombre", header: "Nombre" },
-    { field: "tipo_doc", header: "Tipo Doc." },
     { field: "documento", header: "Documento" },
+    { field: "tipo_doc", header: "Tipo Doc." },
+    { field: "nombre", header: "Nombre" },
     { field: "telefono", header: "Telefono" },
     { field: "correo", header: "Correo" }
   ];

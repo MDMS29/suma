@@ -38,9 +38,9 @@ const Proveedores = () => {
   } = useAuth();
 
   const columns = [
+      { field: "documento", header: "Documento" },
+      { field: "tipo_doc", header: "Tipo Doc." },
     { field: "nombre", header: "Nombre" },
-    { field: "tipo_doc", header: "Tipo Doc." },
-    { field: "documento", header: "Documento" },
     { field: "telefono", header: "Telefono" },
     { field: "correo", header: "Correo" },
   ];
