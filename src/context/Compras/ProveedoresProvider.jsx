@@ -87,6 +87,7 @@ const ProveedoresProvider = ({ children }) => {
         Authorization: `Bearer ${token}`,
       },
     };
+    
 
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
