@@ -1,5 +1,8 @@
 import { Tercero } from '../../Interfaces/Compras/ICompras'
+import { EstadosTablas } from '../../helpers/constants';
 import QueryProveedores from "../../querys/Compras/QueryProveedores";
+
+
 
 export class ProveedoresService {
     private _Query_Proveedores: QueryProveedores;
@@ -59,7 +62,7 @@ export class ProveedoresService {
             return proveedores
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cargar las requisiciones' } //!ERROR
+            return { error: true, message: 'Error al cargar los proveedores' } //!ERROR
         }
     }
 
@@ -126,9 +129,8 @@ export class ProveedoresService {
         try {
             let proveedor = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
             if (!proveedor) {
-                return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+                return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
             }
-
 
             //GUARDAR LOS SUMINISTROS DEL PROVEEDORES
             let array_suministros = []
@@ -145,10 +147,10 @@ export class ProveedoresService {
             //REDUCIR LOS PROVEEDORES PARA IGNORAR LOS REPETIDOS
             proveedor = this.ReduceProveedores([], proveedor)
 
-            return proveedor
+            return proveedor[0]
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al encontrar la requisicion' }
+            return { error: true, message: 'Error al encontrar el proveedor' }
         }
     }
 
@@ -161,7 +163,7 @@ export class ProveedoresService {
 
             const proveedor_editado = await this._Query_Proveedores.Editar_Proveedor(id_proveedor, proveedor_request)
             if (proveedor_editado?.rowCount != 1) {
-                return { error: true, message: 'Error al actualizar la requisicion' } //!ERROR
+                return { error: true, message: 'Error al actualizar el proveedor' } //!ERROR
             }
 
             if (proveedor_request.suministros) {
@@ -224,7 +226,7 @@ export class ProveedoresService {
                 return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR
             }
 
-            return { error: false, message: '' } //*SUCCESSFUL
+            return { error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? `Se ha restaurado el proveedor '${proveedor_filtradp[0].nombre}'` : `Se ha inactivado el proveedor '${proveedor_filtradp[0].nombre}'` }
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR
