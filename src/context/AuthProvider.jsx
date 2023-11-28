@@ -57,8 +57,7 @@ const AuthProvider = ({ children }) => {
     }
     autenticar_usuario()
   }, [])
-  
-  console.log(authUsuario)
+   
 
   useEffect(() => {
     if (authUsuario.id_usuario) {

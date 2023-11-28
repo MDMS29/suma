@@ -323,11 +323,13 @@ const AgregarProv = () => {
                   onChange={btn_cambio}
                   options={tipoDocAgg}
                   disabled={
-                    proveedorAgg.id_tercero !== 0 &&
-                    authUsuario.perfiles?.some(
-                      (perfil) =>
-                        perfil.id_perfil == IDS_PERMISOS.PERFIL_ADMINISTRADOR
-                    )
+                    proveedorAgg.id_tercero == 0
+                      ? false
+                      : authUsuario.perfiles?.some(
+                          (perfil) =>
+                            perfil.id_perfil ==
+                            IDS_PERMISOS.PERFIL_ADMINISTRADOR
+                        )
                       ? false
                       : true
                   }
@@ -347,13 +349,15 @@ const AgregarProv = () => {
               <div className="card flex justify-content-center w-full">
                 <InputText
                   value={proveedorAgg?.documento}
-                  onChange={btn_cambio} 
+                  onChange={btn_cambio}
                   disabled={
-                    proveedorAgg.id_tercero !== 0 &&
-                    authUsuario.perfiles?.some(
-                      (perfil) =>
-                        perfil.id_perfil == IDS_PERMISOS.PERFIL_ADMINISTRADOR
-                    )
+                    proveedorAgg.id_tercero == 0
+                      ? false
+                      : authUsuario.perfiles?.some(
+                          (perfil) =>
+                            perfil.id_perfil ==
+                            IDS_PERMISOS.PERFIL_ADMINISTRADOR
+                        )
                       ? false
                       : true
                   }
@@ -364,7 +368,7 @@ const AgregarProv = () => {
             </div>
             <div className="flex flex-col max-sm:col-span-2 max-lg:col-span-2">
               <label className="text-gray-600 pb-2 font-semibold">
-                Nombre Completo{" "}
+                Nombre / Razon Social{" "}
                 <span className="font-bold text-red-900">*</span>
               </label>
               <div className="card flex justify-content-center w-full">
