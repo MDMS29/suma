@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useMemo, createContext, useEffect, useState } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
@@ -11,7 +12,7 @@ const HistorialProvider = ({ children }) => {
   const [dataHistorial, setDataHistorial] = useState([]);
 
   useEffect(() => {
-    if (location.pathname.includes("historial")) {
+    if (location.pathname.includes("auditoria")) {
       (async () => {
         const token = localStorage.getItem("token");
 
@@ -26,7 +27,7 @@ const HistorialProvider = ({ children }) => {
             `/auditorias/historial/logs`,
             config
           );
-          console.log(data);
+          console.log(data ? "si hay" : "no hay");
 
           if (data.error) {
             setAlerta({
@@ -46,6 +47,8 @@ const HistorialProvider = ({ children }) => {
       })();
     }
   }, [location.pathname]);
+console.log(dataHistorial)
+
 
   const obj = useMemo(() => ({
     dataHistorial,

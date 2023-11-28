@@ -1,3 +1,4 @@
+import Historial from "../Pages/Auditorias/Historial";
 import Modulos from "../Pages/Configuracion/Modulos/Modulos";
 import ModulosInactivos from "../Pages/Configuracion/Modulos/ModulosInactivos";
 import Perfiles from "../Pages/Configuracion/Perfiles/Perfiles";
@@ -63,6 +64,13 @@ const AdminRoutes = [
     component: <RolesInactivos />,
     key: 7,
   },
+  {
+    name: "Auditoria",
+    route: "/configuracion/auditoria",
+    component: <Historial/>,
+    key: 23,
+},
+
 ];
 
 export default AdminRoutes;

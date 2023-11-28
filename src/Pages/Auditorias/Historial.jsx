@@ -22,7 +22,7 @@ const Historial = () => {
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataHistorial);
   const [searchTerm, setSearchTerm] = useState("");
-// console.log(dataHistorial)
+  console.log(dataHistorial)
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -41,10 +41,10 @@ const Historial = () => {
         item.table_name.toLowerCase().includes(value) ||
         item.user_name.toLowerCase().includes(value) ||
         item.action_tstamp.toLowerCase().includes(value) ||
-        item.action.toLowerCase().includes(value) 
-        // item.original_data.toLowerCase().includes(value) ||
-        // item.new_data.toLowerCase().includes(value) ||
-        // item.query.toLowerCase().includes(value)
+        item.action.toLowerCase().includes(value) ||
+        item.original_data.toLowerCase().includes(value) ||
+        item.new_data.toLowerCase().includes(value) ||
+        item.query.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
@@ -87,18 +87,18 @@ const Historial = () => {
         <DataTable
           className="custom-datatable"
           stripedRows
-          value={filteredData} 
+          value={filteredData}
           header={header}
           emptyMessage="No se han encontrado resultados"
           paginator={true}
-          rows={20} 
-          rowsPerPageOptions={[ 25, 50]}
+          rows={25}
+          rowsPerPageOptions={[25, 50]}
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}"
           tableStyle={{ minWidth: "50rem" }}
         >
-          {visibleColumns.map((col) => ( 
-            <Column key={col.field} field={col.field} header={col.header} className={col.field == "original_data" ? "bg-red-300 " : "" } />
+          {visibleColumns.map((col) => (
+            <Column key={col.field} field={col.field} header={col.header} className={col.field == "original_data" ? " max-w-xs " : ""} />
           ))}
         </DataTable>
       </div>
