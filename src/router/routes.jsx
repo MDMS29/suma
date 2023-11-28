@@ -4,6 +4,7 @@ import AdminRoutes from "./AdminRoutes";
 import AuthRoutes from "./AuthRoutes";
 import ComprasRoutes from "./ComprasRoutes";
 import BasicasRoutes from "./BasicasRoutes";
+import AuditoriaRoutes from "./AuditoriaRoutes";
 
 const rutas_usuario = [
   {
@@ -17,6 +18,7 @@ const rutas_usuario = [
   ...ComprasRoutes,
   ...BasicasRoutes,
   ...ErrorRoutes,
+  ...AuditoriaRoutes
 ];
 
 export default rutas_usuario;
