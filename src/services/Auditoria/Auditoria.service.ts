@@ -1,3 +1,4 @@
+import { LogsAuditoria } from "../../Interfaces/Auditoria/IAuditoria";
 import QueryAuditoria from "../../querys/Auditoria/QueryAuditoria";
 
 export class HistorialService {
@@ -15,6 +16,18 @@ export class HistorialService {
                 return { error: true, message: 'No se han encontrado logs' } //!ERROR
             }
             return respuesta.rows
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al cargar los los de auditoria' } //!ERROR
+        }
+    }
+    public async Obtener_Logs_Auditoria_Filtro(body_request : LogsAuditoria) {
+        try {
+            const respuesta:any = await this._Query_Auditoria.Obtener_Logs_Auditoria_Filtro(body_request)
+            if(!respuesta){
+                return { error: true, message: 'No se han encontrado logs' } //!ERROR
+            }
+            return respuesta
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cargar los los de auditoria' } //!ERROR
