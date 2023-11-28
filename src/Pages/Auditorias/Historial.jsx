@@ -2,6 +2,9 @@ import { Column } from "primereact/column";
 import useHistorial from "../../hooks/Auditorias/useHistorial";
 import { DataTable } from "primereact/datatable";
 import { MultiSelect } from "primereact/multiselect";
+import { useState } from "react";
+import { useEffect } from "react";
+import { InputText } from "primereact/inputtext";
 
 const Historial = () => {
   const { dataHistorial } = useHistorial();
@@ -19,7 +22,7 @@ const Historial = () => {
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataHistorial);
   const [searchTerm, setSearchTerm] = useState("");
-
+// console.log(dataHistorial)
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -38,10 +41,10 @@ const Historial = () => {
         item.table_name.toLowerCase().includes(value) ||
         item.user_name.toLowerCase().includes(value) ||
         item.action_tstamp.toLowerCase().includes(value) ||
-        item.action.toLowerCase().includes(value) ||
-        item.original_data.toLowerCase().includes(value) ||
-        item.new_data.toLowerCase().includes(value) ||
-        item.query.toLowerCase().includes(value)
+        item.action.toLowerCase().includes(value) 
+        // item.original_data.toLowerCase().includes(value) ||
+        // item.new_data.toLowerCase().includes(value) ||
+        // item.query.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
@@ -66,7 +69,7 @@ const Historial = () => {
     <div className="w-5/6">
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Historial</h1>
-        {Centro_Icono}
+        {/* {Centro_Icono} */}
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
@@ -84,14 +87,18 @@ const Historial = () => {
         <DataTable
           className="custom-datatable"
           stripedRows
-          value={filteredData}
-          paginator={true}
+          value={filteredData} 
           header={header}
           emptyMessage="No se han encontrado resultados"
+          paginator={true}
+          rows={20} 
+          rowsPerPageOptions={[ 25, 50]}
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
           tableStyle={{ minWidth: "50rem" }}
         >
-          {visibleColumns.map((col) => (
-            <Column key={col.field} field={col.field} header={col.header} />
+          {visibleColumns.map((col) => ( 
+            <Column key={col.field} field={col.field} header={col.header} className={col.field == "original_data" ? "bg-red-300 " : "" } />
           ))}
         </DataTable>
       </div>

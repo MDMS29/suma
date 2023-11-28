@@ -1,57 +1,62 @@
-import { useEffect } from "react";
-import { useMemo, createContext } from "react";
+import { useMemo, createContext, useEffect, useState } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
-import { useState } from "react";
-
+import { useLocation } from "react-router-dom";
 const HistorialContext = createContext();
+
 const HistorialProvider = ({ children }) => {
-    const { setAlerta } = useAuth();
-    const [dataHistorial, setDataHistorial] = useState([]);
+  const location = useLocation();
 
-    useEffect(() => {
-        if (location.pathname.includes('roles')) {
-            (async () => {
-                const token = localStorage.getItem("token");
+  const { setAlerta } = useAuth();
+  const [dataHistorial, setDataHistorial] = useState([]);
 
-                const config = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                };
-                try {
-                    const { data } = await conexion_cliente(`/auditorias/historial/log`, config);
-                    if (data.error) {
-                        setAlerta({
-                            error: true,
-                            show: true,
-                            message: data.message
-                        })
-                    }
-                    if (data.error == false) {
-                        setDataHistorial([]);
-                        return
-                    }
-                    setDataHistorial(data);
-                    console.log(data);
-                } catch (error) {
-                    return setDataHistorial([]);
-                }
-            })()
+  useEffect(() => {
+    if (location.pathname.includes("historial")) {
+      (async () => {
+        const token = localStorage.getItem("token");
+
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        try {
+          const { data } = await conexion_cliente(
+            `/auditorias/historial/logs`,
+            config
+          );
+          console.log(data);
+
+          if (data.error) {
+            setAlerta({
+              error: true,
+              show: true,
+              message: data.message,
+            });
+          }
+          if (data.error == false) {
+            setDataHistorial([]);
+            return;
+          }
+          setDataHistorial(data);
+        } catch (error) {
+          return setDataHistorial([]);
         }
-    }, [location.pathname])
+      })();
+    }
+  }, [location.pathname]);
 
-    const obj = useMemo(() => ({
-        dataHistorial,
-        setDataHistorial
-    }))
-    return (
-        <HistorialContext.Provider
-            value={obj}>
-            {children}
-        </HistorialContext.Provider>
-    )
-}
+  const obj = useMemo(() => ({
+    dataHistorial,
+    setDataHistorial,
+  }));
+  return (
+    <HistorialContext.Provider value={obj}>
+      {children}
+    </HistorialContext.Provider>
+  );
+};
 
-export default HistorialProvider
+export { HistorialProvider };
+export default HistorialContext;
