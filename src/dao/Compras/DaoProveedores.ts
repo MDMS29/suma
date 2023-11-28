@@ -14,7 +14,8 @@ export const _obtener_proveedores = `
         t.id_estado = $1 AND 
         t.id_empresa = $2 AND 
         tts.id_estado != 2 AND
-        t.id_tipo_tercero = 2;
+        t.id_tipo_tercero = 2
+    ORDER BY t.id_tercero DESC;
 `
 
 export const _buscar_documento_proveedor = `

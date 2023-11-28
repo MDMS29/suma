@@ -21,13 +21,10 @@ export default class UsuarioController {
         }
 
         try {
-            
+
             //SERVICIO PARA LA AUTENTICACIÓN
             const usuario_service = new UsuarioService()
-            const val = await usuario_service.Autenticar_Usuario({
-                usuario,
-                clave
-            })
+            const val = await usuario_service.Autenticar_Usuario({ usuario, clave })
 
             //VERIFICACIÓN DE DATOS RETORNADOS
             if (!val) {

@@ -45,6 +45,12 @@ export default class UsuarioService {
             //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
             const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa } = respuesta[0]
             respuesta.token = Generar_JWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
+
+
+            //EJECUTAR FUNCION ALMACENADA PARA GUARDAR EL REGISTRO DE LOS INICIOS Y CIERRES DE SESION
+            await this._Query_Usuario.Inicio_Cierre_Sesion(usuario, 'S')
+
+            
             //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS
             return {
                 usuario:

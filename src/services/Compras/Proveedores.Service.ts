@@ -1,8 +1,6 @@
 import { Tercero } from '../../Interfaces/Compras/ICompras'
 import QueryProveedores from "../../querys/Compras/QueryProveedores";
 
-
-
 export class ProveedoresService {
     private _Query_Proveedores: QueryProveedores;
 
@@ -169,7 +167,7 @@ export class ProveedoresService {
             if (proveedor_request.suministros) {
                 for (let suministro of proveedor_request.suministros) {
                     const suministro_encontrado = await this._Query_Proveedores.Buscar_Suministro_Proveedor(suministro, id_proveedor)
-                    if (suministro_encontrado.length !== 0) {
+                    if (suministro_encontrado) {
                         // EDITAR DETALLE
                         const requisicion_det = await this._Query_Proveedores.Editar_Suministro_Proveedor(suministro)
                         if (!requisicion_det) {
