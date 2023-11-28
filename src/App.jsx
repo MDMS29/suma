@@ -20,7 +20,7 @@ import { CentrosProvider } from "./context/Basicos/CentrosProvider.jsx";
 import { ProductosProvider } from "./context/Basicos/ProductosProvider.jsx";
 import { RequisicionesProvider } from "./context/Compras/RequisicionesProvider.jsx";
 import { ProveedoresProvider } from "./context/Compras/ProveedoresProvider.jsx";
-import {HistorialProvider} from "./context/Auditorias/HistorialProvider.jsx";
+import {AuditoriaProvider} from "./context/Auditorias/AuditoriaProvider.jsx";
 
 const App = () => {
   return (
@@ -41,9 +41,9 @@ const App = () => {
                                 <CentrosProvider>
                                   <RequisicionesProvider>
                                     <ProveedoresProvider>
-                                      <HistorialProvider>
+                                      <AuditoriaProvider>
                                         <AppMain />
-                                      </HistorialProvider>
+                                      </AuditoriaProvider>
                                     </ProveedoresProvider>
                                   </RequisicionesProvider>
                                 </CentrosProvider>

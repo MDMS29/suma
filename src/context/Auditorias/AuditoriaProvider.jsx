@@ -1,17 +1,19 @@
+/* eslint-disable react/prop-types */
 import { useMemo, createContext, useEffect, useState } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
-const HistorialContext = createContext();
+const AuditoriaContext = createContext();
 
-const HistorialProvider = ({ children }) => {
+const AuditoriaProvider = ({ children }) => {
   const location = useLocation();
 
   const { setAlerta } = useAuth();
-  const [dataHistorial, setDataHistorial] = useState([]);
+  const [dataAuditoria, setDataAuditoria] = useState([]);
+  const [permisosAuditoria, setPermisosAuditoria] = useState([]);
 
   useEffect(() => {
-    if (location.pathname.includes("historial")) {
+    if (location.pathname.includes("auditoria")) {
       (async () => {
         const token = localStorage.getItem("token");
 
@@ -26,7 +28,7 @@ const HistorialProvider = ({ children }) => {
             `/auditorias/historial/logs`,
             config
           );
-          console.log(data);
+          console.log(data ? "si hay" : "no hay");
 
           if (data.error) {
             setAlerta({
@@ -36,27 +38,30 @@ const HistorialProvider = ({ children }) => {
             });
           }
           if (data.error == false) {
-            setDataHistorial([]);
+            setDataAuditoria([]);
             return;
           }
-          setDataHistorial(data);
+          setDataAuditoria(data);
         } catch (error) {
-          return setDataHistorial([]);
+          return setDataAuditoria([]);
         }
       })();
     }
   }, [location.pathname]);
 
   const obj = useMemo(() => ({
-    dataHistorial,
-    setDataHistorial,
+    dataAuditoria, 
+    setDataAuditoria,
+    permisosAuditoria,
+    setPermisosAuditoria,
   }));
+
   return (
-    <HistorialContext.Provider value={obj}>
+    <AuditoriaContext.Provider value={obj}>
       {children}
-    </HistorialContext.Provider>
+    </AuditoriaContext.Provider>
   );
 };
 
-export { HistorialProvider };
-export default HistorialContext;
+export { AuditoriaProvider };
+export default AuditoriaContext;

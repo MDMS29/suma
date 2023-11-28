@@ -1,15 +1,19 @@
 import { Column } from "primereact/column";
-import useHistorial from "../../hooks/Auditorias/useHistorial";
+import useAuditoria from "../../hooks/Auditorias/useAuditoria";
 import { DataTable } from "primereact/datatable";
 import { MultiSelect } from "primereact/multiselect";
 import { useState } from "react";
 import { useEffect } from "react";
 import { InputText } from "primereact/inputtext";
 import { Historial_Icono } from "../../components/Icons/Iconos";
+import useAuth from "../../hooks/useAuth";
+import Loader from "../../components/Loader";
+import Forbidden from "../Errors/Forbidden";
 
-const Historial = () => {
-  const { dataHistorial } = useHistorial();
+const Auditoria = () => {
+  const { dataAuditoria, permisosAuditoria, setPermisosAuditoria } = useAuditoria();
 
+  const { authPermisos, Permisos_DB } = useAuth();
   const columns = [
     { field: "schema_name", header: "Esquema" },
     { field: "table_name", header: "Tabla" },
@@ -21,9 +25,9 @@ const Historial = () => {
     { field: "query", header: "Consulta" },
   ];
   const [visibleColumns, setVisibleColumns] = useState(columns);
-  const [filteredData, setFilteredData] = useState(dataHistorial);
+  const [filteredData, setFilteredData] = useState(dataAuditoria);
   const [searchTerm, setSearchTerm] = useState("");
-  // console.log(dataHistorial)
+
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -36,24 +40,32 @@ const Historial = () => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
-    const items_filtrados = dataHistorial.filter((item) => {
+    const items_filtrados = dataAuditoria.filter((item) => {
       return (
         item.schema_name.toLowerCase().includes(value) ||
         item.table_name.toLowerCase().includes(value) ||
         item.user_name.toLowerCase().includes(value) ||
         item.action_tstamp.toLowerCase().includes(value) ||
-        item.action.toLowerCase().includes(value)
-        // item.original_data.toLowerCase().includes(value) ||
-        // item.new_data.toLowerCase().includes(value) ||
-        // item.query.toLowerCase().includes(value)
+        item.action.toLowerCase().includes(value)||
+        item.original_data.toLowerCase()?.includes(value) ||
+        item.new_data.toLowerCase().includes(value) ||
+        item.query.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
   };
 
   useEffect(() => {
-    setFilteredData(dataHistorial);
-  }, [dataHistorial]);
+    setFilteredData(dataAuditoria);
+  }, [dataAuditoria]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (authPermisos !== undefined) {
+        return setPermisosAuditoria(authPermisos);
+      }
+    }, 10);
+  }, [authPermisos]);
 
   const header = (
     <MultiSelect
@@ -92,7 +104,7 @@ const Historial = () => {
           header={header}
           emptyMessage="No se han encontrado resultados"
           paginator={true}
-          rows={20}
+          rows={25}
           rowsPerPageOptions={[25, 50]}
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}"
@@ -103,7 +115,11 @@ const Historial = () => {
               key={col.field}
               field={col.field}
               header={col.header}
-              className={col.field == "original_data" || "new_data" ? "max-w-xs":""}
+              className={
+                col.field == "original_data" || col.field == "new_data"
+                  ? "max-w-xs"
+                  : ""
+              }
             />
           ))}
         </DataTable>
@@ -111,7 +127,19 @@ const Historial = () => {
     </div>
   );
 
-  return <>{main()} </>;
+  return (
+    <>
+      {permisosAuditoria?.length === 0 ? (
+        <Loader />
+      ) : permisosAuditoria.filter(
+          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+        ).length > 0 ? (
+        main()
+      ) : (
+        <Forbidden />
+      )}
+    </>
+  );
 };
 
-export default Historial;
+export default Auditoria;
