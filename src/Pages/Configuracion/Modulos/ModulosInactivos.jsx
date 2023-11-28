@@ -38,7 +38,7 @@ const ModulosInactivos = () => {
   };
 
   const columns = [
-    { field: "id_modulo", header: "ID" },
+    { field: "id_modulo", header: "Codigo" },
     { field: "nombre_modulo", header: "Nombre" },
     { field: "icono", header: "Icono" },
   ];

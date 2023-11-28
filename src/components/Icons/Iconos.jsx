@@ -200,6 +200,8 @@ export const Centro_Icono = (
 
 export const Add_Icono = <i className="pi pi-plus mx-2 font-medium"></i>;
 
+export const Historial_Icono = <i className="pi pi-history text-2xl mx-2 font-medium"></i>;
+
 export const Filter_Icono = <i className="pi pi-filter"></i>;
 
 export const Rol_Icono = <img src={RolIcono} alt="Logo Rol" width={40} />;
