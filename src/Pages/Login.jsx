@@ -26,10 +26,14 @@ const Login = () => {
       }, 1500);
       return;
     } else {
+      const data = await fetch("https://ipinfo.io?token=70210017b789f6");
+      const res = await data.json();
       const body = {
         usuario: usuario,
         clave: clave,
         captcha: captcha.current.getValue(),
+        ip: `${res?.ip}`,
+        ubicacion: `${res?.country} - ${res?.city}/${res?.region}`,
       };
       try {
         const { data } = await conexionCliente.post(
@@ -94,7 +98,7 @@ const Login = () => {
                 placeholder="Contraseña"
                 onChange={(e) => setClave(e.target.value)}
                 value={clave}
-                minLength={8}
+                // minLength={8}
                 maxLength={12}
                 className=" focus:outline-none focus:ring-2 focus:ring-yellow-200 border rounded-l-lg px-3 py-2"
               />

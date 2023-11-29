@@ -11,6 +11,7 @@ const AuditoriaProvider = ({ children }) => {
   const { setAlerta } = useAuth();
   const [dataAuditoria, setDataAuditoria] = useState([]);
   const [permisosAuditoria, setPermisosAuditoria] = useState([]);
+  const [auditoriasFiltradas, setAuditoriasFiltradas] = useState([]);
 
   useEffect(() => {
     if (location.pathname.includes("auditoria")) {
@@ -28,7 +29,6 @@ const AuditoriaProvider = ({ children }) => {
             `/auditorias/historial/logs`,
             config
           );
-          console.log(data ? "si hay" : "no hay");
 
           if (data.error) {
             setAlerta({
@@ -49,11 +49,41 @@ const AuditoriaProvider = ({ children }) => {
     }
   }, [location.pathname]);
 
+  const filtrar_auditoria = async (formData) => { 
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await conexion_cliente(
+        `/auditorias/historial/filtro/logs?inputs=${formData.target.value}`,
+        config
+      );
+      setAuditoriasFiltradas(data);
+      return data;
+    } catch (error) {
+      setAlerta({
+        error: true,
+        show: true,
+        message: error.response?.data.message,
+      });
+
+      setTimeout(() => setAlerta({}), 1500);
+      setAuditoriasFiltradas([]);
+    }
+  };
+
   const obj = useMemo(() => ({
-    dataAuditoria, 
+    dataAuditoria,
     setDataAuditoria,
     permisosAuditoria,
     setPermisosAuditoria,
+    filtrar_auditoria,
+    auditoriasFiltradas,
   }));
 
   return (

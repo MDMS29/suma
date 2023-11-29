@@ -11,7 +11,13 @@ import Loader from "../../components/Loader";
 import Forbidden from "../Errors/Forbidden";
 
 const Auditoria = () => {
-  const { dataAuditoria, permisosAuditoria, setPermisosAuditoria } = useAuditoria();
+  const {
+    dataAuditoria,
+    permisosAuditoria,
+    setPermisosAuditoria,
+    filtrar_auditoria,
+    auditoriasFiltradas,
+  } = useAuditoria();
 
   const { authPermisos, Permisos_DB } = useAuth();
   const columns = [
@@ -19,14 +25,13 @@ const Auditoria = () => {
     { field: "table_name", header: "Tabla" },
     { field: "user_name", header: "Usuario" },
     { field: "action_tstamp", header: "Fecha de la accion" },
-    { field: "action", header: "Accion" },
+    { field: "acciones", header: "Accion" },
     { field: "original_data", header: "Data original" },
     { field: "new_data", header: "Nueva data" },
     { field: "query", header: "Consulta" },
   ];
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataAuditoria);
-  const [searchTerm, setSearchTerm] = useState("");
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -36,28 +41,13 @@ const Auditoria = () => {
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
 
-  const buscador = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-
-    const items_filtrados = dataAuditoria.filter((item) => {
-      return (
-        item.schema_name.toLowerCase().includes(value) ||
-        item.table_name.toLowerCase().includes(value) ||
-        item.user_name.toLowerCase().includes(value) ||
-        item.action_tstamp.toLowerCase().includes(value) ||
-        item.action.toLowerCase().includes(value)||
-        item.original_data.toLowerCase()?.includes(value) ||
-        item.new_data.toLowerCase().includes(value) ||
-        item.query.toLowerCase().includes(value)
-      );
-    });
-    setFilteredData(items_filtrados);
-  };
-
   useEffect(() => {
     setFilteredData(dataAuditoria);
   }, [dataAuditoria]);
+
+  useEffect(() => {
+    setFilteredData(auditoriasFiltradas);
+  }, [auditoriasFiltradas]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -66,6 +56,19 @@ const Auditoria = () => {
       }
     }, 10);
   }, [authPermisos]);
+
+  const renderCell = (rowData, column) => {
+    const text = rowData[column.field];
+
+    // Definir el máximo de caracteres permitidos
+    const maxLength = 100;
+
+    // Limitar el texto a la longitud máxima
+    const truncatedText =
+      text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+
+    return <span title={text}>{truncatedText}</span>;
+  };
 
   const header = (
     <MultiSelect
@@ -90,8 +93,7 @@ const Auditoria = () => {
           <InputText
             className="h-10 pl-8 rounded-md"
             placeholder="Buscar"
-            onChange={(e) => buscador(e)}
-            value={searchTerm}
+            onChange={(e) => filtrar_auditoria(e)}
           />
         </span>
       </div>
@@ -115,8 +117,11 @@ const Auditoria = () => {
               key={col.field}
               field={col.field}
               header={col.header}
+              body={(rowData) => renderCell(rowData, col)}
               className={
-                col.field == "original_data" || col.field == "new_data"
+                col.field === "original_data" ||
+                col.field === "new_data" ||
+                col.field === "acciones"
                   ? "max-w-xs"
                   : ""
               }
