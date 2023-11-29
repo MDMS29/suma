@@ -36,10 +36,10 @@ export default class QueryUsuario {
         }
     }
 
-    public async Inicio_Cierre_Sesion(usuario: string, accion: string) {
+    public async Inicio_Cierre_Sesion(usuario: string, accion: string, ip: string, ubicacion: string) {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
-            const result = await _DB.func(_FAIncio_Cierre_Sesion, [usuario, accion])
+            const result = await _DB.func(_FAIncio_Cierre_Sesion, [usuario, accion, ip,ubicacion])
             return result
         } catch (error) {
             console.log(error)

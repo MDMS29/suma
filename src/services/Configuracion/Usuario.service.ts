@@ -12,7 +12,7 @@ export default class UsuarioService {
     }
 
     public async Autenticar_Usuario(object: Omit<UsuarioLogin, 'captcha'>) {
-        const { usuario, clave } = object
+        const { usuario, clave, ip, ubicacion } = object
         //----OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO----
         // Promise<UsuarioLogeado | undefined>
         const respuesta = await this._Query_Usuario.Autenticar_Usuario({ usuario, clave })
@@ -48,7 +48,7 @@ export default class UsuarioService {
 
 
             //EJECUTAR FUNCION ALMACENADA PARA GUARDAR EL REGISTRO DE LOS INICIOS Y CIERRES DE SESION
-            await this._Query_Usuario.Inicio_Cierre_Sesion(usuario, 'S')
+            await this._Query_Usuario.Inicio_Cierre_Sesion(usuario, 'S', ip ?? '', ubicacion ?? '')
 
             
             //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS

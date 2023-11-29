@@ -9,10 +9,15 @@ import { transporter } from '../../config/mailer';
 export default class UsuarioController {
     public async Autenticar_Usuario(req: Request, res: Response) {
         //TOMAR LA INFORMACIÓN DEL USUARIO ENVIADO
-        const { usuario, clave, captcha }: UsuarioLogin = req.body
+        const { usuario, clave, captcha, ip, ubicacion }: UsuarioLogin = req.body
+
         //VERIFICACIÓN DEL CAPTCHA
         if (captcha === '') {
             return res.status(404).json({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
+        }
+        if (!ip || !ubicacion) {
+            console.log('*** USUARIO SIN IP *** \n'+ ip + '\n' +ubicacion +'\n *********************')
+            return res.status(404).json({ error: true, message: 'Error al iniciar sesion' }) //!ERROR
         }
 
         const result: any = UsuarioSchema.partial().safeParse(req.body)
@@ -24,7 +29,7 @@ export default class UsuarioController {
 
             //SERVICIO PARA LA AUTENTICACIÓN
             const usuario_service = new UsuarioService()
-            const val = await usuario_service.Autenticar_Usuario({ usuario, clave })
+            const val = await usuario_service.Autenticar_Usuario({ usuario, clave, ip, ubicacion })
 
             //VERIFICACIÓN DE DATOS RETORNADOS
             if (!val) {
@@ -145,10 +150,7 @@ export default class UsuarioController {
         if (perfiles?.length <= 0) { //VALIDAR QUE SI SE ESTEN AGREGANDO PERFILES
             return res.status(400).json({ error: true, message: "Debe asignarle al menos un perfil al usuario" }) //!ERROR
         }
-        // const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
-        // if (rol?.length <= 0) {
-        //     return res.status(404).json({ error: true, message: "Para realizar una accion diferente debe seleccionar 'consultar'" }) //!ERROR
-        // }
+
         if (roles?.length <= 0) {//VALIDAR QUE SI SE ESTEN AGREGANDO ROLES
             return res.status(400).json({ error: true, message: "Debe asignarle permisos al usuario" }) //!ERROR
         }

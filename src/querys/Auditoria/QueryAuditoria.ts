@@ -16,23 +16,18 @@ export default class QueryAuditoria {
         }
     }
     public async Obtener_Logs_Auditoria_Filtro(body_request: LogsAuditoria) {
-        const { nombre_tabla,
-            tipo_accion,
-            nombre_esquema,
-            nombre_usuario,
-            fecha_inicial,
-            fecha_final } = body_request
+        const { inputs } = body_request
 
         try {
             let result = await _DB.func(_FAFiltro_logs_auditoria, [
-                nombre_tabla || '',
-                tipo_accion || '',
-                nombre_esquema || '',
-                nombre_usuario || '',
-                fecha_inicial || null,
-                fecha_final || null
+                inputs || '',
+                '',
+                null,
+                null
             ]);
-            
+
+            console.log('RESPUESTA QUERY', result)
+
             return result
         } catch (error) {
             console.log(error)

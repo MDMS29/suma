@@ -22,7 +22,7 @@ export const _obtener_logs_auditoria = `
             WHEN 'S' THEN 'Inicio Sesion'
             WHEN 'CS' THEN 'Cierre Sesion'
             WHEN 'D' THEN 'Eliminacion'
-        END AS action
+        END AS acciones
     FROM 
     auditoria.logged_actions
     ORDER BY action_tstamp DESC 

@@ -1,4 +1,4 @@
-import { LogsAuditoria } from "../../Interfaces/Auditoria/IAuditoria";
+// import { LogsAuditoria } from "../../Interfaces/Auditoria/IAuditoria";
 import QueryAuditoria from "../../querys/Auditoria/QueryAuditoria";
 
 export class HistorialService {
@@ -21,7 +21,7 @@ export class HistorialService {
             return { error: true, message: 'Error al cargar los los de auditoria' } //!ERROR
         }
     }
-    public async Obtener_Logs_Auditoria_Filtro(body_request : LogsAuditoria) {
+    public async Obtener_Logs_Auditoria_Filtro(body_request : any) {
         try {
             const respuesta:any = await this._Query_Auditoria.Obtener_Logs_Auditoria_Filtro(body_request)
             if(!respuesta){
