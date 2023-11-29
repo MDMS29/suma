@@ -6,7 +6,7 @@ import {
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
     _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
     _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario,
-    _CambiarEstadoUsuario, _CambiarClaveUsuario, _Insertar_Empresa_Usuario, _Editar_Empresa_Usuario
+    _CambiarEstadoUsuario, _CambiarClaveUsuario, _Insertar_Empresa_Usuario, _Editar_Empresa_Usuario, _FAIncio_Cierre_Sesion
 } from "../../dao/Configuracion/DaoUsuario";
 
 import {
@@ -31,6 +31,16 @@ export default class QueryUsuario {
                 return
             }
             return
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    public async Inicio_Cierre_Sesion(usuario: string, accion: string, ip: string, ubicacion: string) {
+        try {
+            //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
+            const result = await _DB.func(_FAIncio_Cierre_Sesion, [usuario, accion, ip,ubicacion])
+            return result
         } catch (error) {
             console.log(error)
         }

@@ -2,6 +2,8 @@ export type UsuarioLogin = {
     usuario: string
     clave?: string
     captcha: string
+    ip?: string
+    ubicacion?: string
 }
 
 export type PermisosModulos = {

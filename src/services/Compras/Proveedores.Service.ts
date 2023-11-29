@@ -132,7 +132,6 @@ export class ProveedoresService {
                 return { error: true, message: 'No se ha encontrado el proveedor' } //!ERROR
             }
 
-
             //GUARDAR LOS SUMINISTROS DEL PROVEEDORES
             let array_suministros = []
             for (let proveedor_s of proveedor) {
@@ -170,7 +169,6 @@ export class ProveedoresService {
             if (proveedor_request.suministros) {
                 for (let suministro of proveedor_request.suministros) {
                     const suministro_encontrado = await this._Query_Proveedores.Buscar_Suministro_Proveedor(suministro, id_proveedor)
-                    console.log('173 - suministro encontrado', suministro_encontrado)
                     if (suministro_encontrado) {
                         // EDITAR DETALLE
                         const requisicion_det = await this._Query_Proveedores.Editar_Suministro_Proveedor(suministro)

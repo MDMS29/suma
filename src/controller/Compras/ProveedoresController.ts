@@ -85,8 +85,6 @@ export default class ProveedoresController {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_proveedor } = req.params
 
-        console.log(req.body)
-
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }

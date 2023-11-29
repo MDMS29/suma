@@ -1,5 +1,7 @@
 export const _FALoginUsuario = 'seguridad.login_usuario'
 
+export const _FAIncio_Cierre_Sesion = 'auditoria.fnc_inicio_cierre_sesion'
+
 export const _FAModulosUsuario = 'seguridad.modulos_usuario'
 
 export const _FAMenusModulos = 'seguridad.menus_modulo'
