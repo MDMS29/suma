@@ -1,16 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, createContext, useState, useMemo } from "react";
+import { useEffect, createContext, useState, useMemo } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
-import { useLocation } from "react-router-dom";
-import { Toast } from "primereact/toast";
+import { useLocation } from "react-router-dom"; 
 
 const RequisicionesContext = createContext();
 
 const RequisicionesProvider = ({ children }) => {
-  const toast = useRef(null);
 
-  const { authUsuario, setAlerta, alerta, setVerEliminarRestaurar } = useAuth();
+  const { authUsuario, setAlerta,  setVerEliminarRestaurar } = useAuth();
 
   const [dataRequisiciones, setDataRequisiciones] = useState([]);
   const [procesos, setProcesos] = useState([]);
@@ -93,18 +91,7 @@ const RequisicionesProvider = ({ children }) => {
     }
   }, [location.pathname, authUsuario.id_empresa]);
 
-  useEffect(() => {
-    if (alerta.show) {
-      (() => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      })();
-    }
-  }, [alerta]);
+ 
 
   const obtener_centro_costo = async (id_proceso) => {
     const token = localStorage.getItem("token");
@@ -624,7 +611,6 @@ const RequisicionesProvider = ({ children }) => {
   }));
   return (
     <RequisicionesContext.Provider value={obj}>
-      <Toast ref={toast} />
       {children}
     </RequisicionesContext.Provider>
   );

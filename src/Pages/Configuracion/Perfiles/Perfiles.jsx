@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { MultiSelect } from "primereact/multiselect";
-import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -21,8 +20,7 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Button from "../../../components/Botones/Button";
 
 const Perfiles = () => {
-  const toast = useRef(null);
-
+  
   const columns = [
     { field: "id_perfil", header: "ID" },
     { field: "nombre_perfil", header: "Nombre" },
@@ -39,9 +37,7 @@ const Perfiles = () => {
   } = usePerfiles();
   const {
     authPermisos,
-    Permisos_DB,
-    alerta,
-    setAlerta,
+    Permisos_DB, 
     verEliminarRestaurar,
     setVerEliminarRestaurar,
   } = useAuth();
@@ -95,21 +91,7 @@ const Perfiles = () => {
         return setPermisosPerfil(authPermisos);
       }
     }, 10);
-  }, [authPermisos]);
-
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
+  }, [authPermisos]); 
 
   const header = (
     <MultiSelect
@@ -156,7 +138,6 @@ const Perfiles = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {modalVisible && (
         <ModalAgregarPerfil
           visible={modalVisible}

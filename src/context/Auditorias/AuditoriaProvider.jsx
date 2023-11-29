@@ -67,7 +67,7 @@ const AuditoriaProvider = ({ children }) => {
       return data;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: 'error',
         show: true,
         message: error.response?.data.message,
       });

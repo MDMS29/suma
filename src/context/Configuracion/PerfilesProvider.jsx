@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useMemo } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../../hooks/useAuth'
+import {TIPOS_ALERTAS} from "../../helpers/constantes.js"
 
 const PerfilesContext = createContext();
  
@@ -215,7 +216,7 @@ const PerfilesProvider = ({ children }) => {
       setDataPerfiles(perfiles_actualizados);
 
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: 'Perfil editado con exito'
       })

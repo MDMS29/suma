@@ -1,11 +1,15 @@
-import { createContext, useState, useEffect, useMemo } from "react";
+import { createContext, useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom"
 import conexionCliente from "../config/ConexionCliente";
+import { Toast } from "primereact/toast";
 
 
 const AuthContext = createContext();
- 
+
 const AuthProvider = ({ children }) => {
+  const toast = useRef(null);
+
+
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -57,7 +61,7 @@ const AuthProvider = ({ children }) => {
     }
     autenticar_usuario()
   }, [])
-   
+
 
   useEffect(() => {
     if (authUsuario.id_usuario) {
@@ -84,17 +88,32 @@ const AuthProvider = ({ children }) => {
     RESTAURAR: 'restaurar',
     REVISAR: 'revisar'
   }
- 
+
+  useEffect(() => {
+    if (alerta.show) {
+      (() => {
+        toast.current.show({
+          severity: alerta.error,
+          detail: alerta.message,
+          life: 1500,
+        });
+        setTimeout(() => setAlerta({}), 1500);
+      })();
+    }
+  }, [alerta]);
+
   const obj = useMemo(() => ({
     authUsuario, setAuthUsuario, authModulos, setAuthModulos,
     cerrar_salir, authPermisos, Permisos_DB, alerta, setAlerta,
-    verEliminarRestaurar, setVerEliminarRestaurar, open, setOpen
+    verEliminarRestaurar, setVerEliminarRestaurar, open, setOpen, toast
   }))
 
   return (
     <AuthContext.Provider
       value={obj}
     >
+      <Toast ref={toast} />
+
       {children}
     </AuthContext.Provider>
   )
