@@ -30,8 +30,6 @@ export default class _HistorialController {
         const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
         const { inputs } = req.query
 
-
-        console.log(req.query)
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }

@@ -26,8 +26,6 @@ export default class QueryAuditoria {
                 null
             ]);
 
-            console.log('RESPUESTA QUERY', result)
-
             return result
         } catch (error) {
             console.log(error)

@@ -1,12 +1,12 @@
-node_modules
-.vs
-.env
+/node_modules
+/.vs
+/.env
 
-build
-dist
-.vs
+/build
+/dist
+/.vs
 
-bin
+/bin
 
 
 package-lock.json

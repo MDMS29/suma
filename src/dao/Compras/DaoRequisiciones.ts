@@ -4,7 +4,7 @@ export const _FA_obtener_requisicion_filtro = 'public.obtener_requisiciones_empr
 export const _buscar_detalle_requisicion = `
     SELECT 
         trd.id_detalle, trd.id_producto, tp.referencia, tp.descripcion as nombre_producto, tp.id_unidad, tu.unidad,
-        trd.cantidad, trd.justificacion, trd.id_estado
+        trd.cantidad, trd.justificacion, trd.id_estado, tp.critico, tp.certificado
     FROM
         public.tbl_requisicion_detalle trd
     INNER JOIN public.tbl_productos tp  ON tp.id_producto   = trd.id_producto

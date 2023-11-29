@@ -270,7 +270,9 @@ export class RequisicionesService {
 
             doc.setFont('helvetica', 'normal', 'normal')
             doc.text('Aprobado por:', 217, 32.5); // (texto, x, y)
-            doc.text(`${usuario_r ? usuario_r[0]?.nombre_completo : ''}`, 246, 32.5); // (texto, x, y)
+
+            const nombre_completo = doc.splitTextToSize(usuario_r ? usuario_r[0]?.nombre_completo : '', 47);
+            doc.text(nombre_completo[0], 246, 32.5); // (texto, x, y)
 
             // PIE DE CABEZA - IZQUIERDA
             doc.text('Fecha', 7.5, 40)// (texto, x, y)
@@ -329,11 +331,17 @@ export class RequisicionesService {
             doc.line(250, LineasDivCuerpo, 250, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
             doc.line(215, LineasDivCuerpo + 6, 250, LineasDivCuerpo + 6) // (x1, y1, x2, y2) LINEA DIVISIORA ( SI - NO )
-            doc.text('Si', 223, LineasDivCuerpo + 10.5)
+            doc.text('Si', 222, LineasDivCuerpo + 10.5)
             doc.line(233, LineasDivCuerpo + 6, 233, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
             doc.text('No', 239, LineasDivCuerpo + 10.5)
 
-            doc.text('No. Orden', 261, LineasDivCuerpo + 7)
+            doc.text('No. Orden', 250.5, LineasDivCuerpo + 7)
+            doc.line(271.5, LineasDivCuerpo, 271.5, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
+
+            doc.text('Cri.', 273, LineasDivCuerpo + 7)
+            doc.line(282.3, LineasDivCuerpo, 282.3, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
+
+            doc.text('Cer.', 283.5, LineasDivCuerpo + 7)
             doc.line(293, LineasDivCuerpo, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
             doc.line(5, LineasDivCuerpo + 11.5, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2) LINEA DIVISIORA
@@ -367,6 +375,10 @@ export class RequisicionesService {
                     doc.text(`${detalle.referencia} `, 30, Y);
                     doc.text(`${detalle.cantidad} `, 115, Y);
                     doc.text(`${detalle.unidad} `, 129, Y);
+                    // doc.text(`${detalle.noOrden} `, 129, Y);
+                    
+                    doc.text(`${detalle.critico ? 'X' : ''} `, 275.5, Y);
+                    doc.text(`${detalle.certificado ? 'X' : ''} `, 286.5, Y);
 
                     switch (detalle.id_estado) {
                         case 4:
@@ -409,6 +421,8 @@ export class RequisicionesService {
                             HRectCabePie2 += lineHeight //AUMENTA EL TAMAÑO DEL CUADRO DEL CUERPO
                         }
                     }
+
+                    
                     doc.setFontSize(12)
 
                     doc.line(5, LinesH, 5, Y) // (x1, y1, x2, y2)
@@ -428,6 +442,10 @@ export class RequisicionesService {
                     doc.line(233, LinesH + 6.5, 233, Y) // (x1, y1, x2, y2)
 
                     doc.line(250, LinesH, 250, Y) // (x1, y1, x2, y2)
+
+                    doc.line(271.5, LinesH, 271.5, Y) // (x1, y1, x2, y2)
+
+                    doc.line(282.3, LinesH, 282.3, Y) // (x1, y1, x2, y2)
 
                     doc.line(293, LinesH, 293, Y) // (x1, y1, x2, y2)
 
@@ -488,7 +506,11 @@ export class RequisicionesService {
 
                         doc.setFont('helvetica', 'normal', 'normal')
                         doc.text('Aprobado por:', 217, 32.5); // (texto, x, y)
-                        doc.text(`${usuario_r ? usuario_r?.nombre_completo : ''}`, 246, 32.5); // (texto, x, y)
+
+
+                        // const nombre_completo = doc.splitTextToSize(usuario_r ? usuario_r[0]?.nombre_completo : '', 23);
+
+                        doc.text(nombre_completo[0], 246, 32.5); // (texto, x, y)
 
                         // PIE DE CABEZA - IZQUIERDA
                         doc.text('Fecha', 7.5, 40)// (texto, x, y)
@@ -544,11 +566,17 @@ export class RequisicionesService {
                         doc.line(250, LineasDivCuerpo, 250, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
                         doc.line(215, LineasDivCuerpo + 6, 250, LineasDivCuerpo + 6) // (x1, y1, x2, y2) LINEA DIVISIORA ( SI - NO )
-                        doc.text('Si', 223, LineasDivCuerpo + 10.5)
+                        doc.text('Si', 222, LineasDivCuerpo + 10.5)
                         doc.line(233, LineasDivCuerpo + 6, 233, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
                         doc.text('No', 239, LineasDivCuerpo + 10.5)
 
-                        doc.text('No. Orden', 261, LineasDivCuerpo + 7)
+                        doc.text('No. Orden', 250.5, LineasDivCuerpo + 7)
+                        doc.line(271.5, LineasDivCuerpo, 271.5, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
+
+                        doc.text('Cri.', 273, LineasDivCuerpo + 7)
+                        doc.line(282.3, LineasDivCuerpo, 282.3, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
+
+                        doc.text('Cer.', 283.5, LineasDivCuerpo + 7)
                         doc.line(293, LineasDivCuerpo, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
 
                         // doc.line(5, LineasDivCuerpo + 11.5, 293, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2) LINEA DIVISIORA

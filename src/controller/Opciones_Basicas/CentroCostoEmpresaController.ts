@@ -111,8 +111,6 @@ export default class CentroCostoEmpresa {
         const { id_centro_costo } = req.params
         const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body
 
-        console.log('editando centro...', req.body)
-
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
