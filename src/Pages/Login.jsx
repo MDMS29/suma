@@ -99,7 +99,7 @@ const Login = () => {
                 onChange={(e) => setClave(e.target.value)}
                 value={clave}
                 // minLength={8}
-                maxLength={12}
+                maxLength={25}
                 className=" focus:outline-none focus:ring-2 focus:ring-yellow-200 border rounded-l-lg px-3 py-2"
               />
               <span className="p-inputgroup-addon rounded-r-lg">

@@ -1,14 +1,13 @@
 import useUsuarios from "../../../hooks/Configuracion/useUsuarios";
 import useAuth from "../../../hooks/useAuth";
-import { useRef, useState } from "react";
-import { Toast } from "primereact/toast";
+import { useState } from "react";
+import { TIPOS_ALERTAS } from "../../../helpers/constantes.js";
 
 const ResetearContraseñaUsuario = () => {
-  const { restablecerContraseñaProvider, contraseña, setConstraseña } =
+  const { restablecer_contraseña_provider, contraseña, setConstraseña } =
     useUsuarios();
-  const { cerrar_salir } = useAuth();
+  const { cerrar_salir, setAlerta } = useAuth();
   const [repContraseña, setRepContraseña] = useState("");
-  const toast = useRef(null);
 
   const validar = () => {
     if ([contraseña, repContraseña].includes("")) {
@@ -19,30 +18,42 @@ const ResetearContraseñaUsuario = () => {
     }
   };
 
-  const mensajeCambioContraseña = () => {
-    toast.current.show({
-      severity: "success",
-      detail: "La constraseña se restablecido correctamente.",
-      life: 1500,
-    });
-  };
-  const mensajeErrorCambioContraseña = () => {
-    toast.current.show({ severity: "error", detail: validar(), life: 1500 });
-  };
-
   const restablecerContraseña = (e) => {
     e.preventDefault();
     if (contraseña !== repContraseña) {
-      mensajeErrorCambioContraseña();
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        detail: validar(),
+        message: "Las contraseñas no coinciden",
+      });
+      setTimeout(() => setAlerta({}), 1500);
     } else {
-      restablecerContraseñaProvider();
-      mensajeCambioContraseña();
-      setTimeout(() => {
-        cerrar_salir();
-      }, 2000);
+      if (contraseña == "" || repContraseña == "") {
+        setAlerta({
+          error: TIPOS_ALERTAS.ERROR,
+          show: true,
+          message: "Hay campos vacios",
+        });
+        return;
+      }
+      const respuesta = restablecer_contraseña_provider();
+      if (respuesta) {
+        setAlerta({
+          error: TIPOS_ALERTAS.SUCCESS,
+          show: true,
+          message: "La constraseña se restablecido correctamente.",
+        });
+        setTimeout(() => {
+          setAlerta({});
+          cerrar_salir();
+        }, 1500);
+
+        setConstraseña("");
+        setRepContraseña("");
+        return;
+      }
     }
-    setConstraseña("");
-    setRepContraseña("");
   };
 
   const cerrarSesion = () => {
@@ -51,7 +62,6 @@ const ResetearContraseñaUsuario = () => {
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
-      <Toast ref={toast} />
       <div className="bg-white w-full sm:w-full md:w-1/2 h-auto flex items-center flex-col py-5 rounded-lg shadow-xl flex-wrap">
         <h1 className="text-2xl font-semibold">
           Resetear <span className="text-primaryYellow">contraseña</span>
@@ -77,6 +87,7 @@ const ResetearContraseñaUsuario = () => {
           <input
             onClick={restablecerContraseña}
             type="submit"
+            value="Restablecer"
             className="mt-3 p-2 mx-2 rounded-md font-semibold
                 bg-secundaryYellow hover:bg-primaryYellow transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-yellow-200"
           />

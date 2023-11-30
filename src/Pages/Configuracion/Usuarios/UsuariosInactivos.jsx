@@ -1,12 +1,10 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
-import { Toast } from "primereact/toast";
 import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
 import { Button as PButton } from "primereact/button";
-
 import useUsuarios from "../../../hooks/Configuracion/useUsuarios";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
@@ -15,7 +13,6 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Button from "../../../components/Botones/Button";
 
 const UsuariosInactivos = () => {
-  const toast = useRef(null);
 
   const {
     dataUsuarios,
@@ -26,8 +23,6 @@ const UsuariosInactivos = () => {
   } = useUsuarios();
 
   const {
-    alerta,
-    setAlerta,
     Permisos_DB,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
@@ -72,18 +67,6 @@ const UsuariosInactivos = () => {
     });
     setFilteredData(items_filtrados);
   };
-  useEffect(() => {
-    if (alerta.show) {
-      (() => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      })();
-    }
-  }, [alerta]);
 
   useEffect(() => {
     setFilteredData(dataUsuarios);
@@ -102,7 +85,6 @@ const UsuariosInactivos = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"RESTAURAR"}

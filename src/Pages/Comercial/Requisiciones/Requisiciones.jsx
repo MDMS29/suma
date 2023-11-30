@@ -18,8 +18,13 @@ import Button from "../../../components/Botones/Button.jsx";
 import ModalFiltrarReq from "../../../components/Modales/Compras/Requisiciones/ModalFiltrarReq.jsx";
 
 const Requisiciones = () => {
-  const { verEliminarRestaurar, authUsuario, Permisos_DB, authPermisos } =
-    useAuth();
+  const { 
+    verEliminarRestaurar, 
+    authUsuario, 
+    Permisos_DB, 
+    authPermisos 
+  } = useAuth();
+
   const {
     eliminar_requisicion,
     dataRequisiciones,
@@ -32,6 +37,7 @@ const Requisiciones = () => {
     cargando,
     setRequisicionesFiltradas,
   } = useRequisiciones();
+  
   const [modalVisible, setModalVisible] = useState(false);
   const [modalFiltrar, setmodalFiltrar] = useState(false);
 

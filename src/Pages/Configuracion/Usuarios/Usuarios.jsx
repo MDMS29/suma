@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { Toast } from "primereact/toast";
+import { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
@@ -21,7 +20,6 @@ import BLink from "../../../components/Botones/BLink";
 import ModalAgregarUsuario from "../../../components/Modales/Configuracion/Usuarios/ModalAgregarUsuario";
 
 const Usuarios = () => {
-  const toast = useRef(null);
 
   const columns = [
     { field: "nombre_completo", header: "Nombre" },
@@ -47,8 +45,6 @@ const Usuarios = () => {
   const {
     authPermisos,
     Permisos_DB,
-    alerta,
-    setAlerta,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
   } = useAuth();
@@ -70,21 +66,6 @@ const Usuarios = () => {
       }
     }, 10);
   }, [authPermisos]);
- 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity:
-            alerta.error && !resClave ? "error" : resClave ? "info" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -193,7 +174,6 @@ const Usuarios = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
 
       {modalVisible && (
         <ModalAgregarUsuario
