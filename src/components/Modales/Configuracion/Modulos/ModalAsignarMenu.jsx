@@ -12,7 +12,7 @@ import EliminarRestaurar from "../../../Modales/EliminarRestaurar";
 import Loader from "../../../Loader";
 import Forbidden from "../../../../Pages/Errors/Forbidden";
 import Button from "../../../Botones/Button";
-import {TIPOS_ALERTAS} from "../../helpers/constantes.js"
+import {TIPOS_ALERTAS} from "../../../../helpers/constantes.js"
 
 const ModalAsignarMenu = ({ visible, onClose }) => {
   const {
@@ -28,8 +28,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     permisosModulo,
     eliminarRestablecerMenu,
     cambiar_menu,
-    dataModulos,
-    obtener_menus,
+    dataModulos
   } = useModulos();
 
   const {

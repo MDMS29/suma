@@ -105,9 +105,7 @@ const Sidebar = () => {
                         to={subMenuItem.link_menu}
                         key={subMenuItem.link_menu}
                         className={`${
-                          pathname.includes(
-                            subMenuItem.nombre_menu.toLowerCase()
-                          ) && "bg-gray-300"
+                          pathname===`/${subMenuItem.link_menu}` && "bg-gray-300"
                         } flex text-black p-4 my-2 rounded-md cursor-pointer text-center hover:bg-gray-300 text-sm py-1`}
                         onClick={() => setOpen(false)}
                       >
