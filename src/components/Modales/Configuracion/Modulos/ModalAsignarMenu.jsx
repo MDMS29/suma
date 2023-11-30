@@ -126,12 +126,22 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
       });
       return;
     }
+
     if (!nombreMenu.test(MenusAgg.nombre_menu)) {
       setAlerta({
         error: TIPOS_ALERTAS.ERROR,
         show: true,
         message:
           "Nombre del menu no debe contener ni digitos ni caractes especiales",
+      });
+      return;
+    }
+
+    if (MenusAgg.nombre_menu.trim() === "") {
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: "El nombre del menú no puede consistir solo en espacios en blanco",
       });
       return;
     }
@@ -189,6 +199,14 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
         show: true,
         message:
           "Nombre del menu no debe contener ni digitos ni caractes especiales",
+      });
+      return;
+    }
+    if (MenusAgg.nombre_menu.trim() === "") {
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: "El nombre del menú no puede consistir solo en espacios en blanco",
       });
       return;
     }
