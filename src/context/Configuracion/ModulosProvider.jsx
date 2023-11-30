@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import conexionCliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
+import {TIPOS_ALERTAS} from "../../helpers/constantes.js"
 
 const ModulosContext = createContext();
 
@@ -114,7 +115,7 @@ const ModulosProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message });
+        setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: data.message });
         setTimeout(() => setAlerta({}), 1500);
         return false;
       }
@@ -123,13 +124,13 @@ const ModulosProvider = ({ children }) => {
       );
       setDataModulos(moduloActualizados);
 
-      setAlerta({ error: false, show: true, message: data.message });
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: data.message });
       setTimeout(() => setAlerta({}), 1500);
       setVerEliminarRestaurar(false);
       return true;
     } catch (error) {
       setAlerta({
-        error: true,
+        error:TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });
@@ -162,7 +163,7 @@ const ModulosProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message });
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message });
         setTimeout(() => setAlerta({}), 1500);
         return false;
       }
@@ -172,13 +173,13 @@ const ModulosProvider = ({ children }) => {
       );
       setDataMenus(menusActualizados);
 
-      setAlerta({ error: false, show: true, message: data.message });
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: data.message });
       setTimeout(() => setAlerta({}), 1500);
       setVerEliminarRestaurar(false);
       return true;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -226,7 +227,11 @@ const ModulosProvider = ({ children }) => {
       setDataMenus(data);
       return;
     } catch (error) {
-      console.error("Error al obtener menus:", error);
+      setAlerta({
+        error:TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response.data.message,
+      });
     }
   };
 
@@ -246,7 +251,7 @@ const ModulosProvider = ({ children }) => {
         setDataModulos((dataModulos) => [data, ...dataModulos]);
 
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: "Modulo creado con exito",
         });
@@ -256,7 +261,7 @@ const ModulosProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message,
       });
@@ -265,7 +270,7 @@ const ModulosProvider = ({ children }) => {
       return false;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response,
       });
@@ -293,7 +298,7 @@ const ModulosProvider = ({ children }) => {
         setDataMenus([...dataMenus, data]);
 
         setAlerta({
-          error: false,
+          error:  TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: "Menú creado con éxito",
         });
@@ -304,7 +309,7 @@ const ModulosProvider = ({ children }) => {
       return false;
     } catch (error) {
       setAlerta({
-        error: true,
+        error:  TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response,
       });
@@ -335,7 +340,7 @@ const ModulosProvider = ({ children }) => {
         );
         setDataModulos(modulosActualizados);
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: "Modulo editado con exito",
         });
@@ -345,7 +350,7 @@ const ModulosProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: true,
+        error:TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message,
       });
@@ -355,13 +360,14 @@ const ModulosProvider = ({ children }) => {
     } catch (error) {
 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });
       throw error;
     }
   };
+
   const editar_menu = async (formData) => {
     const token = localStorage.getItem("token");
 
@@ -388,7 +394,11 @@ const ModulosProvider = ({ children }) => {
       }
       return false;
     } catch (error) {
-      console.error("Error al guardar la información:", error);
+      setAlerta({
+        error:TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response.data.message,
+      });
       throw error;
     }
   };
@@ -406,7 +416,7 @@ const ModulosProvider = ({ children }) => {
     try {
       const { data } = await conexionCliente(`/modulos/${id}`, config);
       if (data?.error) {
-        return { error: true, message: data.message };
+        return { error: TIPOS_ALERTAS.ERROR, message: data.message };
       }
       const { id_modulo, cod_modulo, nombre_modulo, icono } = data;
 
@@ -428,7 +438,11 @@ const ModulosProvider = ({ children }) => {
 
       setrolesEdit(rolesModulo);
     } catch (error) {
-      console.error(error);
+      setAlerta({
+        error:TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response.data.message,
+      });
       throw error;
     }
   };

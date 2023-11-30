@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
 import { MultiSelect } from "primereact/multiselect";
 import { Toast } from "primereact/toast";
@@ -14,7 +14,6 @@ import Button from "../../../components/Botones/Button";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
 const ModulosInactivos = () => {
-  const toast = useRef(null);
 
   const {
     dataModulos,
@@ -28,8 +27,6 @@ const ModulosInactivos = () => {
     Permisos_DB,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
-    setAlerta,
-    alerta,
   } = useAuth();
 
   const mostrar_modal_eliminar = (modulo) => {
@@ -69,19 +66,6 @@ const ModulosInactivos = () => {
     setFilteredData(dataModulos);
   }, [dataModulos]);
 
-  useEffect(() => {
-    if (alerta.show) {
-      (() => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      })();
-    }
-  }, [alerta]);
-
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -95,7 +79,6 @@ const ModulosInactivos = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"RESTAURAR"}

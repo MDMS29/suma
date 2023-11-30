@@ -1,7 +1,6 @@
 import { InputText } from "primereact/inputtext";
 import { Button as PButton } from "primereact/button";
-import { Toast } from "primereact/toast";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../../components/Botones/Button";
 import { Restore_Icono, Return_Icono, Proveedores_Icon, } from "../../../components/Icons/Iconos";
 import useProveedores from "../../../hooks/Compras/useProveedores";
@@ -14,9 +13,17 @@ import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
 
 const ProveedoresInactivos = () => {
-  const toast = useRef(null);
-  const { dataProveedores, permisosProveedor, proveedorState, setProveedorState, eliminar_restablecer_proveedor } = useProveedores()
-  const { Permisos_DB, setVerEliminarRestaurar, verEliminarRestaurar  } = useAuth()
+  const { dataProveedores, 
+    permisosProveedor, 
+    proveedorState, 
+    setProveedorState, 
+    eliminar_restablecer_proveedor 
+  } = useProveedores()
+
+  const { Permisos_DB, 
+    setVerEliminarRestaurar, 
+    verEliminarRestaurar  
+  } = useAuth()
 
   const columns = [
     { field: "documento", header: "Documento" },
@@ -75,7 +82,6 @@ const ProveedoresInactivos = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"RESTAURAR"}

@@ -1,23 +1,23 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js";
 
 const ProveedoresContext = createContext();
 
 const ProveedoresProvider = ({ children }) => {
-  const { setAlerta, authUsuario, setAuthUsuario, setVerEliminarRestaurar } =
-    useAuth();
+  const { setAlerta, 
+    authUsuario, 
+    setAuthUsuario, 
+    setVerEliminarRestaurar 
+  } = useAuth();
   const [permisosProveedor, setPermisosProveedor] = useState([]);
   const [dataProveedores, setDataProveedores] = useState([]);
   const [proveedorState, setProveedorState] = useState({});
-
   const [tipoDocAgg, setTipoDocAgg] = useState([]);
   const [tipoProdAgg, setTipoProdAgg] = useState([]);
   const [tipoProdEdit, setTipoProdEdit] = useState([]);
-
   const [tipoProdSeleccionados, setTipoProdSeleccionados] = useState([]);
-
 
   const [proveedorAgg, setProveedorAgg] = useState({
     id_tercero: 0,
@@ -55,7 +55,7 @@ const ProveedoresProvider = ({ children }) => {
             );
             if (data.error) {
               setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: data.message,
               });
@@ -74,7 +74,7 @@ const ProveedoresProvider = ({ children }) => {
     }
   }, [location.pathname]);
 
-  const eliminar_restablecer_proveedor = async (id) => { 
+  const eliminar_restablecer_proveedor = async (id) => {
     const token = localStorage.getItem("token");
     if (!token) {
       setAuthUsuario({});
@@ -87,7 +87,6 @@ const ProveedoresProvider = ({ children }) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    
 
     try {
       const estado = location.pathname.includes("inactivos") ? 1 : 2;
@@ -97,7 +96,7 @@ const ProveedoresProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message });
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message });
         setTimeout(() => setAlerta({}), 1500);
         return false;
       }
@@ -107,12 +106,12 @@ const ProveedoresProvider = ({ children }) => {
       );
       setDataProveedores(proveedores_actualizados);
 
-      setAlerta({ error: false, show: true, message: data.message });
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: data.message });
       setTimeout(() => setAlerta({}), 1500);
       setVerEliminarRestaurar(false);
       return true;
     } catch (error) {
-      setAlerta({ error: false, show: true, message: error.data });
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: error.data });
       setTimeout(() => setAlerta({}), 1500);
       return false;
     }
@@ -135,14 +134,14 @@ const ProveedoresProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message });
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message });
         setTimeout(() => setAlerta({}), 1500);
         return false;
       }
       setDataProveedores((dataProveedores) => [data, ...dataProveedores]);
- 
+
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: `Se ha creado el proveedor con documento ${formData.documento}`,
       });
@@ -150,7 +149,7 @@ const ProveedoresProvider = ({ children }) => {
       return true;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -202,7 +201,11 @@ const ProveedoresProvider = ({ children }) => {
       );
       setTipoProdAgg(data);
     } catch (error) {
-      console.error("Error al obtener los tipos de productos:", error);
+      setAlerta({
+        error:TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response.data.message,
+      });
     }
   };
 
@@ -227,7 +230,7 @@ const ProveedoresProvider = ({ children }) => {
         config
       );
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message });
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message });
         setTimeout(() => setAlerta({}), 1500);
         return false;
       }
@@ -245,7 +248,7 @@ const ProveedoresProvider = ({ children }) => {
       return;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -264,7 +267,6 @@ const ProveedoresProvider = ({ children }) => {
     };
 
     try {
-      // Check if the document number already exists
       const docExists = dataProveedores.some(
         (proveedor) =>
           proveedor.documento === formData.documento &&
@@ -273,7 +275,7 @@ const ProveedoresProvider = ({ children }) => {
 
       if (docExists) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "El número de documento ya existe en la base de datos",
         });
@@ -288,7 +290,7 @@ const ProveedoresProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message });
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message });
         setTimeout(() => setAlerta({}), 1500);
         return false;
       }
@@ -299,7 +301,7 @@ const ProveedoresProvider = ({ children }) => {
       setDataProveedores(proveedores_actualizados);
 
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: `El proveedor con documento ${formData.documento} editado con éxito`,
       });
@@ -308,7 +310,7 @@ const ProveedoresProvider = ({ children }) => {
       return true;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -340,7 +342,7 @@ const ProveedoresProvider = ({ children }) => {
     buscar_proveedor,
     editar_proveedores,
     tipoProdSeleccionados,
-    setTipoProdSeleccionados
+    setTipoProdSeleccionados,
   }));
 
   return (

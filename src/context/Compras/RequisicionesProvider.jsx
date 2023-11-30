@@ -1,15 +1,14 @@
-/* eslint-disable react/prop-types */
 import { useEffect, createContext, useState, useMemo } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom"; 
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js";
 
 const RequisicionesContext = createContext();
 
 const RequisicionesProvider = ({ children }) => {
 
   const { authUsuario, setAlerta,  setVerEliminarRestaurar } = useAuth();
-
   const [dataRequisiciones, setDataRequisiciones] = useState([]);
   const [procesos, setProcesos] = useState([]);
   const [RequiState, setRequiState] = useState({});
@@ -46,9 +45,7 @@ const RequisicionesProvider = ({ children }) => {
   const [productosData, setProductosData] = useState([]);
   const [verPDF, setVerPDF] = useState(false);
   const [srcPDF, setSrcPDF] = useState(null);
-
   const [requisicionesFiltradas, setRequisicionesFiltradas] = useState([]);
-
   const [cargando, setCargando] = useState(false);
 
   const location = useLocation();
@@ -78,7 +75,6 @@ const RequisicionesProvider = ({ children }) => {
               config
             );
             setCargando(false);
-
             setDataRequisiciones(data);
           }
         } catch (error) {
@@ -90,8 +86,6 @@ const RequisicionesProvider = ({ children }) => {
       obtener_requisiciones();
     }
   }, [location.pathname, authUsuario.id_empresa]);
-
- 
 
   const obtener_centro_costo = async (id_proceso) => {
     const token = localStorage.getItem("token");
@@ -115,7 +109,7 @@ const RequisicionesProvider = ({ children }) => {
       setcentroCostoAgg(data);
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -146,7 +140,7 @@ const RequisicionesProvider = ({ children }) => {
       setproductos(data);
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -200,7 +194,7 @@ const RequisicionesProvider = ({ children }) => {
       if (!data?.error) {
         setDataRequisiciones([...dataRequisiciones, data]);
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: `Se ha creado la requisicion ${formData.consecutivo}`,
         });
@@ -209,7 +203,7 @@ const RequisicionesProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message,
       });
@@ -218,7 +212,7 @@ const RequisicionesProvider = ({ children }) => {
       return false;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -252,7 +246,7 @@ const RequisicionesProvider = ({ children }) => {
         setDataRequisiciones(requisiciones);
 
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: `Requisicion ${RequiAgg.consecutivo} verificada con exito`,
         });
@@ -260,7 +254,7 @@ const RequisicionesProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message,
       });
@@ -269,7 +263,7 @@ const RequisicionesProvider = ({ children }) => {
       return false;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });
@@ -295,7 +289,7 @@ const RequisicionesProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        return { error: true, message: data.message };
+        return { error: TIPOS_ALERTAS.ERROR, message: data.message };
       }
 
       const {
@@ -335,7 +329,11 @@ const RequisicionesProvider = ({ children }) => {
       });
       setProductosData(det_requisicion);
     } catch (error) {
-      console.error(error);
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response?.data.message,
+      });
       throw error;
     }
   };
@@ -364,7 +362,7 @@ const RequisicionesProvider = ({ children }) => {
         setDataRequisiciones(requisiciones_actualizadas);
 
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: `Requisicion ${data.requisicion} editada con exito`,
         });
@@ -386,7 +384,7 @@ const RequisicionesProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message,
       });
@@ -394,7 +392,7 @@ const RequisicionesProvider = ({ children }) => {
       return false;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });
@@ -424,7 +422,7 @@ const RequisicionesProvider = ({ children }) => {
 
       if (data.error) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: data.message,
         });
@@ -435,7 +433,7 @@ const RequisicionesProvider = ({ children }) => {
       );
       setDataRequisiciones(requisiciones);
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: data.message,
       });
@@ -457,7 +455,7 @@ const RequisicionesProvider = ({ children }) => {
       };
 
       setAlerta({
-        error: "info",
+        error: TIPOS_ALERTAS.INFO,
         show: true,
         message: `Generando documento - ${requisicion}`,
       });
@@ -469,7 +467,7 @@ const RequisicionesProvider = ({ children }) => {
 
       if (!data) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "Error al generar el documento PDF",
         });
@@ -477,7 +475,7 @@ const RequisicionesProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: `Requisicion - ${requisicion} - generada`,
       });
@@ -516,7 +514,7 @@ const RequisicionesProvider = ({ children }) => {
       console.log(data);
       if (data.error === false) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: data.message,
         });
@@ -527,7 +525,7 @@ const RequisicionesProvider = ({ children }) => {
       return;
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response?.data.message,
       });

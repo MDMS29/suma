@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { Toast } from "primereact/toast";
+import { useEffect, useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -22,7 +21,6 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import ModalAsignarMenu from "../../../components/Modales/Configuracion/Modulos/ModalAsignarMenu";
 
 const Modulos = () => {
-  const toast = useRef(null);
 
   const columns = [
     { field: "cod_modulo", header: "Codigo" },
@@ -33,8 +31,6 @@ const Modulos = () => {
   const {
     authPermisos,
     Permisos_DB,
-    alerta,
-    setAlerta,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
   } = useAuth();
@@ -76,20 +72,6 @@ const Modulos = () => {
       }
     }, 10);
   }, [authPermisos]);
- 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
 
   const editar_modulo = async (e, id_modulo) => {
     e.preventDefault();
@@ -184,7 +166,6 @@ const Modulos = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
 
       {modalVisible && (
         <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />
