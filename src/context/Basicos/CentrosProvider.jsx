@@ -2,6 +2,8 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
 import conexion_cliente from "../../config/ConexionCliente";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
+
 const CentrosContext = createContext();
 
 const CentrosProvider = ({ children }) => {
@@ -47,7 +49,7 @@ const CentrosProvider = ({ children }) => {
               `/opciones-basicas/centro-costo-empresa?estado=${estado}&empresa=${authUsuario.id_empresa}`,
               config
             );
-            if (data.error == false){
+            if (data.error == false) {
               setDataCentros([]);
               return
             }
@@ -77,13 +79,15 @@ const CentrosProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        return { error: true, message: data.message };
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
       }
-
       setCentrosAgg(data);
     } catch (error) {
-      console.error(error);
-      throw error;
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
     }
   };
 
@@ -99,24 +103,21 @@ const CentrosProvider = ({ children }) => {
     };
 
     try {
-      const {data} = await conexion_cliente.post(
+      const { data } = await conexion_cliente.post(
         "/opciones-basicas/centro-costo-empresa",
         formData,
         config
       );
 
-      if(data.error){
-        setAlerta({
-          error: true,
-          show: true,
-          message: data.message,
-        });
+      if (data?.error) {
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
         return false
       }
 
       setDataCentros((dataCentros) => [data, ...dataCentros]);
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: "Centros de Costo creado con exito",
       });
@@ -134,10 +135,8 @@ const CentrosProvider = ({ children }) => {
       setTimeout(() => setAlerta({}), 1500);
       return true
     } catch (error) {
-      console.error("Error al guardar la información:", error);
-
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });
@@ -164,9 +163,9 @@ const CentrosProvider = ({ children }) => {
         config
       );
 
-      if(data.error){
+      if (data?.error) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: data.message,
         });
@@ -179,7 +178,7 @@ const CentrosProvider = ({ children }) => {
       setDataCentros(centro_costo_actualizados);
 
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: "Centro editado con exito",
       });
@@ -196,11 +195,9 @@ const CentrosProvider = ({ children }) => {
       });
 
       return true
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-
+    } catch (error) { 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });

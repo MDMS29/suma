@@ -2,6 +2,8 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import conexion_cliente from "../../config/ConexionCliente";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
+
 const TipoProdContext = createContext();
 
 const TipoProdProvider = ({ children }) => {
@@ -35,8 +37,8 @@ const TipoProdProvider = ({ children }) => {
           `/opciones-basicas/tipos-producto?estado=1&empresa=${authUsuario.id_empresa}`,
           config
         );
-        
-        if (data.error == false){
+
+        if (data.error == false) {
           setDataTipoProf([]);
           return
         }
@@ -70,12 +72,15 @@ const TipoProdProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        return { error: true, message: data.message };
-      } 
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
+      }
       setTipoProdAgg(data);
     } catch (error) {
-      console.error(error);
-      throw error;
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
     }
   };
 
@@ -98,7 +103,7 @@ const TipoProdProvider = ({ children }) => {
 
       setDataTipoProf((dataTipoProf) => [response.data, ...dataTipoProf]);
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: "Tipo de Producto creado con exito",
       });
@@ -110,10 +115,8 @@ const TipoProdProvider = ({ children }) => {
 
       setTimeout(() => setAlerta({}), 1500);
     } catch (error) {
-      console.error("Error al guardar la información:", error);
-
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });
@@ -147,7 +150,7 @@ const TipoProdProvider = ({ children }) => {
       setDataTipoProf(tipos_prod_actualizados);
 
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: "Tipo de producto editado con exito",
       });
@@ -157,11 +160,9 @@ const TipoProdProvider = ({ children }) => {
         id_tipo_producto: 0,
         descripcion: "",
       });
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-
+    } catch (error) { 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });

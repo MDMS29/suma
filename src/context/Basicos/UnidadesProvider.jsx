@@ -2,6 +2,8 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import conexion_cliente from "../../config/ConexionCliente";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
+
 const UnidadesContext = createContext();
 
 const UnidadesProvider = ({ children }) => {
@@ -35,7 +37,7 @@ const UnidadesProvider = ({ children }) => {
           `/opciones-basicas/unidades-medida?estado=1&empresa=${authUsuario.id_empresa}`,
           config
         );
-        if(data.error == false){
+        if (data.error == false) {
           dataUnidades([]);
           return
         }
@@ -69,17 +71,24 @@ const UnidadesProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        return { error: true, message: data.message };
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
       }
 
-      const { id_unidad, unidad } = data; 
+      const { id_unidad, unidad } = data;
       setUnidadesAgg({
         id_unidad,
         unidad: unidad,
       });
     } catch (error) {
-      console.error(error);
-      throw error;
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
     }
   };
 
@@ -103,7 +112,7 @@ const UnidadesProvider = ({ children }) => {
       if (!data?.error) {
         setDataUnidades((dataUnidades) => [data, ...dataUnidades]);
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: "Unidad de medida creada con exito",
         });
@@ -118,18 +127,16 @@ const UnidadesProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message
       })
       setTimeout(() => setAlerta({}), 1500)
       return false;
 
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-
+    } catch (error) { 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.data?.message
       });
@@ -163,7 +170,7 @@ const UnidadesProvider = ({ children }) => {
         );
         setDataUnidades(unidades_actualizados);
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: "Unidad de medida editada con exito",
         });
@@ -176,24 +183,22 @@ const UnidadesProvider = ({ children }) => {
         return true
       }
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message
       })
       setTimeout(() => setAlerta({}), 1500)
       return false;
 
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-
+    } catch (error) { 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });
 
       setTimeout(() => setAlerta({}), 1500);
-      throw error; 
+      throw error;
     }
   };
 

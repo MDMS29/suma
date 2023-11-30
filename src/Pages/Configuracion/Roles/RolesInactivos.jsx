@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { useState, useRef, useEffect } from "react";
-import { Toast } from "primereact/toast";
+import { useState, useEffect } from "react"; 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
@@ -19,7 +17,6 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Loader from "../../../components/Loader";
 
 const RolesInactivos = () => {
-  const toast = useRef(null);
 
   const columns = [
     { field: "id_rol", header: "ID" },
@@ -38,9 +35,7 @@ const RolesInactivos = () => {
 
   const {
     authPermisos,
-    Permisos_DB,
-    alerta,
-    setAlerta,
+    Permisos_DB, 
     verEliminarRestaurar,
     setVerEliminarRestaurar,
   } = useAuth();
@@ -58,19 +53,6 @@ const RolesInactivos = () => {
       if (authPermisos !== undefined) return setPermisosRoles(authPermisos);
     }, 10);
   }, [authPermisos]);
- 
-  useEffect(() => {
-    if (alerta.show) {
-      (() => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      })();
-    }
-  }, [alerta]);
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -132,7 +114,6 @@ const RolesInactivos = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"RESTAURAR"}

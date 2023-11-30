@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
-import { Button as PButton } from "primereact/button";
-import { Toast } from "primereact/toast";
+import { Button as PButton } from "primereact/button"; 
 import {
   Add_Icono,
   Centro_Icono,
@@ -17,9 +16,7 @@ import Forbidden from "../../Errors/Forbidden";
 import useCentros from "../../../hooks/Basicos/useCentros";
 import ModalAgregarCentro from "../../../components/Modales/Basicos/Centros/ModalAgregarCentro";
 
-const Centros = () => {
-  const toast = useRef(null);
-
+const Centros = () => { 
   const {
     dataCentros,
     permisosCentros,
@@ -27,7 +24,7 @@ const Centros = () => {
     buscar_centro_costo,
   } = useCentros();
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const { authPermisos, Permisos_DB } = useAuth();
 
   const columns = [
     { field: "proceso", header: "Proceso" },
@@ -83,21 +80,7 @@ const Centros = () => {
 
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
-  }; 
-  
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
+  };  
 
   const header = (
     <MultiSelect
@@ -131,8 +114,7 @@ const Centros = () => {
   };
 
   const main = () => (
-    <div className="w-5/6">
-      <Toast ref={toast} />
+    <div className="w-5/6"> 
       {modalVisible && (
         <ModalAgregarCentro
           visible={modalVisible}

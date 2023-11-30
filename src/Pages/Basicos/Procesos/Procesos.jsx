@@ -1,5 +1,5 @@
 import { MultiSelect } from "primereact/multiselect";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button as PButton } from "primereact/button";
 import {
   Add_Icono,
@@ -8,7 +8,6 @@ import {
 } from "../../../components/Icons/Iconos";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
-import { Toast } from "primereact/toast";
 import Button from "../../../components/Botones/Button";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -18,7 +17,6 @@ import useAuth from "../../../hooks/useAuth";
 import ModalAgregarProcesos from "../../../components/Modales/Basicos/Procesos/ModalAgregarProcesos";
 
 const Procesos = () => {
-  const toast = useRef(null);
 
   const columns = [
     { field: "codigo", header: "Codigo" },
@@ -31,7 +29,7 @@ const Procesos = () => {
     setPermisosProcesos,
     permisosProcesos,
   } = useProcesos();
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const { authPermisos, Permisos_DB } = useAuth();
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [modalVisible, setModalVisible] = useState(false);
@@ -79,20 +77,6 @@ const Procesos = () => {
       }
     }, 10);
   }, [authPermisos]);
- 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
 
   const header = (
     <MultiSelect
@@ -112,22 +96,21 @@ const Procesos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <PButton
-            tooltip="Editar"
-            tooltipOptions={{ position: "top" }}
-            className="p-button-rounded p-mr-2"
-            onClick={(e) => editar_proceso(e, rowData.id_proceso)}
-          >
-            {Edit_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Editar"
+              tooltipOptions={{ position: "top" }}
+              className="p-button-rounded p-mr-2"
+              onClick={(e) => editar_proceso(e, rowData.id_proceso)}
+            >
+              {Edit_Icono}
+            </PButton>
+          )}
       </div>
     );
   };
 
   const main = () => (
-    <div className="w-5/6">
-      <Toast ref={toast} />
+    <div className="w-5/6"> 
       {modalVisible && (
         <ModalAgregarProcesos
           visible={modalVisible}
@@ -144,10 +127,10 @@ const Procesos = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
-            {Add_Icono} Agregar
-          </Button>
-        )}
+            <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
+              {Add_Icono} Agregar
+            </Button>
+          )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
           <InputText
@@ -192,8 +175,8 @@ const Procesos = () => {
       {permisosProcesos.length === 0 ? (
         <Loader />
       ) : permisosProcesos.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

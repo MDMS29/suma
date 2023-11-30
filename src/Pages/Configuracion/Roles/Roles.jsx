@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { Toast } from "primereact/toast";
+import { useState, useEffect } from "react"; 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
@@ -20,8 +19,7 @@ import {
   Rol_Icono,
 } from "../../../components/Icons/Iconos";
 
-const Roles = () => {
-  const toast = useRef(null);
+const Roles = () => { 
 
   const columns = [ 
     { field: "nombre", header: "Nombre" },
@@ -40,9 +38,7 @@ const Roles = () => {
 
   const {
     authPermisos,
-    Permisos_DB,
-    alerta,
-    setAlerta,
+    Permisos_DB, 
     verEliminarRestaurar,
     setVerEliminarRestaurar,
   } = useAuth();
@@ -59,20 +55,7 @@ const Roles = () => {
     setTimeout(() => {
       if (authPermisos !== undefined) return setPermisosRoles(authPermisos);
     }, 10);
-  }, [authPermisos]);
- 
-  useEffect(() => {
-    if (alerta.show) {
-      (() => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      })();
-    }
-  }, [alerta]);
+  }, [authPermisos]); 
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -151,8 +134,7 @@ const Roles = () => {
   };
 
   const main = () => (
-    <div className="w-5/6">
-      <Toast ref={toast} />
+    <div className="w-5/6"> 
       {modalVisible && (
         <ModalPrinRoles
           visible={modalVisible}

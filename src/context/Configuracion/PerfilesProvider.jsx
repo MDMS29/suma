@@ -2,10 +2,10 @@ import { createContext, useState, useEffect, useMemo } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from '../../hooks/useAuth'
-import {TIPOS_ALERTAS} from "../../helpers/constantes.js"
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
 
 const PerfilesContext = createContext();
- 
+
 const PerfilesProvider = ({ children }) => {
   const navigate = useNavigate()
   const location = useLocation();
@@ -75,7 +75,13 @@ const PerfilesProvider = ({ children }) => {
       const { data } = await conexion_cliente(`/modulos?estado=1`, config);
       setModulosAgg(data);
     } catch (error) {
-      console.error("Error al obtener modulos:", error);
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
     }
   };
 
@@ -93,7 +99,9 @@ const PerfilesProvider = ({ children }) => {
       const { data } = await conexion_cliente(`/perfiles/${id}`, config);
 
       if (data?.error) {
-        return { error: true, message: data.message }
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
       }
 
       const { id_perfil, nombre_perfil } = data
@@ -109,9 +117,14 @@ const PerfilesProvider = ({ children }) => {
       })
       setModulosEdit(modulo_check)
 
-    } catch (error) {
-      console.error(error);
-      throw error;
+    } catch (error) { 
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: error.response.data.message
+      })
+
+      setTimeout(() => setAlerta({}), 1500)
     }
   }
 
@@ -135,7 +148,7 @@ const PerfilesProvider = ({ children }) => {
       const { data } = await conexion_cliente.delete(`/perfiles/${id}?estado=${estado}`, config)
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message })
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -143,13 +156,13 @@ const PerfilesProvider = ({ children }) => {
       const perfiles_actualizados = dataPerfiles.filter((perfil) => perfil.id_perfil !== id)
       setDataPerfiles(perfiles_actualizados)
 
-      setAlerta({ error: false, show: true, message: data.message })
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: data.message })
       setTimeout(() => setAlerta({}), 1500)
       setVerEliminarRestaurar(false)
       return true
 
     } catch (error) {
-      setAlerta({ error: false, show: true, message: error.response.data.message })
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
@@ -174,7 +187,7 @@ const PerfilesProvider = ({ children }) => {
 
       setDataPerfiles((dataPerfiles) => [response.data, ...dataPerfiles]);
       setAlerta({
-        error: false,
+        error: TIPOS_ALERTAS.SUCCESS,
         show: true,
         message: 'Perfil creado con exito'
       })
@@ -188,13 +201,13 @@ const PerfilesProvider = ({ children }) => {
 
     } catch (error) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message
       })
 
       setTimeout(() => setAlerta({}), 1500)
-      throw error;  
+      throw error;
     }
   };
 
@@ -228,16 +241,14 @@ const PerfilesProvider = ({ children }) => {
       });
 
     } catch (error) {
-      console.error("Error al guardar la información:", error);
-
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message
       })
 
       setTimeout(() => setAlerta({}), 1500)
-      throw error;  
+      throw error;
     }
   }
 

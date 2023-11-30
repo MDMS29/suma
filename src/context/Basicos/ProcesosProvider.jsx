@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
 
 const ProcesosContext = createContext();
 
@@ -23,7 +24,7 @@ const ProcesosProvider = ({ children }) => {
     const [errors, setErrors] = useState({
         proceso: ''
     });
-    
+
     const obtener_procesos = async () => {
         const token = localStorage.getItem('token')
 
@@ -36,7 +37,7 @@ const ProcesosProvider = ({ children }) => {
         if (authUsuario.id_empresa) {
             try {
                 const { data } = await conexion_cliente(`/opciones-basicas/procesos-empresa?empresa=${authUsuario.id_empresa} `, config)
-                if (data.error == false){
+                if (data.error == false) {
                     setDataProcesos([]);
                     return
                 }
@@ -52,8 +53,6 @@ const ProcesosProvider = ({ children }) => {
         }
     }, [location.pathname])
 
-
-
     const buscar_proceso = async (id) => {
         const token = localStorage.getItem("token");
 
@@ -68,7 +67,9 @@ const ProcesosProvider = ({ children }) => {
             const { data } = await conexion_cliente(`/opciones-basicas/procesos-empresa/${id}`, config);
 
             if (data?.error) {
-                return { error: true, message: data.message }
+                setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+                setTimeout(() => setAlerta({}), 1500)
+                return false
             }
 
             const { id_proceso, codigo, proceso } = data
@@ -79,8 +80,13 @@ const ProcesosProvider = ({ children }) => {
                 proceso: proceso
             })
         } catch (error) {
-            console.error(error);
-            throw error;
+            setAlerta({
+              error: TIPOS_ALERTAS.ERROR,
+              show: true,
+              message: error.response.data.message
+            })
+      
+            setTimeout(() => setAlerta({}), 1500)
         }
     }
 
@@ -99,7 +105,7 @@ const ProcesosProvider = ({ children }) => {
             if (!data?.error) {
                 setDataProcesos((dataProcesos) => [data, ...dataProcesos]);
                 setAlerta({
-                    error: false,
+                    error: TIPOS_ALERTAS.SUCCESS,
                     show: true,
                     message: 'Proceso creado con exito'
                 })
@@ -114,7 +120,7 @@ const ProcesosProvider = ({ children }) => {
             }
 
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: data.message
             })
@@ -123,12 +129,12 @@ const ProcesosProvider = ({ children }) => {
 
         } catch (error) {
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: error.data?.message
             })
             setTimeout(() => setAlerta({}), 1500)
-            throw error;  
+            throw error;
         }
     }
 
@@ -152,7 +158,7 @@ const ProcesosProvider = ({ children }) => {
                 setDataProcesos(procesos_actualizados);
 
                 setAlerta({
-                    error: false,
+                    error: TIPOS_ALERTAS.SUCCESS,
                     show: true,
                     message: 'Proceso editado con exito'
                 })
@@ -166,7 +172,7 @@ const ProcesosProvider = ({ children }) => {
                 return true
             }
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: data.message
             })
@@ -175,13 +181,13 @@ const ProcesosProvider = ({ children }) => {
 
         } catch (error) {
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: error.response.data.message
 
             })
             setTimeout(() => setAlerta({}), 1500)
-            throw error; 
+            throw error;
         }
     }
 

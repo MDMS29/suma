@@ -10,20 +10,18 @@ import { InputText } from "primereact/inputtext";
 import Button from "../../../components/Botones/Button";
 import { Column } from "primereact/column";
 import Forbidden from "../../Errors/Forbidden";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
-import Loader from "../../../components/Loader";
-import { Toast } from "primereact/toast";
+import Loader from "../../../components/Loader"; 
 import { Button as PButton } from "primereact/button";
 import ModalAgregarFliaPro from "../../../components/Modales/Basicos/Familia Productos/ModalAgregarFliaPro";
 
-const FamiliaProd = () => {
-  const toast = useRef(null);
+const FamiliaProd = () => { 
 
   const { dataFliaPro, permisosFliaPro, setPermisosFliaPro, buscar_flia_pro } =
     useFamiliaProd();
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const { authPermisos, Permisos_DB } = useAuth();
 
   const columns = [
     { field: "referencia", header: "Referencia de Producto" },
@@ -77,20 +75,7 @@ const FamiliaProd = () => {
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
   };
- 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
+  
 
   const header = (
     <MultiSelect
@@ -123,10 +108,8 @@ const FamiliaProd = () => {
     );
   };
 
-  const main = () => (
-    <>
+  const main = () => ( 
       <div className="w-5/6">
-        <Toast ref={toast} />
         {modalVisible && (
           <ModalAgregarFliaPro
             visible={modalVisible}
@@ -186,8 +169,7 @@ const FamiliaProd = () => {
             />
           </DataTable>
         </div>
-      </div>
-    </>
+      </div> 
   );
 
   return (

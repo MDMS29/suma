@@ -164,6 +164,7 @@ const Requisiciones = () => {
                     <CardRequisicion
                       key={requisiciones.id_requisicion}
                       requisiciones={requisiciones}
+                      setModalVisible={setModalVisible}
                     />
                   ))}
                 </>

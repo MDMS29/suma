@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
 
 const RolesContext = createContext();
  
@@ -32,7 +33,7 @@ const RolesProvider = ({ children }) => {
           const { data } = await conexion_cliente(`/roles?estado=${estado}`, config);
           if (data.error) {
             setAlerta({
-              error: true,
+              error: TIPOS_ALERTAS.ERROR,
               show: true,
               message: data.message
             })
@@ -51,7 +52,6 @@ const RolesProvider = ({ children }) => {
   }, [location.pathname])
 
   const guardar_rol = async (formData) => {
-
     const token = localStorage.getItem('token')
     if (!token) {
       setAuthUsuario({})
@@ -69,25 +69,24 @@ const RolesProvider = ({ children }) => {
     try {
       const { data } = await conexion_cliente.post('/roles', formData, config)
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message })
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
 
       setDataRoles((dataRoles) => [data, ...dataRoles])
-      setAlerta({ error: false, show: true, message: 'Rol creado con exito' })
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: 'Rol creado con exito' })
       setTimeout(() => setAlerta({}), 1500)
       return true
 
     } catch (error) {
-      setAlerta({ error: true, show: true, message: error.response.data.message })
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
   }
 
   const buscar_rol = async (id) => {
-
     const token = localStorage.getItem('token')
     if (!token) {
       setAuthUsuario({})
@@ -105,17 +104,15 @@ const RolesProvider = ({ children }) => {
     try {
       const { data } = await conexion_cliente(`roles/${id}`, config)
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message })
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
-
-      setRolAgg(data)
-      console.log(rolAgg)
+      setRolAgg(data) 
       return
 
     } catch (error) {
-      setAlerta({ error: true, show: true, message: error.response.data.message })
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
@@ -139,7 +136,7 @@ const RolesProvider = ({ children }) => {
     try {
       const { data } = await conexion_cliente.patch(`/roles/${formData.id_rol}`, formData, config)
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message })
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -147,12 +144,12 @@ const RolesProvider = ({ children }) => {
       const Roles_Actualizados = dataRoles.map(rol => rol.id_rol === data.id_rol ? data : rol)
       setDataRoles(Roles_Actualizados)
 
-      setAlerta({ error: false, show: true, message: 'Rol editado con exito' })
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: 'Rol editado con exito' })
       setTimeout(() => setAlerta({}), 1500)
       return true
 
     } catch (error) {
-      setAlerta({ error: true, show: true, message: error.response.data.message })
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }
@@ -178,7 +175,7 @@ const RolesProvider = ({ children }) => {
       const { data } = await conexion_cliente.delete(`/roles/${id}?estado=${estado}`, config)
 
       if (data?.error) {
-        setAlerta({ error: true, show: true, message: data.message })
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
         setTimeout(() => setAlerta({}), 1500)
         return false
       }
@@ -186,14 +183,14 @@ const RolesProvider = ({ children }) => {
       const rolesActualizados = dataRoles.filter(rol => rol.id_rol !== id)
       setDataRoles(rolesActualizados)
 
-      setAlerta({ error: false, show: true, message: data.message })
+      setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: data.message })
       setTimeout(() => setAlerta({}), 1500)
       setVerEliminarRestaurar(false)
       setRolAgg({ id_rol: 0, nombre: '', descripcion: '' })
       return true
 
     } catch (error) {
-      setAlerta({ error: true, show: true, message: error.response.data.message })
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
       setTimeout(() => setAlerta({}), 1500)
       return false
     }

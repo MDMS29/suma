@@ -4,6 +4,8 @@ import useAuth from "../../hooks/useAuth";
 import conexion_cliente from "../../config/ConexionCliente";
 const MarcasContext = createContext();
 
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
+
 const MarcasProvider = ({ children }) => {
 
     const location = useLocation()
@@ -64,19 +66,23 @@ const MarcasProvider = ({ children }) => {
             const { data } = await conexion_cliente(`/opciones-basicas/marcas-productos/${id}`, config);
 
             if (data?.error) {
-                return { error: true, message: data.message }
+                setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+                setTimeout(() => setAlerta({}), 1500)
+                return false
             }
-
             const { id_marca, marca } = data
             setMarcasAgg({
                 id_marca,
                 marca: marca
             })
-
-
         } catch (error) {
-            console.error(error);
-            throw error;
+            setAlerta({
+                error: TIPOS_ALERTAS.ERROR,
+                show: true,
+                message: error.response.data.message
+            })
+
+            setTimeout(() => setAlerta({}), 1500)
         }
     }
 
@@ -96,7 +102,7 @@ const MarcasProvider = ({ children }) => {
             if (!data?.error) {
                 setDataMarcas((dataMarcas) => [data, ...dataMarcas]);
                 setAlerta({
-                    error: false,
+                    error: TIPOS_ALERTAS.SUCCESS,
                     show: true,
                     message: 'Marca creada con exito'
                 })
@@ -109,7 +115,7 @@ const MarcasProvider = ({ children }) => {
             }
 
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: data.message
             })
@@ -118,7 +124,7 @@ const MarcasProvider = ({ children }) => {
 
         } catch (error) {
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: error.data?.message
             })
@@ -145,7 +151,7 @@ const MarcasProvider = ({ children }) => {
                 );
                 setDataMarcas(marcas_actualizados);
                 setAlerta({
-                    error: false,
+                    error: TIPOS_ALERTAS.SUCCESS,
                     show: true,
                     message: 'Marca editado con exito'
                 })
@@ -157,7 +163,7 @@ const MarcasProvider = ({ children }) => {
                 return true
             }
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: data.message
             })
@@ -167,7 +173,7 @@ const MarcasProvider = ({ children }) => {
 
         } catch (error) {
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: error.response.data.message
             })
