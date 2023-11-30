@@ -14,9 +14,10 @@ export const _ObtenerModulosPerfil = `
     FROM 
         seguridad.tbl_modulo_perfiles tp
     
-    INNER JOIN seguridad.tbl_modulo tm ON tm.id_modulo = tp.id_modulo
+    LEFT JOIN seguridad.tbl_modulo tm ON tm.id_modulo = tp.id_modulo
     WHERE 
         tp.id_perfil = $1 AND
+        tm.id_estado != '2' AND
         tp.id_estado != 2;
 `
 
@@ -62,7 +63,7 @@ export const _PermisosModulosPerfil = `
     INNER JOIN seguridad.tbl_modulo tm ON tm.id_modulo = trm.id_modulo
     INNER JOIN seguridad.tbl_roles tr ON tr.id_rol = trm.id_rol
     WHERE 
-        trm.id_modulo = $1
+        trm.id_modulo = $1 AND trm.id_estado != 2
 `
 
 export const _EditarPerfil = `

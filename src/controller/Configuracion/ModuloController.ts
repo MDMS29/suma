@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import ModuloService from "../../services/Configuracion/Modulo.service";
-import { EstadosTablas } from "../../helpers/constants";
+import { EstadosTablas, _rol_consultar } from "../../helpers/constants";
 import { ModulosSchema } from "../../validations/Configuracion.Zod";
 
 export default class _ModuloController {
@@ -119,7 +119,7 @@ export default class _ModuloController {
         if (roles.length <= 0) {
             return res.status(400).json({ error: true, message: 'El modulo debe tener por lo menos un rol' }) //!ERROR
         }
-        const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === 1)
+        const rol = roles.filter((rol: { id_rol: number }) => rol.id_rol === _rol_consultar)
         if (rol?.length <= 0) {
             return res.status(400).json({ error: true, message: "Para realizar una acción diferente debe seleccionar 'consultar'" }) //!ERROR
         }
