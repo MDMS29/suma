@@ -1,13 +1,12 @@
 import { Button as PButton } from "primereact/button";
 import { MultiSelect } from "primereact/multiselect";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Add_Icono,
   Edit_Icono,
   Producto_Icono,
   Trash_Icono,
-} from "../../../components/Icons/Iconos";
-import { Toast } from "primereact/toast";
+} from "../../../components/Icons/Iconos"; 
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
@@ -21,8 +20,7 @@ import ModalAgregarProducto from "../../../components/Modales/Basicos/Productos/
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import ExcelJS from "exceljs";
 
-const Productos = () => {
-  const toast = useRef(null);
+const Productos = () => { 
 
   const columns = [
     { field: "referencia", header: "Referencia" },
@@ -46,9 +44,7 @@ const Productos = () => {
 
   const {
     authPermisos,
-    Permisos_DB,
-    alerta,
-    setAlerta,
+    Permisos_DB, 
     setVerEliminarRestaurar,
     verEliminarRestaurar,
   } = useAuth();
@@ -148,21 +144,7 @@ const Productos = () => {
         return setPermisosProductos(authPermisos);
       }
     }, 10);
-  }, [authPermisos]);
- 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
+  }, [authPermisos]); 
 
   const header = (
     <MultiSelect
@@ -212,8 +194,7 @@ const Productos = () => {
   };
 
   const main = () => (
-    <div className="w-5/6">
-      <Toast ref={toast} />
+    <div className="w-5/6">     
 
       {modalVisible && (
         <ModalAgregarProducto

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useUnidades from "../../../hooks/Basicos/useUnidades";
 import {
   Add_Icono,
@@ -9,7 +9,6 @@ import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/Forbidden";
-import { Toast } from "primereact/toast";
 import { Button as PButton } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -17,19 +16,15 @@ import { Column } from "primereact/column";
 import Button from "../../../components/Botones/Button";
 import ModalAgregarUnidades from "../../../components/Modales/Basicos/Unidades/ModalAgregarUnidades";
 
-const Unidades = () => {
-  const toast = useRef(null);
-
+const Unidades = () => { 
   const {
     dataUnidades,
     permisosUnidades,
-    setPermisosUnidades,
-    unidadState,
-    setUnidadState,
+    setPermisosUnidades, 
     buscar_unidad,
   } = useUnidades();
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const { authPermisos, Permisos_DB } = useAuth();
 
   const columns = [
     { field: "id_unidad", header: "ID" },
@@ -80,20 +75,6 @@ const Unidades = () => {
     setModalVisible(!modalVisible);
   };
 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
-
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -127,7 +108,6 @@ const Unidades = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {modalVisible && (
         <ModalAgregarUnidades
           visible={modalVisible}

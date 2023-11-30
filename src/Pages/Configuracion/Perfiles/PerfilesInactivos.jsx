@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { MultiSelect } from "primereact/multiselect";
-import { Toast } from "primereact/toast";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
@@ -14,7 +13,6 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import Button from "../../../components/Botones/Button";
 
 const PerfilesInactivos = () => {
-  const toast = useRef(null);
   const {
     dataPerfiles,
     permisosPerfil,
@@ -27,28 +25,12 @@ const PerfilesInactivos = () => {
     Permisos_DB,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
-    alerta,
-    setAlerta,
   } = useAuth();
 
   const modal_restaurar_perfil = (perfil) => {
     setVerEliminarRestaurar(true);
     setPerfilState(perfil);
   };
-
-  useEffect(() => {
-    if (alerta.show) {
-      (() => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      })();
-    }
-  }, [alerta]);
-
   const columns = [
     { field: "id_perfil", header: "ID" },
     { field: "nombre_perfil", header: "Nombre" },
@@ -56,7 +38,7 @@ const PerfilesInactivos = () => {
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
   const [filteredData, setFilteredData] = useState(dataPerfiles);
- 
+
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
     let columnas_ordenadas_seleccionadas = columns.filter((col) =>
@@ -65,7 +47,7 @@ const PerfilesInactivos = () => {
 
     setVisibleColumns(columnas_ordenadas_seleccionadas);
   };
- 
+
   const [searchTerm, setSearchTerm] = useState("");
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
@@ -94,7 +76,6 @@ const PerfilesInactivos = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"RESTAURAR"}
@@ -172,8 +153,8 @@ const PerfilesInactivos = () => {
       {permisosPerfil.length === 0 ? (
         <Loader />
       ) : permisosPerfil.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

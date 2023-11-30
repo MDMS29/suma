@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MultiSelect } from "primereact/multiselect";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
-import { Toast } from "primereact/toast";
 import Button from "../../../components/Botones/Button";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
@@ -18,7 +17,6 @@ import useAuth from "../../../hooks/useAuth";
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 
 const ProductosInactivos = () => {
-  const toast = useRef(null);
 
   const {
     permisosProductos,
@@ -29,8 +27,6 @@ const ProductosInactivos = () => {
   } = useProductos();
   const {
     Permisos_DB,
-    alerta,
-    setAlerta,
     setVerEliminarRestaurar,
     verEliminarRestaurar,
   } = useAuth();
@@ -84,20 +80,6 @@ const ProductosInactivos = () => {
     setProductoState(producto);
   };
 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
-
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -111,7 +93,6 @@ const ProductosInactivos = () => {
 
   const main = () => (
     <div className="w-5/6">
-      <Toast ref={toast} />
       {verEliminarRestaurar && (
         <EliminarRestaurar
           tipo={"RESTAURAR"}

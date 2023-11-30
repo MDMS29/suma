@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import conexion_cliente from "../../config/ConexionCliente";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
 
 
 const ProductosContext = createContext();
@@ -76,7 +77,6 @@ const ProductosProvider = ({ children }) => {
                             setDataProductos([]);
                             return
                         }
-
                         setDataProductos(data);
 
                     } catch (error) {
@@ -103,7 +103,7 @@ const ProductosProvider = ({ children }) => {
             if (!data?.error) {
                 setDataProductos((dataProductos) => [data, ...dataProductos])
                 setAlerta({
-                    error: false,
+                    error: TIPOS_ALERTAS.SUCCESS,
                     show: true,
                     message: 'Producto creado con exito'
                 })
@@ -111,7 +111,7 @@ const ProductosProvider = ({ children }) => {
                 return true
             }
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: data.message
             })
@@ -120,7 +120,7 @@ const ProductosProvider = ({ children }) => {
 
         } catch (error) {
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: error.response?.data.message
             })
@@ -147,7 +147,7 @@ const ProductosProvider = ({ children }) => {
             const { data } = await conexion_cliente.delete(`/opciones-basicas/productos-empresa/${id}?estado=${estado}`, config)
 
             if (data?.error) {
-                setAlerta({ error: true, show: true, message: data.message })
+                setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
                 setTimeout(() => setAlerta({}), 1500)
                 return false
             }
@@ -155,13 +155,13 @@ const ProductosProvider = ({ children }) => {
             const productos_actualizados = dataProductos.filter((producto) => producto.id_producto !== id)
             setDataProductos(productos_actualizados)
 
-            setAlerta({ error: false, show: true, message: data.message })
+            setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: data.message })
             setTimeout(() => setAlerta({}), 1500)
             setVerEliminarRestaurar(false)
             return true
 
         } catch (error) {
-            setAlerta({ error: false, show: true, message: error.data })
+            setAlerta({ error: TIPOS_ALERTAS.SUCCESS, show: true, message: error.data })
             setTimeout(() => setAlerta({}), 1500)
             return false
         }
@@ -179,7 +179,9 @@ const ProductosProvider = ({ children }) => {
         try {
             const { data } = await conexion_cliente(`/opciones-basicas/productos-empresa/${id}`, config);
             if (data?.error) {
-                return { error: true, message: data.message }
+                setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+                setTimeout(() => setAlerta({}), 1500)
+                return false
             }
             const { id_producto,
                 id_familia,
@@ -214,11 +216,14 @@ const ProductosProvider = ({ children }) => {
                 ficha: ficha,
                 certificado: certificado
             })
-
-
         } catch (error) {
-            console.error(error);
-            throw error;
+            setAlerta({
+                error: TIPOS_ALERTAS.ERROR,
+                show: true,
+                message: error.response.data.message
+            })
+
+            setTimeout(() => setAlerta({}), 1500)
         }
     }
 
@@ -243,7 +248,7 @@ const ProductosProvider = ({ children }) => {
                 setDataProductos(productos_actualizados);
 
                 setAlerta({
-                    error: false,
+                    error: TIPOS_ALERTAS.SUCCESS,
                     show: true,
                     message: 'Producto editado con exito'
                 })
@@ -269,7 +274,7 @@ const ProductosProvider = ({ children }) => {
                 return true
             }
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: data.message
             })
@@ -278,7 +283,7 @@ const ProductosProvider = ({ children }) => {
 
         } catch (error) {
             setAlerta({
-                error: true,
+                error: TIPOS_ALERTAS.ERROR,
                 show: true,
                 message: error.response.data.message
             })

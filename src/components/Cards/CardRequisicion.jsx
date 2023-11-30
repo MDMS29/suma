@@ -47,14 +47,12 @@ const CardRequisicion = ({ requisiciones, setModalVisible }) => {
   const editar_requisicion = async (e, id_requisicion) => {
     e.preventDefault();
     navigate("/compras/requisiciones/agregar");
-    await buscar_requisicion(id_requisicion);
-    return;
+    await buscar_requisicion(id_requisicion); 
   };
 
   const eliminar_requisicion = async (e, id_requisicion) => {
     setRequiState(id_requisicion);
-    setVerEliminarRestaurar(true);
-    return;
+    setVerEliminarRestaurar(true); 
   };
 
   const revisar_req = async (e, id_requisicion) => {

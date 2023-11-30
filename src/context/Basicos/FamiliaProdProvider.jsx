@@ -2,6 +2,8 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { useLocation } from "react-router-dom";
 import conexion_cliente from "../../config/ConexionCliente";
+import { TIPOS_ALERTAS } from "../../helpers/constantes.js"
+
 const FamiliaProdContext = createContext();
 
 const FamiliaProdProvider = ({ children }) => {
@@ -70,9 +72,10 @@ const FamiliaProdProvider = ({ children }) => {
       );
 
       if (data?.error) {
-        return { error: true, message: data.message };
+        setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: data.message })
+        setTimeout(() => setAlerta({}), 1500)
+        return false
       }
-
       const { id_familia, referencia, descripcion } = data;
 
       setFliaProAgg({
@@ -82,8 +85,9 @@ const FamiliaProdProvider = ({ children }) => {
         descripcion,
       });
     } catch (error) {
-      console.error(error);
-      throw error;
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
+      setTimeout(() => setAlerta({}), 1500)
+      return false
     }
   };
 
@@ -107,7 +111,7 @@ const FamiliaProdProvider = ({ children }) => {
       if (!data?.error) {
         setDataFliaPro((dataFliaPro) => [data, ...dataFliaPro]);
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: "Familia de productos creada con exito",
         });
@@ -121,17 +125,15 @@ const FamiliaProdProvider = ({ children }) => {
       }
 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message,
       });
       setTimeout(() => setAlerta({}), 1500);
       return false;
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-
+    } catch (error) { 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });
@@ -165,7 +167,7 @@ const FamiliaProdProvider = ({ children }) => {
         setDataFliaPro(flia_pro_actualizados);
 
         setAlerta({
-          error: false,
+          error: TIPOS_ALERTAS.SUCCESS,
           show: true,
           message: "Familia de Producto editado con exito",
         });
@@ -179,17 +181,15 @@ const FamiliaProdProvider = ({ children }) => {
         return true;
       }
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: data.message,
       });
       setTimeout(() => setAlerta({}), 1500);
       return false;
-    } catch (error) {
-      console.error("Error al guardar la información:", error);
-
+    } catch (error) { 
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });

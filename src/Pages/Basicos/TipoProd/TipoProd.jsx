@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useTipoProd from "../../../hooks/Basicos/useTipoProd";
 import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
@@ -7,7 +7,6 @@ import {
   TipoProduc_Icono,
   Add_Icono,
 } from "../../../components/Icons/Iconos";
-import { Toast } from "primereact/toast";
 import { Column } from "primereact/column";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/Forbidden";
@@ -18,7 +17,6 @@ import { DataTable } from "primereact/datatable";
 import ModalAgregarTipoProd from "../../../components/Modales/Basicos/Tipos Producto/ModalAgregarTipoProd";
 
 const TipoProd = () => {
-  const toast = useRef(null);
 
   const {
     dataTipoProf,
@@ -27,7 +25,7 @@ const TipoProd = () => {
     buscar_tipo_prod,
   } = useTipoProd();
 
-  const { authPermisos, Permisos_DB, alerta, setAlerta } = useAuth();
+  const { authPermisos, Permisos_DB } = useAuth();
 
   const columns = [
     { field: "id_tipo_producto", header: "ID" },
@@ -79,20 +77,6 @@ const TipoProd = () => {
     setModalVisible(!modalVisible);
   };
 
-  useEffect(() => {
-    if (alerta.show) {
-      const show_alert = () => {
-        toast.current.show({
-          severity: alerta.error ? "error" : "success",
-          detail: alerta.message,
-          life: 1500,
-        });
-        setTimeout(() => setAlerta({}), 1500);
-      };
-      show_alert();
-    }
-  }, [alerta]);
-
   const header = (
     <MultiSelect
       value={visibleColumns}
@@ -125,9 +109,7 @@ const TipoProd = () => {
   };
 
   const main = () => (
-    <>
       <div className="w-5/6">
-        <Toast ref={toast} />
         {modalVisible && (
           <ModalAgregarTipoProd
             visible={modalVisible}
@@ -188,7 +170,6 @@ const TipoProd = () => {
           </DataTable>
         </div>
       </div>
-    </>
   );
 
   return (
