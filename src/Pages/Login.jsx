@@ -113,7 +113,7 @@ const Login = () => {
             <div className="recaptcha self-center">
               <ReCAPTCHA
                 ref={captcha}
-                sitekey={import.meta.env.VITE_CAPTCHA_KEY_WS}
+                sitekey={import.meta.env.VITE_CAPTCHA_KEY}
               />
             </div>
 

@@ -5,7 +5,8 @@ import { Dropdown } from "primereact/dropdown";
 import useProcesos from "../../../../hooks/Basicos/useProcesos";
 import useRequisiciones from "../../../../hooks/Compras/useRequisiciones";
 import useAuth from "../../../../hooks/useAuth";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { TIPOS_ALERTAS } from "../../../../helpers/constantes.js";
 
 const ModalFiltrarReq = ({ visible, onClose }) => {
   const {
@@ -59,7 +60,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
 
     if (fechaFinal < fechaInicial) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: "La fecha final no puede ser anterior a la fecha inicial.",
       });
@@ -90,7 +91,7 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
       filtro.fecha_final == 0
     ) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: "Selecciona por lo menos un criterio",
       });
@@ -99,10 +100,9 @@ const ModalFiltrarReq = ({ visible, onClose }) => {
     }
 
     const data_filtrar = await filtrar_modal_requi(formData);
-    console.log(data_filtrar);
     if (!data_filtrar) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: "No se encontraron resultados",
       });

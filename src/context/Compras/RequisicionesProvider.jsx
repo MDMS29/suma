@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, createContext, useState, useMemo } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
