@@ -12,6 +12,7 @@ import EliminarRestaurar from "../../../Modales/EliminarRestaurar";
 import Loader from "../../../Loader";
 import Forbidden from "../../../../Pages/Errors/Forbidden";
 import Button from "../../../Botones/Button";
+import {TIPOS_ALERTAS} from "../../helpers/constantes.js"
 
 const ModalAsignarMenu = ({ visible, onClose }) => {
   const {
@@ -120,7 +121,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
 
     if (!MenusAgg.nombre_menu) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: "El nombre del  menu es obligatorio",
       });
@@ -128,7 +129,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     }
     if (!nombreMenu.test(MenusAgg.nombre_menu)) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message:
           "Nombre del menu no debe contener ni digitos ni caractes especiales",
@@ -154,7 +155,11 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
         });
       }
     } catch (error) {
-      console.error("Error al guardar el menú:", error);
+       setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: data.message,
+      });
     }
   };
 
@@ -173,7 +178,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
 
     if (!MenusAgg.nombre_menu) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: "El nombre del  menu es obligatorio",
       });
@@ -181,7 +186,7 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
     }
     if (!nombreMenu.test(MenusAgg.nombre_menu)) {
       setAlerta({
-        error: true,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message:
           "Nombre del menu no debe contener ni digitos ni caractes especiales",
@@ -202,7 +207,11 @@ const ModalAsignarMenu = ({ visible, onClose }) => {
         });
       }
     } catch (error) {
-      console.error("Error al actualizar el menú:", error);
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: data.message,
+      });
     }
   };
 
