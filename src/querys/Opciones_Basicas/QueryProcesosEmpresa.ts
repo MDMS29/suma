@@ -1,4 +1,4 @@
-import { pool } from "../../config/db";
+import { Database } from "../../config/db";
 import {
     _buscar_proceso_codigo, _buscar_proceso_id, _buscar_proceso_nombre, _editar_proceso_empresa, _insertar_proceso_empresa,
     _obtener_procesos_empresa
@@ -6,9 +6,14 @@ import {
 
 import { Procesos_Empresa } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
-export default class QueryProcesosEmpresa {
+export default class QueryProcesosEmpresa extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async Obtener_Procesos_Empresa(empresa: number): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             let result = await client.query(_obtener_procesos_empresa, [empresa]);
             return result.rows
@@ -21,7 +26,7 @@ export default class QueryProcesosEmpresa {
     }
 
     public async Insertar_Proceso_Empresa(proceso_empresa_request: Procesos_Empresa, usuario_creacion: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_empresa, codigo, proceso } = proceso_empresa_request
         try {
@@ -36,7 +41,7 @@ export default class QueryProcesosEmpresa {
     }
 
     public async Buscar_Proceso_Codigo(proceso_empresa_request: Procesos_Empresa) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_empresa, codigo } = proceso_empresa_request
         try {
@@ -50,7 +55,7 @@ export default class QueryProcesosEmpresa {
         }
     }
     public async Buscar_Proceso_Nombre(proceso_empresa_request: Procesos_Empresa) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_empresa, proceso } = proceso_empresa_request
 
@@ -66,7 +71,7 @@ export default class QueryProcesosEmpresa {
     }
 
     public async Buscar_Proceso_ID(id_proceso_empresa: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_buscar_proceso_id, [id_proceso_empresa]);
@@ -80,7 +85,7 @@ export default class QueryProcesosEmpresa {
     }
 
     public async Editar_Proceso_Empresa(id_proceso_empresa: number, proceso_empresa_request: Procesos_Empresa) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { codigo, proceso } = proceso_empresa_request
 

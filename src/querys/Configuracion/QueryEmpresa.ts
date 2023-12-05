@@ -1,13 +1,18 @@
-import { pool } from "../../config/db";
+import { Database } from "../../config/db";
 import {
     _buscar_empresa_id, _buscar_empresa_nit, _buscar_razon_social, _cambiar_estado_empresa,
     _editar_empresa, _insertar_empresa, _obtener_empresas
 } from "../../dao/Configuracion/DaoEmpresa";
 import { Empresa } from '../../Interfaces/Configuracion/IConfig';
 
-export default class QueryEmpresa {
+export default class QueryEmpresa extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async Obtener_Empresas(estado: number): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_obtener_empresas, [estado]);
@@ -21,7 +26,7 @@ export default class QueryEmpresa {
     }
 
     public async Buscar_Razon_Social(razon_social: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_buscar_razon_social, [razon_social]);
@@ -35,7 +40,7 @@ export default class QueryEmpresa {
     }
 
     public async Insertar_Empresa(empresa_request: Empresa, usuario_creacion: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { nit, razon_social, direccion, telefono, correo } = empresa_request
 
         try {
@@ -50,7 +55,7 @@ export default class QueryEmpresa {
     }
 
     public async Buscar_Empresa_ID(id_empresa: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_buscar_empresa_id, [id_empresa]);
@@ -64,7 +69,7 @@ export default class QueryEmpresa {
     }
 
     public async Buscar_Nit(nit: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_buscar_empresa_nit, [nit]);
@@ -78,7 +83,7 @@ export default class QueryEmpresa {
     }
 
     public async Editar_Empresa(id_empresa: number, empresa_request: Empresa, usuario_modificacion: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { nit, razon_social, direccion, telefono, correo } = empresa_request
 
         try {
@@ -93,7 +98,7 @@ export default class QueryEmpresa {
     }
 
     public async Cambiar_Estado_Empresa(id_empresa: number, estado: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             let result = await client.query(_cambiar_estado_empresa, [id_empresa, estado]);
             return result

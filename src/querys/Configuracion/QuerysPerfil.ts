@@ -1,4 +1,4 @@
-import { pool } from "../../config/db";
+import { Database } from "../../config/db";
 import {
     _ObtenerPerfiles, _ObtenerModulosPerfil, _InsertarPerfil,
     _InsertarModuloPerfil, _BuscarPerfilID, _PermisosModulosPerfil,
@@ -8,9 +8,14 @@ import {
 
 import { PerfilUsuario } from '../../Interfaces/Configuracion/IConfig'
 
-export default class QueryPerfil {
+export default class QueryPerfil extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async Obtener_Perfiles(estado: number): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             let result = await client.query(_ObtenerPerfiles, [estado]);
             return result.rows
@@ -23,7 +28,7 @@ export default class QueryPerfil {
     }
 
     public async Modulos_Perfil(id_perfil: number): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_ObtenerModulosPerfil, [id_perfil])
@@ -37,7 +42,7 @@ export default class QueryPerfil {
     }
 
     public async Insertar_Perfil({ nombre_perfil, usuario_creacion }: { nombre_perfil: string, usuario_creacion: string }) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_InsertarPerfil, [nombre_perfil, usuario_creacion])
@@ -51,7 +56,7 @@ export default class QueryPerfil {
     }
 
     public async Insertar_Modulo_Perfil(id_perfil: number, id_modulo: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_InsertarModuloPerfil, [id_perfil, id_modulo])
@@ -65,7 +70,7 @@ export default class QueryPerfil {
     }
 
     public async Buscar_Perfil_ID(id_perfil: number): Promise<PerfilUsuario | undefined> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_BuscarPerfilID, [id_perfil]);
@@ -79,7 +84,7 @@ export default class QueryPerfil {
     }
 
     public async Buscar_Perfil_Nombre(nombre_perfil: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_ObtenerPerfiles, [1]);
@@ -94,7 +99,7 @@ export default class QueryPerfil {
     }
 
     public async Permisos_Modulos_Perfil(id_modulo: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_PermisosModulosPerfil, [id_modulo]);
@@ -108,7 +113,7 @@ export default class QueryPerfil {
     }
 
     public async Editar_Perfil({ id_perfil, nombre_editado, usuario_creacion }: { id_perfil: number, nombre_editado: string, usuario_creacion: string }) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_EditarPerfil, [id_perfil, nombre_editado, usuario_creacion])
@@ -122,7 +127,7 @@ export default class QueryPerfil {
     }
 
     public async Buscar_Modulo_Perfil(id_perfil: number, id_modulo: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_BuscarModulosPerfil, [id_perfil, id_modulo])
@@ -135,7 +140,7 @@ export default class QueryPerfil {
         }
     }
     public async Editar_Modulo_Perfil(id_perfil: number, modulo: any) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_EditarModuloPerfil, [id_perfil, modulo.id_modulo, modulo.id_estado])
@@ -149,7 +154,7 @@ export default class QueryPerfil {
     }
 
     public async Cambiar_Estado_Perfil(id_perfil: number, estado: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             const result = await client.query(_CambiarEstadoPerfil, [id_perfil, estado]);

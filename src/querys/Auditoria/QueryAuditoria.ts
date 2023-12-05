@@ -1,10 +1,15 @@
 import { LogsAuditoria } from "../../Interfaces/Auditoria/IAuditoria";
-import { _DB, pool } from "../../config/db";
+import { Database, _DB } from "../../config/db";
 import { _FAFiltro_logs_auditoria, _obtener_logs_auditoria } from "../../dao/Auditoria/DaoLogs";
 
-export default class QueryAuditoria {
+export default class QueryAuditoria extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async Obtener_Logs_Auditoria() {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             let result = await client.query(_obtener_logs_auditoria);
             return result

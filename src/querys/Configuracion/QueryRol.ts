@@ -1,13 +1,18 @@
-import { pool } from "../../config/db";
+import { Database } from "../../config/db";
 
 import {
     _BuscarRolID, _BuscarRolNombre, _CambiarEstadoRol, _EditarRol,
     _InsertarRol, _ObtenerRoles, _ObtenerUltimoID
 } from "../../dao/Configuracion/DaoRol";
 
-export default class QueryRol {
+export default class QueryRol extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async ObtenerRoles(estado: number) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect();
 
         try {
             const result = await client.query(_ObtenerRoles, [estado]);
@@ -21,7 +26,7 @@ export default class QueryRol {
     }
 
     public async Buscar_Rol_Nombre(nombre_rol: string) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect();
 
         try {
             let result = await client.query(_BuscarRolNombre, [nombre_rol]);
@@ -35,7 +40,7 @@ export default class QueryRol {
     }
 
     public async Insertar_Rol(nombre_rol: string, descripcion: string, usuario_creacion: string) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect();
 
         try {
 
@@ -52,7 +57,7 @@ export default class QueryRol {
     }
 
     public async Buscar_Rol_ID(id_rol: number) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect();
 
         try {
             let result = await client.query(_BuscarRolID, [id_rol]);
@@ -66,7 +71,7 @@ export default class QueryRol {
     }
 
     public async Editar_Rol(id_rol: number, nombre_editado: string, descripcion: string, usuario_modificacion: string) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect();
 
         try {
             let result = await client.query(_EditarRol, [id_rol, nombre_editado, descripcion, usuario_modificacion]);
@@ -80,7 +85,7 @@ export default class QueryRol {
     }
 
     public async Cambiar_Estado_Rol(id_rol: number, estado: number) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect();
 
         try {
             let result = await client.query(_CambiarEstadoRol, [id_rol, estado]);

@@ -1,4 +1,4 @@
-import { _DB, pool } from "../../config/db";
+import { Database, _DB } from "../../config/db";
 import {
     _FA_obtener_requisicion_enc,
 
@@ -14,9 +14,14 @@ import {
 
 import { Filtro_Requisiciones, Requisicion_Det, Requisicion_Enc } from '../../Interfaces/Compras/ICompras';
 
-export default class QueryRequisiciones {
+export default class QueryRequisiciones extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async Obtener_Requisiciones_Enc(estado: string, empresa: number, usuario: string): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await _DB.func(_FA_obtener_requisicion_enc, [estado, empresa, usuario]);
@@ -30,7 +35,7 @@ export default class QueryRequisiciones {
     }
 
     public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { centro_costo, requisicion, proceso, tipo_producto, fecha_inicial, fecha_final } = filtros
         try {
             let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto, fecha_inicial != '' ? fecha_inicial : null, fecha_final != '' ? fecha_final : null]);
@@ -44,7 +49,7 @@ export default class QueryRequisiciones {
     }
 
     public async Requisiciones_Filtro_Change(estado: string, empresa: number, usuario: string, _: string, valor: string | number): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             //FILTRO DE LOS DATOS ATRAVES DE --> estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto
             let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, 0, valor, 0, 0, null, null]); 
@@ -58,7 +63,7 @@ export default class QueryRequisiciones {
     }
 
     public async Buscar_Detalle_Requisicion(id_requisicion: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_buscar_detalle_requisicion, [id_requisicion])
@@ -72,7 +77,7 @@ export default class QueryRequisiciones {
     }
 
     public async Buscar_Requisicion_Consecutivo(requisicion_request: Requisicion_Enc) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { consecutivo } = requisicion_request
 
@@ -88,7 +93,7 @@ export default class QueryRequisiciones {
     }
 
     public async Insertar_Requisicion_Enc(requisicion_request: Requisicion_Enc, usuario_creacion: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, fecha_requisicion, comentarios, equipo } = requisicion_request
 
         try {
@@ -110,7 +115,7 @@ export default class QueryRequisiciones {
     }
 
     public async Insertar_Requisicion_Det(requisicion_det_request: any, id_requisicion_enc: number, usuario_creacion: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { id_producto, cantidad, justificacion } = requisicion_det_request
 
         try {
@@ -132,7 +137,7 @@ export default class QueryRequisiciones {
     }
 
     public async Buscar_Requisicion_ID(id_requisicion: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result: any = await client.query(_buscar_requisicion_id, [id_requisicion]);
@@ -154,7 +159,7 @@ export default class QueryRequisiciones {
     }
 
     public async Editar_Requisicion_Enc(id_requisicion: number, requisicion_request: Requisicion_Enc) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { id_empresa, id_proceso, id_centro, id_tipo_producto, consecutivo, comentarios, fecha_requisicion } = requisicion_request
 
 
@@ -177,7 +182,7 @@ export default class QueryRequisiciones {
         }
     }
     public async Editar_Requisicion_Det(requisicion_det_request: Requisicion_Det, usuario_modificacion: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { id_detalle, id_producto, cantidad, justificacion, id_estado } = requisicion_det_request
 
         try {
@@ -199,7 +204,7 @@ export default class QueryRequisiciones {
     }
 
     public async Buscar_Detalle_ID(id_detalle: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result: any = await client.query(_buscar_detalle_id, [id_detalle]);
@@ -213,7 +218,7 @@ export default class QueryRequisiciones {
     }
 
     public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             let result = await client.query(_cambiar_estado_requisicion, [id_requisicion, estado]);
             return result
@@ -226,7 +231,7 @@ export default class QueryRequisiciones {
     }
 
     public async Aprobar_Desaprobar_Detalle(detalle: any) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { id_detalle, id_estado } = detalle
         try {
             const result = await client.query(_aprobar_desaprobar_detalle, [id_detalle, id_estado])
@@ -240,7 +245,7 @@ export default class QueryRequisiciones {
     }
 
     public async Editar_Usuario_Revi_Requisicion(id_requisicion: any, usuario: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             const result = await client.query(_editar_usuario_revision, [id_requisicion, usuario])
             return result

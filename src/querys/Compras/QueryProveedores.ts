@@ -1,4 +1,4 @@
-import { pool } from "../../config/db";
+import { Database } from "../../config/db";
 
 import {
     _buscar_correo_proveedor, _buscar_documento_proveedor,
@@ -9,9 +9,14 @@ import {
 
 import { Tercero } from '../../Interfaces/Compras/ICompras';
 
-export default class QueryProveedores {
+export default class QueryProveedores extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async Obtener_Proveedores(estado: string, empresa: string): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_obtener_proveedores, [+estado, +empresa]);
@@ -25,7 +30,7 @@ export default class QueryProveedores {
     }
 
     public async Buscar_Proveedor_Documento(proveedor_request: Tercero) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_tipo_documento, documento } = proveedor_request
 
@@ -41,7 +46,7 @@ export default class QueryProveedores {
     }
 
     public async Buscar_Proveedor_Correo(proveedor_request: Tercero) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { correo } = proveedor_request
 
@@ -57,7 +62,7 @@ export default class QueryProveedores {
     }
 
     public async Insertar_Proveedor(proveedor_request: Tercero, usuario_creacion: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_empresa, id_tipo_tercero, id_tipo_documento, documento, nombre, direccion, telefono, correo, contacto, telefono_contacto } = proveedor_request
 
@@ -81,7 +86,7 @@ export default class QueryProveedores {
     }
 
     public async Insertar_Sumnistro(suministro: { id_tipo_producto: number }, id_tercero: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { id_tipo_producto } = suministro
 
         try {
@@ -101,7 +106,7 @@ export default class QueryProveedores {
     }
 
     public async Buscar_Proveedor_ID(id_proveedor: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result: any = await client.query(_buscar_proveedor_id, [id_proveedor]);
@@ -115,7 +120,7 @@ export default class QueryProveedores {
     }
 
     public async Editar_Proveedor(id_proveedor: number, proveedor_request: Tercero) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_empresa, id_tipo_tercero, id_tipo_documento, documento, nombre, direccion, telefono, correo, contacto, telefono_contacto } = proveedor_request
 
@@ -141,7 +146,7 @@ export default class QueryProveedores {
     }
 
     public async Buscar_Suministro_Proveedor(suministro: { id_suministro: number }, id_proveedor: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result: any = await client.query(_buscar_suministro_proveedor, [id_proveedor, suministro.id_suministro]);
@@ -155,7 +160,7 @@ export default class QueryProveedores {
     }
 
     public async Editar_Suministro_Proveedor(suministro: { id_suministro: number, id_estado: number }) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         const { id_suministro, id_estado } = suministro
 
         try {
@@ -176,7 +181,7 @@ export default class QueryProveedores {
 
 
     public async Cambiar_Estado_Proveedor(id_proveedor: number, estado: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             let result = await client.query(_cambiar_estado_proveedor, [id_proveedor, estado]);
             return result

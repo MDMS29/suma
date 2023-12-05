@@ -1,4 +1,4 @@
-import { _DB, pool } from "../../config/db";
+import { Database, _DB } from "../../config/db";
 
 import {
     _FALoginUsuario, _FAModulosUsuario, _FAMenusModulos,
@@ -16,7 +16,12 @@ import {
 import bcrypt from "bcryptjs";
 
 
-export default class QueryUsuario {
+export default class QueryUsuario extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
 
     public async Autenticar_Usuario({ usuario, clave }: any) {
         try {
@@ -104,7 +109,7 @@ export default class QueryUsuario {
     }
 
     public async Buscar_Usuario_Correo(usuario = '', correo = '') {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             if (usuario !== '' && correo !== '') {
@@ -167,7 +172,7 @@ export default class QueryUsuario {
     }
 
     public async Insertar_Empresa_Usuario(id_usuario: number, id_empresa: any, UsuarioCreador: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             //PROCESO ALMACENADO PARA INSERTAR LOS ROLES DEL USUARIO 
             const result = await client.query(_Insertar_Empresa_Usuario, [id_empresa, id_usuario, UsuarioCreador]);
@@ -181,7 +186,7 @@ export default class QueryUsuario {
     }
 
     public async Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }: any, UsuarioModificador: string) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_EditarUsuario, [id_usuario, Nombre_Editado, Usuario_Editado, Clave_Editada, UsuarioModificador, Correo_Editado])
@@ -195,7 +200,7 @@ export default class QueryUsuario {
     }
 
     public async Editar_Empresa_Usuario(id_empresa: string, id_usuario: string, UsuarioModificador: string) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_Editar_Empresa_Usuario, [id_usuario, id_empresa, UsuarioModificador])
@@ -209,7 +214,7 @@ export default class QueryUsuario {
     }
 
     public async Buscar_Perfil_Usuario(id_perfil: number, usuario: number) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_BuscarPerfilUsuario, [usuario, id_perfil]);
@@ -223,7 +228,7 @@ export default class QueryUsuario {
     }
 
     public async Editar_Perfil_Usuario(id_perfil: number, id_estado: number, usuario: number) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_EditarPerfilUsuario, [usuario, id_perfil, id_estado]);
@@ -237,7 +242,7 @@ export default class QueryUsuario {
     }
 
     public async Buscar_Rol_Usuario(id_rol: number, usuario: number) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_BuscarRolUsuario, [usuario, id_rol]);
@@ -251,7 +256,7 @@ export default class QueryUsuario {
     }
 
     public async Editar_Rol_Usuario(id_rol: number, id_estado: string, usuario: number) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_EditarRolUsuario, [usuario, id_rol, id_estado]);
@@ -265,7 +270,7 @@ export default class QueryUsuario {
     }
 
     public async Cambiar_Estado_Usuario(usuario: number, estado: string) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_CambiarEstadoUsuario, [usuario, estado]);
@@ -278,7 +283,7 @@ export default class QueryUsuario {
         }
     }
     public async Cambiar_Clave_Usuario(id_usuario: number, clave: string, cm_clave: boolean) {
-        const client = await pool.connect(); // Obtiene una conexión de la piscina
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
 
         try {
             const result = await client.query(_CambiarClaveUsuario, [id_usuario, clave, cm_clave]);

@@ -1,4 +1,4 @@
-import { pool } from "../../config/db";
+import { Database } from "../../config/db";
 
 import {
     _buscar_tipo_producto, _buscar_tipo_producto_id, _editar_tipo_producto,
@@ -7,9 +7,14 @@ import {
 
 import { Tipo_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
-export default class QueryTipoProducto {
+export default class QueryTipoProducto extends Database {
+    private pool;
+    constructor() {
+        super()
+        this.pool = this.connect_query()
+    }
     public async Obtener_Tipos_Producto(id_empresa: number): Promise<any> {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
         try {
             let result = await client.query(_obtener_tipos_producto, [id_empresa]);
             return result.rows
@@ -22,7 +27,7 @@ export default class QueryTipoProducto {
     }
 
     public async Insertar_Tipo_Producto(unidad_request: Tipo_Producto, _: string) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_empresa, descripcion } = unidad_request
         try {
@@ -37,7 +42,7 @@ export default class QueryTipoProducto {
     }
 
     public async Buscar_Tipo_Producto(tipos_producto_request: Tipo_Producto) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         const { id_empresa, descripcion } = tipos_producto_request
         try {
@@ -52,7 +57,7 @@ export default class QueryTipoProducto {
     }
 
     public async Buscar_Tipo_Producto_ID(id_tipo_producto: number) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_buscar_tipo_producto_id, [id_tipo_producto]);
@@ -66,7 +71,7 @@ export default class QueryTipoProducto {
     }
 
     public async Editar_Tipo_Producto(id_tipo_producto: number, tipos_producto_request: Tipo_Producto) {
-        const client = await pool.connect()
+        const client = await this.pool.connect()
 
         try {
             let result = await client.query(_editar_tipo_producto, [id_tipo_producto, tipos_producto_request.descripcion]);
