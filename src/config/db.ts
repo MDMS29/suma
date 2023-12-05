@@ -2,22 +2,13 @@ import { Pool } from 'pg';
 
 import { config } from 'dotenv';
 
-const pgp = require('pg-promise')();
+import pg from 'pg-promise'
+
+const pgp = pg();
 
 config();
 
-
-const DATABASE_URL = `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`;
-
-export const _DB = pgp(DATABASE_URL);
-
-export const pool = new Pool({
-    user: process.env.PGUSER,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: Number(process.env.PGPORT),
-});
+export const _DB = pgp(`${process.env.PGURL}`);
 
 export class Database {
     connect_query() {

@@ -1,4 +1,3 @@
-// import { LogsAuditoria } from "../../Interfaces/Auditoria/IAuditoria";
 import QueryAuditoria from "../../querys/Auditoria/QueryAuditoria";
 
 export class HistorialService {
@@ -18,7 +17,7 @@ export class HistorialService {
             return respuesta.rows
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cargar los los de auditoria' } //!ERROR
+            return { error: true, message: 'Error al cargar los logs de auditoria' } //!ERROR
         }
     }
     public async Obtener_Logs_Auditoria_Filtro(body_request : any) {
@@ -30,7 +29,7 @@ export class HistorialService {
             return respuesta
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cargar los los de auditoria' } //!ERROR
+            return { error: true, message: 'Error al cargar los logs de auditoria' } //!ERROR
         }
     }
 }

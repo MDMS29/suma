@@ -9,6 +9,7 @@ import  _ProductosRouter  from './Opciones_Basicas/ProductosRoute';
 import  _RequisicionesRouter  from './Compras/RequisicionesRoutes';
 import  _ProveedoresRouter  from './Compras/ProveedoresRoutes';
 import  _HistorialRouter from './Auditoria/AuditoriaRoutes';
+import  _OrdenesRouter from './Compras/OrdenesRoutes';
 
 export {
     _UsuarioRouter,
@@ -21,5 +22,6 @@ export {
     _ProductosRouter,
     _RequisicionesRouter,
     _ProveedoresRouter,
-    _HistorialRouter
+    _HistorialRouter,
+    _OrdenesRouter
 }

@@ -22,5 +22,20 @@ export class ParametrosService {
             return { error: true, message: 'Error al cargar los tipos de documentos' } //!ERROR
         }
     }
+    
+    public async Obtener_Formas_Pago(): Promise<any> {
+        try {
+            const respuesta = await this._Query_Parametros.Obtener_Formas_Pago()
+
+            if (respuesta?.length <= 0) {
+                return { error: false, message: 'No se han encontrado las formas de pago' } //!ERROR
+            }
+
+            return respuesta
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al cargar las formas de pago' } //!ERROR
+        }
+    }
 
 }

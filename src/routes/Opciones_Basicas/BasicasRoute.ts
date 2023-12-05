@@ -92,4 +92,7 @@ _OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
 _OpcionesBasicasRouter.route('/tipos-documento')
     .get(_Autorizacion, _Parametros_Controller.Obtener_Tipos_Documento) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
 
+_OpcionesBasicasRouter.route('/formas-pago')
+    .get(_Autorizacion, _Parametros_Controller.Obtener_Formas_Pago)
+
 export default _OpcionesBasicasRouter

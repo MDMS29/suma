@@ -136,3 +136,69 @@ export const TercerosSchema = z.object({
     }),
 });
 
+export const OrdenesSchema = z.object({
+    id_orden: z.number().optional(),
+    id_empresa: z.number({
+        invalid_type_error: "Tipo de dato para la empresa es invalido",
+        required_error: "Debe ingresar una empresa"
+    }),
+    id_tipo_orden: z.number({
+        invalid_type_error: "Tipo de dato para el tipo de la orden es invalido",
+        required_error: "Seleccione el tipo de orden"
+    }),
+    id_tercero: z.number({
+        invalid_type_error: "Tipo de dato para el tercero es invalido",
+        required_error: "No se ha encontrado tercero"
+    }),
+    orden: z.string({
+        invalid_type_error: "Tipo de dato para el numero de orden es invalido",
+        required_error: "El numero de la orden es requerido"
+    }),
+    fecha_orden: z.date({
+        invalid_type_error: "Tipo de dato para la fecha de la orden es invalida",
+        required_error: "La fecha de la orden es requerida"
+    }),
+    id_forma_pago: z.number({
+        invalid_type_error: "Tipo de dato para la forma de pago es invalida",
+        required_error: "Seleccione una forma de pago"
+    }),
+    id_centro_costo: z.number({
+        invalid_type_error: "Tipo de dato para el centro de costo invalido",
+        required_error: "Seleccione un centro de costo"
+    }),
+    lugar_entrega: z.string({
+        invalid_type_error: "Tipo de dato para el lugar de la entrega es invalida",
+        required_error: "Ingrese el lugar de la entrega"
+    }),
+    observaciones: z.string({
+        invalid_type_error: "Tipo de dato para la observacion es invalido"
+    }).optional(),
+    cotizacion: z.string({
+        invalid_type_error: "Tipo de dato para la cotización es invalido",
+        required_error: "Ingrese el lugar de la entrega"
+    }),
+    fecha_entrega: z.date({
+        invalid_type_error: "Tipo de dato para la fecha de entrega es invalida",
+        required_error: "La fecha de entrega es requerida"
+    }),
+    id_estado: z.number({
+        invalid_type_error: "Tipo de dato para el estado es invalido",
+        required_error: "Debe ingresar un estado para el proveedor"
+    }),
+    suministros: z.array(z.object({
+        id_suministro: z.number({
+            invalid_type_error: "Tipo de dato para el suministro es invalido",
+            required_error: "Ingrese un suministro para el proveedor"
+        }).optional(),
+        id_tipo_producto: z.number({
+            invalid_type_error: "Tipo de dato para el servicio es invalido",
+            required_error: "Ingrese un servicio para el proveedor"
+        }),
+        id_estado: z.number({
+            invalid_type_error: "Tipo de dato para el estado del suministro es invalido",
+            required_error: "Ingrese un estado para el suministro"
+        })
+    })).nonempty({
+        message: "Ingrese suministros para el proveedor"
+    }),
+});

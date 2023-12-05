@@ -5,6 +5,7 @@ import _HistorialController from "../../controller/Auditoria/AuditoriaController
 //INICIALIZAR RUTAS PARA EL HISTORIAL
 export const _HistorialRouter = Router()
 
+
 //INICIALIZAR CONTROLADOR DE HISTORIAL
 const HistorialController = new _HistorialController()
 
