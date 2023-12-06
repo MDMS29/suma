@@ -60,3 +60,36 @@ export interface Tercero {
     id_estado: number
     suministros?: []
 }
+
+/****************  INTERFACES PARA LAS ORDENES  ****************/
+interface Detalle_Orden {
+    id_detalle?: number;
+    id_orden?: number;
+    id_requisicion: number;
+    id_producto: number;
+    cantidad: number;
+    precio_compra: number;
+    id_iva: number;
+    descuento: number;
+    descuento_porcentaje: number;
+    id_estado: number;
+  }
+  
+  interface Encabezado_Orden {
+    id_orden: number;
+    id_empresa: number;
+    id_tipo_orden: number;
+    id_tercero: number;
+    orden: string;
+    fecha_orden: Date;
+    id_forma_pago: number;
+    id_centro_costo: number;
+    lugar_entrega: string;
+    observaciones?: string;
+    cotizacion: string;
+    fecha_entrega: Date;
+    id_estado?: number;
+    total_orden?: number;
+    anticipo:number
+    detalles_orden: DetalleOrden[];
+  }

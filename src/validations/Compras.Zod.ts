@@ -154,7 +154,7 @@ export const OrdenesSchema = z.object({
         invalid_type_error: "Tipo de dato para el numero de orden es invalido",
         required_error: "El numero de la orden es requerido"
     }),
-    fecha_orden: z.date({
+    fecha_orden: z.coerce.date({
         invalid_type_error: "Tipo de dato para la fecha de la orden es invalida",
         required_error: "La fecha de la orden es requerida"
     }),
@@ -177,27 +177,66 @@ export const OrdenesSchema = z.object({
         invalid_type_error: "Tipo de dato para la cotización es invalido",
         required_error: "Ingrese el lugar de la entrega"
     }),
-    fecha_entrega: z.date({
+    fecha_entrega: z.coerce.date({
         invalid_type_error: "Tipo de dato para la fecha de entrega es invalida",
         required_error: "La fecha de entrega es requerida"
+    }),
+    anticipo: z.number({
+        invalid_type_error: "Tipo de dato para el anticipo es invalido",
+        required_error: "Ingrese un valor valido para el anticipo"
     }),
     id_estado: z.number({
         invalid_type_error: "Tipo de dato para el estado es invalido",
         required_error: "Debe ingresar un estado para el proveedor"
-    }),
-    suministros: z.array(z.object({
-        id_suministro: z.number({
-            invalid_type_error: "Tipo de dato para el suministro es invalido",
-            required_error: "Ingrese un suministro para el proveedor"
+    }).optional(),
+    detalles_orden: z.array(z.object({
+        id_detalle: z.number({
+            invalid_type_error: "Tipo de dato para el id del detalle es invalida"
         }).optional(),
-        id_tipo_producto: z.number({
-            invalid_type_error: "Tipo de dato para el servicio es invalido",
-            required_error: "Ingrese un servicio para el proveedor"
+        id_orden: z.number({
+            invalid_type_error: "Tipo de dato para el id de la orden es invalida",
+            required_error: "Asigne una orden al detalle"
+        }).optional(),
+        id_requisicion: z.number({
+            invalid_type_error: "Tipo de dato para el id de la requisicion es invalida",
+            required_error: "Asigne una requisicion al detalle"
+        }),
+        id_producto: z.number({
+            invalid_type_error: "Tipo de dato para el id del producto es invalido",
+            required_error: "Ingrese un producto al detalle"
+        }),
+        cantidad: z.number({
+            invalid_type_error: "Tipo de dato para la cantidad es invalido",
+            required_error: "Ingrese una cantidad para el detalle"
+        }).min(1, {
+            message: "Ingrese una cantidad mayor a 0"
+        }),
+        precio_compra: z.number({
+            invalid_type_error: "Tipo de dato para la cantidad es invalido",
+            required_error: "Ingrese una cantidad para el detalle"
+        }).min(100, {
+            message: "Ingrese un precio mayor a 100"
+        }),
+        id_iva: z.number({
+            invalid_type_error: "Tipo de dato para el id del iva es invalido",
+            required_error: "Seleccione un valor para el iva"
+        }),
+        descuento: z.number({
+            invalid_type_error: "Tipo de dato para el descuento es invalido",
+            required_error: "Se requiero un valor para el descuento"
+        }).min(1, {
+            message: "Ingrese precio mayor a 100"
+        }),
+        descuento_porcentaje: z.number({
+            invalid_type_error: "Tipo de dato para el procentaje del descuento es invalido",
+            required_error: "Se requiero un valor para el porcentaje del descuento"
+        }).positive({
+            message : "El descuento del porcentaje debe ser mayor a 0"
         }),
         id_estado: z.number({
-            invalid_type_error: "Tipo de dato para el estado del suministro es invalido",
-            required_error: "Ingrese un estado para el suministro"
-        })
+            invalid_type_error: "Tipo de dato para el estado es invalido",
+            required_error: "Debe ingresar un estado para el proveedor"
+        }),
     })).nonempty({
         message: "Ingrese suministros para el proveedor"
     }),
