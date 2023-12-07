@@ -1,7 +1,6 @@
 import { Detalle_Orden, Encabezado_Orden } from "../../Interfaces/Compras/ICompras";
 import { Database } from "../../config/db";
 import { _buscar_detalle_orden, _buscar_numero_orden, _buscar_orden_id, _editar_detalle_orden, _editar_encabezado_orden, _eliminar_restaurar_orden, _insertar_orden, _insertar_orden_detalle, _obtener_ordenes } from "../../dao/Compras/DaoOrdenes";
-import { _buscar_detalle_id } from "../../dao/Compras/DaoRequisiciones";
 
 export default class QueryOrdenes extends Database {
     private pool;
@@ -13,7 +12,7 @@ export default class QueryOrdenes extends Database {
         const client = await this.pool.connect()
         try {
             let result = await client.query(_obtener_ordenes, [tipo, empresa, estado]);
-            return result
+            return result.rows
         } catch (error) {
             console.log(error)
             return

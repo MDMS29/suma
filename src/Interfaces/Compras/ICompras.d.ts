@@ -70,6 +70,7 @@ interface Detalle_Orden {
     cantidad: number;
     precio_compra: number;
     id_iva: number;
+    cotizacion: number;
     descuento: number;
     descuento_porcentaje: number;
     id_estado: number;

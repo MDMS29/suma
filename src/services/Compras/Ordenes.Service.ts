@@ -3,20 +3,20 @@ import { EstadosTablas } from "../../helpers/constants";
 import QueryOrdenes from "../../querys/Compras/QueryOrdenes";
 
 export class OrdenesService {
-    private _Query_Ordenes: QueryOrdenes;
+    _Query_Ordenes: QueryOrdenes;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Ordenes = new QueryOrdenes();
     }
 
-    public async Obtener_Ordenes(tipo: string, empresa: string, estado: string) {
+    async Obtener_Ordenes(tipo: string, empresa: string, estado: string) {
         try {
             const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(tipo, empresa, estado)
-            if (respuesta?.rows?.length <= 0) {
-                return { error: true, message: 'No se han encontrado las ordenes' } //!ERROR
+            if (respuesta?.length <= 0) {
+                return { error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'No se han encontrado ordenes activas' : 'No se han encontrado ordenes inactivas' } //!ERROR
             }
-            return respuesta.rows
+            return respuesta
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cargar las ordenes' } //!ERROR
@@ -62,8 +62,6 @@ export class OrdenesService {
                 console.log(error)
                 return
             }
-
-            return numero_orden
         } catch (error) {
             console.log(error)
             return { error: true, message: `Error al insertar la orden ${req_body.orden}` } //!ERROR
@@ -93,18 +91,25 @@ export class OrdenesService {
 
     public async Editar_Orden(req_body: Encabezado_Orden, id_orden: number) {
         try {
-
             const numero_orden = await this._Query_Ordenes.Buscar_Numero_Orden(req_body)
             if (numero_orden && numero_orden?.length > 0 && req_body.id_orden === numero_orden[0].id_orden) {
                 return { error: true, message: `Ya existe el numero de orden ${req_body.orden}` } //!ERROR
             }
 
-            //SUMAR LOS PREICOS DE COMPRA DE CADA DETALLE DE LA ORDEN
+            //SUMAR LOS PRECiOS DE COMPRA DE CADA DETALLE DE LA ORDEN
             let total_orden = 0
             let detalle: Detalle_Orden
             for (detalle of req_body.detalles_orden) {
-                total_orden = detalle.precio_compra + total_orden
+                if (detalle.id_estado === EstadosTablas.ESTADO_ACTIVO) {
+                    // SUMAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA ACTIVO
+                    total_orden = detalle.precio_compra + total_orden
+                }
+                if (total_orden !== 0 && detalle.id_estado === EstadosTablas.ESTADO_INACTIVO) {
+                    // RESTAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA INACTIVO
+                    total_orden = detalle.precio_compra - total_orden
+                }
             }
+
 
             try {
                 //INSERTAR ENCABEZADO DE LA ORDEN
@@ -132,8 +137,6 @@ export class OrdenesService {
                 console.log(error)
                 return
             }
-
-            return numero_orden
         } catch (error) {
             console.log(error)
             return { error: true, message: `Error al insertar la orden ${req_body.orden}` } //!ERROR
