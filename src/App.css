@@ -1,0 +1,187 @@
+/* select awesome */
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css");
+
+/* estilos PrimeReact */
+@import 'primereact/resources/themes/saga-blue/theme.css';
+@import 'primereact/resources/primereact.min.css';
+@import 'primeicons/primeicons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: Cocogoose-light;
+    src: url("./assets/fonts/Cocogoose/Cocogoose Light.ttf");
+}
+
+@font-face {
+    font-family: Sans-Semibold;
+    src: url("./assets/fonts/OpenSans/OpenSans SemiBold.ttf");
+}
+
+@font-face {
+    font-family: Sans-Medium;
+    src: url("./assets/fonts/OpenSans/OpenSans Medium.ttf");
+}
+
+:root {
+    --primaryYellow: #f2c302;
+    --secundaryYellow: #F0C81F
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+#error {
+    font-family: Cocogoose-light;
+}
+
+form>div>input,
+form>input {
+    font-family: Sans-Medium;
+}
+
+/* --------------------------------- Mensajes Toast --------------------------------- */
+
+.p-toast-message-content {
+    display: flex;
+    align-items: center;
+}
+
+.p-toast-detail {
+    margin-top: 0;
+}
+
+.p-toast-message-success {
+    background-color: #E9F6F0;
+    border: 2px solid #0FAB0B;
+    border-radius: 10px;
+    font-weight: 500
+}
+
+.p-toast-message-info {
+    background-color: #c8e7f5;
+    border: 2px solid #00aeff;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.p-toast-message-error {
+    background-color: #f4cccbac;
+    border: 2px solid rgba(255, 0, 0, 0.453);
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* --------------------------------- Estilos de la Datatable --------------------------------- */
+
+/* Estilos personalizados para la DataTable */
+.custom-datatable .p-datatable-tbody td,
+.custom-datatable .p-datatable-tbody th,
+.custom-datatable .p-datatable-thead tr {
+    border: 1px solid #e0e0e0;
+    /* Cambia el color y grosor del borde según tus preferencias */
+}
+
+.custom-datatable .p-datatable-tbody tr:hover {
+    background-color: #f0f0f0;
+    /* Cambia el color de fondo en hover según tus preferencias */
+}
+
+
+/* Estilo para la línea entre los pasos */
+.p-steps-item:not(:last-child):before {
+    content: '' !important;
+    position: absolute !important;
+    width: 2px !important;
+    /* Ancho de la línea entre pasos */
+    height: 20px !important;
+    /* Altura de la línea entre pasos */
+    background-color: yellow !important;
+    /* Color de la línea entre pasos */
+    top: calc(50% - 10px) !important;
+    /* Posiciona la línea en el centro verticalmente */
+    left: 50%;
+    transform: translate(-50%, 0) !important;
+    z-index: -1 !important;
+    /* Coloca la línea detrás de los círculos de los pasos */
+}
+
+.p-steps-number {
+    background-color: yellow;
+}
+
+
+/* ------ LOADER ------ */
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #000000;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #000000 transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ------ Select ------ */
+select {
+    font-family: 'FontAwesome', Verdana;
+}
+
+/* ------ file ------ */
+.custom-file-input {
+    visibility: hidden;
+    position: absolute;
+}
+
+.custom-file-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secundaryYellow);
+    border: 2px solid var(--secundaryYellow);
+    border-radius: 5px;
+    font-weight: 500;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.custom-file-label:hover {
+    background-color: var(--primaryYellow);
+}
