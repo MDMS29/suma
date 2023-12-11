@@ -1,0 +1,78 @@
+                                                                  DISEÑO MODAL
+
+<Dialog  visible={modalEliminar} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} modal onHide={esconderModalEliminar} footer={deleteProductDialogFooter}>
+            <div className="flex flex-col">
+                <div className="flex justify-center pb-4">
+                    <i className="pi pi-exclamation-triangle" style={{ fontSize: '5rem' }} />
+                </div>
+                <p className='text-2xl text-center'>
+                    {eliminarUsuario.estado_usuario == "ACTIVO" ? "¿Estás seguro de que deseas inactivar este usuario?" : "¿Deseas restaurar este usuario?"}
+                </p>
+            </div>
+            <div className="flex justify-center pt-4">
+                <Button label="Cancelar" onClick={esconderModalEliminar} className='px-4 p-2 mx-2 rounded-md font-semibold 
+            bg-neutralGray hover:bg-hoverGray transition duration-300 ease-in-out' />
+                <Button label="Eliminar" onClick={clickEliminarUsuario} className="px-4 p-2 mx-2 rounded-md font-semibold
+            bg-secundaryYellow hover:bg-primaryYellow transition duration-300 ease-in-out" />
+            </div>
+        </Dialog>
+
+---------------------------------SELECT CON DROPDOWN Y NORMAL---------------------------------------------------------------------------------------------------------------------
+<div className="flex">
+                  <div>icon</div>
+                  <select filter className="border-1 h-10 rounded-md px-2 py-2 border-gray-300">
+                    <option disabled>-- Selecione un icono --</option>
+                    {Array.isArray(iconos) && iconos.length > 0 ? (
+                      iconos.map((e) => (
+                        <option key={e.name} >
+                          {e.description}, {e.link}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="">No hay datos disponibles</option>
+                    )}
+                  </select>
+                </div>
+
+{/* <div className="flex items-center gap-2">
+                <div className="card flex justify-content-center w-full">
+                  <Dropdown
+                    value={ModulosAgg.icono}
+                    onChange={(e) => handleChangeModulos(e)}
+                    options={
+                      Array.isArray(iconos) && iconos.length > 0
+                        ? iconos.map((e) => ({
+                          label: e.description,
+                          value: e.name,
+                        }))
+                        : [{ label: "No hay datos disponibles", value: "" }]
+                    }
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccione un icono"
+                    filter
+                    name="icono"
+                    className="w-full md:w-14rem h-10 rounded-lg"
+                  />
+                </div>
+                <i className={`pi ${ModulosAgg?.icono} mx-3`}></i>
+              </div> */}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+return (
+            <div className="flex justify-around">
+                <button
+                    onChange={() =>
+                        btn_producto(producto.id_producto, producto.id_producto)
+                    }
+                    className={btn_producto_seleccionado(producto) && 'text-green-500'}>
+                    {check_Icono}
+                </button>
+                <button
+                    onChange={() =>
+                        btn_producto(producto.id_producto, producto.id_producto)
+                    }
+                    className={btn_producto_seleccionado(producto) && 'text-red-500'}>
+                    {x_Icono}
+                </button>
+            </div>
+        )
