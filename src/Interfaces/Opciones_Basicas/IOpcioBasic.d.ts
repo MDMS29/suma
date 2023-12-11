@@ -63,3 +63,26 @@ export interface Producto_Empresa {
     ficha: boolean;
     certificado: boolean;
 };
+
+
+export interface Iva {
+    id_iva?: number;
+    descripcion: string;
+    porcentaje: number;
+    id_empresa: number;
+}
+
+export interface Tipo_Producto_Orden{
+    id_tipo_producto_orden:number;
+    id_tipo_orden?:number;
+    id_tipo_producto: number;
+    id_estado:number;
+}
+
+export interface Tipo_Orden {
+    id_tipo_orden?: number;
+    id_empresa: number;
+    tipo_orden: string;
+    consecutivo: number;
+    tipos_productos: Tipo_Producto_Orden[]
+}

@@ -113,6 +113,7 @@ export const CentroEmpresaSchema = z.object({
     })
 })
 
+// VALIDACION PARA LOS VALORES DE LOS PRODUCTOS DE LA EMPRESA
 export const ProductosSchema = z.object({
     id_empresa: z.number({
         invalid_type_error: 'El tipo de dato es invalido empresa',
@@ -172,5 +173,64 @@ export const ProductosSchema = z.object({
     certificado: z.boolean({
         invalid_type_error: 'El tipo de dato es invalido certificado',
         required_error: 'Seleccione si el producto requiere un certificado'
+    })
+})
+
+// VALIDACION PARA LOS IVAS DE LA EMPRESA
+export const IvaSchema = z.object({
+    id_iva: z.number().int().optional(),
+    descripcion: z.string({
+        invalid_type_error: 'El tipo de dato para el nombre es invalido',
+        required_error: 'El nombre del iva es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }).min(5, {
+        message: "El nombre del iva debe tener al menos 5 caracteres"
+    }),
+    porcentaje: z.number({
+        invalid_type_error: 'El tipo de dato para el porcentaje es invalida',
+        required_error: 'El porcentaje del iva es requerido'
+    }),
+    id_empresa: z.number({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+})
+
+// VALIDACION PARA LOS TIPO DE ORDENES DE LA EMPRESA
+export const TipoOrdenSchema = z.object({
+    id_tipo_orden: z.number().int().optional(),
+    tipo_orden: z.string({
+        invalid_type_error: 'El tipo de dato para el nombre es invalido',
+        required_error: 'El nombre del tipo de orden es requerida'
+    }).regex(/^[a-zA-Z0-9\s]*$/, {
+        message: 'No se permiten caracteres especiales'
+    }).min(5, {
+        message: "El nombre del tipo de orden debe tener al menos 5 caracteres"
+    }),
+    consecutivo: z.number({
+        invalid_type_error: 'El tipo de dato para el porcentaje es invalida',
+        required_error: 'El porcentaje del iva es requerido'
+    }),
+    id_empresa: z.number({
+        invalid_type_error: 'El tipo de dato de la empresa es invalido',
+        required_error: 'La empresa es requerida'
+    }),
+    tipos_productos : z.object({
+        id_tipo_producto_orden: z.number().optional(),
+        id_tipo_orden: z.number({
+            invalid_type_error: 'El tipo de dato para el tipo de orden es invalido',
+            required_error: 'El tipo de orden es requerida'
+        }).optional(),
+        id_tipo_producto: z.number({
+            invalid_type_error: 'El tipo de dato para el tipo de producto es invalido',
+            required_error: 'El tipo de producto es requerida'
+        }),
+        id_estado: z.number({
+            invalid_type_error: 'El tipo de dato del estado tipo producto es invalido',
+            required_error: 'El estado del tipo de producto es requerido'
+        }),
+    }).array().min(1,{
+        message: "Debe agregar al menos un tipo de producto"
     })
 })

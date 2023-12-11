@@ -7,6 +7,7 @@ import FamiliaProductoController from "../../controller/Opciones_Basicas/Familia
 import ProcesosEmpresaController from "../../controller/Opciones_Basicas/ProcesosEmpresaController";
 import CentroCostoEmpresa from "../../controller/Opciones_Basicas/CentroCostoEmpresaController";
 import ParametrosController from "../../controller/Opciones_Basicas/Parametrizadas/ParametrosController";
+import _OrdenesController from "../../controller/Compras/OrdenesController";
 
 export const _OpcionesBasicasRouter = Router()
 
@@ -18,6 +19,7 @@ const _Familia_Producto_Controller = new FamiliaProductoController()
 const _Proceso_Empresa_Controller = new ProcesosEmpresaController()
 const _Centro_Empresa_Controller = new CentroCostoEmpresa()
 const _Parametros_Controller = new ParametrosController()
+const OrdenesController = new _OrdenesController()
 
 
 
@@ -87,12 +89,26 @@ _OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
     .get(_Autorizacion, _Centro_Empresa_Controller.Buscar_Centro_Costo) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
     .patch(_Autorizacion, _Centro_Empresa_Controller.Editar_Centro_Costo) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
     .delete(_Autorizacion, _Centro_Empresa_Controller.Cambiar_Estado_Centro) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
+    
+_OpcionesBasicasRouter.route('/tipos-ordenes')
+    .get(_Autorizacion, OrdenesController.Obtener_Tipos_Ordenes) //OBTENER TODAS LOS TIPOS DE ORDENES
+    .post(_Autorizacion, OrdenesController.Insertar_Tipo_Orden) //INSERTAR UN TIPO DE ORDEN
 
+_OpcionesBasicasRouter.route('/tipos-ordenes/:id_tipo_orden')
+    .get(_Autorizacion, OrdenesController.Buscar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
+    .patch(_Autorizacion, OrdenesController.Editar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
 
 _OpcionesBasicasRouter.route('/tipos-documento')
-    .get(_Autorizacion, _Parametros_Controller.Obtener_Tipos_Documento) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
+    .get(_Autorizacion, _Parametros_Controller.Obtener_Tipos_Documento) //OBTENER TODOS LOS TIPOS DE DOCUMENTOS
 
 _OpcionesBasicasRouter.route('/formas-pago')
-    .get(_Autorizacion, _Parametros_Controller.Obtener_Formas_Pago)
+    .get(_Autorizacion, _Parametros_Controller.Obtener_Formas_Pago) //OBTENER TODOS LAS FORMAS DE PAGO
 
+_OpcionesBasicasRouter.route('/ivas')
+    .get(_Autorizacion, _Parametros_Controller.Obtener_Ivas) //OBTENER TODOS LOS IVAS
+    .post(_Autorizacion, _Parametros_Controller.Insertar_Iva) //INSERTAR UN IVA
+
+_OpcionesBasicasRouter.route('/ivas/:iva_id')
+    .get(_Autorizacion, _Parametros_Controller.Buscar_Iva) //BUSCAR UN IVA POR SU ID
+    .patch(_Autorizacion, _Parametros_Controller.Editar_Iva) //EDITAR UN IVA POR SU ID
 export default _OpcionesBasicasRouter
