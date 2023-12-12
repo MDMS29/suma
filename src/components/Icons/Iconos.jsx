@@ -1,7 +1,7 @@
- import RolIcono from "../../assets/images/rol.png";
- import NoReqIcono from "../../assets/images/NoHay.png";
- import ProcesoIcono from "../../assets/images/proceso.png";
- import ProductoIcono from "../../assets/images/caja.png";
+import RolIcono from "../../assets/images/rol.png";
+import NoReqIcono from "../../assets/images/NoHay.png";
+import ProcesoIcono from "../../assets/images/proceso.png";
+import ProductoIcono from "../../assets/images/caja.png";
 export const Key_Icono = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +200,9 @@ export const Centro_Icono = (
 
 export const Add_Icono = <i className="pi pi-plus mx-2 font-medium"></i>;
 
-export const Historial_Icono = <i className="pi pi-history text-2xl mx-2 font-medium"></i>;
+export const Historial_Icono = (
+  <i className="pi pi-history text-2xl mx-2 font-medium"></i>
+);
 
 export const Filter_Icono = <i className="pi pi-filter"></i>;
 
@@ -281,6 +283,45 @@ export const Proveedores_Icon = (
   </svg>
 );
 
-export const Subir_Archi_Icon = (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>)
+export const Subir_Archi_Icon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="lucide lucide-download"
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" x2="12" y1="15" y2="3" />
+  </svg>
+);
 
 // export const Nuevo_menu = ( <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folders"><path d="M20 17a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3.9a2 2 0 0 1-1.69-.9l-.81-1.2a2 2 0 0 0-1.67-.9H8a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2Z"/><path d="M2 8v11a2 2 0 0 0 2 2h14"/></svg>)
+
+export const Tipo_Orden = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="35"
+    height="35"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="lucide lucide-bird"
+  >
+    <path d="M16 7h.01" />
+    <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20" />
+    <path d="m20 7 2 .5-2 .5" />
+    <path d="M10 18v3" />
+    <path d="M14 17.75V21" />
+    <path d="M7 18a6 6 0 0 0 3.84-10.61" />
+  </svg>
+);
