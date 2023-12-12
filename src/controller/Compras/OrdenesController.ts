@@ -238,6 +238,9 @@ export default class _OrdenesController {
         const { usuario } = req
         const { id_tipo_orden } = req.params
 
+
+        console.log('---  REQBODY  --- \n',req.body, '---  fin REQBODY  --- \n')
+
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }

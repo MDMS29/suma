@@ -89,7 +89,9 @@ _OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
     .get(_Autorizacion, _Centro_Empresa_Controller.Buscar_Centro_Costo) //BUSCAR UNA CENTRO DE PROCESO DE LA EMPRESA
     .patch(_Autorizacion, _Centro_Empresa_Controller.Editar_Centro_Costo) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
     .delete(_Autorizacion, _Centro_Empresa_Controller.Cambiar_Estado_Centro) //EDITAR UN CENTRO DE PROCESO DE LA EMPRESA
-    
+
+
+// TIPOS DE ORDENES DE LA EMPRESA
 _OpcionesBasicasRouter.route('/tipos-ordenes')
     .get(_Autorizacion, OrdenesController.Obtener_Tipos_Ordenes) //OBTENER TODAS LOS TIPOS DE ORDENES
     .post(_Autorizacion, OrdenesController.Insertar_Tipo_Orden) //INSERTAR UN TIPO DE ORDEN
@@ -98,12 +100,18 @@ _OpcionesBasicasRouter.route('/tipos-ordenes/:id_tipo_orden')
     .get(_Autorizacion, OrdenesController.Buscar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
     .patch(_Autorizacion, OrdenesController.Editar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
 
+
+// TIPOS DE DOCUMENTOS
 _OpcionesBasicasRouter.route('/tipos-documento')
     .get(_Autorizacion, _Parametros_Controller.Obtener_Tipos_Documento) //OBTENER TODOS LOS TIPOS DE DOCUMENTOS
 
+
+// FORMAS DE PAGO
 _OpcionesBasicasRouter.route('/formas-pago')
     .get(_Autorizacion, _Parametros_Controller.Obtener_Formas_Pago) //OBTENER TODOS LAS FORMAS DE PAGO
 
+    
+// IVAS QUE MANEJE LA EMPRESA
 _OpcionesBasicasRouter.route('/ivas')
     .get(_Autorizacion, _Parametros_Controller.Obtener_Ivas) //OBTENER TODOS LOS IVAS
     .post(_Autorizacion, _Parametros_Controller.Insertar_Iva) //INSERTAR UN IVA

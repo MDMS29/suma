@@ -72,7 +72,6 @@ interface Detalle_Orden {
     id_iva: number;
     cotizacion: number;
     descuento: number;
-    descuento_porcentaje: number;
     id_estado: number;
   }
   
@@ -84,7 +83,6 @@ interface Detalle_Orden {
     orden: string;
     fecha_orden: Date;
     id_forma_pago: number;
-    id_centro_costo: number;
     lugar_entrega: string;
     observaciones?: string;
     cotizacion: string;

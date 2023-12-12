@@ -201,7 +201,7 @@ export const IvaSchema = z.object({
 export const TipoOrdenSchema = z.object({
     id_tipo_orden: z.number().int().optional(),
     tipo_orden: z.string({
-        invalid_type_error: 'El tipo de dato para el nombre es invalido',
+        invalid_type_error: 'El tipo de dato para el nombre de tipo orden es invalido',
         required_error: 'El nombre del tipo de orden es requerida'
     }).regex(/^[a-zA-Z0-9\s]*$/, {
         message: 'No se permiten caracteres especiales'
@@ -209,7 +209,7 @@ export const TipoOrdenSchema = z.object({
         message: "El nombre del tipo de orden debe tener al menos 5 caracteres"
     }),
     consecutivo: z.number({
-        invalid_type_error: 'El tipo de dato para el porcentaje es invalida',
+        invalid_type_error: 'El tipo de dato para el consecutivo es invalido',
         required_error: 'El porcentaje del iva es requerido'
     }),
     id_empresa: z.number({

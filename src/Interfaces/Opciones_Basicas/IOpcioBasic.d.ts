@@ -83,6 +83,6 @@ export interface Tipo_Orden {
     id_tipo_orden?: number;
     id_empresa: number;
     tipo_orden: string;
-    consecutivo: number;
+    consecutivo: number | string;
     tipos_productos: Tipo_Producto_Orden[]
 }

@@ -162,10 +162,6 @@ export const OrdenesSchema = z.object({
         invalid_type_error: "Tipo de dato para la forma de pago es invalida",
         required_error: "Seleccione una forma de pago"
     }),
-    id_centro_costo: z.number({
-        invalid_type_error: "Tipo de dato para el centro de costo invalido",
-        required_error: "Seleccione un centro de costo"
-    }),
     lugar_entrega: z.string({
         invalid_type_error: "Tipo de dato para el lugar de la entrega es invalida",
         required_error: "Ingrese el lugar de la entrega"
@@ -226,12 +222,6 @@ export const OrdenesSchema = z.object({
             required_error: "Se requiero un valor para el descuento"
         }).min(1, {
             message: "Ingrese precio mayor a 100"
-        }),
-        descuento_porcentaje: z.number({
-            invalid_type_error: "Tipo de dato para el procentaje del descuento es invalido",
-            required_error: "Se requiero un valor para el porcentaje del descuento"
-        }).positive({
-            message : "El descuento del porcentaje debe ser mayor a 0"
         }),
         id_estado: z.number({
             invalid_type_error: "Tipo de dato para el estado es invalido",

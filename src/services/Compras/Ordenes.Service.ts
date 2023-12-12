@@ -198,6 +198,10 @@ export class OrdenesService {
                     }
                 }
 
+                let numeroOrden = tipo_orden[0].id_tipo_orden + String(+req_body.consecutivo+1).padStart(Math.max(0, 6 - String(tipo_orden[0].id_tipo_orden).length), '0');
+
+                req_body.consecutivo = numeroOrden.slice(0, 6);
+
                 return req_body
 
             } catch (error) {
@@ -249,8 +253,10 @@ export class OrdenesService {
                 for (let tipo_producto of req_body.tipos_productos) {
 
                     const existe_tipo_producto = await this._Query_Ordenes.Buscar_Tipo_Producto_Orden(tipo_producto, id_tipo_orden)
+
                     if (existe_tipo_producto && existe_tipo_producto?.length > 0) {
                         // EDITAR
+                        tipo_producto.id_tipo_producto_orden = existe_tipo_producto[0].id_tipo_producto_orden
                         const tipo_producto_editado = await this._Query_Ordenes.Editar_Tipo_Producto_Orden(tipo_producto, id_tipo_orden)
                         if (tipo_producto_editado != 1) {
                             return { error: true, message: 'Error al editar el tipo de producto' } //!ERROR
@@ -265,21 +271,16 @@ export class OrdenesService {
 
                     }
 
-                    // PREVENIR QUE EL TIPO DE ORDEN NO QUEDE SIN TIPOS DE PRODUCTOS
-                    const tipos_productos_existentes = await this._Query_Ordenes.Obtener_Tipo_Producto_Orden(req_body)
-                    if (tipos_productos_existentes && tipos_productos_existentes?.length <= 0) {
-                        // ACTIVAR EL TIPO DE PRODUCTO INACTIVADO
-                        tipo_producto.id_estado = 1
-                        const tipo_producto_editado = await this._Query_Ordenes.Editar_Tipo_Producto_Orden(tipo_producto, id_tipo_orden)
-                        if (tipo_producto_editado != 1) {
-                            return { error: true, message: 'Error al editar el tipo de producto' } //!ERROR
-                        }
-                    }
+                    
                 }
                 const tipo_orden_editada: any = await this._Query_Ordenes.Buscar_Tipo_ID(id_tipo_orden)
                 if (tipo_orden_editada?.length <= 0) {
                     return { error: true, message: 'No se han encontrado el tipo de orden' } //!ERROR
                 }
+
+                let numeroOrden = id_tipo_orden + String(+req_body.consecutivo+1).padStart(Math.max(0, 6 - String(id_tipo_orden).length), '0');
+                tipo_orden_editada[0].consecutivo = numeroOrden.slice(0, 6);
+
                 return tipo_orden_editada[0]
 
             } catch (error) {
