@@ -29,6 +29,7 @@ const Procesos = () => {
     setPermisosProcesos,
     permisosProcesos,
   } = useProcesos();
+
   const { authPermisos, Permisos_DB } = useAuth();
 
   const [visibleColumns, setVisibleColumns] = useState(columns);
@@ -56,7 +57,8 @@ const Procesos = () => {
 
     const items_filtrados = dataProcesos.filter((item) => {
       return (
-        item.codigo.includes(value), item.proceso.toLowerCase().includes(value)
+        item.codigo.toLowerCase().includes(value)||
+        item.proceso.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);

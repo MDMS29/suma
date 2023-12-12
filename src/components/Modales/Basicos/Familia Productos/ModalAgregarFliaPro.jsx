@@ -87,7 +87,6 @@ function ModalAgregarFliaPro({ visible, onClose }) {
       </Button>
     </div>
   );
-  console.log(FliaProAgg.referencia)
 
   return (
     <Dialog
