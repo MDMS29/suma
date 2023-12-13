@@ -42,15 +42,14 @@ const ModalAgregarTipoOrden = ({ visible, onClose }) => {
   };
 
   const btn_guardar = async () => {
-    const errors = {};
 
-    const guardandoOEditando = tipoOrdenAgg.id_tipo_orden !== 0;
-
-    // Validar que el campo "Tipo de Orden" no esté vacío solo al guardar o editar
-    if (guardandoOEditando && !tipoOrdenAgg.tipo_orden.trim()) {
-      errors.tipo_orden = "El campo 'Tipo de Orden' no puede estar vacío";
-      // Puedes mostrar un mensaje de error al usuario si es necesario
-      return;
+    if (tipoProdporOrden.length === 0 || tipoProdporOrden.filter(tipoProd => tipoProd?.id_estado === 1).length === 0) {
+      setAlerta({
+        error: TIPOS_ALERTAS.ERROR,
+        show: true,
+        message: "Debes seleccionar por lo menos un tipo de producto",
+      });
+      return
     }
     try {
       const formData = {
@@ -180,15 +179,8 @@ const ModalAgregarTipoOrden = ({ visible, onClose }) => {
               name="tipo_orden"
               value={tipoOrdenAgg.tipo_orden}
               onChange={(e) => cambiar_tipos_produ(e)}
-              className={`border-1 h-10 rounded-md px-3 py-2 ${
-                errors.tipo_orden ? "border-red-500" : "border-gray-300"
-              }`}
+              className="border-1 h-10 rounded-md px-3 py-2 border-gray-300"
             />
-            {errors.tipo_orden && (
-              <div className="text-red-600 text-xs w-44">
-                {errors.tipo_orden}
-              </div>
-            )}
           </div>
           <div className="flex flex-grow flex-col">
             <label className="text-gray-600 pb-2 font-semibold">
