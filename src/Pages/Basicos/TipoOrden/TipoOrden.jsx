@@ -55,16 +55,17 @@ const TipoOrden = () => {
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-
-    const items_filtrados = dataCentros.filter((item) => {
+  
+    const items_filtrados = dataTipoOrden.filter((item) => {
       return (
-        item.id_tipo_orden.toLowerCase().includes(value) ||
+        String(item.id_tipo_orden).toLowerCase().includes(value) ||
         item.tipo_orden.toLowerCase().includes(value) ||
         item.consecutivo.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
   };
+  
 
   useEffect(() => {
     setFilteredData(dataTipoOrden);
