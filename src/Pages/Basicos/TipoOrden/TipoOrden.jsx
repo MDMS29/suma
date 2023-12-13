@@ -60,7 +60,7 @@ const TipoOrden = () => {
       return (
         String(item.id_tipo_orden).toLowerCase().includes(value) ||
         item.tipo_orden.toLowerCase().includes(value) ||
-        item.consecutivo.toLowerCase().includes(value)
+        String(item.consecutivo).toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
