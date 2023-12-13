@@ -207,13 +207,9 @@ export const Centro_Icono = (
 
 export const Add_Icono = <i className="pi pi-plus mx-2 font-medium"></i>;
 
-<<<<<<< HEAD
-export const Historial_Icono = <i className="pi pi-history text-2xl mx-2 font-medium"></i>;
-=======
 export const Historial_Icono = (
   <i className="pi pi-history text-2xl mx-2 font-medium"></i>
 );
->>>>>>> feat-fte/tiposdeordenes
 
 export const Filter_Icono = <i className="pi pi-filter"></i>;
 
