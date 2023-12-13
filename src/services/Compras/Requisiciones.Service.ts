@@ -7,6 +7,13 @@ import { transporter } from "../../config/mailer";
 import { EstadosTablas } from "../../helpers/constants";
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 
+interface productos_pendiente {
+    id_requisicion: number,
+    requisicion: string,
+    nombre_producto: string,
+    id_producto: number,
+    productos_pendientes: number
+}
 
 
 export class RequisicionesService {
@@ -102,7 +109,7 @@ export class RequisicionesService {
 
             // EN ESTE ESPACIO DE LINEA SE EJECUTA UN TRIGGER PARA AUMENTAR EL CONSECUTIVO DEL CENTRO UTILIZADO
 
-            const nueva_requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(requisicion_enc[0].id_requisicion)
+            const nueva_requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(requisicion_enc[0].id_requisicion, false)
             if (!nueva_requisicion) {
                 return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
             }
@@ -138,12 +145,36 @@ export class RequisicionesService {
         }
     }
 
-    public async Buscar_Requisicion(id_requisicion: number): Promise<any> {
+    public async Buscar_Requisicion(id_requisicion: number, tipo_consulta: boolean): Promise<any> {
         try {
-            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            let requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, tipo_consulta)
             if (!requisicion) {
                 return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
             }
+
+            if (!Array.isArray(requisicion)) {
+                return requisicion
+            }
+
+            let reducidos:any = []
+
+            requisicion.reduce((acc: productos_pendiente, cv: productos_pendiente) => {
+                console.log(acc)
+                reducidos.push({
+                    id_producto: cv.id_producto,
+                    productos_pendientes: cv.productos_pendientes + cv.productos_pendientes
+                })
+            }, {
+                id_producto: "",
+                productos_pendientes: 0
+            })
+
+            if (tipo_consulta) {
+                console.log(reducidos)
+                requisicion[0].productos_pendientes = requisicion.reduce((acc: number, cv: { productos_pendientes: number }) => acc + cv.productos_pendientes, 0);
+            }
+
+
             return requisicion
         } catch (error) {
             console.log(error)
@@ -153,7 +184,7 @@ export class RequisicionesService {
 
     public async Editar_Requisicion(id_requisicion: number, requisicion_request: Requisicion_Enc, usuario_modificacion: string) {
         try {
-            const respuesta: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            const respuesta: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, false)
 
             if (!respuesta) {
                 return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
@@ -195,7 +226,7 @@ export class RequisicionesService {
 
     public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
         try {
-            const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, false)
             if (requisicion_filtrada?.length <= 0) {
                 return { error: true, message: 'No se ha encontrado esta la requisicion' } //!ERROR
             }
@@ -214,7 +245,7 @@ export class RequisicionesService {
 
     public async Generar_PDF_Requisicion(id_requisicion: number) {
         try {
-            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, false)
             if (!requisicion) {
                 return { error: true, message: "No se ha encontrado la requisicion" }
             }
@@ -376,7 +407,7 @@ export class RequisicionesService {
                     doc.text(`${detalle.cantidad} `, 115, Y);
                     doc.text(`${detalle.unidad} `, 129, Y);
                     // doc.text(`${detalle.noOrden} `, 129, Y);
-                    
+
                     doc.text(`${detalle.critico ? 'X' : ''} `, 275.5, Y);
                     doc.text(`${detalle.certificado ? 'X' : ''} `, 286.5, Y);
 
@@ -422,7 +453,7 @@ export class RequisicionesService {
                         }
                     }
 
-                    
+
                     doc.setFontSize(12)
 
                     doc.line(5, LinesH, 5, Y) // (x1, y1, x2, y2)
@@ -605,7 +636,7 @@ export class RequisicionesService {
     public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: [{ id_detalle: number, id_estado: number }], usuario: any) {
         const estados_det_requi: any = { '3': true, '4': true, '5': true }
         try {
-            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion)
+            const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, false)
             if (!requisicion.id_requisicion) {
                 return { error: true, message: 'No se ha encontrado esta requisicion' }
             }

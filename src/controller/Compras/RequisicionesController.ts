@@ -115,6 +115,7 @@ export default class RequisicionesController {
     public async Buscar_Requisicion(req: Request, res: Response) {
         const { usuario } = req
         const { id_requisicion } = req.params
+
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
@@ -123,10 +124,11 @@ export default class RequisicionesController {
         }
         try {
             const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Buscar_Requisicion(+id_requisicion)
+            const respuesta = await requisiciones_service.Buscar_Requisicion(+id_requisicion, req.url.includes('detalles/pendientes'))
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
+
             return res.json(respuesta) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
@@ -159,7 +161,7 @@ export default class RequisicionesController {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await requisiciones_service.Buscar_Requisicion(+id_requisicion)
+            const response = await requisiciones_service.Buscar_Requisicion(+id_requisicion, false)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
             }

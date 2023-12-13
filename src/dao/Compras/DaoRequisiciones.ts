@@ -1,6 +1,8 @@
 export const _FA_obtener_requisicion_enc = 'public.obtener_requisiciones_empresa'
 export const _FA_obtener_requisicion_filtro = 'public.obtener_requisiciones_empresa_filtro'
 
+export const _FA_obtener_productos_pendientes = 'public.fnc_obtener_productos_pendientes'
+
 export const _buscar_detalle_requisicion = `
     SELECT 
         trd.id_detalle, trd.id_producto, tp.referencia, tp.descripcion as nombre_producto, tp.id_unidad, tu.unidad,

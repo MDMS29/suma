@@ -5,7 +5,7 @@ export const Generar_JWT = (id: number) => {
     if (!process.env.JWT_SECRET) {
         throw new Error('La variable de entorno JWT_SECRET no está configurada.');
     }
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '2d' });
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '8h' });
 
 }
 

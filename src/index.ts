@@ -27,7 +27,7 @@ app.use('/suma/api/opciones-basicas', _routes._OpcionesBasicasRouter)
 app.use('/suma/api/opciones-basicas/productos-empresa', _routes._ProductosRouter)
 
 //DEFINIR RUTAS PARA LAS REQUISICIONES
-app.use('/suma/api/compras', _routes._RequisicionesRouter)
+app.use('/suma/api/compras/requisiciones', _routes._RequisicionesRouter)
 
 //DEFINIR RUTAS PARA LOS PROVEEDORES
 app.use('/suma/api/compras/proveedores', _routes._ProveedoresRouter)

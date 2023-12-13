@@ -1,5 +1,6 @@
 import { Database, _DB } from "../../config/db";
 import {
+    _FA_obtener_productos_pendientes,
     _FA_obtener_requisicion_enc,
 
     _FA_obtener_requisicion_filtro,
@@ -52,7 +53,7 @@ export default class QueryRequisiciones extends Database {
         const client = await this.pool.connect()
         try {
             //FILTRO DE LOS DATOS ATRAVES DE --> estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto
-            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, 0, valor, 0, 0, null, null]); 
+            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, 0, valor, 0, 0, null, null]);
             return result
         } catch (error) {
             console.log(error)
@@ -136,20 +137,29 @@ export default class QueryRequisiciones extends Database {
         }
     }
 
-    public async Buscar_Requisicion_ID(id_requisicion: number) {
+    public async Buscar_Requisicion_ID(id_requisicion: number, tipo_consulta: boolean) {
         const client = await this.pool.connect()
 
         try {
-            let result: any = await client.query(_buscar_requisicion_id, [id_requisicion]);
-            if (result.rows.length > 0) {
-                let detalle = await client.query(_buscar_detalle_requisicion, [result.rows[0].id_requisicion])
-                if (!detalle.rows) {
-                    return
+
+            if (tipo_consulta) {
+                let result: any = await _DB.func(_FA_obtener_productos_pendientes, [id_requisicion]);
+                if (result.length == 0) {
+                    return { error: false, message: "No hay productos pendientes" }
                 }
-                result.rows[0].det_requisicion = detalle.rows
+                return result;
+            } else {
+                let result: any = await client.query(_buscar_requisicion_id, [id_requisicion]);
+                if (result.rows.length > 0) {
+                    let detalle = await client.query(_buscar_detalle_requisicion, [result.rows[0].id_requisicion])
+                    if (!detalle.rows) {
+                        return
+                    }
+                    result.rows[0].det_requisicion = detalle.rows
+                    return result.rows[0]
+                }
             }
 
-            return result.rows[0]
         } catch (error) {
             console.log(error)
             return

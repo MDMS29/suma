@@ -18,4 +18,6 @@ _OrdenesRouter.route('/:id_orden')
     .patch(_Autorizacion, OrdenesController.Editar_Orden) //EDITAR UNA ORDEN POR SU ID
     .delete(_Autorizacion, OrdenesController.Eliminar_Restaurar_Orden) //ELIMINAR O RESTAURAR UNA ORDEN POR SU ID
 
+
+
 export default _OrdenesRouter
