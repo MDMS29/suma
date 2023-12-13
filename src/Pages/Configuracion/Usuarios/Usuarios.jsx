@@ -7,6 +7,7 @@ import {
   Trash_Icono,
   Edit_Icono,
   Add_Icono,
+  Perfil_Icono
 } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
@@ -191,10 +192,11 @@ const Usuarios = () => {
           }
         />
       )}
-
-      <div className="flex justify-center gap-x-4 m-2 p-3">
-        <h1 className="text-3xl">Usuarios</h1>
-        <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+      <div className="flex  justify-center gap-x-4 m-2 p-3">
+        <h1 className="text-3xl">Usuarios Inactivos</h1>
+        <div className="max-sm:hidden">
+          {Perfil_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosUsuario.filter(

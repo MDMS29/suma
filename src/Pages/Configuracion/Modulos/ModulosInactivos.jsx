@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
+import { Restore_Icono, Return_Icono, Modulo_Icono } from "../../../components/Icons/Iconos";
 import { MultiSelect } from "primereact/multiselect";
-import { Toast } from "primereact/toast";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -87,6 +86,9 @@ const ModulosInactivos = () => {
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Modulos Inactivos</h1>
+        <div className="max-sm:hidden">
+          {Modulo_Icono}
+        </div>
         <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
@@ -156,8 +158,8 @@ const ModulosInactivos = () => {
       {permisosModulo.length === 0 ? (
         <Loader />
       ) : permisosModulo.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

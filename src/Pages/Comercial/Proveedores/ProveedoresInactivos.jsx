@@ -13,16 +13,16 @@ import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
 
 const ProveedoresInactivos = () => {
-  const { dataProveedores, 
-    permisosProveedor, 
-    proveedorState, 
-    setProveedorState, 
-    eliminar_restablecer_proveedor 
+  const { dataProveedores,
+    permisosProveedor,
+    proveedorState,
+    setProveedorState,
+    eliminar_restablecer_proveedor
   } = useProveedores()
 
-  const { Permisos_DB, 
-    setVerEliminarRestaurar, 
-    verEliminarRestaurar  
+  const { Permisos_DB,
+    setVerEliminarRestaurar,
+    verEliminarRestaurar
   } = useAuth()
 
   const columns = [
@@ -63,7 +63,7 @@ const ProveedoresInactivos = () => {
   const modal_restaurar_proveedor = (proveedor) => {
     setVerEliminarRestaurar(true);
     setProveedorState(proveedor);
-  }; 
+  };
 
   useEffect(() => {
     setFilteredData(dataProveedores);
@@ -92,7 +92,9 @@ const ProveedoresInactivos = () => {
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Proveedores Inactivos</h1>
-        {Proveedores_Icon}
+        <div className="max-sm:hidden">
+          {Proveedores_Icon}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>

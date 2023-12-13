@@ -26,14 +26,19 @@ const Login = () => {
       }, 1500);
       return;
     } else {
-      const data = await fetch("https://ipinfo.io?token=70210017b789f6");
-      const res = await data.json();
+      let res
+      try {
+        const data = await fetch("https://ipinfo.io?token=70210017b789f6");
+        res = await data.json();
+      } catch (error) {
+        console.log(error);
+      }
       const body = {
         usuario: usuario,
         clave: clave,
         captcha: captcha.current.getValue(),
-        ip: `${res?.ip}`,
-        ubicacion: `${res?.country} - ${res?.city}/${res?.region}`,
+        ip: `${res?.ip || '0.0.0.0'}`,
+        ubicacion: `${res?.country || 'error'} - ${res?.city || 'host'}/${res?.region || 'ip'}`,
       };
       try {
         const { data } = await conexionCliente.post(
@@ -109,7 +114,6 @@ const Login = () => {
                 ></i>
               </span>
             </div>
-
             <div className="recaptcha self-center">
               <ReCAPTCHA
                 ref={captcha}

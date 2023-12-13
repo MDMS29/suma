@@ -2,15 +2,18 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import conexion_cliente from "../../config/ConexionCliente";
 import useAuth from "../../hooks/useAuth";
 import { TIPOS_ALERTAS } from "../../helpers/constantes.js";
+import { useNavigate } from "react-router-dom";
 
 const ProveedoresContext = createContext();
 
 const ProveedoresProvider = ({ children }) => {
-  const { setAlerta, 
-    authUsuario, 
-    setAuthUsuario, 
-    setVerEliminarRestaurar 
+  const { setAlerta,
+    authUsuario,
+    setAuthUsuario,
+    setVerEliminarRestaurar
   } = useAuth();
+  const navigate = useNavigate()
+
   const [permisosProveedor, setPermisosProveedor] = useState([]);
   const [dataProveedores, setDataProveedores] = useState([]);
   const [proveedorState, setProveedorState] = useState({});
@@ -21,8 +24,7 @@ const ProveedoresProvider = ({ children }) => {
 
   const [proveedorAgg, setProveedorAgg] = useState({
     id_tercero: 0,
-    id_empresa:
-      authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
+    id_empresa: authUsuario && authUsuario.id_empresa ? authUsuario.id_empresa : 0,
     id_tipo_tercero: 2,
     id_tipo_documento: 0,
     documento: "",
@@ -202,7 +204,7 @@ const ProveedoresProvider = ({ children }) => {
       setTipoProdAgg(data);
     } catch (error) {
       setAlerta({
-        error:TIPOS_ALERTAS.ERROR,
+        error: TIPOS_ALERTAS.ERROR,
         show: true,
         message: error.response.data.message,
       });

@@ -69,7 +69,8 @@ const ProductosInactivos = () => {
         item.marca.toLowerCase().includes(value) ||
         item.nombre_familia.toLowerCase().includes(value) ||
         item.tipo_producto.toLowerCase().includes(value) ||
-        item.unidad.toLowerCase().includes(value)
+        item.unidad.toLowerCase().includes(value) ||
+        item.critico_con.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
@@ -104,7 +105,9 @@ const ProductosInactivos = () => {
 
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Productos Inactivos</h1>
-        {Producto_Icono}
+        <div className="max-sm:hidden">
+          {Producto_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>
@@ -171,8 +174,8 @@ const ProductosInactivos = () => {
       {permisosProductos.length === 0 ? (
         <Loader />
       ) : permisosProductos.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

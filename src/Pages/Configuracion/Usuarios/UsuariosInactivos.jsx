@@ -3,7 +3,7 @@ import { Column } from "primereact/column";
 import { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from "primereact/multiselect";
-import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
+import { Restore_Icono, Return_Icono, Perfil_Icono } from "../../../components/Icons/Iconos";
 import { Button as PButton } from "primereact/button";
 import useUsuarios from "../../../hooks/Configuracion/useUsuarios";
 import Loader from "../../../components/Loader";
@@ -95,7 +95,9 @@ const UsuariosInactivos = () => {
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Usuarios Inactivos</h1>
-        <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+        <div className="max-sm:hidden">
+          {Perfil_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>

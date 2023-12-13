@@ -3,12 +3,13 @@ import { MultiSelect } from "primereact/multiselect";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button as PButton } from "primereact/button";
+import { Button as PButton } from "primereact/button"; 
 import {
   Edit_Icono,
   Trash_Icono,
   Menu_Icono,
   Add_Icono,
+  Modulo_Icono
 } from "../../../components/Icons/Iconos";
 import useModulos from "../../../hooks/Configuracion/useModulos";
 import useAuth from "../../../hooks/useAuth";
@@ -99,7 +100,11 @@ const Modulos = () => {
     setSearchTerm(value);
 
     const filteredItems = dataModulos.filter((item) => {
-      return item.nombre_modulo.toLowerCase().includes(value);
+      return (
+        item.cod_modulo.toLowerCase().includes(value)||
+        item.nombre_modulo.toLowerCase().includes(value)||
+        item.icono.toLowerCase().includes(value)
+        )
     });
     setFilteredData(filteredItems);
   };
@@ -166,7 +171,6 @@ const Modulos = () => {
 
   const main = () => (
     <div className="w-5/6">
-
       {modalVisible && (
         <ModalAgregarModulo visible={modalVisible} onClose={toggleModal} />
       )}
@@ -189,7 +193,9 @@ const Modulos = () => {
 
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Modulos</h1>
-        <i className="pi pi-folder" style={{ fontSize: "2rem" }}></i>
+        <div className="max-sm:hidden">
+          {Modulo_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosModulo.filter(

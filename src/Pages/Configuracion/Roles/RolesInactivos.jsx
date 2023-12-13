@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
@@ -35,7 +35,7 @@ const RolesInactivos = () => {
 
   const {
     authPermisos,
-    Permisos_DB, 
+    Permisos_DB,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
   } = useAuth();
@@ -123,7 +123,9 @@ const RolesInactivos = () => {
 
       <div className="flex justify-center items-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Roles Inactivos</h1>
-        {Rol_Icono}
+        <div className="max-sm:hidden">
+          {Rol_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <Button tipo={"PRINCIPAL"} funcion={(e) => window.history.back()}>

@@ -6,6 +6,8 @@ import { Toast } from "primereact/toast";
 import Button from "../../../Botones/Button";
 import useModulos from "../../../../hooks/Configuracion/useModulos";
 
+import json_iconos from "../../../../assets/dataIcons.json"
+
 const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
   const {
     ModulosAgg,

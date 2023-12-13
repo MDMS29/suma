@@ -3,7 +3,7 @@ import { MultiSelect } from "primereact/multiselect";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button as PButton } from "primereact/button";
-import { Restore_Icono, Return_Icono } from "../../../components/Icons/Iconos";
+import { Restore_Icono, Return_Icono, Perfil_Icono } from "../../../components/Icons/Iconos";
 import { InputText } from "primereact/inputtext";
 import Loader from "../../../components/Loader";
 import Forbidden from "../../Errors/forbidden";
@@ -54,7 +54,11 @@ const PerfilesInactivos = () => {
     setSearchTerm(value);
 
     const items_filtrados = dataPerfiles.filter((item) => {
-      return item.nombre_perfil.toLowerCase().includes(value);
+      const lowercasedValue = String(value).toLowerCase();
+      return (
+        (typeof item.id_perfil === 'number' && item.id_perfil.toString().includes(lowercasedValue)) ||
+        item.nombre_perfil.toLowerCase().includes(lowercasedValue)
+      );
     });
     setFilteredData(items_filtrados);
   };
@@ -84,7 +88,9 @@ const PerfilesInactivos = () => {
       )}
       <div className="flex  justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Perfiles Inactivos</h1>
-        <i className="pi pi-user" style={{ fontSize: "2rem" }}></i>
+        <div className="max-sm:hidden">
+          {Perfil_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         <div>

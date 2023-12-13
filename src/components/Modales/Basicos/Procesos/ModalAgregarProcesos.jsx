@@ -7,7 +7,7 @@ import useAuth from '../../../../hooks/useAuth';
 
 const ModalAgregarProcesos = ({ visible, onClose }) => {
     const { procesosAgg, setProcesosAgg, errors, setErrors, guardar_proceso, editar_proceso } = useProcesos()
-    const { authUsuario, setAlerta } = useAuth()
+    const { authUsuario } = useAuth()
 
     const btn_guardar = async () => {
         const formData = {
@@ -21,17 +21,13 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
         const errors = {};
 
         if (!procesosAgg.codigo) {
-            errors.codigo = "El código es obligatorio";
+            errors.codigo = "Este campo es obligatorio";
             setErrors(errors);
             return
         }
         if (!regex.test(procesosAgg.codigo)) {
-            setAlerta({
-                error: true,
-                show: true,
-                message: "No se permiten caracteres especiales",
-            });
-            setTimeout(() => setAlerta({}), 1500);
+            errors.codigo = "No se permiten caracteres especiales"
+            setErrors(errors);
             return;
         }
         if (procesosAgg.proceso.trim() === '') {
@@ -54,8 +50,7 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
             }
 
             if (response) {
-                onClose();
-                setErrors({});
+                cerrar_modal() 
             }
 
         } catch (error) {
@@ -115,6 +110,11 @@ const ModalAgregarProcesos = ({ visible, onClose }) => {
                                 } ${procesosAgg.id_proceso !== 0 && "bg-gray-200"}`}
                             onChange={(e) => btn_cambio_proceso(e)}
                         />
+                        {errors.codigo && (
+                            <div className="text-red-600 text-xs">
+                                {errors.codigo}
+                            </div>
+                        )}
                     </div>
                     <div className="flex flex-col">
                         <label className="text-gray-600 pb-2 font-semibold">

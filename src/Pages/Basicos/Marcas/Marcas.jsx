@@ -16,7 +16,7 @@ import Button from "../../../components/Botones/Button";
 import useAuth from "../../../hooks/useAuth";
 import ModalAgregarMarcas from "../../../components/Modales/Basicos/Marcas/ModalAgregarMarcas";
 
-const Marcas = () => { 
+const Marcas = () => {
 
   const columns = [
     { field: "id_marca", header: "ID" },
@@ -48,9 +48,13 @@ const Marcas = () => {
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-
+ 
     const items_filtrados = dataMarcas.filter((item) => {
-      return item.marca.toLowerCase().includes(value);
+      const lowercasedValue = String(value).toLowerCase();
+      return (
+        (typeof item.id_marca === 'number' && item.id_marca.toString().includes(lowercasedValue)) ||
+        item.marca.toLowerCase().includes(lowercasedValue)
+      );
     });
     setFilteredData(items_filtrados);
   };
@@ -70,7 +74,6 @@ const Marcas = () => {
       }
     }, 10);
   }, [authPermisos]);
-  
 
   const header = (
     <MultiSelect
@@ -114,7 +117,9 @@ const Marcas = () => {
 
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Marcas</h1>
-        {Marca_Icono}
+        <div className="max-sm:hidden">
+          {Marca_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosMarcas.filter(

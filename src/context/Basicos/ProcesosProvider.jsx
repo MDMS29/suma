@@ -81,11 +81,11 @@ const ProcesosProvider = ({ children }) => {
             })
         } catch (error) {
             setAlerta({
-              error: TIPOS_ALERTAS.ERROR,
-              show: true,
-              message: error.response.data.message
+                error: TIPOS_ALERTAS.ERROR,
+                show: true,
+                message: error.response.data.message
             })
-      
+
             setTimeout(() => setAlerta({}), 1500)
         }
     }

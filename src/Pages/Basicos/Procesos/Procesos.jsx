@@ -56,7 +56,8 @@ const Procesos = () => {
 
     const items_filtrados = dataProcesos.filter((item) => {
       return (
-        item.codigo.includes(value), item.proceso.toLowerCase().includes(value)
+        item.codigo.toLowerCase().includes(value)||
+        item.proceso.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
@@ -110,7 +111,7 @@ const Procesos = () => {
   };
 
   const main = () => (
-    <div className="w-5/6"> 
+    <div className="w-5/6">
       {modalVisible && (
         <ModalAgregarProcesos
           visible={modalVisible}
@@ -120,7 +121,9 @@ const Procesos = () => {
 
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Procesos</h1>
-        {Proceso_Icono}
+        <div className="max-sm:hidden">
+          {Proceso_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosProcesos.filter(

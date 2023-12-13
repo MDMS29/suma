@@ -9,7 +9,6 @@ import BLink from "../../../components/Botones/BLink";
 import { Dropdown } from "primereact/dropdown";
 import Button from "../../../components/Botones/Button";
 import { MultiSelect } from "primereact/multiselect";
-import { Mention } from "primereact/mention";
 import useProcesos from "../../../hooks/Basicos/useProcesos";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import { DataTable } from "primereact/datatable";
@@ -19,6 +18,7 @@ import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import useAuth from "../../../hooks/useAuth";
 import { genLlaveAleatoria } from "../../../helpers/utils";
 import { useNavigate } from "react-router";
+import { TIPOS_ALERTAS } from "../../../helpers/constantes";
 
 const AgregarReq = () => {
   const columns = [
@@ -160,7 +160,7 @@ const AgregarReq = () => {
           id_estado: 3,
         });
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "Este producto ya ha sido agregado",
         });
@@ -172,7 +172,7 @@ const AgregarReq = () => {
     if (name === "cantidad") {
       if (!/^\d*$/.test(value)) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "La cantidad debe contener solo dígitos",
         });
@@ -234,7 +234,7 @@ const AgregarReq = () => {
     } else {
       if (detalle.id_producto == 0) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "Debe seleccionar un producto",
         });
@@ -243,7 +243,7 @@ const AgregarReq = () => {
       }
       if (!detalle.cantidad.trim()) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "Debe ingresar una cantidad",
         });
@@ -253,7 +253,7 @@ const AgregarReq = () => {
 
       if (detalle.cantidad <= 0) {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "Debe ingresar una cantidad válida",
         });
@@ -262,7 +262,7 @@ const AgregarReq = () => {
       }
       if (detalle.justificacion == "") {
         setAlerta({
-          error: true,
+          error: TIPOS_ALERTAS.ERROR,
           show: true,
           message: "Ingrese una justificacion para el producto",
         });
@@ -417,7 +417,9 @@ const AgregarReq = () => {
               </p>
             )}
           </h1>
-          {Req_Icono}
+          <div className="max-sm:hidden">
+            {Req_Icono}
+          </div>
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           <div className="h-full flex justify-center items-center">
@@ -647,7 +649,7 @@ const AgregarReq = () => {
             <label className="text-gray-600 pb-2 font-semibold">
               Observaciones <span className="font-bold text-red-900">*</span>
             </label>
-            <Mention 
+            <textarea
               value={RequiAgg.comentarios}
               onChange={(e) => btn_cambio(e)}
               name="comentarios"

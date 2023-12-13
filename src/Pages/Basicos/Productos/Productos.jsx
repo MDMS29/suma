@@ -6,7 +6,7 @@ import {
   Edit_Icono,
   Producto_Icono,
   Trash_Icono,
-} from "../../../components/Icons/Iconos"; 
+} from "../../../components/Icons/Iconos";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { InputText } from "primereact/inputtext";
@@ -20,7 +20,7 @@ import ModalAgregarProducto from "../../../components/Modales/Basicos/Productos/
 import EliminarRestaurar from "../../../components/Modales/EliminarRestaurar";
 import ExcelJS from "exceljs";
 
-const Productos = () => { 
+const Productos = () => {
 
   const columns = [
     { field: "referencia", header: "Referencia" },
@@ -44,7 +44,7 @@ const Productos = () => {
 
   const {
     authPermisos,
-    Permisos_DB, 
+    Permisos_DB,
     setVerEliminarRestaurar,
     verEliminarRestaurar,
   } = useAuth();
@@ -73,7 +73,8 @@ const Productos = () => {
         item.marca.toLowerCase().includes(value) ||
         item.nombre_familia.toLowerCase().includes(value) ||
         item.tipo_producto.toLowerCase().includes(value) ||
-        item.unidad.toLowerCase().includes(value)
+        item.unidad.toLowerCase().includes(value) ||
+        item.critico_con.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);
@@ -98,7 +99,6 @@ const Productos = () => {
   const descargarExcel = () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Productos");
- 
     const columnasIncluidas = [
       "referencia",
       "nombre_producto",
@@ -114,14 +114,13 @@ const Productos = () => {
       "ficha_con",
       "certificado_con",
     ];
- 
+
     worksheet.addRow(columnasIncluidas);
- 
+
     filteredData.forEach((obj) => {
       const rowValues = columnasIncluidas.map((columna) => obj[columna]);
       worksheet.addRow(rowValues);
     });
- 
     workbook.xlsx.writeBuffer().then((buffer) => {
       const blob = new Blob([buffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -144,7 +143,7 @@ const Productos = () => {
         return setPermisosProductos(authPermisos);
       }
     }, 10);
-  }, [authPermisos]); 
+  }, [authPermisos]);
 
   const header = (
     <MultiSelect
@@ -165,36 +164,36 @@ const Productos = () => {
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-            <PButton
-              tooltip="Editar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={(e) => editar_producto(e, rowData.id_producto)}
-            >
-              {Edit_Icono}
-            </PButton>
-          )}
+              <PButton
+                tooltip="Editar"
+                tooltipOptions={{ position: "top" }}
+                className="p-button-rounded p-mr-2"
+                onClick={(e) => editar_producto(e, rowData.id_producto)}
+              >
+                {Edit_Icono}
+              </PButton>
+            )}
 
           {permisosProductos.filter(
             (permiso) =>
               permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
           ).length > 0 && (
-            <PButton
-              tooltip="Eliminar"
-              tooltipOptions={{ position: "top" }}
-              className="p-button-rounded p-mr-2"
-              onClick={(e) => modal_eliminar_producto(e, rowData)}
-            >
-              {Trash_Icono}
-            </PButton>
-          )}
+              <PButton
+                tooltip="Eliminar"
+                tooltipOptions={{ position: "top" }}
+                className="p-button-rounded p-mr-2"
+                onClick={(e) => modal_eliminar_producto(e, rowData)}
+              >
+                {Trash_Icono}
+              </PButton>
+            )}
         </div>
       </div>
     );
   };
 
   const main = () => (
-    <div className="w-5/6">     
+    <div className="w-5/6">
 
       {modalVisible && (
         <ModalAgregarProducto
@@ -213,26 +212,28 @@ const Productos = () => {
 
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Productos</h1>
-        {Producto_Icono}
+        <div className="max-sm:hidden">
+          {Producto_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosProductos.filter(
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
-            {Add_Icono} Agregar
-          </Button>
-        )}
+            <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
+              {Add_Icono} Agregar
+            </Button>
+          )}
         {permisosProductos.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
         ).length > 0 && (
-          <div className="h-full flex justify-center items-center">
-            <BLink tipo={"INACTIVOS"} url="/basicas/productos/inactivos">
-              Inactivos
-            </BLink>
-          </div>
-        )}
+            <div className="h-full flex justify-center items-center">
+              <BLink tipo={"INACTIVOS"} url="/basicas/productos/inactivos">
+                Inactivos
+              </BLink>
+            </div>
+          )}
         <Button type="button" funcion={descargarExcel} tipo={"EXPORTAR"}>
           <i className="pi pi-file-excel text-xl"></i> Exportar
         </Button>
@@ -281,8 +282,8 @@ const Productos = () => {
       {permisosProductos.length === 0 ? (
         <Loader />
       ) : permisosProductos.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

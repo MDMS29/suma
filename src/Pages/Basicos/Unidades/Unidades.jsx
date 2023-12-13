@@ -16,11 +16,11 @@ import { Column } from "primereact/column";
 import Button from "../../../components/Botones/Button";
 import ModalAgregarUnidades from "../../../components/Modales/Basicos/Unidades/ModalAgregarUnidades";
 
-const Unidades = () => { 
+const Unidades = () => {
   const {
     dataUnidades,
     permisosUnidades,
-    setPermisosUnidades, 
+    setPermisosUnidades,
     buscar_unidad,
   } = useUnidades();
 
@@ -58,8 +58,13 @@ const Unidades = () => {
     setSearchTerm(value);
 
     const items_filtrados = dataUnidades.filter((item) => {
-      return item.unidad.toLowerCase().includes(value);
+      const lowercasedValue = String(value).toLowerCase();
+      return (
+        (typeof item.id_unidad === 'number' && item.id_unidad.toString().includes(lowercasedValue)) ||
+        item.unidad.toLowerCase().includes(lowercasedValue)
+      );
     });
+
     setFilteredData(items_filtrados);
   };
 
@@ -114,10 +119,11 @@ const Unidades = () => {
           onClose={cambiar_visibilidad_modal}
         />
       )}
-
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Unidades de Medida</h1>
-        {UnidadesMedida_Icono}
+        <div className="max-sm:hidden">
+          {UnidadesMedida_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosUnidades.filter(

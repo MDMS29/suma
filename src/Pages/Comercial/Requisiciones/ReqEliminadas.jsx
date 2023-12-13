@@ -43,7 +43,9 @@ function ReqEliminadas() {
       <div className="w-5/6">
         <div className="flex justify-center gap-x-4 m-2 p-3">
           <h1 className="text-3xl">Requisiciones Inactivas</h1>
-          {Req_Icono}
+          <div className="max-sm:hidden">
+            {Req_Icono}
+          </div>
         </div>
         <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
           {permisosReq.filter(

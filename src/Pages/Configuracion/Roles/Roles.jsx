@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { MultiSelect } from "primereact/multiselect";
@@ -19,9 +19,9 @@ import {
   Rol_Icono,
 } from "../../../components/Icons/Iconos";
 
-const Roles = () => { 
+const Roles = () => {
 
-  const columns = [ 
+  const columns = [
     { field: "nombre", header: "Nombre" },
     { field: "descripcion", header: "Descripcion" },
   ];
@@ -38,7 +38,7 @@ const Roles = () => {
 
   const {
     authPermisos,
-    Permisos_DB, 
+    Permisos_DB,
     verEliminarRestaurar,
     setVerEliminarRestaurar,
   } = useAuth();
@@ -55,7 +55,7 @@ const Roles = () => {
     setTimeout(() => {
       if (authPermisos !== undefined) return setPermisosRoles(authPermisos);
     }, 10);
-  }, [authPermisos]); 
+  }, [authPermisos]);
 
   const filtrar_columnas = (event) => {
     let columnas_seleccionadas = event.value;
@@ -105,36 +105,36 @@ const Roles = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <PButton
-            tooltip="Editar"
-            tooltipOptions={{ position: "top" }}
-            className="p-button-rounded p-mr-2"
-            onClick={() => {
-              setModalVisible(true);
-              buscar_rol(rowData.id_rol);
-            }}
-          >
-            {Edit_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Editar"
+              tooltipOptions={{ position: "top" }}
+              className="p-button-rounded p-mr-2"
+              onClick={() => {
+                setModalVisible(true);
+                buscar_rol(rowData.id_rol);
+              }}
+            >
+              {Edit_Icono}
+            </PButton>
+          )}
         {permisosRoles.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-          <PButton
-            tooltip="Eliminar"
-            className="p-button-rounded p-button-danger p-mr-2"
-            tooltipOptions={{ position: "top" }}
-            onClick={(e) => mostrar_modal_eliminar(rowData)}
-          >
-            {Trash_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Eliminar"
+              className="p-button-rounded p-button-danger p-mr-2"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => mostrar_modal_eliminar(rowData)}
+            >
+              {Trash_Icono}
+            </PButton>
+          )}
       </div>
     );
   };
 
   const main = () => (
-    <div className="w-5/6"> 
+    <div className="w-5/6">
       {modalVisible && (
         <ModalPrinRoles
           visible={modalVisible}
@@ -147,29 +147,30 @@ const Roles = () => {
           funcion={(e) => eliminar_rol(rolAgg.id_rol, e)}
         />
       )}
-
       <div className="flex justify-center items-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Roles</h1>
-        {Rol_Icono}
+        <div className="max-sm:hidden">
+          {Rol_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosRoles.filter(
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
-            {Add_Icono} Agregar{" "}
-          </Button>
-        )}
+            <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
+              {Add_Icono} Agregar{" "}
+            </Button>
+          )}
         {permisosRoles.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
         ).length > 0 && (
-          <div className="h-full flex justify-center items-center">
-            <BLink url={"/configuracion/roles/inactivos"} tipo={"INACTIVOS"}>
-              Inactivos
-            </BLink>
-          </div>
-        )}
+            <div className="h-full flex justify-center items-center">
+              <BLink url={"/configuracion/roles/inactivos"} tipo={"INACTIVOS"}>
+                Inactivos
+              </BLink>
+            </div>
+          )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto  lg:ml-auto  xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
           <InputText
@@ -214,8 +215,8 @@ const Roles = () => {
       {permisosRoles.length === 0 ? (
         <Loader />
       ) : permisosRoles.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

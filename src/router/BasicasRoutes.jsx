@@ -6,6 +6,7 @@ import FamiliaProd from "../Pages/Basicos/FamiliaProd/FamiliaProd";
 import TipoProd from "../Pages/Basicos/TipoProd/TipoProd";
 import Productos from "../Pages/Basicos/Productos/Productos";
 import ProductosInactivos from "../Pages/Basicos/Productos/ProductosInactivos";
+import Iva from "../Pages/Basicos/Iva/Iva";
 
 const BasicasRoutes = [
   {
@@ -55,6 +56,12 @@ const BasicasRoutes = [
     route: "/basicas/productos/inactivos",
     component: <ProductosInactivos />,
     key: 22,
+  },
+  {
+    name: "IVA",
+    route: "/basicas/iva",
+    component: <Iva />,
+    key: 25
   },
 ];
 

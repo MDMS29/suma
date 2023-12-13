@@ -115,27 +115,27 @@ const Proveedores = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <PButton
-            tooltip="Editar"
-            tooltipOptions={{ position: "top" }}
-            className="p-button-rounded p-mr-2"
-            onClick={(e) => editar_proveedores(e, rowData.id_tercero)}
-          >
-            {Edit_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Editar"
+              tooltipOptions={{ position: "top" }}
+              className="p-button-rounded p-mr-2"
+              onClick={(e) => editar_proveedores(e, rowData.id_tercero)}
+            >
+              {Edit_Icono}
+            </PButton>
+          )}
         {permisosProveedor.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.BORRAR
         ).length > 0 && (
-          <PButton
-            tooltip="Eliminar"
-            className="p-button-rounded p-button-danger p-mr-2"
-            tooltipOptions={{ position: "top" }}
-            onClick={(e) => modal_eliminar_proveedor(e, rowData)}
-          >
-            {Trash_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Eliminar"
+              className="p-button-rounded p-button-danger p-mr-2"
+              tooltipOptions={{ position: "top" }}
+              onClick={(e) => modal_eliminar_proveedor(e, rowData)}
+            >
+              {Trash_Icono}
+            </PButton>
+          )}
       </div>
     );
   };
@@ -152,27 +152,29 @@ const Proveedores = () => {
       )}
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Proveedores</h1>
-        {Proveedores_Icon}
+        <div className="max-sm:hidden">
+          {Proveedores_Icon}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosProveedor.filter(
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <BLink tipo={"PRINCIPAL"} url={"/compras/proveedores/agregar"}>
-            {Add_Icono} Agregar
-          </BLink>
-        )}
+            <BLink tipo={"PRINCIPAL"} url={"/compras/proveedores/agregar"}>
+              {Add_Icono} Agregar
+            </BLink>
+          )}
 
         {permisosProveedor.filter(
           (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
         ).length > 0 && (
-          <div className="h-full flex justify-center items-center">
-            <BLink tipo={"INACTIVOS"} url={"/compras/proveedores/inactivos"}>
-              Inactivos
-            </BLink>
-          </div>
-        )}
+            <div className="h-full flex justify-center items-center">
+              <BLink tipo={"INACTIVOS"} url={"/compras/proveedores/inactivos"}>
+                Inactivos
+              </BLink>
+            </div>
+          )}
 
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
@@ -218,8 +220,8 @@ const Proveedores = () => {
       {permisosProveedor.length === 0 ? (
         <Loader />
       ) : permisosProveedor.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

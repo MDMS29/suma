@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { MultiSelect } from "primereact/multiselect";
-import { Button as PButton } from "primereact/button"; 
+import { Button as PButton } from "primereact/button";
 import {
   Add_Icono,
   Centro_Icono,
@@ -16,7 +16,7 @@ import Forbidden from "../../Errors/Forbidden";
 import useCentros from "../../../hooks/Basicos/useCentros";
 import ModalAgregarCentro from "../../../components/Modales/Basicos/Centros/ModalAgregarCentro";
 
-const Centros = () => { 
+const Centros = () => {
   const {
     dataCentros,
     permisosCentros,
@@ -58,6 +58,7 @@ const Centros = () => {
 
     const items_filtrados = dataCentros.filter((item) => {
       return (
+        item.proceso.toLowerCase().includes(value) ||
         item.codigo.toLowerCase().includes(value) ||
         item.centro_costo.toLowerCase().includes(value) ||
         item.correo_responsable.toLowerCase().includes(value)
@@ -80,7 +81,7 @@ const Centros = () => {
 
   const cambiar_visibilidad_modal = () => {
     setModalVisible(!modalVisible);
-  };  
+  };
 
   const header = (
     <MultiSelect
@@ -100,41 +101,42 @@ const Centros = () => {
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <PButton
-            tooltip="Editar"
-            tooltipOptions={{ position: "top" }}
-            className="p-button-rounded p-mr-2"
-            onClick={(e) => editar_centro_costos(e, rowData.id_centro)}
-          >
-            {Edit_Icono}
-          </PButton>
-        )}
+            <PButton
+              tooltip="Editar"
+              tooltipOptions={{ position: "top" }}
+              className="p-button-rounded p-mr-2"
+              onClick={(e) => editar_centro_costos(e, rowData.id_centro)}
+            >
+              {Edit_Icono}
+            </PButton>
+          )}
       </div>
     );
   };
 
   const main = () => (
-    <div className="w-5/6"> 
+    <div className="w-5/6">
       {modalVisible && (
         <ModalAgregarCentro
           visible={modalVisible}
           onClose={cambiar_visibilidad_modal}
         />
       )}
-
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Centro de Costos</h1>
-        {Centro_Icono}
+        <div className="max-sm:hidden">
+          {Centro_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap gap-3">
         {permisosCentros.filter(
           (permiso) =>
             permiso.permiso.toLowerCase() === Permisos_DB.CREAR_EDITAR
         ).length > 0 && (
-          <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
-            {Add_Icono} Agregar
-          </Button>
-        )}
+            <Button tipo={"PRINCIPAL"} funcion={(e) => setModalVisible(true, e)}>
+              {Add_Icono} Agregar
+            </Button>
+          )}
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
           <i className="pi pi-search" />
           <InputText
@@ -179,8 +181,8 @@ const Centros = () => {
       {permisosCentros?.length === 0 ? (
         <Loader />
       ) : permisosCentros.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />

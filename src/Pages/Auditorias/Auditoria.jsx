@@ -85,7 +85,9 @@ const Auditoria = () => {
     <div className="w-10/12">
       <div className="flex justify-center gap-x-4 m-2 p-3">
         <h1 className="text-3xl">Auditoria</h1>
-        {Historial_Icono}
+        <div className="max-sm:hidden">
+          {Historial_Icono}
+        </div>
       </div>
       <div className="bg-white border my-3 p-3 rounded-sm w-full flex flex-wrap ">
         <span className="p-input-icon-left sm:ml-auto md:ml-auto lg:ml-auto xl:ml-auto border rounded-md">
@@ -120,8 +122,8 @@ const Auditoria = () => {
               body={(rowData) => renderCell(rowData, col)}
               className={
                 col.field === "original_data" ||
-                col.field === "new_data" ||
-                col.field === "acciones"
+                  col.field === "new_data" ||
+                  col.field === "acciones"
                   ? "max-w-xs"
                   : ""
               }
@@ -137,8 +139,8 @@ const Auditoria = () => {
       {permisosAuditoria?.length === 0 ? (
         <Loader />
       ) : permisosAuditoria.filter(
-          (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
-        ).length > 0 ? (
+        (permiso) => permiso.permiso.toLowerCase() === Permisos_DB.CONSULTAR
+      ).length > 0 ? (
         main()
       ) : (
         <Forbidden />
