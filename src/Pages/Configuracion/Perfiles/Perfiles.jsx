@@ -73,7 +73,11 @@ const Perfiles = () => {
     setSearchTerm(value);
 
     const items_filtrados = dataPerfiles.filter((item) => {
-      return item.nombre_perfil.toLowerCase().includes(value);
+      const lowercasedValue = String(value).toLowerCase();
+      return (
+        (typeof item.id_perfil === 'number' && item.id_perfil.toString().includes(lowercasedValue)) ||
+        item.nombre_perfil.toLowerCase().includes(lowercasedValue)
+      );
     });
     setFilteredData(items_filtrados);
   };
@@ -155,7 +159,7 @@ const Perfiles = () => {
       )}
 
       <div className="flex  justify-center gap-x-4 m-2 p-3">
-        <h1 className="text-3xl">Usuarios Inactivos</h1>
+        <h1 className="text-3xl">Perfiles</h1>
         <div className="max-sm:hidden">
           {Perfil_Icono}
         </div>

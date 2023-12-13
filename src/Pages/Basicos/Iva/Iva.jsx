@@ -52,10 +52,10 @@ const Iva = () => {
         setSearchTerm(value);
 
         const items_filtrados = dataIva.filter((item) => {
+            const lowercasedValue = String(value).toLowerCase();
             return (
-                item.porcentaje == value ||
-                item.descripcion.toLowerCase().includes(value)
-                // item.porcentaje == +value
+                (typeof item.porcentaje === 'number' && item.porcentaje.toString().includes(lowercasedValue)) ||
+                item.descripcion.toLowerCase().includes(lowercasedValue)
             );
         });
         setFilteredData(items_filtrados);

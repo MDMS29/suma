@@ -5,7 +5,7 @@ import { Dropdown } from "primereact/dropdown";
 import useProcesos from "../../../../hooks/Basicos/useProcesos";
 import useRequisiciones from "../../../../hooks/Compras/useRequisiciones";
 import useAuth from "../../../../hooks/useAuth";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const ModalFiltrarReq = ({ visible, onClose }) => {
   const {

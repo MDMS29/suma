@@ -100,7 +100,11 @@ const Modulos = () => {
     setSearchTerm(value);
 
     const filteredItems = dataModulos.filter((item) => {
-      return item.nombre_modulo.toLowerCase().includes(value);
+      return (
+        item.cod_modulo.toLowerCase().includes(value)||
+        item.nombre_modulo.toLowerCase().includes(value)||
+        item.icono.toLowerCase().includes(value)
+        )
     });
     setFilteredData(filteredItems);
   };

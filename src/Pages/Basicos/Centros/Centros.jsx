@@ -58,6 +58,7 @@ const Centros = () => {
 
     const items_filtrados = dataCentros.filter((item) => {
       return (
+        item.proceso.toLowerCase().includes(value) ||
         item.codigo.toLowerCase().includes(value) ||
         item.centro_costo.toLowerCase().includes(value) ||
         item.correo_responsable.toLowerCase().includes(value)

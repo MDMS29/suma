@@ -58,8 +58,13 @@ const Unidades = () => {
     setSearchTerm(value);
 
     const items_filtrados = dataUnidades.filter((item) => {
-      return item.unidad.toLowerCase().includes(value);
+      const lowercasedValue = String(value).toLowerCase();
+      return (
+        (typeof item.id_unidad === 'number' && item.id_unidad.toString().includes(lowercasedValue)) ||
+        item.unidad.toLowerCase().includes(lowercasedValue)
+      );
     });
+
     setFilteredData(items_filtrados);
   };
 

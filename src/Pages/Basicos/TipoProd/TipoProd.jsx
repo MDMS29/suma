@@ -60,7 +60,11 @@ const TipoProd = () => {
     setSearchTerm(value);
 
     const items_filtrados = dataTipoProf.filter((item) => {
-      return item.descripcion.toLowerCase().includes(value);
+      const lowercasedValue = String(value).toLowerCase();
+      return (
+        (typeof item.id_tipo_producto === 'number' && item.id_tipo_producto.toString().includes(lowercasedValue)) ||
+        item.descripcion.toLowerCase().includes(lowercasedValue)
+      );
     });
     setFilteredData(items_filtrados);
   };

@@ -69,7 +69,8 @@ const ProductosInactivos = () => {
         item.marca.toLowerCase().includes(value) ||
         item.nombre_familia.toLowerCase().includes(value) ||
         item.tipo_producto.toLowerCase().includes(value) ||
-        item.unidad.toLowerCase().includes(value)
+        item.unidad.toLowerCase().includes(value) ||
+        item.critico_con.toLowerCase().includes(value)
       );
     });
     setFilteredData(items_filtrados);

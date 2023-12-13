@@ -48,9 +48,13 @@ const Marcas = () => {
   const buscador = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-
+ 
     const items_filtrados = dataMarcas.filter((item) => {
-      return item.marca.toLowerCase().includes(value);
+      const lowercasedValue = String(value).toLowerCase();
+      return (
+        (typeof item.id_marca === 'number' && item.id_marca.toString().includes(lowercasedValue)) ||
+        item.marca.toLowerCase().includes(lowercasedValue)
+      );
     });
     setFilteredData(items_filtrados);
   };
