@@ -1,14 +1,7 @@
-<<<<<<< HEAD
- import RolIcono from "../../assets/images/rol.png";
- import NoReqIcono from "../../assets/images/NoHay.png";
- import ProcesoIcono from "../../assets/images/proceso.png";
- import ProductoIcono from "../../assets/images/caja.png";
-=======
 import RolIcono from "../../assets/images/rol.png";
 import NoReqIcono from "../../assets/images/NoHay.png";
 import ProcesoIcono from "../../assets/images/proceso.png";
 import ProductoIcono from "../../assets/images/caja.png";
->>>>>>> feat-fte/tiposdeordenes
 export const Key_Icono = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
