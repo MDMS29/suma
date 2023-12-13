@@ -198,8 +198,6 @@ const ModalAgregarModulo = ({ visible, onClose, guardarModulo }) => {
     setVentanaIcon(false)
   }
 
-  console.log(rolesporModulo);
-
   return (
     <Dialog
       header={

@@ -59,7 +59,7 @@ const ModalAgregarMarcas = ({ visible, onClose }) => {
         setErrors({});
       }
     } catch (error) {
-      console.error("Error al guardar la marca:", error);
+      setAlerta({ error: TIPOS_ALERTAS.ERROR, show: true, message: error.response.data.message })
     }
     setErrors({});
   };

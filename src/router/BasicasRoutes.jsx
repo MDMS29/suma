@@ -7,6 +7,7 @@ import TipoProd from "../Pages/Basicos/TipoProd/TipoProd";
 import Productos from "../Pages/Basicos/Productos/Productos";
 import ProductosInactivos from "../Pages/Basicos/Productos/ProductosInactivos";
 import Iva from "../Pages/Basicos/Iva/Iva";
+import TipoOrden from "../Pages/Basicos/TipoOrden/TipoOrden";
 
 const BasicasRoutes = [
   {
@@ -56,6 +57,12 @@ const BasicasRoutes = [
     route: "/basicas/productos/inactivos",
     component: <ProductosInactivos />,
     key: 22,
+  },
+  {
+    name: "Tipos de Ordenes",
+    route: "/basicas/tipos-de-ordenes",
+    component: <TipoOrden />,
+    key: 24,
   },
   {
     name: "IVA",

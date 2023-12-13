@@ -22,6 +22,7 @@ import { RequisicionesProvider } from "./context/Compras/RequisicionesProvider.j
 import { ProveedoresProvider } from "./context/Compras/ProveedoresProvider.jsx";
 import { AuditoriaProvider } from "./context/Auditorias/AuditoriaProvider.jsx";
 import { IvaProvider } from "./context/Basicos/IvaProvider.jsx";
+import { TipoOrdenProvider } from "./context/Basicos/TipoOrdenProvider.jsx";
 
 const App = () => {
   return (
@@ -44,7 +45,9 @@ const App = () => {
                                     <ProveedoresProvider>
                                       <AuditoriaProvider>
                                         <IvaProvider>
-                                          <AppMain />
+                                          <TipoOrdenProvider>
+                                            <AppMain />
+                                          </TipoOrdenProvider>
                                         </IvaProvider>
                                       </AuditoriaProvider>
                                     </ProveedoresProvider>
