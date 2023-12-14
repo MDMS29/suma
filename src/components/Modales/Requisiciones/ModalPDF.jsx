@@ -1,4 +1,3 @@
-import React from "react";
 import useRequisiciones from "../../../hooks/Compras/useRequisiciones";
 import { Dialog } from "primereact/dialog";
 import Loader from "../../Loader";

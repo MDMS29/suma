@@ -73,7 +73,7 @@ const ModalAgregarIva = ({ visible, onClose }) => {
 
     const btn_cambio_iva = (e) => {
         const value = e.target.value;
-        setIvaAgg({ ...ivaAgg, [e.target.name]: e.target.name == "descripcion" ? value.replace(/\d/g, '') : value });
+        setIvaAgg({ ...ivaAgg, [e.target.name]: value });
     };
 
     const footerContent = (
