@@ -15,7 +15,6 @@ interface productos_pendiente {
     productos_pendientes: number
 }
 
-
 export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
     private _Query_Usuarios: QueryUsuario;
@@ -24,6 +23,24 @@ export class RequisicionesService {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Requisiciones = new QueryRequisiciones();
         this._Query_Usuarios = new QueryUsuario();
+    }
+
+    private Reduce_Productos_Pendientes(result: productos_pendiente[], productos_pendientes: productos_pendiente[]) {
+        productos_pendientes.forEach((producto: productos_pendiente) => {
+
+            const esProducto = result.find((existe) => existe.id_producto === producto.id_producto);
+            
+            if (!esProducto) {
+                // AGREGAR EL PRODUCTO PENDIENTE
+                result.push(producto);
+            } else {
+                // SUMAR LAS CANTIDADES DE LOS PRODUCTOS PENDIENTES
+                const producto_filtrado: productos_pendiente[] = result.filter(r => r.id_producto === producto.id_producto)
+                producto_filtrado[0].productos_pendientes = producto.productos_pendientes
+            }
+
+        });
+        return result;
     }
 
     public async Obtener_Requisiciones(estado: string, empresa: number, usuario: string, tipoFiltro: string, valor: string | number): Promise<any> {
@@ -156,22 +173,9 @@ export class RequisicionesService {
                 return requisicion
             }
 
-            let reducidos:any = []
-
-            requisicion.reduce((acc: productos_pendiente, cv: productos_pendiente) => {
-                console.log(acc)
-                reducidos.push({
-                    id_producto: cv.id_producto,
-                    productos_pendientes: cv.productos_pendientes + cv.productos_pendientes
-                })
-            }, {
-                id_producto: "",
-                productos_pendientes: 0
-            })
-
             if (tipo_consulta) {
-                console.log(reducidos)
-                requisicion[0].productos_pendientes = requisicion.reduce((acc: number, cv: { productos_pendientes: number }) => acc + cv.productos_pendientes, 0);
+                // SI SE BUSCAN LOS PRODUCTOS PENDIENTES SE HACE UN REDUCE PARA SUMAR SUS PRODUCTOS PENDIENTES
+                requisicion = this.Reduce_Productos_Pendientes([], requisicion)
             }
 
 
@@ -406,7 +410,6 @@ export class RequisicionesService {
                     doc.text(`${detalle.referencia} `, 30, Y);
                     doc.text(`${detalle.cantidad} `, 115, Y);
                     doc.text(`${detalle.unidad} `, 129, Y);
-                    // doc.text(`${detalle.noOrden} `, 129, Y);
 
                     doc.text(`${detalle.critico ? 'X' : ''} `, 275.5, Y);
                     doc.text(`${detalle.certificado ? 'X' : ''} `, 286.5, Y);
@@ -537,9 +540,6 @@ export class RequisicionesService {
 
                         doc.setFont('helvetica', 'normal', 'normal')
                         doc.text('Aprobado por:', 217, 32.5); // (texto, x, y)
-
-
-                        // const nombre_completo = doc.splitTextToSize(usuario_r ? usuario_r[0]?.nombre_completo : '', 23);
 
                         doc.text(nombre_completo[0], 246, 32.5); // (texto, x, y)
 

@@ -11,17 +11,13 @@ export default class _OrdenesController {
     async Obtener_Ordenes(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
 
-        const { tipo, empresa, estado } = req.query as { tipo: string, empresa: string, estado: string }
+        const { empresa, estado, inputs } = req.query as { empresa: string, estado: string, inputs: string }
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
-        if (!tipo) {
-            return res.status(401).json({ error: true, message: 'No hay un tipo de orden a buscar' }) //!ERROR
-        }
-
-        if (!empresa) {
+        if (!empresa || empresa === 'undefined') {
             return res.status(401).json({ error: true, message: 'No hay una empresa definida' }) //!ERROR
         }
 
@@ -31,7 +27,7 @@ export default class _OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Obtener_Ordenes(tipo, empresa, estado)
+            const respuesta = await ordenes_service.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta.error) {
                 return res.status(500).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -126,13 +122,13 @@ export default class _OrdenesController {
     async Eliminar_Restaurar_Orden(req: Request, res: Response) {
         const { usuario } = req
         const { id_orden } = req.params
-        const { id_estado } = req.query
+        const { estado } = req.query
 
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
-        if (!id_estado) {
+        if (!estado) {
             return res.status(400).json({ error: true, message: 'No se hay un estado a cambiar' }) //!ERROR
         }
         if (!id_orden) {
@@ -141,8 +137,8 @@ export default class _OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Eliminar_Restaurar_Orden(+id_orden, +id_estado)
-            if (respuesta && 'error' in respuesta) {
+            const respuesta = await ordenes_service.Eliminar_Restaurar_Orden(+id_orden, +estado)
+            if (!respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
 
@@ -239,7 +235,7 @@ export default class _OrdenesController {
         const { id_tipo_orden } = req.params
 
 
-        console.log('---  REQBODY  --- \n',req.body, '---  fin REQBODY  --- \n')
+        console.log('---  REQBODY  --- \n', req.body, '---  fin REQBODY  --- \n')
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR

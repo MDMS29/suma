@@ -11,11 +11,11 @@ export class OrdenesService {
         this._Query_Ordenes = new QueryOrdenes();
     }
 
-    async Obtener_Ordenes(tipo: string, empresa: string, estado: string) {
+    async Obtener_Ordenes(empresa: string, estado: string, inputs: string) {
         try {
-            const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(tipo, empresa, estado)
+            const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta?.length <= 0) {
-                return { error: true, message: +estado === EstadosTablas.ESTADO_ACTIVO ? 'No se han encontrado ordenes activas' : 'No se han encontrado ordenes inactivas' } //!ERROR
+                return { error: true, message:  'No se han encontrado ordenes' } //!ERROR
             }
             return respuesta
         } catch (error) {
@@ -46,8 +46,6 @@ export class OrdenesService {
                     return { error: true, message: `Error al insertar la orden ${req_body.orden}` } //!ERROR
                 }
 
-                req_body.id_orden = orden[0].id_orden
-
                 ///INSERTAR DETALLES DE LA ORDEN
                 for (detalle of req_body.detalles_orden) {
 
@@ -57,7 +55,12 @@ export class OrdenesService {
                     }
                 }
 
-                return req_body
+                const orden_insertada: any = await this._Query_Ordenes.Buscar_Orden_ID(orden[0].id_orden, req_body.id_empresa)
+                if (orden_insertada?.length <= 0) {
+                    return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
+                }
+
+                return orden_insertada[0]
 
             } catch (error) {
                 console.log(error)
@@ -151,13 +154,12 @@ export class OrdenesService {
                 return { error: true, message: 'Error al cambiar el estado de la orden' } //!ERROR
             }
 
-            return { error: true, message: id_estado == EstadosTablas.ESTADO_ACTIVO ? 'Se ha restablecido la orden' : 'Se ha eliminado la orden' } //!ERROR
+            return { error: true, message: id_estado == EstadosTablas.ESTADO_ANULADO ? 'Se ha anulado la orden' : 'Se ha aprobado la orden' } //!ERROR
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cambiar el estado de la orden' } //!ERROR
         }
     }
-
 
     //SERVICIO PARA LOS TIPOS DE ORDENES
     async Obtener_Tipos_Ordenes(empresa: number) {
@@ -197,10 +199,6 @@ export class OrdenesService {
                         return { error: true, message: 'Error al insertar el tipo de producto' } //!ERROR
                     }
                 }
-
-                let numeroOrden = tipo_orden[0].id_tipo_orden + String(+req_body.consecutivo+1).padStart(Math.max(0, 6 - String(tipo_orden[0].id_tipo_orden).length), '0');
-
-                req_body.consecutivo = numeroOrden.slice(0, 6);
 
                 return req_body
 
@@ -270,16 +268,11 @@ export class OrdenesService {
                         }
 
                     }
-
-                    
                 }
                 const tipo_orden_editada: any = await this._Query_Ordenes.Buscar_Tipo_ID(id_tipo_orden)
                 if (tipo_orden_editada?.length <= 0) {
                     return { error: true, message: 'No se han encontrado el tipo de orden' } //!ERROR
                 }
-
-                let numeroOrden = id_tipo_orden + String(+req_body.consecutivo+1).padStart(Math.max(0, 6 - String(id_tipo_orden).length), '0');
-                tipo_orden_editada[0].consecutivo = numeroOrden.slice(0, 6);
 
                 return tipo_orden_editada[0]
 

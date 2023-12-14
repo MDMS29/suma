@@ -3,6 +3,7 @@ import { Tipo_Orden, Tipo_Producto_Orden } from "../../Interfaces/Opciones_Basic
 import { Database, _DB } from "../../config/db";
 import {
     _FAObtener_tipos_ordenes,
+    _FA_filtro_ordenes,
     _buscar_detalle_orden, _buscar_numero_orden, _buscar_orden_id,
     _buscar_tipo_orden_id,
     _buscar_tipo_orden_nombre, _buscar_tipo_producto_orden, _editar_detalle_orden, _editar_encabezado_orden,
@@ -18,11 +19,16 @@ export default class QueryOrdenes extends Database {
         super()
         this.pool = this.connect_query()
     }
-    public async Obtener_Ordenes(tipo: string, empresa: string, estado: string) {
+    public async Obtener_Ordenes(empresa: string, estado: string, inputs: string) {
         const client = await this.pool.connect()
         try {
-            let result = await client.query(_obtener_ordenes, [tipo, empresa, estado]);
-            return result.rows
+            if(!inputs){
+                let result = await client.query(_obtener_ordenes, [empresa, estado]);
+                return result.rows    
+            }else{
+                let result = await _DB.func(_FA_filtro_ordenes, [empresa, estado, inputs]);
+                return result 
+            }
         } catch (error) {
             console.log(error)
             return
@@ -88,7 +94,7 @@ export default class QueryOrdenes extends Database {
                 [
                     id_orden, id_requisicion, id_producto,
                     cantidad, precio_compra, id_iva,
-                    descuento,  id_estado
+                    descuento, id_estado
                 ]);
             return result.rows
         } catch (error) {
@@ -172,7 +178,7 @@ export default class QueryOrdenes extends Database {
                 [
                     id_detalle,
                     id_requisicion, id_producto, cantidad,
-                    precio_compra, id_iva, descuento,id_estado
+                    precio_compra, id_iva, descuento, id_estado
                 ]);
             return result.rowCount
         } catch (error) {
@@ -325,7 +331,7 @@ export default class QueryOrdenes extends Database {
         }
     }
 
-    public async Editar_Tipo_Producto_Orden(req_body: Tipo_Producto_Orden, id_tipo_orden:number) {
+    public async Editar_Tipo_Producto_Orden(req_body: Tipo_Producto_Orden, id_tipo_orden: number) {
         const client = await this.pool.connect()
 
         console.log('editando tipo producto orden.... \n', req_body)

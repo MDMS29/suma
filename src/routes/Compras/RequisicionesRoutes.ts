@@ -24,11 +24,10 @@ _RequisicionesRouter.route('/detalles/pendientes/:id_requisicion')
 .get(_Autorizacion, _RequisicionesController.Buscar_Requisicion) //BUSCAR LOS DETALLES PENDIENTES DE LA REQUISICION
 
 _RequisicionesRouter.route('/detalles/:id_requisicion')
-    .patch(_Autorizacion, _RequisicionesController.Aprobar_Desaprobar_Detalle) //CAMBIAR ESTADO DE LA REQUISICION POR ID
+    .patch(_Autorizacion, _RequisicionesController.Aprobar_Desaprobar_Detalle) //APROBAR Y DESAPROBAR LOS DETALLES DE LA REQUISICION
 
 _RequisicionesRouter.route('/doc/:id_requisicion')
     .get(_Autorizacion, _RequisicionesController.Generar_PDF_Requisicion)
-// _RequisicionesRouter.get('/productos-empresa/filtro', _Autorizacion, _RequisicionesController.Buscar_Producto_Empresa)
 
 
 export default _RequisicionesRouter

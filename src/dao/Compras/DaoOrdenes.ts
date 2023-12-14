@@ -1,3 +1,5 @@
+export const _FA_filtro_ordenes = 'public.fnc_obtener_ordenes_filtro'
+
 export const _obtener_ordenes = `
     SELECT 
         tor.id_orden, tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago, 
@@ -8,11 +10,11 @@ export const _obtener_ordenes = `
     INNER JOIN public.tbl_tipo_orden tto ON tto.id_tipo_orden = tor.id_tipo_orden
     INNER JOIN public.tbl_forma_pago tfp ON tfp.id_forma_pago = tor.id_forma_pago
     INNER JOIN public.tbl_terceros tt ON tt.id_tercero = tor.id_tercero 
-    WHERE 
-        tor.id_tipo_orden = $1 AND
-        tor.id_empresa = $2 AND
-        tor.id_estado = $3
-    ORDER BY tor.id_orden DESC;
+    WHERE
+        tor.id_empresa = $1 AND
+        tor.id_estado = $2
+    ORDER BY tor.id_orden DESC
+    LIMIT 20;
 `
 
 export const _buscar_numero_orden = `
@@ -49,7 +51,7 @@ export const _insertar_orden = `
             $1, $2, $3, $4, 
             $5, $6, $7, 
             $8, $9, $10, $11, 
-            $12, 1, now(), $13
+            $12, 3, now(), $13
         )
     RETURNING id_orden;
 `
