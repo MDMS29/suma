@@ -35,12 +35,21 @@ export default class QueryRequisiciones extends Database {
         }
     }
 
-    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>): Promise<any> {
+    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>, esTipoOrden:boolean): Promise<any> {
         const client = await this.pool.connect()
         const { centro_costo, requisicion, proceso, tipo_producto, fecha_inicial, fecha_final } = filtros
         try {
-            let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto, fecha_inicial != '' ? fecha_inicial : null, fecha_final != '' ? fecha_final : null]);
-            return result
+
+
+            if(!esTipoOrden){
+                let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, centro_costo, requisicion, proceso, tipo_producto, fecha_inicial != '' ? fecha_inicial : null, fecha_final != '' ? fecha_final : null]);
+                return result
+            }else{
+                // FILTRAR POR TIPO DE PRODUCTO
+                let result = await _DB.func(_FA_obtener_requisicion_filtro, [estado, empresa, usuario, 0, '', 0, tipo_producto, null, null]);
+                return result
+            }
+            
         } catch (error) {
             console.log(error)
             return
@@ -191,6 +200,7 @@ export default class QueryRequisiciones extends Database {
             client.release();
         }
     }
+    
     public async Editar_Requisicion_Det(requisicion_det_request: Requisicion_Det, usuario_modificacion: string) {
         const client = await this.pool.connect()
         const { id_detalle, id_producto, cantidad, justificacion, id_estado } = requisicion_det_request

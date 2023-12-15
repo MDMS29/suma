@@ -7,7 +7,7 @@ export default class RequisicionesController {
 
     public async Obtener_Requisiciones_Filtro(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { estado, empresa } = req.query as { estado: string, empresa: string, requisicion: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        const { estado, empresa, tipo_orden } = req.query as { estado: string, empresa: string, requisicion: string, tipo_orden:string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
@@ -18,23 +18,15 @@ export default class RequisicionesController {
             return res.status(400).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
         }
 
-        if (!req.body) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }) //!ERROR
-        }
-
-        if (Object.keys(req.body).length === 0) {
-            return res.status(400).json({ error: true, message: 'Debe ingresar filtros para buscar' }) //!ERROR
-        }
-
         // VALIDACION DE DATOS
-        const result = FiltroRequisicionesSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        const result = FiltroRequisicionesSchema.partial().safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
             const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, req.body)
+            const respuesta = await requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, req.body, tipo_orden)
 
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR

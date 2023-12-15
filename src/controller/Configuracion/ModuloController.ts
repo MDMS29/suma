@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import ModuloService from "../../services/Configuracion/Modulo.service";
+import ModuloService from "../../services/Configuracion/Modulo.Service";
 import { EstadosTablas, _rol_consultar } from "../../helpers/constants";
 import { ModulosSchema } from "../../validations/Configuracion.Zod";
 

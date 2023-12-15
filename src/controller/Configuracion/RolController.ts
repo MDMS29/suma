@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RolService } from "../../services/Configuracion/Rol.service";
+import { RolService } from "../../services/Configuracion/Rol.Service";
 import { EstadosTablas } from "../../helpers/constants";
 import { RolesSchema } from "../../validations/Configuracion.Zod";
 

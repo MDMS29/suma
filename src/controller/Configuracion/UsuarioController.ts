@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import UsuarioService from '../../services/Configuracion/Usuario.service';
+import UsuarioService from '../../services/Configuracion/Usuario.Service';
 import { UsuarioLogin } from '../../Interfaces/Configuracion/IConfig';
 import { UsuarioSchema } from '../../validations/Configuracion.Zod';
 import { EstadosTablas } from '../../helpers/constants';

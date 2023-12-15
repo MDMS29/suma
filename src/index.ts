@@ -36,7 +36,7 @@ app.use('/suma/api/compras/proveedores', _routes._ProveedoresRouter)
 app.use('/suma/api/auditorias', _routes._HistorialRouter)
 
 // DEFINIR RUTAS PARA LAS ORDENES
-app.use('/suma/api/ordenes', _routes._OrdenesRouter)
+app.use('/suma/api/compras/ordenes', _routes._OrdenesRouter)
 
 //MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
 app.use((_, res: Response) => {

@@ -4,8 +4,10 @@ import { Filtro_Requisiciones, Requisicion_Det, Requisicion_Enc } from '../../In
 import { jsPDF } from "jspdf"
 import fs from "fs"
 import { transporter } from "../../config/mailer";
+
 import { EstadosTablas } from "../../helpers/constants";
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
+import _QueryTipoOrdenes from "../../querys/Opciones_Basicas/Compras/QueryTipoOrdenes";
 
 interface productos_pendiente {
     id_requisicion: number,
@@ -18,18 +20,20 @@ interface productos_pendiente {
 export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
     private _Query_Usuarios: QueryUsuario;
+    private _Query_Tipo_Ordenes: _QueryTipoOrdenes;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Requisiciones = new QueryRequisiciones();
         this._Query_Usuarios = new QueryUsuario();
+        this._Query_Tipo_Ordenes = new _QueryTipoOrdenes();
     }
 
     private Reduce_Productos_Pendientes(result: productos_pendiente[], productos_pendientes: productos_pendiente[]) {
         productos_pendientes.forEach((producto: productos_pendiente) => {
 
             const esProducto = result.find((existe) => existe.id_producto === producto.id_producto);
-            
+
             if (!esProducto) {
                 // AGREGAR EL PRODUCTO PENDIENTE
                 result.push(producto);
@@ -78,13 +82,33 @@ export class RequisicionesService {
     }
 
 
-    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>) {
+    public async Obtener_Requisiciones_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Requisiciones>, tipo_orden: string) {
+        let requisiciones
         try {
             if (!Object.keys(filtros)) {
                 return { error: true, message: "No hay existen filtros a realizar" }
             }
+            
+            if (tipo_orden) {
+                // BUSCAR LOS TIPO DE PRODUCTOS DEL TIPO DE ORDEN
+                const tipo_productos = await this._Query_Tipo_Ordenes.Obtener_Tipo_Producto_Orden({ id_tipo_orden: +tipo_orden })
+                if (!tipo_productos) {
+                    return { error: true, message: "No se han encontrado tipos de productos" }
+                }
 
-            const requisiciones: any = await this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros)
+                let requisiciones_tipadas = []
+                for (let tipo of tipo_productos) {
+                    // OBTENER LAS REQUISICIONES POR LOS TIPOS DE PRODUCTOS DEL TIPO DE ORDEN
+                    requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, { tipo_producto: tipo.id_tipo_producto }, true)
+                    if (requisiciones.length > 0) {
+                        requisiciones_tipadas.push(requisiciones)
+                    }
+                }
+                return requisiciones_tipadas.flat() //APLANAR MATRIZ A UN NIVEL [ [ {} ], [ {} ] ] --> [ {}, {} ]  
+            } else {
+                requisiciones = await this._Query_Requisiciones.Obtener_Requisiciones_Filtro(estado, empresa, usuario, filtros, false)
+            }
+
             if (requisiciones?.length === 0 || !requisiciones) {
                 return { error: true, message: "No se han encontrado las requisiciones" }
             }

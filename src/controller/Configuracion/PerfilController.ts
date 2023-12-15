@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PerfilService } from "../../services/Configuracion/Perfil.service";
+import { PerfilService } from "../../services/Configuracion/Perfil.Service";
 import { PerfilesSchema } from "../../validations/Configuracion.Zod";
 import { EstadosTablas } from "../../helpers/constants";
 

@@ -7,7 +7,7 @@ import FamiliaProductoController from "../../controller/Opciones_Basicas/Familia
 import ProcesosEmpresaController from "../../controller/Opciones_Basicas/ProcesosEmpresaController";
 import CentroCostoEmpresa from "../../controller/Opciones_Basicas/CentroCostoEmpresaController";
 import ParametrosController from "../../controller/Opciones_Basicas/Parametrizadas/ParametrosController";
-import _OrdenesController from "../../controller/Compras/OrdenesController";
+import TipoOrdenesController from "../../controller/Opciones_Basicas/Compras/TiposOrdenes";
 
 export const _OpcionesBasicasRouter = Router()
 
@@ -19,7 +19,7 @@ const _Familia_Producto_Controller = new FamiliaProductoController()
 const _Proceso_Empresa_Controller = new ProcesosEmpresaController()
 const _Centro_Empresa_Controller = new CentroCostoEmpresa()
 const _Parametros_Controller = new ParametrosController()
-const OrdenesController = new _OrdenesController()
+const _TipoOrdenesController = new TipoOrdenesController()
 
 
 
@@ -93,12 +93,12 @@ _OpcionesBasicasRouter.route('/centro-costo-empresa/:id_centro_costo')
 
 // TIPOS DE ORDENES DE LA EMPRESA
 _OpcionesBasicasRouter.route('/tipos-ordenes')
-    .get(_Autorizacion, OrdenesController.Obtener_Tipos_Ordenes) //OBTENER TODAS LOS TIPOS DE ORDENES
-    .post(_Autorizacion, OrdenesController.Insertar_Tipo_Orden) //INSERTAR UN TIPO DE ORDEN
+    .get(_Autorizacion, _TipoOrdenesController.Obtener_Tipos_Ordenes) //OBTENER TODAS LOS TIPOS DE ORDENES
+    .post(_Autorizacion, _TipoOrdenesController.Insertar_Tipo_Orden) //INSERTAR UN TIPO DE ORDEN
 
 _OpcionesBasicasRouter.route('/tipos-ordenes/:id_tipo_orden')
-    .get(_Autorizacion, OrdenesController.Buscar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
-    .patch(_Autorizacion, OrdenesController.Editar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
+    .get(_Autorizacion, _TipoOrdenesController.Buscar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
+    .patch(_Autorizacion, _TipoOrdenesController.Editar_Tipo_Orden) //OBTENER TODAS LOS TIPOS DE ORDENES
 
 
 // TIPOS DE DOCUMENTOS

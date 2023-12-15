@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { HistorialService } from "../../services/Auditoria/Auditoria.service";
+import { HistorialService } from "../../services/Auditoria/Auditoria.Service";
 import { FiltroLogsAuditoriaSchema } from "../../validations/Auditoria.Zod";
 
 export default class _HistorialController {

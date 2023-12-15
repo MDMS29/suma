@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
-import { MenuService } from "../../services/Configuracion/Menu.service";
+import { MenuService } from "../../services/Configuracion/Menu.Service";
 import { MenuSchema } from "../../validations/Configuracion.Zod";
 
 export default class _MenuController {
