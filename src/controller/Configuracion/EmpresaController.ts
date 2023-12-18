@@ -119,11 +119,6 @@ export default class _EmpresaController {
             return res.status(400).json({ error: true, message: 'Ingrese el correo de la empresa' }) //!ERROR
         }
 
-        // const result = PerfilesSchema.safeParse(req.body)
-        // if (!result.success) {
-        //     return res.status(400).json({ error: true, message: result.error.issues }) //!ERROR
-        // }
-
         try {
             const menu_service = new EmpresaService()
 

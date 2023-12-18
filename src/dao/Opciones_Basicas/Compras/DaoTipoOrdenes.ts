@@ -1,5 +1,3 @@
-
-// TIPOS DE ORDENES
 export const _FAObtener_tipos_ordenes = `public.fnc_obtener_consecutivo_ordenes`
 
 export const _buscar_tipo_orden_nombre = `
