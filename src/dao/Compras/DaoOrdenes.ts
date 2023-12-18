@@ -100,7 +100,7 @@ export const _buscar_detalle_orden = `
         public.tbl_orden_detalle tod
     WHERE 
         tod.id_orden = $1 AND 
-        tod.id_estado != 2;
+        tod.id_estado = 3;
 `
 
 export const _editar_encabezado_orden = `

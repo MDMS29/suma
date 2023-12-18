@@ -1,3 +1,5 @@
+import { Direccion } from "../IConstants"
+
 export interface Requisicion_Det {
     id_detalle?: number
     id_producto: number
@@ -45,6 +47,7 @@ export interface Filtro_Requisiciones {
 
 
 /****************  INTERFACES PARA LOS PROVEEDORES  ****************/
+
 export interface Tercero {
     id_tercero?: number
     id_empresa: number
@@ -52,7 +55,7 @@ export interface Tercero {
     id_tipo_documento: number
     documento: string
     nombre: string
-    direccion: string
+    direccion: Direccion
     telefono: string
     correo: string
     contacto: string

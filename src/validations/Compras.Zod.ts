@@ -92,9 +92,19 @@ export const TercerosSchema = z.object({
         invalid_type_error: "Tipo de dato para el nombre es invalido",
         required_error: "Ingrese un nombre para el proveedor"
     }),
-    direccion: z.string({
-        invalid_type_error: "Tipo de dato para la dirección es invalido",
-        required_error: "Ingrese la dirección del proveedor"
+    direccion: z.object({ //TODO: COMPONER ESTA WEA
+        tipo_via: z.string(),
+        numero_u: z.number(),
+        letra_u: z.string(),
+        numero_d: z.number(),
+        complemento_u: z.string(),
+        numero_t: z.number(),
+        letra_d: z.string(),
+        complemento_d: z.string(),
+        numero_c: z.number(),
+        complemento_f: z.string(),
+        departamento: z.string(),
+        municipio: z.string(),
     }),
     telefono: z.string({
         invalid_type_error: "Tipo de dato para el telefono es invalido",
@@ -185,49 +195,51 @@ export const OrdenesSchema = z.object({
         invalid_type_error: "Tipo de dato para el estado es invalido",
         required_error: "Debe ingresar un estado para el proveedor"
     }).optional(),
-    detalles_orden: z.array(z.object({
-        id_detalle: z.number({
-            invalid_type_error: "Tipo de dato para el id del detalle es invalida"
-        }).optional(),
-        id_orden: z.number({
-            invalid_type_error: "Tipo de dato para el id de la orden es invalida",
-            required_error: "Asigne una orden al detalle"
-        }).optional(),
-        id_requisicion: z.number({
-            invalid_type_error: "Tipo de dato para el id de la requisicion es invalida",
-            required_error: "Asigne una requisicion al detalle"
-        }),
-        id_producto: z.number({
-            invalid_type_error: "Tipo de dato para el id del producto es invalido",
-            required_error: "Ingrese un producto al detalle"
-        }),
-        cantidad: z.number({
-            invalid_type_error: "Tipo de dato para la cantidad es invalido",
-            required_error: "Ingrese una cantidad para el detalle"
-        }).min(1, {
-            message: "Ingrese una cantidad mayor a 0"
-        }),
-        precio_compra: z.number({
-            invalid_type_error: "Tipo de dato para la cantidad es invalido",
-            required_error: "Ingrese una cantidad para el detalle"
-        }).min(100, {
-            message: "Ingrese un precio mayor a 100"
-        }),
-        id_iva: z.number({
-            invalid_type_error: "Tipo de dato para el id del iva es invalido",
-            required_error: "Seleccione un valor para el iva"
-        }),
-        descuento: z.number({
-            invalid_type_error: "Tipo de dato para el descuento es invalido",
-            required_error: "Se requiero un valor para el descuento"
-        }).min(1, {
-            message: "Ingrese precio mayor a 100"
-        }),
-        id_estado: z.number({
-            invalid_type_error: "Tipo de dato para el estado es invalido",
-            required_error: "Debe ingresar un estado para el proveedor"
-        }),
-    })).nonempty({
-        message: "Ingrese suministros para el proveedor"
+    detalles_orden: z.array(
+        z.object({
+            id_detalle: z.number({
+                invalid_type_error: "Tipo de dato para el id del detalle es invalida"
+            }).optional(),
+            id_orden: z.number({
+                invalid_type_error: "Tipo de dato para el id de la orden es invalida",
+                required_error: "Asigne una orden al detalle"
+            }).optional(),
+            id_requisicion: z.number({
+                invalid_type_error: "Tipo de dato para el id de la requisicion es invalida",
+                required_error: "Asigne una requisicion al detalle"
+            }),
+            id_producto: z.number({
+                invalid_type_error: "Tipo de dato para el id del producto es invalido",
+                required_error: "Ingrese un producto al detalle"
+            }),
+            cantidad: z.number({
+                invalid_type_error: "Tipo de dato para la cantidad es invalido",
+                required_error: "Ingrese una cantidad para el detalle"
+            }).min(1, {
+                message: "Ingrese una cantidad mayor a 0"
+            }),
+            precio_compra: z.number({
+                invalid_type_error: "Tipo de dato para la cantidad es invalido",
+                required_error: "Ingrese una cantidad para el detalle"
+            }).min(100, {
+                message: "Ingrese un precio mayor a 100"
+            }),
+            id_iva: z.number({
+                invalid_type_error: "Tipo de dato para el id del iva es invalido",
+                required_error: "Seleccione un valor para el iva"
+            }),
+            descuento: z.number({
+                invalid_type_error: "Tipo de dato para el descuento es invalido",
+                required_error: "Se requiero un valor para el descuento"
+            }).min(1, {
+                message: "Ingrese precio mayor a 100"
+            }),
+            id_estado: z.number({
+                invalid_type_error: "Tipo de dato para el estado es invalido",
+                required_error: "Debe ingresar un estado para el proveedor"
+            }),
+        })
+    ).nonempty({
+        message: "Ingrese los detalles de la orden"
     }),
 });

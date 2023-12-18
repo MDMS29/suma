@@ -78,7 +78,12 @@ export class ProveedoresService {
                 return { error: true, message: 'Ya existe este correo' } //!ERROR
             }
 
+            const direccion_insertada = await this._Query_Proveedores.Insertar_Direccion(proveedor_request.direccion)
+            if (direccion_insertada.length <= 0) {
+                return { error: true, message: 'Error al insertar la dirección' } //!ERROR
+            }
 
+            proveedor_request.direccion = direccion_insertada[0].id_direccion
 
             // INSERTAR EL PROVEEDOR
             const proveedor_insert = await this._Query_Proveedores.Insertar_Proveedor(proveedor_request, usuario_creacion)

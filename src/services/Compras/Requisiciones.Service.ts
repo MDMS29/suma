@@ -34,15 +34,10 @@ export class RequisicionesService {
 
             const esProducto = result.find((existe) => existe.id_producto === producto.id_producto);
 
-            if (!esProducto) {
-                // AGREGAR EL PRODUCTO PENDIENTE
-                result.push(producto);
-            } else {
-                // SUMAR LAS CANTIDADES DE LOS PRODUCTOS PENDIENTES
-                const producto_filtrado: productos_pendiente[] = result.filter(r => r.id_producto === producto.id_producto)
-                producto_filtrado[0].productos_pendientes = producto.productos_pendientes
-            }
+            if (!esProducto) result = [...result, producto];
 
+            if (producto.productos_pendientes <= 0) result = result.filter(r => r.id_producto !== producto.id_producto)
+            else result = result.map(res => res.id_producto === producto.id_producto ? producto : res)
         });
         return result;
     }
@@ -88,7 +83,7 @@ export class RequisicionesService {
             if (!Object.keys(filtros)) {
                 return { error: true, message: "No hay existen filtros a realizar" }
             }
-            
+
             if (tipo_orden) {
                 // BUSCAR LOS TIPO DE PRODUCTOS DEL TIPO DE ORDEN
                 const tipo_productos = await this._Query_Tipo_Ordenes.Obtener_Tipo_Producto_Orden({ id_tipo_orden: +tipo_orden })
@@ -193,15 +188,10 @@ export class RequisicionesService {
                 return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
             }
 
-            if (!Array.isArray(requisicion)) {
-                return requisicion
-            }
-
             if (tipo_consulta) {
                 // SI SE BUSCAN LOS PRODUCTOS PENDIENTES SE HACE UN REDUCE PARA SUMAR SUS PRODUCTOS PENDIENTES
                 requisicion = this.Reduce_Productos_Pendientes([], requisicion)
             }
-
 
             return requisicion
         } catch (error) {
