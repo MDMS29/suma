@@ -1,4 +1,5 @@
 export interface Direccion {
+    id_direccion: number;
     tipo_via:      string;
     numero_u:      number;
     letra_u:       string;

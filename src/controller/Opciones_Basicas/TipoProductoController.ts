@@ -7,7 +7,6 @@ export default class TipoProductoController {
     public async Obtener_Tipos_Producto(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { empresa } = req.query //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
-        console.log("🚀 ~ file: TipoProductoController.ts:10 ~ TipoProductoController ~ Obtener_Tipos_Producto ~ empresa:", empresa)
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }

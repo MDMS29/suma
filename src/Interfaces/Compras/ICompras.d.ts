@@ -55,6 +55,7 @@ export interface Tercero {
     id_tipo_documento: number
     documento: string
     nombre: string
+    id_direccion?: number
     direccion: Direccion
     telefono: string
     correo: string

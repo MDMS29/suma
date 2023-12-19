@@ -30,6 +30,10 @@ export class RequisicionesService {
     }
 
     private Reduce_Productos_Pendientes(result: productos_pendiente[], productos_pendientes: productos_pendiente[]) {
+        if(productos_pendientes.length <= 0){
+            return []
+        } 
+
         productos_pendientes.forEach((producto: productos_pendiente) => {
 
             const esProducto = result.find((existe) => existe.id_producto === producto.id_producto);
@@ -156,7 +160,7 @@ export class RequisicionesService {
                 to: nueva_requisicion.correo_responsable,
                 subject: `Nueva requisición ${nueva_requisicion.requisicion}`,
                 html: `
-                        <div>
+                    <div>
                             <p>Cordial saludo, ${nueva_requisicion.correo_responsable}!</p>
                             <br />
                             <p>Atentamente nos permitimos comunicarle que se ha creado una requisición dentro del Sistema Unificado de Mejora y Autogestión - <b>SUMA</b></p>

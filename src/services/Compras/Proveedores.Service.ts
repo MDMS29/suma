@@ -166,6 +166,11 @@ export class ProveedoresService {
                 return { error: true, message: 'Este correo ya existe' } //!ERROR
             }
 
+            const direccion_editada = await this._Query_Proveedores.Editar_Direccion(proveedor_request.direccion.id_direccion || 0, proveedor_request.direccion)
+            if (direccion_editada !== 1) {
+                return { error: true, message: 'Error al editar la dirección' } //!ERROR
+            }
+
             const proveedor_editado = await this._Query_Proveedores.Editar_Proveedor(id_proveedor, proveedor_request)
             if (proveedor_editado?.rowCount != 1) {
                 return { error: true, message: 'Error al actualizar el proveedor' } //!ERROR

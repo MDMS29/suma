@@ -28,7 +28,7 @@ export default class _OrdenesController {
             const ordenes_service = new OrdenesService()
             const respuesta = await ordenes_service.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta.error) {
-                return res.status(500).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
+                return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
 
 

@@ -14,7 +14,7 @@ export class OrdenesService {
         try {
             const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta?.length <= 0) {
-                return { error: true, message:  'No se han encontrado ordenes' } //!ERROR
+                return { error: false, message:  'No se han encontrado ordenes' } //!ERROR
             }
             return respuesta
         } catch (error) {

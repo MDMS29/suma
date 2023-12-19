@@ -153,10 +153,7 @@ export default class QueryRequisiciones extends Database {
 
             if (tipo_consulta) {
                 let result: any = await _DB.func(_FA_obtener_productos_pendientes, [id_requisicion]);
-                if (result.length == 0) {
-                    return { error: false, message: "No hay productos pendientes" }
-                }
-                return result;
+                return result || [];
             } else {
                 let result: any = await client.query(_buscar_requisicion_id, [id_requisicion]);
                 if (result.rows.length > 0) {

@@ -19,14 +19,14 @@ export default class QueryOrdenes extends Database {
         try {
             if(!inputs){
                 let result = await client.query(_obtener_ordenes, [empresa, estado]);
-                return result.rows    
+                return result.rows || []
             }else{
                 let result = await _DB.func(_FA_filtro_ordenes, [empresa, estado, inputs]);
-                return result 
+                return result || []
             }
         } catch (error) {
             console.log(error)
-            return
+            return []
         } finally {
             client.release();
         }

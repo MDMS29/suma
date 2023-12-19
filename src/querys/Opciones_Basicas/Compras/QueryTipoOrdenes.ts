@@ -14,10 +14,10 @@ export default class _QueryTipoOrdenes extends Database{
         const client = await this.pool.connect()
         try {
             let result = await _DB.func(_FAObtener_tipos_ordenes, [empresa]);
-            return result
+            return result || []
         } catch (error) {
             console.log(error)
-            return
+            return []
         } finally {
             client.release();
         }
