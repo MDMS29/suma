@@ -166,7 +166,7 @@ export class ProveedoresService {
                 return { error: true, message: 'Este correo ya existe' } //!ERROR
             }
 
-            const direccion_editada = await this._Query_Proveedores.Editar_Direccion(proveedor_request.direccion.id_direccion || 0, proveedor_request.direccion)
+            const direccion_editada = await this._Query_Proveedores.Editar_Direccion(proveedor_request.direccion.id_direccion ?? 0, proveedor_request.direccion)
             if (direccion_editada !== 1) {
                 return { error: true, message: 'Error al editar la dirección' } //!ERROR
             }
@@ -181,7 +181,7 @@ export class ProveedoresService {
                     const suministro_encontrado = await this._Query_Proveedores.Buscar_Suministro_Proveedor(suministro, id_proveedor)
                     if (suministro_encontrado) {
                         // EDITAR DETALLE
-                        const requisicion_det = await this._Query_Proveedores.Editar_Suministro_Proveedor(suministro)
+                        const requisicion_det = await this._Query_Proveedores.Editar_Suministro_Proveedor(suministro_encontrado.id_suministro, suministro)
                         if (!requisicion_det) {
                             return { error: true, message: `Error al editar el suministro` } //!ERROR
                         }

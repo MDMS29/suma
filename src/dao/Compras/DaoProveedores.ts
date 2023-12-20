@@ -149,7 +149,7 @@ export const _buscar_suministro_proveedor = `
         public.tbl_tipo_suministro tts 
     WHERE 
         tts.id_tercero = $1 AND 
-        tts.id_suministro = $2 
+        tts.id_tipo_producto = $2 
 `
 
 export const _editar_proveedor = `

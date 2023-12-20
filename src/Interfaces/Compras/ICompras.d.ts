@@ -87,7 +87,8 @@ interface Detalle_Orden {
     orden: string;
     fecha_orden: Date;
     id_forma_pago: number;
-    lugar_entrega: string;
+    id_direccion?: number
+    lugar_entrega: Direccion
     observaciones?: string;
     cotizacion: string;
     fecha_entrega: Date;

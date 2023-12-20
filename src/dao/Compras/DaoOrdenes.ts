@@ -3,10 +3,28 @@ export const _FA_filtro_ordenes = 'public.fnc_obtener_ordenes_filtro'
 export const _obtener_ordenes = `
     SELECT 
         tor.id_orden, tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago, 
-        tor.fecha_orden, tor.lugar_entrega, tor.observaciones, 
-        tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo
+        tor.fecha_orden, tor.id_lugar_entrega, tor.observaciones, 
+        tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo,
+        to_jsonb(
+            json_build_object(
+                'id_lugar_entrega', tdir.id_direccion,
+                'tipo_via', tdir.tipo_via,
+                'numero_u', tdir.numero_u,
+                'letra_u', CASE WHEN tdir.letra_u IS NOT NULL THEN tdir.letra_u ELSE '' END,
+                'numero_d', CASE WHEN tdir.numero_d IS NOT NULL THEN tdir.numero_d ELSE '' END,
+                'complemento_u', CASE WHEN tdir.complemento_u IS NOT NULL THEN tdir.complemento_u ELSE '' END,
+                'numero_t', tdir.numero_t,
+                'letra_d', CASE WHEN tdir.letra_d IS NOT NULL THEN tdir.letra_d ELSE '' END,
+                'complemento_d', CASE WHEN tdir.complemento_d IS NOT NULL THEN tdir.complemento_d ELSE '' END,
+                'numero_c', tdir.numero_c,
+                'complemento_f',  CASE WHEN tdir.complemento_f IS NOT NULL THEN tdir.complemento_f ELSE '' END,
+                'departamento', tdir.departamento,
+                'municipio', tdir.municipio
+            )
+        ) AS lugar_entrega
     FROM
         public.tbl_ordenes tor
+    LEFT JOIN tbl_direcciones tdir ON tdir.id_direccion = tor.id_lugar_entrega
     INNER JOIN public.tbl_tipo_orden tto ON tto.id_tipo_orden = tor.id_tipo_orden
     INNER JOIN public.tbl_forma_pago tfp ON tfp.id_forma_pago = tor.id_forma_pago
     INNER JOIN public.tbl_terceros tt ON tt.id_tercero = tor.id_tercero 
@@ -20,13 +38,12 @@ export const _obtener_ordenes = `
 export const _buscar_numero_orden = `
     SELECT 
         tor.id_orden, tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago, 
-        tc.centro_costo, tor.fecha_orden, tor.lugar_entrega, tor.observaciones, 
+        tor.fecha_orden, tor.id_lugar_entrega, tor.observaciones, 
         tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo
     FROM
         public.tbl_ordenes tor
     INNER JOIN public.tbl_tipo_orden tto ON tto.id_tipo_orden = tor.id_tipo_orden
     INNER JOIN public.tbl_forma_pago tfp ON tfp.id_forma_pago = tor.id_forma_pago
-    INNER JOIN public.tbl_centros tc ON tc.id_centro = tor.id_centro_costo
     INNER JOIN public.tbl_terceros tt ON tt.id_tercero = tor.id_tercero 
     WHERE 
         tor.orden = $1 AND
@@ -41,7 +58,7 @@ export const _insertar_orden = `
         (
             id_orden, 
             id_empresa, id_tipo_orden, id_tercero, orden, 
-            fecha_orden, id_forma_pago, lugar_entrega, 
+            fecha_orden, id_forma_pago, id_lugar_entrega, 
             observaciones, cotizacion, fecha_entrega, total_orden, 
             anticipo, id_estado, fecha_creacion, usuario_creacion
         )
@@ -79,10 +96,28 @@ export const _buscar_orden_id = `
     SELECT 
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
         tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago,
-        tor.fecha_orden, tor.lugar_entrega, tor.observaciones, 
-        tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo
+        tor.fecha_orden, tor.observaciones, 
+        tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo,
+        to_jsonb(
+            json_build_object(
+                'id_lugar_entrega', tdir.id_direccion,
+                'tipo_via', tdir.tipo_via,
+                'numero_u', tdir.numero_u,
+                'letra_u', CASE WHEN tdir.letra_u IS NOT NULL THEN tdir.letra_u ELSE '' END,
+                'numero_d', CASE WHEN tdir.numero_d IS NOT NULL THEN tdir.numero_d ELSE '' END,
+                'complemento_u', CASE WHEN tdir.complemento_u IS NOT NULL THEN tdir.complemento_u ELSE '' END,
+                'numero_t', tdir.numero_t,
+                'letra_d', CASE WHEN tdir.letra_d IS NOT NULL THEN tdir.letra_d ELSE '' END,
+                'complemento_d', CASE WHEN tdir.complemento_d IS NOT NULL THEN tdir.complemento_d ELSE '' END,
+                'numero_c', tdir.numero_c,
+                'complemento_f',  CASE WHEN tdir.complemento_f IS NOT NULL THEN tdir.complemento_f ELSE '' END,
+                'departamento', tdir.departamento,
+                'municipio', tdir.municipio
+            )
+        ) AS lugar_entrega
     FROM
         public.tbl_ordenes tor
+    LEFT JOIN tbl_direcciones tdir ON tdir.id_direccion = tor.id_lugar_entrega
     INNER JOIN public.tbl_tipo_orden tto ON tto.id_tipo_orden = tor.id_tipo_orden
     INNER JOIN public.tbl_forma_pago tfp ON tfp.id_forma_pago = tor.id_forma_pago
     INNER JOIN public.tbl_terceros tt ON tt.id_tercero = tor.id_tercero 
@@ -100,7 +135,7 @@ export const _buscar_detalle_orden = `
         public.tbl_orden_detalle tod
     WHERE 
         tod.id_orden = $1 AND 
-        tod.id_estado = 3;
+        tod.id_estado != 2 AND tod.id_estado != 5;
 `
 
 export const _editar_encabezado_orden = `
@@ -109,7 +144,7 @@ export const _editar_encabezado_orden = `
     SET 
         id_tipo_orden=$2, id_tercero=$3, orden=$4, 
         fecha_orden=$5, id_forma_pago=$6,
-        lugar_entrega=$7, observaciones=$8, cotizacion=$9, 
+        id_lugar_entrega=$7, observaciones=$8, cotizacion=$9, 
         fecha_entrega=$10, total_orden=$11, anticipo=$12
     WHERE 
         id_orden=$1;

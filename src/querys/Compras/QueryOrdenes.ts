@@ -1,4 +1,5 @@
 import { Detalle_Orden, Encabezado_Orden } from "../../Interfaces/Compras/ICompras";
+import { Direccion } from "../../Interfaces/IConstants";
 import { Database, _DB } from "../../config/db";
 import {
     _FA_filtro_ordenes,
@@ -7,6 +8,7 @@ import {
     _editar_encabezado_orden,
     _eliminar_restaurar_orden, _insertar_orden, _insertar_orden_detalle, _obtener_ordenes,
 } from "../../dao/Compras/DaoOrdenes";
+import { _editar_direccion, _insertar_direccion } from "../../dao/Compras/DaoProveedores";
 
 export default class QueryOrdenes extends Database {
     private pool;
@@ -47,6 +49,68 @@ export default class QueryOrdenes extends Database {
             client.release();
         }
     }
+
+    //TODO: IMPLEMENTAR ESTO EN OTRO SITIO PARA REUTILIZAR
+    public async Insertar_Direccion(direccion_request: Direccion) {
+        const client = await this.pool.connect()
+
+        const {
+            tipo_via, numero_u, letra_u,
+            numero_d, complemento_u, numero_t,
+            letra_d, complemento_d, numero_c,
+            complemento_f, departamento, municipio
+        } = direccion_request
+
+        try {
+            let result = await client.query(
+                _insertar_direccion,
+                [
+                    tipo_via, numero_u, letra_u,
+                    numero_d, complemento_u, numero_t,
+                    letra_d, complemento_d, numero_c,
+                    complemento_f, departamento, municipio
+                ]
+            );
+            return result.rows || []
+        } catch (error) {
+            console.log(error)
+            return []
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Editar_Direccion(id_direccion: number, direccion_request: Direccion) {
+        const client = await this.pool.connect()
+
+        const {
+            tipo_via, numero_u, letra_u,
+            numero_d, complemento_u, numero_t,
+            letra_d, complemento_d, numero_c,
+            complemento_f, departamento, municipio
+        } = direccion_request
+
+        try {
+            let result = await client.query(
+                _editar_direccion,
+                [
+                    id_direccion,
+                    tipo_via, numero_u, letra_u,
+                    numero_d, complemento_u, numero_t,
+                    letra_d, complemento_d, numero_c,
+                    complemento_f, departamento, municipio
+                ]
+            );
+            return result.rowCount || 0
+        } catch (error) {
+            console.log(error)
+            return 0
+        } finally {
+            client.release();
+        }
+    }
+
+
 
     public async Insertar_Orden_Encabezado(req_body: Encabezado_Orden, total_orden: number, usuario_creacion: string) {
         const client = await this.pool.connect()

@@ -39,6 +39,13 @@ export class OrdenesService {
             }
 
             try {
+                const direccion_insertada = await this._Query_Ordenes.Insertar_Direccion(req_body.lugar_entrega)
+                if (direccion_insertada.length <= 0) {
+                    return { error: true, message: 'Error al insertar la dirección' } //!ERROR
+                }
+    
+                req_body.lugar_entrega = direccion_insertada[0].id_direccion
+
                 //INSERTAR ENCABEZADO DE LA ORDEN
                 const orden = await this._Query_Ordenes.Insertar_Orden_Encabezado(req_body, total_orden, usuario_id)
                 if (!orden) {
@@ -95,8 +102,13 @@ export class OrdenesService {
     public async Editar_Orden(req_body: Encabezado_Orden, id_orden: number) {
         try {
             const numero_orden = await this._Query_Ordenes.Buscar_Numero_Orden(req_body)
-            if (numero_orden && numero_orden?.length > 0 && req_body.id_orden === numero_orden[0].id_orden) {
+            if (numero_orden && numero_orden?.length > 0 && id_orden !== numero_orden[0].id_orden) {
                 return { error: true, message: `Ya existe el numero de orden ${req_body.orden}` } //!ERROR
+            }
+
+            const direccion_editada = await this._Query_Ordenes.Editar_Direccion(req_body.lugar_entrega.id_lugar_entrega ?? 0, req_body.lugar_entrega)
+            if (direccion_editada !== 1) {
+                return { error: true, message: 'Error al editar la dirección' } //!ERROR
             }
 
             //SUMAR LOS PRECiOS DE COMPRA DE CADA DETALLE DE LA ORDEN

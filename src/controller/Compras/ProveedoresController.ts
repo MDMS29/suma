@@ -84,7 +84,7 @@ export default class ProveedoresController {
     public async Editar_Proveedor(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_proveedor } = req.params
-
+        
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
@@ -94,6 +94,7 @@ export default class ProveedoresController {
 
         // VALIDACION DE DATOS
         const result = TercerosSchema.safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        
         if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }

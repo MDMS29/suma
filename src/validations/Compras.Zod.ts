@@ -95,18 +95,18 @@ export const TercerosSchema = z.object({
     id_direccion: z.number().optional(),
     direccion: z.object({ //TODO: COMPONER ESTA WEA
         tipo_via: z.string(),
-        numero_u: z.string().optional(),
-        letra_u: z.string(),
-        numero_d: z.string().optional(),
-        complemento_u: z.string().optional(),
+        numero_u: z.string(),
+        letra_u: z.string().optional().nullable(),
+        numero_d: z.string().optional().nullable(),
+        complemento_u: z.string().optional().nullable(),
         numero_t: z.string(),
-        letra_d: z.string().optional(),
-        complemento_d: z.string().optional(),
+        letra_d: z.string().optional().nullable(),
+        complemento_d: z.string().optional().nullable(),
         numero_c: z.string(),
-        complemento_f: z.string().optional(),
+        complemento_f: z.string().optional().nullable(),
         departamento: z.string(),
         municipio: z.string(),
-    }),
+    }).partial(),
     telefono: z.string({
         invalid_type_error: "Tipo de dato para el telefono es invalido",
         required_error: "Ingrese el telefono del proveedor"
@@ -173,10 +173,21 @@ export const OrdenesSchema = z.object({
         invalid_type_error: "Tipo de dato para la forma de pago es invalida",
         required_error: "Seleccione una forma de pago"
     }),
-    lugar_entrega: z.string({
-        invalid_type_error: "Tipo de dato para el lugar de la entrega es invalida",
-        required_error: "Ingrese el lugar de la entrega"
-    }),
+    lugar_entrega: z.object({ //TODO: COMPONER ESTA WEA
+        id_lugar_entrega: z.number().optional(),
+        tipo_via: z.string(),
+        numero_u: z.string(),
+        letra_u: z.string().optional().nullable(),
+        numero_d: z.string().optional().nullable(),
+        complemento_u: z.string().optional().nullable(),
+        numero_t: z.string(),
+        letra_d: z.string().optional().nullable(),
+        complemento_d: z.string().optional().nullable(),
+        numero_c: z.string(),
+        complemento_f: z.string().optional().nullable(),
+        departamento: z.string(),
+        municipio: z.string(),
+    }).partial(),
     observaciones: z.string({
         invalid_type_error: "Tipo de dato para la observacion es invalido"
     }).optional(),
@@ -200,7 +211,7 @@ export const OrdenesSchema = z.object({
         z.object({
             id_detalle: z.number({
                 invalid_type_error: "Tipo de dato para el id del detalle es invalida"
-            }).optional(),
+            }).optional().or(z.string().optional()),
             id_orden: z.number({
                 invalid_type_error: "Tipo de dato para el id de la orden es invalida",
                 required_error: "Asigne una orden al detalle"

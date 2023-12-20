@@ -78,10 +78,10 @@ export default class QueryProveedores extends Database {
             let result = await client.query(
                 _insertar_direccion,
                 [
-                    tipo_via, numero_u, letra_u || null,
-                    numero_d || null, complemento_u || null, numero_t,
-                    letra_d || null, complemento_d || null, numero_c,
-                    complemento_f || null, departamento, municipio
+                    tipo_via, numero_u, letra_u,
+                    numero_d, complemento_u, numero_t,
+                    letra_d, complemento_d, numero_c,
+                    complemento_f, departamento, municipio
                 ]
             );
             return result.rows || []
@@ -210,11 +210,11 @@ export default class QueryProveedores extends Database {
         }
     }
 
-    public async Buscar_Suministro_Proveedor(suministro: { id_suministro: number }, id_proveedor: number) {
+    public async Buscar_Suministro_Proveedor(suministro: { id_tipo_producto: number }, id_proveedor: number) {
         const client = await this.pool.connect()
 
         try {
-            let result: any = await client.query(_buscar_suministro_proveedor, [id_proveedor, suministro.id_suministro]);
+            let result: any = await client.query(_buscar_suministro_proveedor, [id_proveedor, suministro.id_tipo_producto]);
             return result.rows[0]
         } catch (error) {
             console.log(error)
@@ -224,9 +224,9 @@ export default class QueryProveedores extends Database {
         }
     }
 
-    public async Editar_Suministro_Proveedor(suministro: { id_suministro: number, id_estado: number }) {
+    public async Editar_Suministro_Proveedor(id_suministro:number, suministro: { id_suministro: number, id_estado: number }) {
         const client = await this.pool.connect()
-        const { id_suministro, id_estado } = suministro
+        const { id_estado } = suministro
 
         try {
             let result = await client.query(
