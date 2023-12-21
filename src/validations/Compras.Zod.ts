@@ -1,4 +1,5 @@
 import z from 'zod'
+import { DireccionSchema } from './Global.Zod';
 
 export const RequisicionesSchema = z.object({
     id_empresa: z.number({
@@ -93,20 +94,7 @@ export const TercerosSchema = z.object({
         required_error: "Ingrese un nombre para el proveedor"
     }),
     id_direccion: z.number().optional(),
-    direccion: z.object({ //TODO: COMPONER ESTA WEA
-        tipo_via: z.string(),
-        numero_u: z.string(),
-        letra_u: z.string().optional().nullable(),
-        numero_d: z.string().optional().nullable(),
-        complemento_u: z.string().optional().nullable(),
-        numero_t: z.string(),
-        letra_d: z.string().optional().nullable(),
-        complemento_d: z.string().optional().nullable(),
-        numero_c: z.string(),
-        complemento_f: z.string().optional().nullable(),
-        departamento: z.string(),
-        municipio: z.string(),
-    }).partial(),
+    direccion: DireccionSchema,
     telefono: z.string({
         invalid_type_error: "Tipo de dato para el telefono es invalido",
         required_error: "Ingrese el telefono del proveedor"
@@ -173,21 +161,7 @@ export const OrdenesSchema = z.object({
         invalid_type_error: "Tipo de dato para la forma de pago es invalida",
         required_error: "Seleccione una forma de pago"
     }),
-    lugar_entrega: z.object({ //TODO: COMPONER ESTA WEA
-        id_lugar_entrega: z.number().optional(),
-        tipo_via: z.string(),
-        numero_u: z.string(),
-        letra_u: z.string().optional().nullable(),
-        numero_d: z.string().optional().nullable(),
-        complemento_u: z.string().optional().nullable(),
-        numero_t: z.string(),
-        letra_d: z.string().optional().nullable(),
-        complemento_d: z.string().optional().nullable(),
-        numero_c: z.string(),
-        complemento_f: z.string().optional().nullable(),
-        departamento: z.string(),
-        municipio: z.string(),
-    }).partial(),
+    lugar_entrega: DireccionSchema,
     observaciones: z.string({
         invalid_type_error: "Tipo de dato para la observacion es invalido"
     }).optional(),
@@ -207,6 +181,10 @@ export const OrdenesSchema = z.object({
         invalid_type_error: "Tipo de dato para el estado es invalido",
         required_error: "Debe ingresar un estado para el proveedor"
     }).optional(),
+    total_orden: z.number({
+        invalid_type_error: "Tipo de dato para el total de la orden es invalido",
+        required_error: "El total de la orden es requerido"
+    }),
     detalles_orden: z.array(
         z.object({
             id_detalle: z.number({
@@ -243,9 +221,7 @@ export const OrdenesSchema = z.object({
             descuento: z.number({
                 invalid_type_error: "Tipo de dato para el descuento es invalido",
                 required_error: "Se requiero un valor para el descuento"
-            }).min(1, {
-                message: "Ingrese precio mayor a 100"
-            }),
+            }).optional(),
             id_estado: z.number({
                 invalid_type_error: "Tipo de dato para el estado es invalido",
                 required_error: "Debe ingresar un estado para el proveedor"

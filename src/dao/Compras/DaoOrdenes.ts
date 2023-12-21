@@ -3,8 +3,8 @@ export const _FA_filtro_ordenes = 'public.fnc_obtener_ordenes_filtro'
 export const _obtener_ordenes = `
     SELECT 
         tor.id_orden, tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago, 
-        tor.fecha_orden, tor.id_lugar_entrega, tor.observaciones, 
-        tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo,
+        SUBSTRING(CAST(tor.fecha_orden AS VARCHAR) FROM 1 FOR 10) AS fecha_orden, tor.id_lugar_entrega, tor.observaciones, 
+        tor.cotizacion, SUBSTRING(CAST(tor.fecha_entrega AS VARCHAR) FROM 1 FOR 10) AS fecha_entrega, tor.total_orden, tor.anticipo,
         to_jsonb(
             json_build_object(
                 'id_lugar_entrega', tdir.id_direccion,
@@ -127,15 +127,29 @@ export const _buscar_orden_id = `
     ORDER BY tor.id_orden DESC;
 `
 
+export const _buscar_detalle_orden_pendiente = `
+    SELECT 
+        tod.id_detalle, tod.id_orden, tod.id_requisicion, tod.id_producto, 
+        tod.cantidad, tod.precio_compra, tod.id_iva, tod.descuento, tod.id_estado,
+        tp.descripcion as nombre_producto
+    FROM 
+        public.tbl_orden_detalle tod
+    INNER JOIN public.tbl_productos tp ON tp.id_producto = tod.id_producto
+    WHERE 
+        tod.id_orden = $1 AND 
+        tod.id_estado = 3;
+`
 export const _buscar_detalle_orden = `
     SELECT 
         tod.id_detalle, tod.id_orden, tod.id_requisicion, tod.id_producto, 
-        tod.cantidad, tod.precio_compra, tod.id_iva, tod.descuento, tod.id_estado
+        tod.cantidad, tod.precio_compra, tod.id_iva, tod.descuento, tod.id_estado,
+        tp.descripcion as nombre_producto
     FROM 
         public.tbl_orden_detalle tod
+    INNER JOIN public.tbl_productos tp ON tp.id_producto = tod.id_producto
     WHERE 
         tod.id_orden = $1 AND 
-        tod.id_estado != 2 AND tod.id_estado != 5;
+        tod.id_estado = 3 AND tod.id_estado = 4;
 `
 
 export const _editar_encabezado_orden = `
@@ -161,6 +175,24 @@ export const _editar_detalle_orden = `
 `
 
 export const _eliminar_restaurar_orden = `
+    UPDATE 
+        public.tbl_ordenes
+    SET 
+        id_estado=$2
+    WHERE 
+        id_orden=$1;
+`
+
+export const _aprobar_detalle_orden = `
+    UPDATE 
+        public.tbl_orden_detalle
+    SET 
+        id_estado=$2
+    WHERE 
+        id_detalle=$1;
+`
+
+export const _aprobar_encabezado_orden = `
     UPDATE 
         public.tbl_ordenes
     SET 

@@ -1,20 +1,27 @@
-import { Detalle_Orden, Encabezado_Orden } from "../../Interfaces/Compras/ICompras";
+import jsPDF from "jspdf";
+import { Encabezado_Orden } from "../../Interfaces/Compras/ICompras";
 import { EstadosTablas } from "../../helpers/constants";
 import QueryOrdenes from "../../querys/Compras/QueryOrdenes";
+import Querys from "../../querys/Querys";
+import { RequisicionesService } from "./Requisiciones.Service";
 
 export class OrdenesService {
     _Query_Ordenes: QueryOrdenes;
+    _QuerysG: Querys;
+    _Service_Requisicion: RequisicionesService;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Ordenes = new QueryOrdenes();
+        this._QuerysG = new Querys();
+        this._Service_Requisicion = new RequisicionesService();
     }
 
     async Obtener_Ordenes(empresa: string, estado: string, inputs: string) {
         try {
             const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta?.length <= 0) {
-                return { error: false, message:  'No se han encontrado ordenes' } //!ERROR
+                return { error: false, message: 'No se han encontrado ordenes' } //!ERROR
             }
             return respuesta
         } catch (error) {
@@ -25,35 +32,34 @@ export class OrdenesService {
 
     public async Insertar_Orden(req_body: Encabezado_Orden, usuario_id: string) {
         try {
-
             const numero_orden = await this._Query_Ordenes.Buscar_Numero_Orden(req_body)
             if (numero_orden && numero_orden?.length > 0) {
                 return { error: true, message: `Ya existe el numero de orden ${req_body.orden}` } //!ERROR
             }
 
             //SUMAR LOS PREICOS DE COMPRA DE CADA DETALLE DE LA ORDEN
-            let total_orden = 0
-            let detalle: Detalle_Orden
-            for (detalle of req_body.detalles_orden) {
-                total_orden = detalle.precio_compra + total_orden
-            }
+            // let total_orden = 0
+            // let detalle: Detalle_Orden
+            // for (detalle of req_body.detalles_orden) {
+            //     total_orden = detalle.precio_compra + total_orden
+            // }
 
             try {
-                const direccion_insertada = await this._Query_Ordenes.Insertar_Direccion(req_body.lugar_entrega)
+                const direccion_insertada = await this._QuerysG.Insertar_Direccion(req_body.lugar_entrega)
                 if (direccion_insertada.length <= 0) {
                     return { error: true, message: 'Error al insertar la dirección' } //!ERROR
                 }
-    
+
                 req_body.lugar_entrega = direccion_insertada[0].id_direccion
 
                 //INSERTAR ENCABEZADO DE LA ORDEN
-                const orden = await this._Query_Ordenes.Insertar_Orden_Encabezado(req_body, total_orden, usuario_id)
+                const orden = await this._Query_Ordenes.Insertar_Orden_Encabezado(req_body, 0, usuario_id)
                 if (!orden) {
                     return { error: true, message: `Error al insertar la orden ${req_body.orden}` } //!ERROR
                 }
 
                 ///INSERTAR DETALLES DE LA ORDEN
-                for (detalle of req_body.detalles_orden) {
+                for (let detalle of req_body.detalles_orden) {
 
                     const orden_detalle = await this._Query_Ordenes.Insertar_Orden_Detalle(detalle, orden[0].id_orden)
                     if (orden_detalle?.length == 0 && !orden_detalle) {
@@ -106,35 +112,36 @@ export class OrdenesService {
                 return { error: true, message: `Ya existe el numero de orden ${req_body.orden}` } //!ERROR
             }
 
-            const direccion_editada = await this._Query_Ordenes.Editar_Direccion(req_body.lugar_entrega.id_lugar_entrega ?? 0, req_body.lugar_entrega)
+            const direccion_editada = await this._QuerysG.Editar_Direccion(req_body.lugar_entrega.id_lugar_entrega ?? 0, req_body.lugar_entrega)
             if (direccion_editada !== 1) {
                 return { error: true, message: 'Error al editar la dirección' } //!ERROR
             }
 
             //SUMAR LOS PRECiOS DE COMPRA DE CADA DETALLE DE LA ORDEN
-            let total_orden = 0
-            let detalle: Detalle_Orden
-            for (detalle of req_body.detalles_orden) {
-                if (detalle.id_estado === EstadosTablas.ESTADO_ACTIVO) {
-                    // SUMAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA ACTIVO
-                    total_orden = detalle.precio_compra + total_orden
-                }
-                if (total_orden !== 0 && detalle.id_estado === EstadosTablas.ESTADO_INACTIVO) {
-                    // RESTAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA INACTIVO
-                    total_orden = detalle.precio_compra - total_orden
-                }
-            }
+            // let total_orden = 0
+            // let detalle: Detalle_Orden
+            // for (detalle of req_body.detalles_orden) {
+            //     if (detalle.id_estado === EstadosTablas.ESTADO_ACTIVO) {
+            //         // SUMAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA ACTIVO
+            //         total_orden = detalle.precio_compra + total_orden
+            //     }
+            //     if (total_orden !== 0 && detalle.id_estado === EstadosTablas.ESTADO_INACTIVO) {
+            //         // RESTAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA INACTIVO
+            //         total_orden = detalle.precio_compra - total_orden
+            //     }
+            // }
 
 
+            
             try {
                 //INSERTAR ENCABEZADO DE LA ORDEN
-                const orden = await this._Query_Ordenes.Editar_Orden_Encabezado(req_body, total_orden, id_orden)
+                const orden = await this._Query_Ordenes.Editar_Orden_Encabezado(req_body, 0, id_orden)
                 if (orden !== 1) {
                     return { error: true, message: `Error al editar la orden ${req_body.orden}` } //!ERROR
                 }
 
                 ///INSERTAR DETALLES DE LA ORDEN
-                for (detalle of req_body.detalles_orden) {
+                for (let detalle of req_body.detalles_orden) {
 
                     const orden_detalle = await this._Query_Ordenes.Editar_Detalle_Orden(detalle)
                     if (orden_detalle !== 1 && !orden_detalle) {
@@ -171,4 +178,94 @@ export class OrdenesService {
             return { error: true, message: 'Error al cambiar el estado de la orden' } //!ERROR
         }
     }
+
+    public async Aprobar_Orden(id_orden: number, empresa_id: number) {
+        try {
+            const [orden_aprobar] = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, empresa_id)
+            if (!orden_aprobar) {
+                return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
+            }
+
+            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Pendientes(id_orden)
+            if (dellate_orden && dellate_orden?.length <= 0) {
+                return { error: true, message: `No se han encontrado los detalle de la orden ${orden_aprobar.orden}` } //!ERROR
+            }
+
+            orden_aprobar.detalles_orden = dellate_orden
+
+            try {
+                for (let detalle of orden_aprobar.detalles_orden) {
+                    type TProductosPpendiente = {
+                        id_producto: number;
+                        nombre_producto: string;
+                        productos_pendientes: number;
+                    };
+
+                    // --- COMPROBAR QUE LOS PRODUCTOS PENDIENTES SEA VALIDO CON RESPECTO A LOS DETALLES DE LA ORDEN ---
+                    // ---BUSCAR LOS PRODUCTO PENDIENTES
+                    const productos_pendientes = await this._Service_Requisicion.Buscar_Requisicion(detalle.id_requisicion, true)
+
+                    // VALIDAR QUE EL PRODUCTO SI TENGA PENDIENTES
+                    const producto_pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto == detalle.id_producto)
+                    //DEVOLVER ERROR
+                    if (producto_pendiente.length <= 0) {
+                        return { error: true, message: `El producto "${detalle.nombre_producto}" no tiene pendientes` } //!ERROR
+                    }
+
+                    // VALIDAR QUE LA CANTIDAD NO PASE DE LOS PRODUCTOS PENDIENTES
+                    const pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto === detalle.id_producto && producto.productos_pendientes < detalle.cantidad)
+                    //DEVOLVER ERROR
+                    if (pendiente.length > 0) {
+                        return { error: true, message: `La cantidad del producto "${detalle.nombre_producto}" debe ser menor o igual a ${pendiente[0].productos_pendientes}` } //!ERROR
+                    }
+                    // --- FIN DE VALIDACIONES PARA LOS PRODUCTOS PENDIENTES ---
+
+                    //APROBAR EL DETALLE DE LA ORDEN
+                    const detalle_aprobado = await this._Query_Ordenes.Aprobar_Detalle(detalle.id_detalle, EstadosTablas.ESTADO_APROBADO)
+                    if (detalle_aprobado !== 1) {
+                        return { error: true, message: `Error al aprobar el detalle de la orden ${orden_aprobar.orden}` } //!ERROR
+                    }
+                }
+
+                // APROBAR EL ENCABEZADO DE LA ORDEN
+                const aprobar_encabezado_orden = await this._Query_Ordenes.Aprobar_Encabezado_Orden(id_orden, EstadosTablas.ESTADO_APROBADO)
+                if (aprobar_encabezado_orden !== 1) {
+                    return { error: true, message: `Error al aprobar la orden ${orden_aprobar.orden}` } //!ERROR
+                }
+
+                return { error: false, message: `Se ha aprobado la orden ${orden_aprobar.orden}` }
+
+            } catch (error) {
+                console.log(error)
+                return { error: true, message: `Error al aprobar la orden ${orden_aprobar.orden}` } //!ERROR
+            }
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: `Error al aprobar la orden` } //!ERROR
+        }
+    }
+
+    public async Generar_Documento_Orden(id_orden: number, id_empresa: number) {
+        try {
+            const respuesta: any = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, id_empresa)
+            if (respuesta?.length <= 0) {
+                return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
+            }
+
+            
+            // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
+            const doc = new jsPDF({ orientation: 'l' });
+            doc.setFontSize(12) // (size)
+            doc.setFont('helvetica', 'normal', 'normal')
+
+            doc.text('TEXTO FORMADO', 10, 10)
+
+            const pdfBase64 = doc.output('bloburi');
+            return { data: pdfBase64, nombre: respuesta[0].orden }
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al generar el documento de la orden' } //!ERROR
+        }
+    }
+
 }

@@ -1,14 +1,17 @@
 import { Tercero } from '../../Interfaces/Compras/ICompras'
 import { EstadosTablas } from '../../helpers/constants';
 import QueryProveedores from "../../querys/Compras/QueryProveedores";
+import Querys from '../../querys/Querys';
 
 
 
 export class ProveedoresService {
+    private _Querys: Querys;
     private _Query_Proveedores: QueryProveedores;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
+        this._Querys = new Querys();
         this._Query_Proveedores = new QueryProveedores();
     }
 
@@ -78,7 +81,7 @@ export class ProveedoresService {
                 return { error: true, message: 'Ya existe este correo' } //!ERROR
             }
 
-            const direccion_insertada = await this._Query_Proveedores.Insertar_Direccion(proveedor_request.direccion)
+            const direccion_insertada = await this._Querys.Insertar_Direccion(proveedor_request.direccion)
             if (direccion_insertada.length <= 0) {
                 return { error: true, message: 'Error al insertar la dirección' } //!ERROR
             }
@@ -166,7 +169,7 @@ export class ProveedoresService {
                 return { error: true, message: 'Este correo ya existe' } //!ERROR
             }
 
-            const direccion_editada = await this._Query_Proveedores.Editar_Direccion(proveedor_request.direccion.id_direccion ?? 0, proveedor_request.direccion)
+            const direccion_editada = await this._Querys.Editar_Direccion(proveedor_request.direccion.id_direccion ?? 0, proveedor_request.direccion)
             if (direccion_editada !== 1) {
                 return { error: true, message: 'Error al editar la dirección' } //!ERROR
             }

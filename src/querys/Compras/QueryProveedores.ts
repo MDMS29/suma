@@ -3,13 +3,11 @@ import { Database } from "../../config/db";
 import {
     _buscar_correo_proveedor, _buscar_documento_proveedor,
     _buscar_proveedor_id, _buscar_suministro_proveedor, _cambiar_estado_proveedor,
-    _editar_direccion,
-    _editar_proveedor, _editar_suministro, _insertar_direccion, _insertar_proveedor,
+    _editar_proveedor, _editar_suministro, _insertar_proveedor,
     _insertar_suministro_proveedor, _obtener_proveedores
 } from "../../dao/Compras/DaoProveedores";
 
 import { Tercero } from '../../Interfaces/Compras/ICompras';
-import { Direccion } from "../../Interfaces/IConstants";
 
 export default class QueryProveedores extends Database {
     private pool;
@@ -62,68 +60,6 @@ export default class QueryProveedores extends Database {
             client.release();
         }
     }
-
-    //TODO: IMPLEMENTAR ESTO EN OTRO SITIO PARA REUTILIZAR
-    public async Insertar_Direccion(direccion_request: Direccion) {
-        const client = await this.pool.connect()
-
-        const {
-            tipo_via, numero_u, letra_u,
-            numero_d, complemento_u, numero_t,
-            letra_d, complemento_d, numero_c,
-            complemento_f, departamento, municipio
-        } = direccion_request
-
-        try {
-            let result = await client.query(
-                _insertar_direccion,
-                [
-                    tipo_via, numero_u, letra_u,
-                    numero_d, complemento_u, numero_t,
-                    letra_d, complemento_d, numero_c,
-                    complemento_f, departamento, municipio
-                ]
-            );
-            return result.rows || []
-        } catch (error) {
-            console.log(error)
-            return []
-        } finally {
-            client.release();
-        }
-    }
-
-    public async Editar_Direccion(id_direccion: number, direccion_request: Direccion) {
-        const client = await this.pool.connect()
-
-        const {
-            tipo_via, numero_u, letra_u,
-            numero_d, complemento_u, numero_t,
-            letra_d, complemento_d, numero_c,
-            complemento_f, departamento, municipio
-        } = direccion_request
-
-        try {
-            let result = await client.query(
-                _editar_direccion,
-                [
-                    id_direccion,
-                    tipo_via, numero_u, letra_u,
-                    numero_d, complemento_u, numero_t,
-                    letra_d, complemento_d, numero_c,
-                    complemento_f, departamento, municipio
-                ]
-            );
-            return result.rowCount || 0
-        } catch (error) {
-            console.log(error)
-            return 0
-        } finally {
-            client.release();
-        }
-    }
-
-
 
     public async Insertar_Proveedor(proveedor_request: Tercero, usuario_creacion: string) {
         const client = await this.pool.connect()

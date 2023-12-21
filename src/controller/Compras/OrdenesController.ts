@@ -45,7 +45,7 @@ export default class _OrdenesController {
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
-
+        
         const result: any = OrdenesSchema.safeParse(req.body)
         if (!result.success) {
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
@@ -118,6 +118,29 @@ export default class _OrdenesController {
         }
     }
 
+    async Aprobar_Orden(req: Request, res: Response) {
+        const { usuario } = req
+        const { id_orden } = req.params as { id_orden: string }
+
+
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
+        }
+
+        try {
+            const ordenes_service = new OrdenesService()
+            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden, usuario?.id_empresa)
+            if (respuesta && 'error' in respuesta) {
+                return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
+            }
+
+            return res.status(200).json(respuesta)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: `Error al aprobar la orden ${req.body.orden}` }) //!ERROR
+        }
+    }
+
     async Eliminar_Restaurar_Orden(req: Request, res: Response) {
         const { usuario } = req
         const { id_orden } = req.params
@@ -145,6 +168,33 @@ export default class _OrdenesController {
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: true, message: `Error al cambiar el estado de la orden` }) //!ERROR
+        }
+    }
+
+    async Generar_Documento_Orden(req: Request, res: Response) {
+        const { usuario } = req
+        const { id_orden } = req.params as { id_orden: string }
+
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
+        }
+        if (!id_orden) {
+            return res.status(401).json({ error: true, message: 'No existe esta orden' }) //!ERROR
+        }
+
+        try {
+            const ordenes_service = new OrdenesService()
+            const respuesta = await ordenes_service.Generar_Documento_Orden(+id_orden, usuario.id_empresa)
+            if (respuesta && 'error' in respuesta) {
+                return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
+            }
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `inline; filename=Req_${respuesta.nombre}.pdf`);
+            return res.send(respuesta.data)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: 'Error al buscar la orden' }) //!ERROR
         }
     }
 }
