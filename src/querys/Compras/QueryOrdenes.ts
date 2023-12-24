@@ -73,6 +73,7 @@ export default class QueryOrdenes extends Database {
             client.release();
         }
     }
+    
     public async Insertar_Orden_Detalle(req_body: Detalle_Orden, id_orden: number) {
         const client = await this.pool.connect()
 

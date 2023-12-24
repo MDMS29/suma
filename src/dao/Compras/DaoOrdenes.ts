@@ -97,7 +97,7 @@ export const _buscar_orden_id = `
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
         tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago,
         tor.fecha_orden, tor.observaciones, 
-        tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo,
+        tor.cotizacion, tor.fecha_entrega, tor.total_orden, tor.anticipo, tor.total_orden,
         to_jsonb(
             json_build_object(
                 'id_lugar_entrega', tdir.id_direccion,
@@ -129,11 +129,13 @@ export const _buscar_orden_id = `
 
 export const _buscar_detalle_orden_pendiente = `
     SELECT 
-        tod.id_detalle, tod.id_orden, tod.id_requisicion, tod.id_producto, 
-        tod.cantidad, tod.precio_compra, tod.id_iva, tod.descuento, tod.id_estado,
-        tp.descripcion as nombre_producto
+        tod.id_detalle, tod.id_orden, tod.id_requisicion, tr.requisicion, tod.id_producto, 
+        tod.cantidad, tod.precio_compra, tod.descuento, tod.id_estado,
+        tp.descripcion as producto,  tod.id_iva, ti.descripcion as iva, ti.porcentaje
     FROM 
         public.tbl_orden_detalle tod
+    INNER JOIN public.tbl_requisiciones tr ON tr.id_requisicion = tod.id_requisicion
+    INNER JOIN public.tbl_iva ti ON ti.id_iva = tod.id_iva
     INNER JOIN public.tbl_productos tp ON tp.id_producto = tod.id_producto
     WHERE 
         tod.id_orden = $1 AND 
@@ -141,13 +143,15 @@ export const _buscar_detalle_orden_pendiente = `
 `
 export const _buscar_detalle_orden = `
     SELECT 
-        tod.id_detalle, tod.id_orden, tod.id_requisicion, tod.id_producto, 
-        tod.cantidad, tod.precio_compra, tod.id_iva, tod.descuento, tod.id_estado,
-        tp.descripcion as nombre_producto
+        tod.id_detalle, tod.id_orden, tod.id_requisicion, tr.requisicion, tod.id_producto, 
+        tod.cantidad, tod.precio_compra, tod.descuento, tod.id_estado,
+        tp.descripcion as producto,  tod.id_iva, ti.descripcion as iva, ti.porcentaje
     FROM 
         public.tbl_orden_detalle tod
+    INNER JOIN public.tbl_requisiciones tr ON tr.id_requisicion = tod.id_requisicion
+    INNER JOIN public.tbl_iva ti ON ti.id_iva = tod.id_iva
     INNER JOIN public.tbl_productos tp ON tp.id_producto = tod.id_producto
-    WHERE 
+    WHERE  
         tod.id_orden = $1 AND 
         tod.id_estado = 3 AND tod.id_estado = 4;
 `
