@@ -225,8 +225,6 @@ export default class RequisicionesController {
         const { id_requisicion } = req.params
         const { detalles } = req.body
 
-        console.log(req.body)
-
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }

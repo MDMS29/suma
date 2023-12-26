@@ -11,13 +11,14 @@ const OrdenesController = new _OrdenesController()
 
 _OrdenesRouter.route('/doc/:id_orden')
     .get(_Autorizacion, OrdenesController.Generar_Documento_Orden) //GENERAR DOCUMENTOS PDF
+    
+_OrdenesRouter.route('/aprobar/:id_orden_aprobar')
+    .patch(_Autorizacion, OrdenesController.Aprobar_Orden) //APROBAR UNA ORDEN POR EL ID DE UNA ORDEN
 
 _OrdenesRouter.route('/')
     .get(_Autorizacion, OrdenesController.Obtener_Ordenes) //OBTENER TODAS LAS ORDENES
     .post(_Autorizacion, OrdenesController.Insertar_Orden) //INSERTAR UNA ORDEN
 
-_OrdenesRouter.route('/aprobar/:id_orden')
-    .patch(_Autorizacion, OrdenesController.Aprobar_Orden) //APROBAR UNA ORDEN POR EL ID DE UNA ORDEN
 
 _OrdenesRouter.route('/:id_orden')
     .get(_Autorizacion, OrdenesController.Buscar_Orden) //BUSCAR UNA ORDEN POR SU ID

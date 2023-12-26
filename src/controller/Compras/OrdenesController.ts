@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import { OrdenesService } from "../../services/Compras/Ordenes.Service";
 import { OrdenesSchema } from "../../validations/Compras.Zod";
 
-// import url from "url"
-
 export default class _OrdenesController {
 
 
@@ -120,8 +118,7 @@ export default class _OrdenesController {
 
     async Aprobar_Orden(req: Request, res: Response) {
         const { usuario } = req
-        const { id_orden } = req.params as { id_orden: string }
-
+        const { id_orden_aprobar } = req.params as { id_orden_aprobar: string }
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -129,8 +126,8 @@ export default class _OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden, usuario?.id_empresa)
-            if (respuesta && 'error' in respuesta) {
+            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden_aprobar, usuario?.id_empresa)
+            if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
 
@@ -190,8 +187,8 @@ export default class _OrdenesController {
             }
 
             res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `inline; filename=Req_${respuesta.nombre}.pdf`);
-            return res.send(respuesta.data)
+            res.setHeader('Content-Disposition', `inline; filename=orden_generada.pdf`);
+            return res.send(respuesta)
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: true, message: 'Error al buscar la orden' }) //!ERROR

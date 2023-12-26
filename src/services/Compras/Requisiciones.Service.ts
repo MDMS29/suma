@@ -30,9 +30,9 @@ export class RequisicionesService {
     }
 
     private Reduce_Productos_Pendientes(result: productos_pendiente[], productos_pendientes: productos_pendiente[]) {
-        if(productos_pendientes.length <= 0){
+        if (productos_pendientes.length <= 0) {
             return []
-        } 
+        }
 
         productos_pendientes.forEach((producto: productos_pendiente) => {
 
@@ -156,7 +156,7 @@ export class RequisicionesService {
 
             //ENVIAR CORREO ELECTRONICO AL RESPONSABLE DEL CENTRO
             const correo_confir = await transporter.sendMail({
-                from: '"SUMA" <mazomoises@gmail.com>',
+                from: `"SUMA" <${process.env.MAILER_USER}>`,
                 to: nueva_requisicion.correo_responsable,
                 subject: `Nueva requisición ${nueva_requisicion.requisicion}`,
                 html: `
@@ -676,6 +676,9 @@ export class RequisicionesService {
                 if (detalle_verifi.id_requisicion !== id_requisicion) {
                     return { error: true, message: `El detalle ${detalle.id_detalle} no pertenece a la requisicion` }
                 }
+
+                // SI EL ESTADO LLEGA EN PENDIENTE SE INTUYE QUE NO SE HA APROBADO
+                detalle.id_estado = detalle.id_estado == EstadosTablas.ESTADO_PENDIENTE ? EstadosTablas.ESTADO_ANULADO : detalle.id_estado
 
                 // VERIFICAR SI EL ESTADO ESTA PARAMETRIZADO
                 if (!estados_det_requi[detalle.id_estado]) {

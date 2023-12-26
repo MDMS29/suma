@@ -73,7 +73,7 @@ export default class QueryOrdenes extends Database {
             client.release();
         }
     }
-    
+
     public async Insertar_Orden_Detalle(req_body: Detalle_Orden, id_orden: number) {
         const client = await this.pool.connect()
 
@@ -132,13 +132,17 @@ export default class QueryOrdenes extends Database {
 
         try {
             let result = await client.query(_buscar_detalle_orden, [id_orden]);
-            return result.rows
+            return result.rows ?? []
         } catch (error) {
             console.log(error)
-            return
+            return []
         } finally {
             client.release();
         }
+    }
+
+    private formatear_fecha(fecha: Date) {
+        return fecha.toISOString().split('T')[0]
     }
 
     public async Editar_Orden_Encabezado(req_body: Encabezado_Orden, _: number, id_orden: number) {
@@ -149,6 +153,7 @@ export default class QueryOrdenes extends Database {
             fecha_orden, id_forma_pago, lugar_entrega,
             observaciones, cotizacion, fecha_entrega, anticipo, total_orden
         } = req_body
+        console.log("🚀 ~ file: QueryOrdenes.ts:152 ~ QueryOrdenes ~ req_body:", this.formatear_fecha(fecha_orden))
 
         const { id_lugar_entrega } = lugar_entrega
 
@@ -158,9 +163,9 @@ export default class QueryOrdenes extends Database {
                 [
                     id_orden,
                     id_tipo_orden, id_tercero, orden,
-                    fecha_orden, id_forma_pago,
+                    this.formatear_fecha(fecha_orden), id_forma_pago,
                     id_lugar_entrega, observaciones, cotizacion,
-                    fecha_entrega, total_orden, anticipo
+                    this.formatear_fecha(fecha_entrega), total_orden, anticipo
                 ]);
             return result.rowCount
         } catch (error) {

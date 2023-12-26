@@ -4,6 +4,7 @@ import { EstadosTablas } from "../../helpers/constants";
 import QueryOrdenes from "../../querys/Compras/QueryOrdenes";
 import Querys from "../../querys/Querys";
 import { RequisicionesService } from "./Requisiciones.Service";
+import { transporter } from "../../config/mailer";
 
 export class OrdenesService {
     _Query_Ordenes: QueryOrdenes;
@@ -117,22 +118,7 @@ export class OrdenesService {
                 return { error: true, message: 'Error al editar la dirección' } //!ERROR
             }
 
-            //SUMAR LOS PRECiOS DE COMPRA DE CADA DETALLE DE LA ORDEN
-            // let total_orden = 0
-            // let detalle: Detalle_Orden
-            // for (detalle of req_body.detalles_orden) {
-            //     if (detalle.id_estado === EstadosTablas.ESTADO_ACTIVO) {
-            //         // SUMAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA ACTIVO
-            //         total_orden = detalle.precio_compra + total_orden
-            //     }
-            //     if (total_orden !== 0 && detalle.id_estado === EstadosTablas.ESTADO_INACTIVO) {
-            //         // RESTAR LOS PRECIOS DE COMPRA EN CASO EL DETALLE SEA INACTIVO
-            //         total_orden = detalle.precio_compra - total_orden
-            //     }
-            // }
 
-
-            
             try {
                 //INSERTAR ENCABEZADO DE LA ORDEN
                 const orden = await this._Query_Ordenes.Editar_Orden_Encabezado(req_body, 0, id_orden)
@@ -142,11 +128,27 @@ export class OrdenesService {
 
                 ///INSERTAR DETALLES DE LA ORDEN
                 for (let detalle of req_body.detalles_orden) {
+                    // BUSCAR SI EL DETALLE DE LA ORDEN YA EXISTE
+                    const existe_detalle = await this._Query_Ordenes.Buscar_Detalle_Orden(id_orden)
+                    // if(existe_detalle?.length <= 0 ){
+                    //     return { error: true, message: `No hay detalles para la orden ${req_body.orden}` } //!ERROR
+                    // }
 
-                    const orden_detalle = await this._Query_Ordenes.Editar_Detalle_Orden(detalle)
-                    if (orden_detalle !== 1 && !orden_detalle) {
-                        return { error: true, message: `Error al editar los detalles de la orden ${req_body.orden}` } //!ERROR
+                    const esDetalle = existe_detalle.filter(ex_detalle => ex_detalle.id_detalle == detalle.id_detalle)
+                    if (esDetalle.length > 0) {
+                        // SI EXISTE EL DETALLE EN LA ORDEN LO EDITARA
+                        const orden_detalle = await this._Query_Ordenes.Editar_Detalle_Orden(detalle)
+                        if (orden_detalle !== 1 && !orden_detalle) {
+                            return { error: true, message: `Error al editar los detalles de la orden ${req_body.orden}` } //!ERROR
+                        }
+                    } else {
+                        // SI EL DETALLE NO EXISTE LO INSERTA
+                        const orden_detalle = await this._Query_Ordenes.Insertar_Orden_Detalle(detalle, id_orden)
+                        if (orden_detalle?.length == 0 && !orden_detalle) {
+                            return { error: true, message: 'Error al insertar los detalles' } //!ERROR
+                        }
                     }
+
                 }
 
                 const orden_editada: any = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, req_body.id_empresa)
@@ -207,14 +209,14 @@ export class OrdenesService {
 
                     // VALIDAR QUE EL PRODUCTO SI TENGA PENDIENTES
                     const producto_pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto == detalle.id_producto)
-                    //DEVOLVER ERROR
+                    //EL PRODUCTO NO TIENE PENDIENTES - DEVOLVER ERROR
                     if (producto_pendiente.length <= 0) {
                         return { error: true, message: `El producto "${detalle.nombre_producto}" no tiene pendientes` } //!ERROR
                     }
 
                     // VALIDAR QUE LA CANTIDAD NO PASE DE LOS PRODUCTOS PENDIENTES
                     const pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto === detalle.id_producto && producto.productos_pendientes < detalle.cantidad)
-                    //DEVOLVER ERROR
+                    //LA CANTIDAD REQUEST ES MAYOR A LA CANTIDAD DE LOS PENDIENTES - DEVOLVER ERROR
                     if (pendiente.length > 0) {
                         return { error: true, message: `La cantidad del producto "${detalle.nombre_producto}" debe ser menor o igual a ${pendiente[0].productos_pendientes}` } //!ERROR
                     }
@@ -252,15 +254,46 @@ export class OrdenesService {
                 return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
             }
 
-            
+            //ENVIAR CORREO ELECTRONICO AL RESPONSABLE DEL CENTRO
+            const correo_confir = await transporter.sendMail({
+                from: `"SUMA" <${process.env.MAILER_USER}>`,
+                to: 'rosmypachon@gmail.com',
+                subject: `Confirmación de Aprobación de Orden ${respuesta[0].orden}`,
+                html: `
+                    <div>
+                            <p>Cordial saludo, ${respuesta[0].correo_responsable}!</p>
+                            <br />
+                            <p>Es un placer informarle que su orden ha sido revisada y aprobada con éxito. Nos complace confirmar que todos los detalles de la orden han sido verificados.</p>
+                            <p>A continuación, se detallan los elementos clave de su orden:</p>
+                            <p>Número de Orden: <strong> ${respuesta[0].orden} </strong></p>
+                            <p>Fecha de Aprobacion: <strong> ${respuesta[0].fecha_entrega} </strong></p>
+                            <p>Total de la Orden: <strong> ${respuesta[0].total_orden} </strong></p>
+                            <p>Por favor, tenga en cuenta que este correo electrónico sirve como confirmación oficial de la aprobación de su orden.</p>
+                            <p>Si tiene alguna pregunta o necesita más información, no dude en responder a este correo electrónico.</p>
+                            <br />
+                            
+                            <p>Atentamente,</p>
+                            <br />
+                            <p><strong>SUMA</strong></p>
+                            <p>Sistema Unificado de Mejora y Autogestión</p>
+                            <p><strong>Devices & Technology</strong></p>
+                            <p>proyecto.suma@devitech.com.co</p>
+
+                            <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
+                        </div>
+                    `,
+            });
+            if (!correo_confir.accepted) {
+                return { error: true, message: 'Error al enviar correo de confirmación' }; //!ERROR
+            }
+
+
             // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
-            const doc = new jsPDF({ orientation: 'l' });
-            doc.setFontSize(12) // (size)
-            doc.setFont('helvetica', 'normal', 'normal')
+            const doc = new jsPDF();
 
             doc.text('TEXTO FORMADO', 10, 10)
 
-            const pdfBase64 = doc.output('bloburi');
+            const pdfBase64 = doc.output('datauristring');
             return { data: pdfBase64, nombre: respuesta[0].orden }
         } catch (error) {
             console.log(error)
