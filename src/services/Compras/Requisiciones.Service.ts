@@ -702,4 +702,24 @@ export class RequisicionesService {
             return
         }
     }
+
+
+    public async Obtener_Correo_Responsables(requisiciones: { id_requisicion: number, requisicion: string }[]) {
+        let correos_responsables: string[] = []
+        try {
+            for (let requisicion of requisiciones) {
+                const correo = await this._Query_Requisiciones.Obtener_Correo_Responsable(requisicion.id_requisicion)
+                if (correo.length <= 0) {
+                    return { error: true, message: `Centro o Requisicion de la requisición "${requisicion.requisicion}" es inactiva` }
+                }
+
+                correos_responsables.push(correo[0].correo_responsable)
+            }
+
+            return correos_responsables
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
 }

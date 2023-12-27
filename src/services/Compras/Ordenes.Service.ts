@@ -5,6 +5,8 @@ import QueryOrdenes from "../../querys/Compras/QueryOrdenes";
 import Querys from "../../querys/Querys";
 import { RequisicionesService } from "./Requisiciones.Service";
 import { transporter } from "../../config/mailer";
+import { MessageError } from "../../Interfaces/Configuracion/IConfig";
+import { formatear_cantidad } from "../../helpers/utils";
 
 export class OrdenesService {
     _Query_Ordenes: QueryOrdenes;
@@ -18,6 +20,50 @@ export class OrdenesService {
         this._Service_Requisicion = new RequisicionesService();
     }
 
+
+    private async Enviar_Correo(orden: Encabezado_Orden, correo_responsables: string[], pdf: string): Promise<MessageError> {
+        const correo_confir = await transporter.sendMail({
+            from: `"SUMA" <${process.env.MAILER_USER}>`,
+            to: correo_responsables,
+            subject: `Confirmación de Aprobación de Orden ${orden.orden}`,
+            html: `
+                <div>
+                    <p>Cordial saludo!</p>
+                    <br />
+                    <p>Es un placer informarle que su orden ha sido revisada y aprobada con éxito. Nos complace confirmar que todos los detalles de la orden han sido verificados.</p>
+                    <p>A continuación, se detallan los elementos clave de su orden:</p>
+                    <p>Número de Orden: <strong> ${orden.orden} </strong></p>
+                    <p>Fecha de Aprobacion: <strong> ${orden.fecha_entrega} </strong></p>
+                    <p>Total de la Orden: <strong> ${formatear_cantidad(orden.total_orden ?? 0)} </strong></p>
+                    <p>Por favor, tenga en cuenta que este correo electrónico sirve como confirmación oficial de la aprobación de su orden.</p>
+                    <p>Si tiene alguna pregunta o necesita más información, no dude en responder a este correo electrónico.</p>
+                    <br />
+                    
+                    <p>Atentamente,</p>
+                    <br />
+                    <p><strong>SUMA</strong></p>
+                    <p>Sistema Unificado de Mejora y Autogestión</p>
+                    <p><strong>Devices & Technology</strong></p>
+                    <p>proyecto.suma@devitech.com.co</p>
+
+                    <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
+                </div>
+            `,
+            attachments: [
+                // ENVIAR ARCHIVOS
+                {
+                    path: pdf
+                }
+            ]
+        });
+        if (!correo_confir.accepted) {
+            return { error: true, message: 'Error al enviar correo de confirmación' }; //!ERROR
+        }
+
+        return { error: false, message: '' }
+    }
+
+    
     async Obtener_Ordenes(empresa: string, estado: string, inputs: string) {
         try {
             const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(empresa, estado, inputs)
@@ -37,13 +83,6 @@ export class OrdenesService {
             if (numero_orden && numero_orden?.length > 0) {
                 return { error: true, message: `Ya existe el numero de orden ${req_body.orden}` } //!ERROR
             }
-
-            //SUMAR LOS PREICOS DE COMPRA DE CADA DETALLE DE LA ORDEN
-            // let total_orden = 0
-            // let detalle: Detalle_Orden
-            // for (detalle of req_body.detalles_orden) {
-            //     total_orden = detalle.precio_compra + total_orden
-            // }
 
             try {
                 const direccion_insertada = await this._QuerysG.Insertar_Direccion(req_body.lugar_entrega)
@@ -130,9 +169,6 @@ export class OrdenesService {
                 for (let detalle of req_body.detalles_orden) {
                     // BUSCAR SI EL DETALLE DE LA ORDEN YA EXISTE
                     const existe_detalle = await this._Query_Ordenes.Buscar_Detalle_Orden(id_orden)
-                    // if(existe_detalle?.length <= 0 ){
-                    //     return { error: true, message: `No hay detalles para la orden ${req_body.orden}` } //!ERROR
-                    // }
 
                     const esDetalle = existe_detalle.filter(ex_detalle => ex_detalle.id_detalle == detalle.id_detalle)
                     if (esDetalle.length > 0) {
@@ -183,6 +219,8 @@ export class OrdenesService {
 
     public async Aprobar_Orden(id_orden: number, empresa_id: number) {
         try {
+            let array_requisiciones: { id_requisicion: number, requisicion: string }[] = []
+
             const [orden_aprobar] = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, empresa_id)
             if (!orden_aprobar) {
                 return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
@@ -211,14 +249,14 @@ export class OrdenesService {
                     const producto_pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto == detalle.id_producto)
                     //EL PRODUCTO NO TIENE PENDIENTES - DEVOLVER ERROR
                     if (producto_pendiente.length <= 0) {
-                        return { error: true, message: `El producto "${detalle.nombre_producto}" no tiene pendientes` } //!ERROR
+                        return { error: true, message: `El producto "${detalle.producto}" no tiene pendientes` } //!ERROR
                     }
 
                     // VALIDAR QUE LA CANTIDAD NO PASE DE LOS PRODUCTOS PENDIENTES
                     const pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto === detalle.id_producto && producto.productos_pendientes < detalle.cantidad)
                     //LA CANTIDAD REQUEST ES MAYOR A LA CANTIDAD DE LOS PENDIENTES - DEVOLVER ERROR
                     if (pendiente.length > 0) {
-                        return { error: true, message: `La cantidad del producto "${detalle.nombre_producto}" debe ser menor o igual a ${pendiente[0].productos_pendientes}` } //!ERROR
+                        return { error: true, message: `La cantidad del producto "${detalle.producto}" debe ser menor o igual a ${pendiente[0].productos_pendientes}` } //!ERROR
                     }
                     // --- FIN DE VALIDACIONES PARA LOS PRODUCTOS PENDIENTES ---
 
@@ -227,12 +265,32 @@ export class OrdenesService {
                     if (detalle_aprobado !== 1) {
                         return { error: true, message: `Error al aprobar el detalle de la orden ${orden_aprobar.orden}` } //!ERROR
                     }
+
+                    array_requisiciones.push({ id_requisicion: detalle.id_requisicion, requisicion: detalle.requisicion })
                 }
 
                 // APROBAR EL ENCABEZADO DE LA ORDEN
                 const aprobar_encabezado_orden = await this._Query_Ordenes.Aprobar_Encabezado_Orden(id_orden, EstadosTablas.ESTADO_APROBADO)
                 if (aprobar_encabezado_orden !== 1) {
                     return { error: true, message: `Error al aprobar la orden ${orden_aprobar.orden}` } //!ERROR
+                }
+
+                //? OBTENER LOS CORREOS DE LOS RESPONSABLES DE LOS CENTROS DE COSTO DE LAS REQUISICIONES
+                const correo_responsables = await this._Service_Requisicion.Obtener_Correo_Responsables(array_requisiciones)
+                if ('error' in correo_responsables) {
+                    return correo_responsables
+                }
+
+                //? GENERAR PDF DE LA ORDEN PARA ENVIAR
+                const pdf = this.Generar_PDF_Orden(orden_aprobar)
+                if (!pdf) {
+                    return { error: true, message: `Error al generar documento - Orden ${orden_aprobar.orden}` } //!ERROR
+                }
+
+                //?ENVIAR CORREO DE CONFIRMACIÓN
+                const es_correo = await this.Enviar_Correo(orden_aprobar, correo_responsables, pdf)
+                if (es_correo.error) {
+                    return es_correo
                 }
 
                 return { error: false, message: `Se ha aprobado la orden ${orden_aprobar.orden}` }
@@ -249,56 +307,36 @@ export class OrdenesService {
 
     public async Generar_Documento_Orden(id_orden: number, id_empresa: number) {
         try {
-            const respuesta: any = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, id_empresa)
-            if (respuesta?.length <= 0) {
+            const [orden] = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, id_empresa)
+            if (!orden) {
                 return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
             }
 
-            //ENVIAR CORREO ELECTRONICO AL RESPONSABLE DEL CENTRO
-            const correo_confir = await transporter.sendMail({
-                from: `"SUMA" <${process.env.MAILER_USER}>`,
-                to: 'rosmypachon@gmail.com',
-                subject: `Confirmación de Aprobación de Orden ${respuesta[0].orden}`,
-                html: `
-                    <div>
-                            <p>Cordial saludo, ${respuesta[0].correo_responsable}!</p>
-                            <br />
-                            <p>Es un placer informarle que su orden ha sido revisada y aprobada con éxito. Nos complace confirmar que todos los detalles de la orden han sido verificados.</p>
-                            <p>A continuación, se detallan los elementos clave de su orden:</p>
-                            <p>Número de Orden: <strong> ${respuesta[0].orden} </strong></p>
-                            <p>Fecha de Aprobacion: <strong> ${respuesta[0].fecha_entrega} </strong></p>
-                            <p>Total de la Orden: <strong> ${respuesta[0].total_orden} </strong></p>
-                            <p>Por favor, tenga en cuenta que este correo electrónico sirve como confirmación oficial de la aprobación de su orden.</p>
-                            <p>Si tiene alguna pregunta o necesita más información, no dude en responder a este correo electrónico.</p>
-                            <br />
-                            
-                            <p>Atentamente,</p>
-                            <br />
-                            <p><strong>SUMA</strong></p>
-                            <p>Sistema Unificado de Mejora y Autogestión</p>
-                            <p><strong>Devices & Technology</strong></p>
-                            <p>proyecto.suma@devitech.com.co</p>
-
-                            <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
-                        </div>
-                    `,
-            });
-            if (!correo_confir.accepted) {
-                return { error: true, message: 'Error al enviar correo de confirmación' }; //!ERROR
+            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Pendientes(id_orden)
+            if (dellate_orden && dellate_orden?.length <= 0) {
+                return { error: true, message: `No se han encontrado los detalle de la orden ${orden.orden}` } //!ERROR
             }
 
+            const pdf = this.Generar_PDF_Orden(orden)
+            if (!pdf) {
+                return { error: true, message: `Error al generar documento - Orden ${orden.orden}` } //!ERROR
+            }
 
-            // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
-            const doc = new jsPDF();
-
-            doc.text('TEXTO FORMADO', 10, 10)
-
-            const pdfBase64 = doc.output('datauristring');
-            return { data: pdfBase64, nombre: respuesta[0].orden }
+            return { data: pdf, nombre: orden.orden }
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al generar el documento de la orden' } //!ERROR
         }
     }
 
+    private Generar_PDF_Orden(orden: Encabezado_Orden) {
+
+        // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
+        const doc = new jsPDF();
+
+        doc.text(`TEXTO FORMADO ${orden.orden}`, 10, 10)
+
+        return doc.output('datauristring');
+
+    } 
 }

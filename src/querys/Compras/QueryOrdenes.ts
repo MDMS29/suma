@@ -6,6 +6,7 @@ import {
     _editar_detalle_orden, _editar_encabezado_orden, _eliminar_restaurar_orden,
     _insertar_orden, _insertar_orden_detalle, _obtener_ordenes,
 } from "../../dao/Compras/DaoOrdenes";
+import { formatear_fecha } from "../../helpers/utils";
 
 export default class QueryOrdenes extends Database {
     private pool;
@@ -139,11 +140,7 @@ export default class QueryOrdenes extends Database {
         } finally {
             client.release();
         }
-    }
-
-    private formatear_fecha(fecha: Date) {
-        return fecha.toISOString().split('T')[0]
-    }
+    }    
 
     public async Editar_Orden_Encabezado(req_body: Encabezado_Orden, _: number, id_orden: number) {
         const client = await this.pool.connect()
@@ -153,8 +150,7 @@ export default class QueryOrdenes extends Database {
             fecha_orden, id_forma_pago, lugar_entrega,
             observaciones, cotizacion, fecha_entrega, anticipo, total_orden
         } = req_body
-        console.log("🚀 ~ file: QueryOrdenes.ts:152 ~ QueryOrdenes ~ req_body:", this.formatear_fecha(fecha_orden))
-
+        
         const { id_lugar_entrega } = lugar_entrega
 
         try {
@@ -163,9 +159,9 @@ export default class QueryOrdenes extends Database {
                 [
                     id_orden,
                     id_tipo_orden, id_tercero, orden,
-                    this.formatear_fecha(fecha_orden), id_forma_pago,
+                    formatear_fecha(fecha_orden), id_forma_pago,
                     id_lugar_entrega, observaciones, cotizacion,
-                    this.formatear_fecha(fecha_entrega), total_orden, anticipo
+                    formatear_fecha(fecha_entrega), total_orden, anticipo
                 ]);
             return result.rowCount
         } catch (error) {

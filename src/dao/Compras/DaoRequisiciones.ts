@@ -13,7 +13,7 @@ export const _buscar_detalle_requisicion = `
     INNER JOIN public.tbl_productos tp  ON tp.id_producto   = trd.id_producto
     INNER JOIN public.tbl_unidad    tu  ON tu.id_unidad     = tp.id_unidad
     WHERE 
-        trd.id_requisicion = $1 AND trd.id_estado = 3 
+        trd.id_requisicion = $1 AND trd.id_estado != 2 
     ORDER BY trd.id_detalle ASC;
 `
 
@@ -141,4 +141,14 @@ export const _editar_usuario_revision = `
         usuario_revision=$2, fecha_revision=now()
     WHERE 
         id_requisicion=$1;        
+`
+
+export const _buscar_correo_responsable = `
+    SELECT 
+        tr.id_requisicion, tc.correo_responsable
+    FROM
+        tbl_requisiciones tr
+    INNER JOIN public.tbl_centros tc ON tc.id_centro = tr.id_centro
+    WHERE
+        tr.id_requisicion = $1 AND tr.id_estado != 2 AND tc.id_estado != 2;
 `
