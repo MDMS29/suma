@@ -172,7 +172,7 @@ export default class UsuarioService {
                 }
 
                 //TOMAR INFORMACIÓN DEL USUARIO PARA RETONARLA DE FORMA PERSONALIZADA
-                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, estado_usuario, id_empresa, nombre_empresa } = respuesta[0]
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, estado_usuario, id_empresa, nombre_empresa, direccion_empresa } = respuesta[0]
                 // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
                     usuario:
@@ -187,6 +187,7 @@ export default class UsuarioService {
                         estado_usuario,
                         id_empresa,
                         nombre_empresa,
+                        direccion_empresa,
                         perfiles: perfilLogin
                     },
                     modulos: respuesta.modulos
@@ -208,7 +209,7 @@ export default class UsuarioService {
                 let perfilLogin: PerfilUsuario[] = [] //ARRAY DE LOS PERFILES DEL USUARIO
                 respuesta.forEach((res: any) => perfilLogin.push(res?.perfiles));
                 respuesta.perfiles = perfilLogin
-                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa } = respuesta[0]
+                const { id_usuario, nombre_completo, usuario, fecha_creacion, correo, id_estado, cm_clave, id_empresa, nombre_empresa, direccion_empresa } = respuesta[0]
                 // respuesta.token = generarJWT(respuesta[0].id_usuario) //GENERAR TOKEN DE AUTENTICACIÓN
                 return {
                     id_usuario,
@@ -220,6 +221,7 @@ export default class UsuarioService {
                     cm_clave,
                     id_empresa,
                     nombre_empresa,
+                    direccion_empresa,
                     perfiles: perfilLogin
                 }
             }

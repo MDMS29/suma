@@ -9,6 +9,9 @@ export const _OrdenesRouter = Router()
 //INICIALIZAR CONTROLADOR PARA LAS ORDENES
 const OrdenesController = new _OrdenesController()
 
+_OrdenesRouter.route('/filtrar')
+    .post(_Autorizacion, OrdenesController.Obtener_Ordenes_Filtro) //OBTENER TODOS LAS REQUISICIONES
+
 _OrdenesRouter.route('/doc/:id_orden')
     .get(_Autorizacion, OrdenesController.Generar_Documento_Orden) //GENERAR DOCUMENTOS PDF
     

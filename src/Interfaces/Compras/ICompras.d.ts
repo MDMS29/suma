@@ -77,9 +77,9 @@ interface Detalle_Orden {
     cotizacion: number;
     descuento: number;
     id_estado: number;
-  }
-  
-  interface Encabezado_Orden {
+}
+
+interface Encabezado_Orden {
     id_orden: number;
     id_empresa: number;
     id_tipo_orden: number;
@@ -94,6 +94,15 @@ interface Detalle_Orden {
     fecha_entrega: Date;
     id_estado?: number;
     total_orden?: number;
-    anticipo:number
+    anticipo: number
     detalles_orden: DetalleOrden[];
-  }
+}
+
+interface Filtro_Ordenes {
+    proveedor: number;
+    tipo_orden: number;
+    fecha_inicial: string;
+    fecha_final: string;
+    forma_pago: number;
+    numero_orden: string;
+}

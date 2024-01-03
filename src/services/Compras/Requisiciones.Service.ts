@@ -358,8 +358,6 @@ export class RequisicionesService {
             let LineasDivCuerpo = LineasDivCabe //POSICION INICIAL DEL SALTO DE LINEA
 
             //!CABECERA CUERPO
-            // this.Generar_Cuerpo_PDF(doc, { LineasDivCuerpo })
-
             doc.setFont('helvetica', 'normal', 'bold')
             doc.line(5, LineasDivCuerpo, 5, LineasDivCuerpo + 11.5) // (x1, y1, x2, y2)
             doc.text('Item', 9, LineasDivCuerpo + 7)// (texto, x, y)
@@ -702,7 +700,6 @@ export class RequisicionesService {
             return
         }
     }
-
 
     public async Obtener_Correo_Responsables(requisiciones: { id_requisicion: number, requisicion: string }[]) {
         let correos_responsables: string[] = []

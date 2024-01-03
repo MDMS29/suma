@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { Encabezado_Orden } from "../../Interfaces/Compras/ICompras";
+import { Encabezado_Orden, Filtro_Ordenes } from "../../Interfaces/Compras/ICompras";
 import { EstadosTablas } from "../../helpers/constants";
 import QueryOrdenes from "../../querys/Compras/QueryOrdenes";
 import Querys from "../../querys/Querys";
@@ -7,6 +7,8 @@ import { RequisicionesService } from "./Requisiciones.Service";
 import { transporter } from "../../config/mailer";
 import { MessageError } from "../../Interfaces/Configuracion/IConfig";
 import { formatear_cantidad } from "../../helpers/utils";
+
+import fs from "node:fs"
 
 export class OrdenesService {
     _Query_Ordenes: QueryOrdenes;
@@ -52,6 +54,7 @@ export class OrdenesService {
             attachments: [
                 // ENVIAR ARCHIVOS
                 {
+                    filename: `Orden - ${orden.orden}`,
                     path: pdf
                 }
             ]
@@ -63,7 +66,29 @@ export class OrdenesService {
         return { error: false, message: '' }
     }
 
-    
+    public async Obtener_Ordenes_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Ordenes>) {
+        let ordenes
+        try {
+            if (!Object.keys(filtros)) {
+                return { error: true, message: "No hay existen filtros a realizar" }
+            }
+
+
+            ordenes = await this._Query_Ordenes.Obtener_Ordenes_Filtro(estado, empresa, usuario, filtros)
+
+
+            if (ordenes?.length === 0 || !ordenes) {
+                return { error: true, message: "No se han encontrado ordenes con estos criterios" }
+            }
+
+            return ordenes
+
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: "Error al filtrar las ordenes" }
+        }
+    }
+
     async Obtener_Ordenes(empresa: string, estado: string, inputs: string) {
         try {
             const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(empresa, estado, inputs)
@@ -217,7 +242,7 @@ export class OrdenesService {
         }
     }
 
-    public async Aprobar_Orden(id_orden: number, empresa_id: number) {
+    public async Aprobar_Orden(id_orden: number, empresa_id: number, usuario_id: number) {
         try {
             let array_requisiciones: { id_requisicion: number, requisicion: string }[] = []
 
@@ -270,7 +295,7 @@ export class OrdenesService {
                 }
 
                 // APROBAR EL ENCABEZADO DE LA ORDEN
-                const aprobar_encabezado_orden = await this._Query_Ordenes.Aprobar_Encabezado_Orden(id_orden, EstadosTablas.ESTADO_APROBADO)
+                const aprobar_encabezado_orden = await this._Query_Ordenes.Aprobar_Encabezado_Orden(id_orden, EstadosTablas.ESTADO_APROBADO, usuario_id)
                 if (aprobar_encabezado_orden !== 1) {
                     return { error: true, message: `Error al aprobar la orden ${orden_aprobar.orden}` } //!ERROR
                 }
@@ -305,17 +330,20 @@ export class OrdenesService {
         }
     }
 
+    //INVOCA EL PDF Y LO REUTILIZA
     public async Generar_Documento_Orden(id_orden: number, id_empresa: number) {
         try {
-            const [orden] = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, id_empresa)
+            const [orden] = await this._Query_Ordenes.Buscar_Encabezado_Doc(id_orden, id_empresa)
             if (!orden) {
                 return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
             }
 
-            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Pendientes(id_orden)
+            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden(id_orden)
             if (dellate_orden && dellate_orden?.length <= 0) {
                 return { error: true, message: `No se han encontrado los detalle de la orden ${orden.orden}` } //!ERROR
             }
+
+            orden.detalle_orden = dellate_orden
 
             const pdf = this.Generar_PDF_Orden(orden)
             if (!pdf) {
@@ -329,14 +357,27 @@ export class OrdenesService {
         }
     }
 
+    // GENERA EL PDF Y RETORNA EL BASE64
     private Generar_PDF_Orden(orden: Encabezado_Orden) {
 
         // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
-        const doc = new jsPDF();
+        const doc = new jsPDF({ orientation: 'l' });
 
-        doc.text(`TEXTO FORMADO ${orden.orden}`, 10, 10)
+        // CABECERA DOCUMENTO
+        doc.setFontSize(12) // (size)
+        doc.setFont('helvetica', 'normal', 'normal')
+
+        //!ENCABEZADO DOCUMENTO
+
+        console.log('------------------ORDEN ----------------\n',orden)
+        // RECUADRO PARA LA CABECERA
+
+        // CABECERA - IZQUIERDA
+        const imageData = fs.readFileSync('resources/logo_empresa_short.png')
+
+        doc.addImage(imageData, 'PNG', 6.5, 10, 30, 13.5) // (dataImage, format, x, y, ancho, alto)
 
         return doc.output('datauristring');
 
-    } 
+    }
 }

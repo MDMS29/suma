@@ -1,9 +1,44 @@
 import { Request, Response } from "express";
 import { OrdenesService } from "../../services/Compras/Ordenes.Service";
-import { OrdenesSchema } from "../../validations/Compras.Zod";
+import { FiltroOrdenesSchema, OrdenesSchema } from "../../validations/Compras.Zod";
 
 export default class _OrdenesController {
 
+
+    public async Obtener_Ordenes_Filtro(req: Request, res: Response) {
+        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { estado, empresa } = req.query as { estado: string, empresa: string, requisicion: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
+        }
+        if (!empresa) {
+            return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
+        }
+        if (!estado) {
+            return res.status(400).json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
+        }
+
+        // VALIDACION DE DATOS
+        const result = FiltroOrdenesSchema.partial().safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
+
+        try {
+            const ordenes_service = new OrdenesService()
+            const respuesta = await ordenes_service.Obtener_Ordenes_Filtro(estado, +empresa, usuario.id_usuario, req.body)
+
+            if (respuesta?.error) {
+                return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
+            }
+
+            return res.status(200).json(respuesta)
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: 'Error al obtener las requisiciones' }) //!ERROR
+        }
+    }
 
     async Obtener_Ordenes(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
@@ -43,7 +78,7 @@ export default class _OrdenesController {
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
-        
+
         const result: any = OrdenesSchema.safeParse(req.body)
         if (!result.success) {
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
@@ -126,7 +161,7 @@ export default class _OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden_aprobar, usuario?.id_empresa)
+            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden_aprobar, usuario?.id_empresa, usuario.id_usuario ?? 0)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }

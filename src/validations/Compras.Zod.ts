@@ -47,7 +47,7 @@ export const RequisicionesSchema = z.object({
 export const FiltroRequisicionesSchema = z.object({
     requisicion: z.string({
         invalid_type_error: "Tipo de dato para el numero de requisición es invalido",
-        required_error: "Seleccione un centro de costo"
+        required_error: "Ingrese un numero de requisición "
     }),
     proceso: z.number({
         invalid_type_error: "Tipo de dato del proceso es invalido",
@@ -231,3 +231,30 @@ export const OrdenesSchema = z.object({
         message: "Ingrese los detalles de la orden"
     }),
 });
+
+export const FiltroOrdenesSchema = z.object({
+    proveedor: z.number({
+        invalid_type_error: "Tipo de dato para el proveedor es invalido",
+        required_error: "Seleccione un proveedor"
+    }),
+    tipo_orden: z.number({
+        invalid_type_error: "Tipo de dato para el tipo de la orden es invalido",
+        required_error: "Seleccione un tipo de orden"
+    }).int(),
+    fecha_inicial: z.string({
+        invalid_type_error: "Tipo de dato para la fecha inicial es invalido",
+        required_error: "Seleccione un centro de costo"
+    }),
+    fecha_final: z.string({
+        invalid_type_error: "Tipo de dato para la fecha final es invalido",
+        required_error: "Seleccione un centro de costo"
+    }),
+    forma_pago: z.number({
+        invalid_type_error: "Tipo de dato para la forma de pago es invalido",
+        required_error: "Seleccione una forma de pago"
+    }).int(),
+    numero_orden: z.string({
+        invalid_type_error: "Tipo de dato para el numero de la requisición es invalido",
+        required_error: "Ingrese el numero de requisición"
+    })
+})
