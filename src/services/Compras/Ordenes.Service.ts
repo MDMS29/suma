@@ -351,7 +351,7 @@ export class OrdenesService {
 
                 let subtotal_local = cantidad * precio_compra
                 let iva_local = subtotal_local * (porcentaje / 100)
-                
+
                 let total_local = subtotal_local + iva_local
 
                 // SUBTOTAL GLOBAL
@@ -403,7 +403,130 @@ export class OrdenesService {
         // CABECERA - IZQUIERDA
         const imageData = fs.readFileSync('resources/logo_empresa_short.png')
 
-        doc.addImage(imageData, 'PNG', 6.5, 10, 30, 13.5) // (dataImage, format, x, y, ancho, alto)
+        doc.addImage(imageData, 'PNG', 14, 10, 30, 13.5)
+
+        doc.setFont('helvetica', 'normal', 'bold')
+        doc.text("ORDEN DE COMPRA", 120, 20);
+
+        doc.rect(20, 30, 260, 38);
+
+        //doc.line(20, 30, 20, 200)  //vertical
+        doc.line(150, 30, 150, 68)
+
+
+        doc.text('Proveedor:', 21, 36); // (texto, x, y)
+        doc.line(20, 38, 280, 38) // horizontal
+
+        doc.text('Dirección:', 21, 44);
+        doc.line(20, 46, 280, 46) // horizontal
+
+        doc.text('Telefono:', 21, 52);
+        doc.line(20, 54, 280, 54)
+
+        doc.text('Lugar de entrega:', 21, 63);
+
+        doc.line(240, 30, 240, 68)
+
+        doc.text('Forma de pago:', 172, 36);
+
+        doc.text('Fecha de compra', 170, 45);
+
+        doc.text('Fecha de entrega', 170, 52);
+
+        doc.text('No. Cotizacion', 174, 63);
+
+        doc.text('Efectivo', 250, 36);
+
+        doc.text('04/01/2024', 248, 45);
+        doc.text('04/01/2024', 248, 52);
+
+        doc.text('COT.# 890518', 246, 63);
+
+        doc.rect(20, 68, 260, 9);
+
+        doc.setFontSize(10)
+        doc.text('Con base en la cotizacion presentada por su empresa DEVICES & TECHNOLOGY, sírvase remitir los bienes o servicios que a continuación se detallan', 21, 75);
+
+        doc.rect(20, 77, 260, 10);
+
+        doc.line(45, 77, 45, 87)
+        doc.text('Requisición', 22, 83);
+
+        doc.line(68, 77, 68, 87)
+        doc.text('Item', 53, 83);
+
+        doc.line(103, 77, 103, 87)
+        doc.text('Descripcion', 76, 83);
+
+        doc.line(121, 77, 121, 87)
+        doc.text('Unidad', 106, 83);
+
+        doc.line(141, 77, 141, 87)
+        doc.text('Cantidad', 123, 83);
+
+        doc.line(181, 77, 181, 87)
+        doc.text('Precio Unitario', 148, 83);
+
+        doc.line(210, 77, 210, 87)
+        doc.text('Descuento', 187, 83);
+
+        doc.line(233, 77, 233, 87)
+        doc.text('Subtotal', 215, 83);
+
+        doc.line(250, 77, 250, 87)
+        doc.text('IVA', 238, 83);
+
+        doc.text('Precio Total', 255, 83);
+
+        doc.rect(20, 87, 260, 20)
+
+        doc.line(45, 107, 45, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('2704022 ', 22, 98);
+
+
+        doc.line(68, 107, 68, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('76381', 52, 98);
+
+        doc.line(103, 107, 103, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('Aire Acondicionado', 71, 98);
+        
+        doc.line(121, 107, 121, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('Uni', 106, 98);
+        
+        doc.line(141, 107, 141, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('1', 123, 98);
+        
+        doc.line(181, 107, 181, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('258,817', 155, 98);
+        
+        doc.line(210, 107, 210, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('0', 187, 98);
+        
+        doc.line(233, 107, 233, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('258,817', 215, 98);
+        
+        doc.line(250, 107, 250, 87)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('19', 238, 98);
+        
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('307,992', 255, 98);
+
+        doc.rect(20, 107, 260, 20)
+
+        
+
+
+
+        // (dataImage, format, x, y, ancho, alto)
 
         return doc.output('datauristring');
 
