@@ -338,11 +338,39 @@ export class OrdenesService {
                 return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
             }
 
-            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden(id_orden)
+            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Doc(id_orden)
             if (dellate_orden && dellate_orden?.length <= 0) {
                 return { error: true, message: `No se han encontrado los detalle de la orden ${orden.orden}` } //!ERROR
             }
 
+            let iva_total = 0
+            let descuento_total = 0
+            let subtotal = 0
+            for (let detalle of dellate_orden) {
+                const { cantidad, precio_compra, porcentaje, descuento } = detalle
+
+                let subtotal_local = cantidad * precio_compra
+                let iva_local = subtotal_local * (porcentaje / 100)
+                
+                let total_local = subtotal_local + iva_local
+
+                // SUBTOTAL GLOBAL
+                subtotal = subtotal_local + subtotal
+
+                // IVA GLOBAL
+                iva_total = iva_total + iva_local
+
+                // DESCUENTO GLOBAL
+                descuento_total = descuento + descuento_total
+
+                // AGREGAR AL DETALLE EL CALCULO LOCAL
+                detalle.total_detalle = total_local
+            }
+
+
+            orden.subtotal = subtotal
+            orden.descuento_total = descuento_total
+            orden.iva_total = iva_total
             orden.detalle_orden = dellate_orden
 
             const pdf = this.Generar_PDF_Orden(orden)
@@ -369,7 +397,7 @@ export class OrdenesService {
 
         //!ENCABEZADO DOCUMENTO
 
-        console.log('------------------ORDEN ----------------\n',orden)
+        console.log('------------------ORDEN ----------------\n', orden)
         // RECUADRO PARA LA CABECERA
 
         // CABECERA - IZQUIERDA

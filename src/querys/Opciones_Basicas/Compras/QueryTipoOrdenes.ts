@@ -71,9 +71,6 @@ export default class _QueryTipoOrdenes extends Database{
     public async Insertar_Tipo_Producto_Orden(req_body: Tipo_Producto_Orden, id_tipo_orden: number) {
         const client = await this.pool.connect()
 
-        console.log('guardando tipo producto orden.... \n', req_body)
-
-
         const { id_tipo_producto } = req_body
 
         try {
@@ -138,8 +135,6 @@ export default class _QueryTipoOrdenes extends Database{
 
     public async Editar_Tipo_Producto_Orden(req_body: Tipo_Producto_Orden, id_tipo_orden: number) {
         const client = await this.pool.connect()
-
-        console.log('editando tipo producto orden.... \n', req_body)
 
         const { id_tipo_producto_orden, id_tipo_producto, id_estado } = req_body
 

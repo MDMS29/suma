@@ -3,7 +3,7 @@ import { Database, _DB } from "../../config/db";
 import {
     _FA_filtrar_ordenes,
     _FA_obtener_ordenes, _aprobar_detalle_orden, _aprobar_encabezado_orden,
-    _buscar_detalle_orden, _buscar_detalle_orden_pendiente, _buscar_numero_orden, _buscar_orden_encabezado_pdf, _buscar_orden_id,
+    _buscar_detalle_orden, _buscar_detalle_orden_pdf, _buscar_detalle_orden_pendiente, _buscar_numero_orden, _buscar_orden_encabezado_pdf, _buscar_orden_id,
     _editar_detalle_orden, _editar_encabezado_orden, _eliminar_restaurar_orden,
     _insertar_orden, _insertar_orden_detalle, _obtener_ordenes,
 } from "../../dao/Compras/DaoOrdenes";
@@ -164,6 +164,19 @@ export default class QueryOrdenes extends Database {
 
         try {
             let result = await client.query(_buscar_detalle_orden, [id_orden]);
+            return result.rows ?? []
+        } catch (error) {
+            console.log(error)
+            return []
+        } finally {
+            client.release();
+        }
+    }
+    public async Buscar_Detalle_Orden_Doc(id_orden: number) {
+        const client = await this.pool.connect()
+
+        try {
+            let result = await client.query(_buscar_detalle_orden_pdf, [id_orden]);
             return result.rows ?? []
         } catch (error) {
             console.log(error)

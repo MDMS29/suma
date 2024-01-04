@@ -193,7 +193,6 @@ export const _aprobar_detalle_orden = `
         id_detalle=$1;
 `
 
-//TODO: CENTROS DE COSTOS PUEDEN HABER MUCHOS
 export const _buscar_orden_encabezado_pdf = `
     SELECT 
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
@@ -246,4 +245,20 @@ export const _buscar_orden_encabezado_pdf = `
         tor.id_orden = $1 AND
         tor.id_empresa = $2
     ORDER BY tor.id_orden DESC;
+`
+
+export const _buscar_detalle_orden_pdf = `
+    SELECT 
+        tod.id_detalle, tod.id_orden, tod.id_requisicion, tod.id_producto,  tod.id_iva,
+        tr.requisicion, tp.referencia AS codigo_producto, tp.descripcion as nombre_producto,
+        tu.unidad, tod.cantidad, tod.precio_compra, tod.descuento, ti.porcentaje
+    FROM 
+        public.tbl_orden_detalle tod
+    INNER JOIN public.tbl_requisiciones tr ON tr.id_requisicion = tod.id_requisicion
+    INNER JOIN public.tbl_iva ti ON ti.id_iva = tod.id_iva
+    INNER JOIN public.tbl_productos tp ON tp.id_producto = tod.id_producto
+    INNER JOIN public.tbl_unidad tu ON tu.id_unidad = tp.id_unidad
+    WHERE  
+        tod.id_orden = $1 AND 
+        tod.id_estado = 4;
 `

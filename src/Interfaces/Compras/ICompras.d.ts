@@ -94,6 +94,8 @@ interface Encabezado_Orden {
     fecha_entrega: Date;
     id_estado?: number;
     total_orden?: number;
+    descuento_total?:number;
+    iva_total?:number;
     anticipo: number
     detalles_orden: DetalleOrden[];
 }
