@@ -47,10 +47,10 @@ export class CentroCostoEmpresaService {
             if (centro_filtrado_nombre?.length > 0) {
                 return { error: true, message: 'Ya existe este nombre' } //!ERROR
             }
-            const responsable_filtrado: any = await this._Query_Centro_Costo_Empresa.Buscar_Responsable_Centro(centro_costo_request)
-            if (responsable_filtrado?.length > 0) {
-                return { error: true, message: 'Este correo esta asociado a un centro de costo diferente' } //!ERROR
-            }
+            // const responsable_filtrado: any = await this._Query_Centro_Costo_Empresa.Buscar_Responsable_Centro(centro_costo_request)
+            // if (responsable_filtrado?.length > 0) {
+            //     return { error: true, message: 'Este correo esta asociado a un centro de costo diferente' } //!ERROR
+            // }
 
             const respuesta = await this._Query_Centro_Costo_Empresa.Insertar_Centro_Costo(centro_costo_request, usuario_creacion)
 
@@ -97,10 +97,10 @@ export class CentroCostoEmpresaService {
                 return { error: true, message: 'Ya existe este nombre de centro' } //!ERROR
             }
 
-            const centro_filtrado_responsable: any = await this._Query_Centro_Costo_Empresa.Buscar_Responsable_Centro(centro_costo_request)
-            if (centro_filtrado_responsable?.length > 0 && centro_filtrado_responsable[0].correo_responsable !== respuesta[0].correo_responsable && centro_costo_request.id_empresa === respuesta[0].id_empresa) {
-                return { error: true, message: 'Este correo esta asociado a un centro de costo diferente' } //!ERROR
-            }
+            // const centro_filtrado_responsable: any = await this._Query_Centro_Costo_Empresa.Buscar_Responsable_Centro(centro_costo_request)
+            // if (centro_filtrado_responsable?.length > 0 && centro_filtrado_responsable[0].correo_responsable !== respuesta[0].correo_responsable && centro_costo_request.id_empresa === respuesta[0].id_empresa) {
+            //     return { error: true, message: 'Este correo esta asociado a un centro de costo diferente' } //!ERROR
+            // }
 
             //ACTUALIZAR INFORMACION
             centro_costo_request.codigo = respuesta[0]?.codigo === centro_costo_request.codigo ? respuesta[0]?.codigo : centro_costo_request.codigo

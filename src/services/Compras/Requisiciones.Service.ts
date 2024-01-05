@@ -692,6 +692,40 @@ export class RequisicionesService {
             if (requisicion_verificada?.rowCount != 1) {
                 return { error: true, message: 'Error al cambiar el estado de la requisicion' }
             }
+            
+            const pdf_requisicion = await this.Generar_PDF_Requisicion(requisicion.id_requisicion)
+            if(pdf_requisicion?.error){
+                return { error: true, message: 'Error al generar la requisición' }
+            }
+            //ENVIAR CORREO ELECTRONICO AL RESPONSABLE DEL CENTRO
+            const correo_confir = await transporter.sendMail({
+                from: `"SUMA" <${process.env.MAILER_USER}>`,
+                to: requisicion.correo_responsable,
+                subject: `Aprobaciòn de requisición ${requisicion.requisicion}`,
+                html: `
+                    <div>
+                            <p>Cordial saludo, ${requisicion.correo_responsable}!</p>
+                            <br />
+                            <p>Atentamente nos permitimos comunicarle que se ha aprobado la requisición ${requisicion.requisicion} dentro del Sistema Unificado de Mejora y Autogestión - <b>SUMA</b></p>
+                            <p>Consecutivo: <strong> ${requisicion.requisicion} </strong></p>
+                            <p>Fecha Creación: <strong> ${requisicion.fecha_creacion.toLocaleString().split(',')[0]} </strong></p>
+                            <br />
+                            <p>Puede confirmar su aprobación ingresando en nuestro Sistema <a href=${process.env.FRONT_END_URL}>por este link</a></p>
+                            <p>Cordialmente,</p>
+                            <br />
+                            <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
+                        </div>
+                    `,
+                    attachments: [
+                        {
+                            filename:`Requisición ${requisicion.requisicion}`,
+                            path:pdf_requisicion?.data
+                        }
+                    ]
+            });
+            if (!correo_confir.accepted) {
+                return { error: true, message: 'Error al enviar correo de confirmación' }; //!ERROR
+            }
 
             return { error: false, message: 'Se han calificado los detalles' }
 
