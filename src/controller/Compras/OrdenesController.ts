@@ -229,4 +229,33 @@ export default class _OrdenesController {
             return res.status(500).json({ error: true, message: 'Error al buscar la orden' }) //!ERROR
         }
     }
+
+    async Enviar_Correo_Aprobacion(req: Request, res: Response) {
+        const { usuario } = req
+        const { id_orden } = req.params as { id_orden: string }
+        const { empresa } = req.query
+
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
+        }
+        if (!id_orden) {
+            return res.status(401).json({ error: true, message: 'No existe esta orden' }) //!ERROR
+        }
+        if (!empresa) {
+            return res.status(401).json({ error: true, message: 'No hay empresa a buscar' }) //!ERROR
+        }
+
+        try {
+            const ordenes_service = new OrdenesService()
+            const respuesta = await ordenes_service.Enviar_Correo_Aprobacion(+id_orden, +empresa)
+            if (respuesta && 'error' in respuesta) {
+                return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
+            }
+
+            return res.send(respuesta)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: 'Error al buscar la orden' }) //!ERROR
+        }
+    }
 }

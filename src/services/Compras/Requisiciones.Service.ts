@@ -716,12 +716,12 @@ export class RequisicionesService {
                             <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />
                         </div>
                     `,
-                    attachments: [
-                        {
-                            filename:`Requisición ${requisicion.requisicion}`,
-                            path:pdf_requisicion?.data
-                        }
-                    ]
+                attachments: [
+                    {
+                        filename:`Requisición ${requisicion.requisicion}`,
+                        path:pdf_requisicion?.data
+                    }
+                ]
             });
             if (!correo_confir.accepted) {
                 return { error: true, message: 'Error al enviar correo de confirmación' }; //!ERROR

@@ -23,7 +23,7 @@ export class OrdenesService {
     }
 
 
-    private async Enviar_Correo(orden: Encabezado_Orden, correo_responsables: string[], pdf: string): Promise<MessageError> {
+    private async Enviar_Correo(orden: Encabezado_Orden, correo_responsables: string[], pdf: string | undefined): Promise<MessageError> {
         const correo_confir = await transporter.sendMail({
             from: `"SUMA" <${process.env.MAILER_USER}>`,
             to: correo_responsables,
@@ -307,13 +307,13 @@ export class OrdenesService {
                 }
 
                 //? GENERAR PDF DE LA ORDEN PARA ENVIAR
-                const pdf = this.Generar_PDF_Orden(orden_aprobar)
+                const pdf = await this.Generar_Documento_Orden(id_orden, empresa_id)
                 if (!pdf) {
                     return { error: true, message: `Error al generar documento - Orden ${orden_aprobar.orden}` } //!ERROR
                 }
 
                 //?ENVIAR CORREO DE CONFIRMACIÓN
-                const es_correo = await this.Enviar_Correo(orden_aprobar, correo_responsables, pdf)
+                const es_correo = await this.Enviar_Correo(orden_aprobar, correo_responsables, pdf.data)
                 if (es_correo.error) {
                     return es_correo
                 }
@@ -327,6 +327,51 @@ export class OrdenesService {
         } catch (error) {
             console.log(error)
             return { error: true, message: `Error al aprobar la orden` } //!ERROR
+        }
+    }
+
+    public async Enviar_Correo_Aprobacion(orden_id:number, empresa_id:number) {
+        let array_requisiciones: { id_requisicion: number, requisicion: string }[] = []
+        try {
+            const [orden_aprobar] = await this._Query_Ordenes.Buscar_Orden_ID(orden_id, empresa_id)
+            if (!orden_aprobar) {
+                return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
+            }
+
+            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Pendientes(orden_id)
+            if (dellate_orden && dellate_orden?.length <= 0) {
+                return { error: true, message: `No se han encontrado los detalle de la orden ${orden_aprobar.orden}` } //!ERROR
+            }
+
+            orden_aprobar.detalles_orden = dellate_orden
+
+            for (let detalle of orden_aprobar.detalles_orden) {
+                array_requisiciones.push({ id_requisicion: detalle.id_requisicion, requisicion: detalle.requisicion })
+            }
+
+            //? OBTENER LOS CORREOS DE LOS RESPONSABLES DE LOS CENTROS DE COSTO DE LAS REQUISICIONES
+            const correo_responsables = await this._Service_Requisicion.Obtener_Correo_Responsables(array_requisiciones)
+            if ('error' in correo_responsables) {
+                return correo_responsables
+            }   
+            
+            //? GENERAR PDF DE LA ORDEN PARA ENVIAR
+            const pdf = await this.Generar_Documento_Orden(orden_id, empresa_id)
+            if (!pdf) {
+                return { error: true, message: `Error al generar documento` } //!ERROR
+            }
+
+            //?ENVIAR CORREO DE CONFIRMACIÓN
+            const es_correo = await this.Enviar_Correo(orden_aprobar, correo_responsables, pdf.data)
+            if (es_correo.error) {
+                return es_correo
+            }
+
+            return {error: false, message: `Correo enviado a los responsables ${correo_responsables}`}
+
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: "Error al enviar correo de aprobación" } //!ERROR
         }
     }
 

@@ -9,6 +9,8 @@ export const _OrdenesRouter = Router()
 //INICIALIZAR CONTROLADOR PARA LAS ORDENES
 const OrdenesController = new _OrdenesController()
 
+_OrdenesRouter.route('/:id_orden/correo').post(_Autorizacion, OrdenesController.Enviar_Correo_Aprobacion)
+
 _OrdenesRouter.route('/filtrar')
     .post(_Autorizacion, OrdenesController.Obtener_Ordenes_Filtro) //OBTENER TODOS LAS REQUISICIONES
 
