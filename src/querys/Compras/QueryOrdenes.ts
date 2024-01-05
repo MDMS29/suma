@@ -271,6 +271,7 @@ export default class QueryOrdenes extends Database {
             client.release();
         }
     }
+    
     public async Aprobar_Detalle(id_detalle: number, id_estado: number) {
         const client = await this.pool.connect()
 

@@ -9,14 +9,15 @@ export const _OrdenesRouter = Router()
 //INICIALIZAR CONTROLADOR PARA LAS ORDENES
 const OrdenesController = new _OrdenesController()
 
-_OrdenesRouter.route('/:id_orden/correo').post(_Autorizacion, OrdenesController.Enviar_Correo_Aprobacion)
+_OrdenesRouter.route('/:id_orden/enviar-correo-proveedor')
+    .post(_Autorizacion, OrdenesController.Enviar_Correo_Aprobacion_Proveedor) //ENVIAR EL CORREO DE PEDIDO AL PROVEEDOR
 
 _OrdenesRouter.route('/filtrar')
     .post(_Autorizacion, OrdenesController.Obtener_Ordenes_Filtro) //OBTENER TODOS LAS REQUISICIONES
 
 _OrdenesRouter.route('/doc/:id_orden')
     .get(_Autorizacion, OrdenesController.Generar_Documento_Orden) //GENERAR DOCUMENTOS PDF
-    
+
 _OrdenesRouter.route('/aprobar/:id_orden_aprobar')
     .patch(_Autorizacion, OrdenesController.Aprobar_Orden) //APROBAR UNA ORDEN POR EL ID DE UNA ORDEN
 

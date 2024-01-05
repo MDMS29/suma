@@ -230,7 +230,7 @@ export default class _OrdenesController {
         }
     }
 
-    async Enviar_Correo_Aprobacion(req: Request, res: Response) {
+    async Enviar_Correo_Aprobacion_Proveedor(req: Request, res: Response) {
         const { usuario } = req
         const { id_orden } = req.params as { id_orden: string }
         const { empresa } = req.query
@@ -247,12 +247,12 @@ export default class _OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Enviar_Correo_Aprobacion(+id_orden, +empresa)
-            if (respuesta && 'error' in respuesta) {
+            const respuesta = await ordenes_service.Enviar_Correo_Aprobacion_Proveedor(+id_orden, +empresa)
+            if (respuesta && respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
 
-            return res.send(respuesta)
+            return res.status(200).send(respuesta)
         } catch (error) {
             console.log(error)
             return res.status(500).json({ error: true, message: 'Error al buscar la orden' }) //!ERROR

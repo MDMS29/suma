@@ -701,7 +701,7 @@ export class RequisicionesService {
             const correo_confir = await transporter.sendMail({
                 from: `"SUMA" <${process.env.MAILER_USER}>`,
                 to: requisicion.correo_responsable,
-                subject: `Aprobaciòn de requisición ${requisicion.requisicion}`,
+                subject: `Aprobación de requisición ${requisicion.requisicion}`,
                 html: `
                     <div>
                             <p>Cordial saludo, ${requisicion.correo_responsable}!</p>
@@ -710,7 +710,7 @@ export class RequisicionesService {
                             <p>Consecutivo: <strong> ${requisicion.requisicion} </strong></p>
                             <p>Fecha Creación: <strong> ${requisicion.fecha_creacion.toLocaleString().split(',')[0]} </strong></p>
                             <br />
-                            <p>Puede confirmar su aprobación ingresando en nuestro Sistema <a href=${process.env.FRONT_END_URL}>por este link</a></p>
+                            <p>Puede confirmar su aprobación ingresando en nuestro Sistema <a href=${process.env.FRONT_END_URL}>por este link</a> o descargando el siguiente archivo adjunto.</p>
                             <p>Cordialmente,</p>
                             <br />
                             <img src="https://devitech.com.co/wp-content/uploads/2019/07/logo_completo.png" alt="Logo Empresa" />

@@ -4,7 +4,7 @@ export const _FA_filtrar_ordenes = 'public.fnc_filtrar_ordenes'
 
 export const _obtener_ordenes = `
     SELECT 
-        tor.id_orden, tor.orden, tto.tipo_orden, SUBSTRING(CAST(tt.nombre AS VARCHAR) FROM 1 FOR 10) as nombre_tercero, 
+        tor.id_orden, tor.orden, tto.tipo_orden, SUBSTRING(CAST(tt.nombre AS VARCHAR) FROM 1 FOR 10) as nombre_tercero, tfp.forma_pago, 
         SUBSTRING(CAST(tor.fecha_orden AS VARCHAR) FROM 1 FOR 10) AS fecha_orden, tor.id_lugar_entrega, tor.observaciones, 
         tor.cotizacion, SUBSTRING(CAST(tor.fecha_entrega AS VARCHAR) FROM 1 FOR 10) AS fecha_entrega, tor.total_orden, tor.anticipo,
         SUBSTRING(CAST(tu.nombre_completo AS VARCHAR) FROM 1 FOR 10) as usuario_aprobacion, SUBSTRING(CAST(tor.fecha_aprobacion AS VARCHAR) FROM 1 FOR 10) AS fecha_aprobacion
@@ -82,7 +82,7 @@ export const _insertar_orden_detalle = `
 export const _buscar_orden_id = `
     SELECT 
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
-        tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago,
+        tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero,  tt.correo as correo_tercero, tfp.forma_pago,
         SUBSTRING(CAST(tor.fecha_orden AS VARCHAR) FROM 1 FOR 10) AS fecha_orden, tor.observaciones, 
         tor.cotizacion, SUBSTRING(CAST(tor.fecha_entrega AS VARCHAR) FROM 1 FOR 10) AS fecha_entrega, tor.total_orden, tor.anticipo, tor.total_orden,
         to_jsonb(
@@ -198,7 +198,7 @@ export const _buscar_orden_encabezado_pdf = `
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
         te.razon_social, te.nit AS nit_empresa,
         tto.tipo_orden, tor.orden,
-        tt.nombre AS nombre_proveedor, tt.documento AS nit_proveedor, 
+        tt.nombre AS nombre_proveedor, tt.documento AS nit_proveedor, tt.correo AS correo_proveedor, 
         tfp.forma_pago,
         CONCAT(
             tdir.tipo_via, ' ', tdir.numero_u, 
