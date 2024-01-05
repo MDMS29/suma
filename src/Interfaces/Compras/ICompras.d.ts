@@ -85,6 +85,12 @@ interface Encabezado_Orden {
     id_tipo_orden: number;
     id_tercero: number;
     orden: string;
+    razon_social: string;
+    nombre_proveedor: string;
+    forma_pago: string;
+    nit_empresa: string;
+    nit_proveedor: string;
+    direccion_proveedor: string;
     fecha_orden: Date;
     id_forma_pago: number;
     id_direccion?: number
@@ -97,6 +103,7 @@ interface Encabezado_Orden {
     descuento_total?:number;
     iva_total?:number;
     anticipo: number
+    telefono_proveedor: number
     detalles_orden: DetalleOrden[];
 }
 
