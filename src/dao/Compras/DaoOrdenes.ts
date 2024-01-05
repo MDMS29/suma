@@ -4,10 +4,10 @@ export const _FA_filtrar_ordenes = 'public.fnc_filtrar_ordenes'
 
 export const _obtener_ordenes = `
     SELECT 
-        tor.id_orden, tor.orden, tto.tipo_orden, tt.nombre as nombre_tercero, tfp.forma_pago, 
+        tor.id_orden, tor.orden, tto.tipo_orden, SUBSTRING(CAST(tt.nombre AS VARCHAR) FROM 1 FOR 10) as nombre_tercero, 
         SUBSTRING(CAST(tor.fecha_orden AS VARCHAR) FROM 1 FOR 10) AS fecha_orden, tor.id_lugar_entrega, tor.observaciones, 
         tor.cotizacion, SUBSTRING(CAST(tor.fecha_entrega AS VARCHAR) FROM 1 FOR 10) AS fecha_entrega, tor.total_orden, tor.anticipo,
-        tu.nombre_completo as usuario_aprobacion, SUBSTRING(CAST(tor.fecha_aprobacion AS VARCHAR) FROM 1 FOR 10) AS fecha_aprobacion
+        SUBSTRING(CAST(tu.nombre_completo AS VARCHAR) FROM 1 FOR 10) as usuario_aprobacion, SUBSTRING(CAST(tor.fecha_aprobacion AS VARCHAR) FROM 1 FOR 10) AS fecha_aprobacion
     FROM
         public.tbl_ordenes tor
     LEFT JOIN tbl_direcciones tdir ON tdir.id_direccion = tor.id_lugar_entrega

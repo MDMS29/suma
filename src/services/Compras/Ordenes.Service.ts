@@ -461,6 +461,7 @@ export class OrdenesService {
         doc.line(150, 30, 150, 68)
 
         doc.text('Proveedor:', 21, 36); // (texto, x, y)
+        doc.text('EMPRESA Anonima', 44, 36); // (texto, x, y)
         doc.line(20, 38, 280, 38) // horizontal
 
         doc.text('Dirección:', 21, 44);
