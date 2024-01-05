@@ -43,6 +43,9 @@ export interface Centro_Costo {
     id_estado: number
     fecha_creacion?: Date
     usuario_creacion?: string
+
+    ip?: string | undefined
+    ubicacion?: string | undefined
 }
 
 export interface Producto_Empresa {
@@ -72,11 +75,11 @@ export interface Iva {
     id_empresa: number;
 }
 
-export interface Tipo_Producto_Orden{
-    id_tipo_producto_orden:number;
-    id_tipo_orden?:number;
+export interface Tipo_Producto_Orden {
+    id_tipo_producto_orden: number;
+    id_tipo_orden?: number;
     id_tipo_producto: number;
-    id_estado:number;
+    id_estado: number;
 }
 
 export interface Tipo_Orden {

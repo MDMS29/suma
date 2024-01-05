@@ -30,3 +30,17 @@ export const _editar_direccion = `
     WHERE 
         id_direccion=$1;
 `
+
+export const _insertar_tabla_temporal = `
+    INSERT INTO 
+        auditoria.tbl_temp_valores_auxiliares
+        (
+            id, 
+            v_user, v_ip, v_ubicacion
+        )
+    VALUES
+        (
+            nextval('auditoria.tbl_temp_valores_auxiliares_id_seq'::regclass), 
+            $1, $2, $3
+        );
+`

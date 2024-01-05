@@ -1,6 +1,6 @@
 import { Direccion } from "../Interfaces/IConstants";
 import { Database } from "../config/db";
-import { _editar_direccion, _insertar_direccion } from "../dao/Daos";
+import { _editar_direccion, _insertar_direccion, _insertar_tabla_temporal } from "../dao/Daos";
 
 export default class Querys extends Database {
     private pool;
@@ -57,6 +57,25 @@ export default class Querys extends Database {
                     numero_d, complemento_u, numero_t,
                     letra_d, complemento_d, numero_c,
                     complemento_f, departamento, municipio
+                ]
+            );
+            return result.rowCount || 0
+        } catch (error) {
+            console.log(error)
+            return 0
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Insertar_Log_Auditoria(usuario: string, ip: string | undefined, ubicacion: string | undefined) {
+        const client = await this.pool.connect()
+
+        try {
+            let result = await client.query(
+                _insertar_tabla_temporal,
+                [
+                    usuario, ip, ubicacion
                 ]
             );
             return result.rowCount || 0

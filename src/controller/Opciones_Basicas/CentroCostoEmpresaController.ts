@@ -44,6 +44,8 @@ export default class CentroCostoEmpresa {
     public async Insertar_Centros_Costo_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
 
+        console.log(req.body)
+
         const { id_empresa, id_proceso, codigo, centro_costo, correo_responsable } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO

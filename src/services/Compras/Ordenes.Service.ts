@@ -405,14 +405,15 @@ export class OrdenesService {
 
         doc.addImage(imageData, 'PNG', 14, 10, 30, 13.5)
 
+        //TITULO DE LA ORDEN
         doc.setFont('helvetica', 'normal', 'bold')
         doc.text("ORDEN DE COMPRA", 120, 20);
 
+        //CABECERA DE LA ORDEN
         doc.rect(20, 30, 260, 38);
 
         //doc.line(20, 30, 20, 200)  //vertical
         doc.line(150, 30, 150, 68)
-
 
         doc.text('Proveedor:', 21, 36); // (texto, x, y)
         doc.line(20, 38, 280, 38) // horizontal
@@ -449,6 +450,8 @@ export class OrdenesService {
 
         doc.rect(20, 77, 260, 10);
 
+        //PRODUCTOS/SERVICIOS DE LA ORDEN
+
         doc.line(45, 77, 45, 87)
         doc.text('Requisición', 22, 83);
 
@@ -464,65 +467,105 @@ export class OrdenesService {
         doc.line(141, 77, 141, 87)
         doc.text('Cantidad', 123, 83);
 
-        doc.line(181, 77, 181, 87)
+        doc.line(178, 77, 178, 107)
         doc.text('Precio Unitario', 148, 83);
 
-        doc.line(210, 77, 210, 87)
-        doc.text('Descuento', 187, 83);
+        doc.line(206, 77, 206, 107)
+        doc.text('Descuento', 183, 83);
 
-        doc.line(233, 77, 233, 87)
-        doc.text('Subtotal', 215, 83);
+        doc.line(229, 137, 229, 77)
+        doc.text('Subtotal', 212, 83);
 
-        doc.line(250, 77, 250, 87)
+        doc.line(255, 137, 255, 77)
         doc.text('IVA', 238, 83);
 
-        doc.text('Precio Total', 255, 83);
+        doc.text('Precio Total', 258, 83);
 
         doc.rect(20, 87, 260, 20)
 
         doc.line(45, 107, 45, 87)
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('2704022 ', 22, 98);
+        doc.text('2704022 ', 22, 98); //NUMERO DE REQUISICIÓN
 
 
         doc.line(68, 107, 68, 87)
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('76381', 52, 98);
+        doc.text('76381', 52, 98); //ID DEL PRODUCTO
 
         doc.line(103, 107, 103, 87)
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('Aire Acondicionado', 71, 98);
-        
+        doc.text('Aire Acondicionado', 71, 98); //NOMBRE DEL PRODUCTO
+
         doc.line(121, 107, 121, 87)
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('Uni', 106, 98);
-        
+        doc.text('Uni', 106, 98); //UNIDAD
+
         doc.line(141, 107, 141, 87)
         doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('1', 123, 98);
-        
-        doc.line(181, 107, 181, 87)
-        doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('258,817', 155, 98);
-        
-        doc.line(210, 107, 210, 87)
-        doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('0', 187, 98);
-        
-        doc.line(233, 107, 233, 87)
-        doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('258,817', 215, 98);
-        
-        doc.line(250, 107, 250, 87)
-        doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('19', 238, 98);
-        
-        doc.setFont('helvetica', 'normal', 'normal')
-        doc.text('307,992', 255, 98);
+        doc.text('1', 123, 98); // CANTIDAD
 
-        doc.rect(20, 107, 260, 20)
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('258,817', 155, 98); //PRECIO UNITARIO
 
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('0', 187, 98); //DESCUENTO POR PRODUCTO
+
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('258,817', 215, 98); //SUBTOTAL POR PRODUCTO
+
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('19', 244, 98); //iVA POR PRODUCTO
+
+        doc.setFont('helvetica', 'normal', 'normal')
+        doc.text('307,992', 265, 98); //PRECIO TOTAL POR PRODUCTO
+
+        doc.rect(20, 107, 260, 30)
+
+        doc.setFontSize(10)
+        doc.text('TOTAL BRUTO', 230, 111);
+        doc.line(280, 113, 229, 113) // horizontal TOTAL BRUTO
+        doc.text('DESCUENTOS', 230, 117);
+        doc.line(280, 119, 229, 119) // horizontal DESCUENTO
+        doc.text('SUBTOTAL', 235.5, 123);
+        doc.line(280, 125, 229, 125) // horizontal SUBTOTAL
+        doc.text('IVA', 248, 129);
+        doc.line(280, 131, 229, 131) // horizontal IVA
+        doc.text('TOTAL', 243, 136);
+
+
+        //RESUMEN DE ORDEN
+        doc.text('258,817', 265, 111); //RESULTADO DEL TOTAL BRUTO
+        doc.text('0', 275, 117); //RESULTADO DEL TOTAL DESCUENTOS
+        doc.text('258,817', 265, 123); //RESULTADO DEL TOTAL SUBTOTAL
+        doc.text('49,175', 267, 129); //RESULTADO DEL TOTAL IVA
+        doc.text('307,992', 265, 136); //RESULTADO DEL TOTAL IVA
+
+        //FIRMA Y SELLO
+        doc.rect(20, 137, 260, 10);
+        doc.setFontSize(10)
+        doc.text('FIRMA Y SELLO', 22, 141);
+
+        //AUTORIZADO POR
+        doc.rect(20, 147, 260, 10);
+        doc.text('AUTORIZADO POR', 22, 151);
         
+        
+        //FINAL DE LA ORDEN
+        doc.rect(20, 157, 260, 20);
+
+        doc.line(103, 177, 103, 157)
+        doc.setFont('helvetica', 'normal', 'bold')
+        doc.text('DIRECTOR ADMINISTRATIVO', 104, 161);
+
+        doc.line(255, 177, 255, 157)
+        doc.text('DIRECTOR:', 258, 161);
+
+
+
+
+
+
+
 
 
 

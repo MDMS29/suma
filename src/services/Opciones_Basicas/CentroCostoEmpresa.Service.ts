@@ -1,12 +1,15 @@
 import QueryCentroCostoEmpresa from "../../querys/Opciones_Basicas/QueryCentroCostoEmpresa";
 import { Centro_Costo } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
+import Querys from "../../querys/Querys";
 
 export class CentroCostoEmpresaService {
     private _Query_Centro_Costo_Empresa: QueryCentroCostoEmpresa;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Centro_Costo_Empresa = new QueryCentroCostoEmpresa();
+        this._Querys = new Querys();
     }
 
     public async Obtener_Centros_Costo_Empresa(estado: number, empresa: number, tipo: string, valor: number): Promise<any> {
@@ -51,6 +54,11 @@ export class CentroCostoEmpresaService {
             // if (responsable_filtrado?.length > 0) {
             //     return { error: true, message: 'Este correo esta asociado a un centro de costo diferente' } //!ERROR
             // }
+
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, centro_costo_request.ip, centro_costo_request?.ubicacion)
+            if(log !== 1){
+                console.log('ERROR AL INSERTAR LOGS DE AUDITORIA')
+            }
 
             const respuesta = await this._Query_Centro_Costo_Empresa.Insertar_Centro_Costo(centro_costo_request, usuario_creacion)
 
