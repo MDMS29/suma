@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { HistorialService } from "../../services/Auditoria/Auditoria.Service";
+import { HistorialService } from "../../services/Auditoria/Auditoria.service";
 import { FiltroLogsAuditoriaSchema } from "../../validations/Auditoria.Zod";
 
 export default class _HistorialController {
@@ -51,6 +51,4 @@ export default class _HistorialController {
             return res.status(500).json({ error: true, message: 'Error al obtener los logs de auditoria' }) //!ERROR
         }
     }
-
-
 }

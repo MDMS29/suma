@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { OrdenesService } from "../../services/Compras/Ordenes.Service";
 import { FiltroOrdenesSchema, OrdenesSchema } from "../../validations/Compras.Zod";
 
-export default class _OrdenesController {
+export default class OrdenesController {
 
 
     public async Obtener_Ordenes_Filtro(req: Request, res: Response) {
@@ -248,7 +248,7 @@ export default class _OrdenesController {
         try {
             const ordenes_service = new OrdenesService()
             const respuesta = await ordenes_service.Enviar_Correo_Aprobacion_Proveedor(+id_orden, +empresa)
-            if (respuesta && respuesta.error) {
+            if (respuesta?.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
 

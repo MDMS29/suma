@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import ModuloService from "../../services/Configuracion/Modulo.Service";
+import ModuloService from "../../services/Configuracion/Modulo.service";
 import { EstadosTablas, _rol_consultar } from "../../helpers/constants";
 import { ModulosSchema } from "../../validations/Configuracion.Zod";
 
@@ -59,7 +59,7 @@ export default class _ModuloController {
 
         try {
             const _ModuloService = new ModuloService()
-            const respuesta = await _ModuloService.Insertar_Modulo(cod_modulo, nombre_modulo, icono, usuario?.usuario, roles)
+            const respuesta = await _ModuloService.Insertar_Modulo(req.body, usuario?.usuario, roles)
             
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR

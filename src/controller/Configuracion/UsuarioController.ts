@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import UsuarioService from '../../services/Configuracion/Usuario.Service';
+import UsuarioService from '../../services/Configuracion/Usuario.service';
 import { UsuarioLogin } from '../../Interfaces/Configuracion/IConfig';
 import { UsuarioSchema } from '../../validations/Configuracion.Zod';
 import { EstadosTablas } from '../../helpers/constants';
@@ -198,13 +198,6 @@ export default class UsuarioController {
         }
         if (!estado) { //VALIDAR SI EL ESTADO EXISTE
             return res.status(400).json({ error: true, message: "Estado no definido" })
-        }
-        if (typeof estado === 'string') {
-            //CONVERSION DEL ESTADO STRING A NUMBER PARA ENVIARLO AL SERVICE
-            // estado = +estado
-            // if (!estado) {
-            //     return res.json({ error: true, message: "Estado no definido" }) //VALIDAR SI EL ESTADO ES UN VALOR VALIDO
-            // }
         }
         try {
             const usuario_service = new UsuarioService()

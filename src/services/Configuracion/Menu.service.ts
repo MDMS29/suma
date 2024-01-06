@@ -1,11 +1,16 @@
 import QueryMenu from "../../querys/Configuracion/QueryMenu";
+import Querys from "../../querys/Querys";
+import {MenusModulos} from "../../Interfaces/Configuracion/IConfig";
+import {Logs_Info} from "../../Interfaces/IConstants";
 
 export class MenuService {
     private _Query_Menu: QueryMenu;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Menu = new QueryMenu();
+        this._Querys = new Querys();
     }
 
     public async Obtener_Menus(estado: number, id_modulo: number): Promise<any> {
@@ -26,16 +31,23 @@ export class MenuService {
         }
     }
 
-    public async Insertar_Menu(nombre: string, link_menu: string, id_modulo: string, usuario_creacion: string) {
+    public async Insertar_Menu(menu_request: MenusModulos, id_modulo:string, usuario_creacion: string) {
+        const {nombre_menu, link_menu} = menu_request
         try {
             //VALIDAR SI EL MENU EXISTE
-            const BMenu: any = await this._Query_Menu.Buscar_Menu_Nombre(nombre)
+            const BMenu: any = await this._Query_Menu.Buscar_Menu_Nombre(nombre_menu)
             if (BMenu?.length > 0) {
                 return { error: true, message: 'Ya existe este menu' } //!ERROR
             }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, menu_request.ip, menu_request?.ubicacion)
+            if(log !== 1){
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${menu_request.ip}, UBICACIÓN: \n ${menu_request?.ubicacion}`)
+            }
+
             //INVOCAR FUNCION PARA INSERTAR MENU
-            const respuesta = await this._Query_Menu.Insertar_Menu(nombre, link_menu.toLowerCase(), id_modulo, usuario_creacion)
+            const respuesta = await this._Query_Menu.Insertar_Menu(nombre_menu, link_menu.toLowerCase(), id_modulo, usuario_creacion)
 
             if (!respuesta) {
                 return { error: true, message: 'No se ha podido crear el menu' } //!ERROR
@@ -67,25 +79,34 @@ export class MenuService {
         }
     }
 
-    public async Editar_menu(id_menu: number, nombre: string, link_menu: string, usuario_modificacion: string) {
+    public async Editar_menu(id_menu: number, menu_request: MenusModulos, usuario_modificacion: string) {
+
+        const {nombre_menu, link_menu} = menu_request
+
         let nombre_editado: string
         let link_menu_editado: string
         try {
-            const BMenu: any = await this._Query_Menu.Buscar_Menu_Nombre(nombre)
-            if (BMenu?.length > 0 && BMenu[0].nombre_menu !== nombre) {
+            const BMenu: any = await this._Query_Menu.Buscar_Menu_Nombre(nombre_menu)
+            if (BMenu?.length > 0 && BMenu[0].nombre_menu !== nombre_menu) {
                 return { error: true, message: 'Ya existe este menu' } //!ERROR
             }
             const respuesta: any = await this._Query_Menu.Buscar_Menu_ID(id_menu)
-            if (respuesta[0]?.nombre_menu === nombre) {
+            if (respuesta[0]?.nombre_menu === nombre_menu) {
                 nombre_editado = respuesta[0]?.nombre_menu
             } else {
-                nombre_editado = nombre
+                nombre_editado = nombre_menu
             }
 
             if (respuesta[0]?.link_menu === link_menu) {
                 link_menu_editado = respuesta[0]?.link_menu
             } else {
                 link_menu_editado = link_menu
+            }
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modificacion, menu_request.ip, menu_request?.ubicacion)
+            if(log !== 1){
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modificacion}, IP: \n ${menu_request.ip}, UBICACIÓN: \n ${menu_request?.ubicacion}`)
             }
 
             const res = await this._Query_Menu.Editar_Menu(id_menu, nombre_editado, link_menu_editado.toLowerCase(), usuario_modificacion)
@@ -100,8 +121,13 @@ export class MenuService {
         }
     }
 
-    public async Cambiar_Estado_Menu(id_menu: number, estado: number) {
+    public async Cambiar_Estado_Menu(id_menu: number, estado: number, info_user: Logs_Info, usuario:string) {
         try {
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            if(log !== 1){
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
 
             const menu_editado = await this._Query_Menu.Cambiar_Estado_Menu(id_menu, estado);
             if (!menu_editado?.rowCount) {

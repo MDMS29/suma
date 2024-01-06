@@ -36,7 +36,6 @@ export interface Centro_Costo {
     id_empresa?: number
     id_proceso: number
     codigo: string
-    consecutivo: number
     centro_costo: string
     correo_responsable: string
     consecutivo: number
@@ -65,7 +64,7 @@ export interface Producto_Empresa {
     compuesto: boolean;
     ficha: boolean;
     certificado: boolean;
-};
+}
 
 
 export interface Iva {

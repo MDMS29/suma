@@ -50,14 +50,11 @@ export class CentroCostoEmpresaService {
             if (centro_filtrado_nombre?.length > 0) {
                 return { error: true, message: 'Ya existe este nombre' } //!ERROR
             }
-            // const responsable_filtrado: any = await this._Query_Centro_Costo_Empresa.Buscar_Responsable_Centro(centro_costo_request)
-            // if (responsable_filtrado?.length > 0) {
-            //     return { error: true, message: 'Este correo esta asociado a un centro de costo diferente' } //!ERROR
-            // }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
             const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, centro_costo_request.ip, centro_costo_request?.ubicacion)
             if(log !== 1){
-                console.log('ERROR AL INSERTAR LOGS DE AUDITORIA')
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${centro_costo_request.ip}, UBICACIÓN: \n ${centro_costo_request?.ubicacion}`)
             }
 
             const respuesta = await this._Query_Centro_Costo_Empresa.Insertar_Centro_Costo(centro_costo_request, usuario_creacion)
@@ -91,7 +88,7 @@ export class CentroCostoEmpresaService {
         }
     }
 
-    public async Editar_Centro_Costo(id_proceso_empresa: number, centro_costo_request: Centro_Costo) {
+    public async Editar_Centro_Costo(id_proceso_empresa: number, centro_costo_request: Centro_Costo, usuario: string) {
         try {
             const respuesta: any = await this._Query_Centro_Costo_Empresa.Buscar_Centro_ID(id_proceso_empresa)
 
@@ -105,16 +102,17 @@ export class CentroCostoEmpresaService {
                 return { error: true, message: 'Ya existe este nombre de centro' } //!ERROR
             }
 
-            // const centro_filtrado_responsable: any = await this._Query_Centro_Costo_Empresa.Buscar_Responsable_Centro(centro_costo_request)
-            // if (centro_filtrado_responsable?.length > 0 && centro_filtrado_responsable[0].correo_responsable !== respuesta[0].correo_responsable && centro_costo_request.id_empresa === respuesta[0].id_empresa) {
-            //     return { error: true, message: 'Este correo esta asociado a un centro de costo diferente' } //!ERROR
-            // }
-
             //ACTUALIZAR INFORMACION
             centro_costo_request.codigo = respuesta[0]?.codigo === centro_costo_request.codigo ? respuesta[0]?.codigo : centro_costo_request.codigo
             centro_costo_request.centro_costo = respuesta[0]?.centro_costo === centro_costo_request.centro_costo ? respuesta[0]?.centro_costo : centro_costo_request.centro_costo
             centro_costo_request.id_proceso = respuesta[0]?.id_proceso === centro_costo_request.id_proceso ? respuesta[0]?.id_proceso : centro_costo_request.id_proceso
             centro_costo_request.correo_responsable = respuesta[0]?.correo_responsable === centro_costo_request.correo_responsable ? respuesta[0]?.correo_responsable : centro_costo_request.correo_responsable
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, centro_costo_request.ip, centro_costo_request?.ubicacion)
+            if(log !== 1){
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${centro_costo_request.ip}, UBICACIÓN: \n ${centro_costo_request?.ubicacion}`)
+            }
 
             const res = await this._Query_Centro_Costo_Empresa.Editar_Centro_Costo(id_proceso_empresa, centro_costo_request)
 

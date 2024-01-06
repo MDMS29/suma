@@ -143,7 +143,7 @@ export default class CentroCostoEmpresa {
         try {
             const centro_costo_service = new CentroCostoEmpresaService()
 
-            const respuesta = await centro_costo_service.Editar_Centro_Costo(+id_centro_costo, req.body)
+            const respuesta = await centro_costo_service.Editar_Centro_Costo(+id_centro_costo, req.body, usuario?.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }

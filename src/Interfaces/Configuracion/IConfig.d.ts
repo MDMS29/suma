@@ -1,3 +1,5 @@
+import {Logs_Info} from "../IConstants";
+
 export type UsuarioLogin = {
     usuario: string
     clave?: string
@@ -14,12 +16,13 @@ export type PermisosModulos = {
     id_estado: string | number;
 }
 
-export type MenusModulos = {
+export interface MenusModulos extends Logs_Info {
+    id_menu: number
     link_menu: string
     nombre_menu: string
 }
 
-export type ModulosUsuario = {
+export interface ModulosUsuario extends Logs_Info {
     readonly id_modulo: number
     cod_modulo: string
     nombre_modulo: string
@@ -56,7 +59,7 @@ export type MessageError = {
     message: string
 }
 
-export interface Empresa {
+export interface Empresa extends Logs_Info {
     id_empresa?: number
     nit: string
     razon_social: string

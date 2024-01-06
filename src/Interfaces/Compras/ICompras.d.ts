@@ -88,9 +88,6 @@ interface Encabezado_Orden {
     nombre_proveedor?: string
     razon_social?: string
     orden: string;
-    razon_social: string;
-    nombre_proveedor: string;
-    forma_pago: string;
     nit_empresa: string;
     nit_proveedor: string;
     direccion_proveedor: string;

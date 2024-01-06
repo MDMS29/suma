@@ -41,7 +41,8 @@ export const _BuscarMenuNombre = `
     FROM 
         seguridad.tbl_menus tm
     WHERE
-        tm.nombre_menu = $1
+        tm.nombre_menu = $1 AND
+        tm.id_estado = 1
     ORDER BY tm.id_menu DESC;  
 ` 
 

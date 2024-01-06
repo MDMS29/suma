@@ -1,12 +1,15 @@
 import QueryEmpresa from "../../querys/Configuracion/QueryEmpresa";
 import { Empresa } from '../../Interfaces/Configuracion/IConfig'
+import Querys from "../../querys/Querys";
 
 export default class EmpresaService {
     private _Query_Empresa: QueryEmpresa;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Empresa = new QueryEmpresa();
+        this._Querys = new Querys();
     }
 
     public async Obtener_Empresas(estado: number): Promise<any> {
@@ -39,7 +42,11 @@ export default class EmpresaService {
                 return { error: true, message: 'Ya existe este nombre de empresa' } //!ERROR
             }
 
-
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, empresa_request.ip, empresa_request?.ubicacion)
+            if(log !== 1){
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${empresa_request.ip}, UBICACIÓN: \n ${empresa_request?.ubicacion}`)
+            }
 
             //INVOCAR FUNCION PARA INSERTAR ROL
             const respuesta = await this._Query_Empresa.Insertar_Empresa(empresa_request, usuario_creacion)
@@ -100,6 +107,12 @@ export default class EmpresaService {
             empresa_request.telefono = empresa[0]?.telefono === empresa_request.telefono ? empresa[0].telefono : empresa_request.telefono
             empresa_request.correo = empresa[0]?.correo === empresa_request.telefono ? empresa[0].telefono : empresa_request.telefono
             empresa_request.direccion = empresa[0]?.direccion === empresa_request.telefono ? empresa[0].telefono : empresa_request.telefono
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modificacion, empresa_request.ip, empresa_request?.ubicacion)
+            if(log !== 1){
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modificacion}, IP: \n ${empresa_request.ip}, UBICACIÓN: \n ${empresa_request?.ubicacion}`)
+            }
 
             const res = await this._Query_Empresa.Editar_Empresa(id_empresa, empresa_request, usuario_modificacion)
             if (res?.rowCount != 1) {

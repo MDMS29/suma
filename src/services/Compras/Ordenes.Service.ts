@@ -1,15 +1,15 @@
-import jsPDF from "jspdf";
+import {jsPDF as JSPDF} from "jspdf";
 import {
     Encabezado_Orden,
     Filtro_Ordenes,
 } from "../../Interfaces/Compras/ICompras";
-import { EstadosTablas } from "../../helpers/constants";
+import {EstadosTablas} from "../../helpers/constants";
 import QueryOrdenes from "../../querys/Compras/QueryOrdenes";
 import Querys from "../../querys/Querys";
-import { RequisicionesService } from "./Requisiciones.Service";
-import { transporter } from "../../config/mailer";
-import { MessageError } from "../../Interfaces/Configuracion/IConfig";
-import { formatear_cantidad } from "../../helpers/utils";
+import {RequisicionesService} from "./Requisiciones.Service";
+import {transporter} from "../../config/mailer";
+import {MessageError} from "../../Interfaces/Configuracion/IConfig";
+import {formatear_cantidad} from "../../helpers/utils";
 
 import fs from "node:fs";
 
@@ -62,9 +62,9 @@ export class OrdenesService {
             ],
         });
         if (!correo_confir.accepted) {
-            return { error: true, message: "Error al enviar correo de confirmación" }; //!ERROR
+            return {error: true, message: "Error al enviar correo de confirmación"}; //!ERROR
         }
-        return { error: false, message: '' }
+        return {error: false, message: ''}
     }
 
     private async Enviar_Correo_Proveedor(orden: Encabezado_Orden, correo_responsables: string[], pdf: string | undefined): Promise<MessageError> {
@@ -112,17 +112,17 @@ export class OrdenesService {
             ]
         });
         if (!correo_confir.accepted) {
-            return { error: true, message: 'Error al enviar correo de confirmación' }; //!ERROR
+            return {error: true, message: 'Error al enviar correo de confirmación'}; //!ERROR
         }
 
-        return { error: false, message: '' }
+        return {error: false, message: ''}
     }
 
     public async Obtener_Ordenes_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Ordenes>) {
         let ordenes
         try {
             if (!Object.keys(filtros)) {
-                return { error: true, message: "No hay existen filtros a realizar" }
+                return {error: true, message: "No hay existen filtros a realizar"}
             }
 
 
@@ -130,14 +130,14 @@ export class OrdenesService {
 
 
             if (ordenes?.length === 0 || !ordenes) {
-                return { error: true, message: "No se han encontrado ordenes con estos criterios" }
+                return {error: true, message: "No se han encontrado ordenes con estos criterios"}
             }
 
             return ordenes
 
         } catch (error) {
             console.log(error)
-            return { error: true, message: "Error al filtrar las ordenes" }
+            return {error: true, message: "Error al filtrar las ordenes"}
         }
     }
 
@@ -145,12 +145,12 @@ export class OrdenesService {
         try {
             const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta?.length <= 0) {
-                return { error: false, message: 'No se han encontrado ordenes' } //!ERROR
+                return {error: false, message: 'No se han encontrado ordenes'} //!ERROR
             }
             return respuesta
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al cargar las ordenes' } //!ERROR
+            return {error: true, message: 'Error al cargar las ordenes'} //!ERROR
         }
     }
 
@@ -171,7 +171,7 @@ export class OrdenesService {
                     req_body.lugar_entrega
                 );
                 if (direccion_insertada.length <= 0) {
-                    return { error: true, message: "Error al insertar la dirección" }; //!ERROR
+                    return {error: true, message: "Error al insertar la dirección"}; //!ERROR
                 }
 
                 req_body.lugar_entrega = direccion_insertada[0].id_direccion;
@@ -197,7 +197,7 @@ export class OrdenesService {
                             orden[0].id_orden
                         );
                     if (orden_detalle?.length == 0 && !orden_detalle) {
-                        return { error: true, message: "Error al insertar los detalles" }; //!ERROR
+                        return {error: true, message: "Error al insertar los detalles"}; //!ERROR
                     }
                 }
 
@@ -206,7 +206,7 @@ export class OrdenesService {
                     req_body.id_empresa
                 );
                 if (orden_insertada?.length <= 0) {
-                    return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
+                    return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
                 }
 
                 return orden_insertada[0];
@@ -224,28 +224,23 @@ export class OrdenesService {
     }
 
     public async Enviar_Correo_Aprobacion_Proveedor(orden_id: number, empresa_id: number) {
-        let array_requisiciones: { id_requisicion: number, requisicion: string }[] = []
         try {
             const [orden_aprobar] = await this._Query_Ordenes.Buscar_Encabezado_Doc(orden_id, empresa_id)
             if (!orden_aprobar) {
-                return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
+                return {error: true, message: 'No se ha encontrado la orden'} //!ERROR
             }
 
             const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Doc(orden_id)
             if (dellate_orden && dellate_orden?.length <= 0) {
-                return { error: true, message: `No se han encontrado los detalle de la orden ${orden_aprobar.orden}` } //!ERROR
+                return {error: true, message: `No se han encontrado los detalle de la orden ${orden_aprobar.orden}`} //!ERROR
             }
 
             orden_aprobar.detalles_orden = dellate_orden
 
-            for (let detalle of orden_aprobar.detalles_orden) {
-                array_requisiciones.push({ id_requisicion: detalle.id_requisicion, requisicion: detalle.requisicion })
-            }
-
             //? GENERAR PDF DE LA ORDEN PARA ENVIAR
             const pdf = await this.Generar_Documento_Orden(orden_id, empresa_id)
             if (!pdf) {
-                return { error: true, message: `Error al generar documento` } //!ERROR
+                return {error: true, message: `Error al generar documento`} //!ERROR
             }
 
             //?ENVIAR CORREO DE CONFIRMACIÓN AL PROVEEDOR
@@ -254,11 +249,11 @@ export class OrdenesService {
                 return es_correo
             }
 
-            return { error: false, message: `Correo enviado al proveedor ${orden_aprobar.nombre_proveedor}` }
+            return {error: false, message: `Correo enviado al proveedor ${orden_aprobar.nombre_proveedor}`}
 
         } catch (error) {
             console.log(error)
-            return { error: true, message: "Error al enviar correo de aprobación" } //!ERROR
+            return {error: true, message: "Error al enviar correo de aprobación"} //!ERROR
         }
     }
 
@@ -269,7 +264,7 @@ export class OrdenesService {
                 id_empresa
             );
             if (respuesta?.length <= 0) {
-                return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
+                return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
             }
 
             const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden(
@@ -287,7 +282,7 @@ export class OrdenesService {
             return respuesta[0];
         } catch (error) {
             console.log(error);
-            return { error: true, message: "Error al encontrar la orden" }; //!ERROR
+            return {error: true, message: "Error al encontrar la orden"}; //!ERROR
         }
     }
 
@@ -312,7 +307,7 @@ export class OrdenesService {
                 req_body.lugar_entrega
             );
             if (direccion_editada !== 1) {
-                return { error: true, message: "Error al editar la dirección" }; //!ERROR
+                return {error: true, message: "Error al editar la dirección"}; //!ERROR
             }
 
             try {
@@ -357,7 +352,7 @@ export class OrdenesService {
                                 id_orden
                             );
                         if (orden_detalle?.length == 0 && !orden_detalle) {
-                            return { error: true, message: "Error al insertar los detalles" }; //!ERROR
+                            return {error: true, message: "Error al insertar los detalles"}; //!ERROR
                         }
                     }
                 }
@@ -367,7 +362,7 @@ export class OrdenesService {
                     req_body.id_empresa
                 );
                 if (orden_editada?.length <= 0) {
-                    return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
+                    return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
                 }
                 return orden_editada[0];
             } catch (error) {
@@ -405,15 +400,11 @@ export class OrdenesService {
             }; //!ERROR
         } catch (error) {
             console.log(error);
-            return { error: true, message: "Error al cambiar el estado de la orden" }; //!ERROR
+            return {error: true, message: "Error al cambiar el estado de la orden"}; //!ERROR
         }
     }
 
-    public async Aprobar_Orden(
-        id_orden: number,
-        empresa_id: number,
-        usuario_id: number
-    ) {
+    public async Aprobar_Orden(id_orden: number, empresa_id: number, usuario_id: number) {
         try {
             let array_requisiciones: {
                 id_requisicion: number;
@@ -425,7 +416,7 @@ export class OrdenesService {
                 empresa_id
             );
             if (!orden_aprobar) {
-                return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
+                return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
             }
 
             const dellate_orden =
@@ -556,7 +547,7 @@ export class OrdenesService {
             }
         } catch (error) {
             console.log(error);
-            return { error: true, message: `Error al aprobar la orden` }; //!ERROR
+            return {error: true, message: `Error al aprobar la orden`}; //!ERROR
         }
     }
 
@@ -568,7 +559,7 @@ export class OrdenesService {
                 id_empresa
             );
             if (!orden) {
-                return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
+                return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
             }
 
             const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Doc(
@@ -585,7 +576,7 @@ export class OrdenesService {
             let descuento_total = 0;
             let subtotal = 0;
             for (let detalle of dellate_orden) {
-                const { cantidad, precio_compra, porcentaje, descuento } = detalle;
+                const {cantidad, precio_compra, porcentaje, descuento} = detalle;
 
                 let subtotal_local = cantidad * precio_compra;
                 let iva_local = subtotal_local * (porcentaje / 100);
@@ -618,7 +609,7 @@ export class OrdenesService {
                 }; //!ERROR
             }
 
-            return { data: pdf, nombre: orden.orden };
+            return {data: pdf, nombre: orden.orden};
         } catch (error) {
             console.log(error);
             return {
@@ -644,7 +635,7 @@ export class OrdenesService {
         } = orden;
 
         // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
-        const doc = new jsPDF({ orientation: "l" });
+        const doc = new JSPDF({orientation: "l"});
 
         // CABECERA DOCUMENTO
         doc.setFontSize(12); // (size)
