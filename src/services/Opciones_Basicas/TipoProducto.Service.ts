@@ -1,12 +1,15 @@
 import QueryTipoProducto from "../../querys/Opciones_Basicas/QueryTipoProducto";
 import { Tipo_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
+import Querys from "../../querys/Querys";
 
 export class TiposProductoService {
     private _QueryTipoProducto: QueryTipoProducto;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._QueryTipoProducto = new QueryTipoProducto();
+        this._Querys = new Querys();
     }
 
     public async Obtener_Tipos_Producto(id_empresa: number): Promise<any> {
@@ -30,6 +33,12 @@ export class TiposProductoService {
             const unidad_filtrada: any = await this._QueryTipoProducto.Buscar_Tipo_Producto(tipos_producto_request)
             if (unidad_filtrada?.length > 0) {
                 return { error: true, message: 'Ya existe este tipo de producto' } //!ERROR
+            }
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, tipos_producto_request.ip, tipos_producto_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${tipos_producto_request.ip}, UBICACIÓN: \n ${tipos_producto_request?.ubicacion}`)
             }
 
             //INVOCAR FUNCION PARA INSERTAR MENU
@@ -65,7 +74,7 @@ export class TiposProductoService {
         }
     }
 
-    public async Editar_Tipo_Producto(id_tipo_producto: number, tipos_producto_request: Tipo_Producto) {
+    public async Editar_Tipo_Producto(id_tipo_producto: number, tipos_producto_request: Tipo_Producto, usuario_modi:string) {
         try {
             const respuesta: any = await this._QueryTipoProducto.Buscar_Tipo_Producto_ID(id_tipo_producto)
 
@@ -75,6 +84,12 @@ export class TiposProductoService {
             }
 
             tipos_producto_request.descripcion = respuesta[0]?.descripcion === tipos_producto_request.descripcion ? respuesta[0]?.descripcion : tipos_producto_request.descripcion
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modi, tipos_producto_request.ip, tipos_producto_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${tipos_producto_request.ip}, UBICACIÓN: \n ${tipos_producto_request?.ubicacion}`)
+            }
 
             const res = await this._QueryTipoProducto.Editar_Tipo_Producto(id_tipo_producto, tipos_producto_request)
             if (res?.rowCount != 1) {

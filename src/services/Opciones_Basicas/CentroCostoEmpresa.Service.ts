@@ -53,7 +53,7 @@ export class CentroCostoEmpresaService {
 
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
             const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, centro_costo_request.ip, centro_costo_request?.ubicacion)
-            if(log !== 1){
+            if (log !== 1) {
                 console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${centro_costo_request.ip}, UBICACIÓN: \n ${centro_costo_request?.ubicacion}`)
             }
 
@@ -110,7 +110,7 @@ export class CentroCostoEmpresaService {
 
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
             const log = await this._Querys.Insertar_Log_Auditoria(usuario, centro_costo_request.ip, centro_costo_request?.ubicacion)
-            if(log !== 1){
+            if (log !== 1) {
                 console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${centro_costo_request.ip}, UBICACIÓN: \n ${centro_costo_request?.ubicacion}`)
             }
 
@@ -127,8 +127,14 @@ export class CentroCostoEmpresaService {
         }
     }
 
-    public async Cambiar_Estado_Centro(id_centro_costo: number, estado: number) {
+    public async Cambiar_Estado_Centro(id_centro_costo: number, estado: number, info_user: any, usuario:string) {
         try {
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
+
             const familia_filtrada: any = await this._Query_Centro_Costo_Empresa.Buscar_Centro_ID(id_centro_costo)
             if (familia_filtrada?.length <= 0) {
                 return { error: true, message: 'No se ha encontrado este centro de costo' } //!ERROR

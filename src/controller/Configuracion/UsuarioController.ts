@@ -16,7 +16,7 @@ export default class UsuarioController {
             return res.status(404).json({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
         }
         if (!ip || !ubicacion) {
-            console.log('*** USUARIO SIN IP *** \n'+ ip + '\n' +ubicacion +'\n *********************')
+            console.log('*** USUARIO SIN IP *** \n' + ip + '\n' + ubicacion + '\n *********************')
             return res.status(404).json({ error: true, message: 'Error al iniciar sesion' }) //!ERROR
         }
 
@@ -116,7 +116,7 @@ export default class UsuarioController {
 
         try {
             const usuario_service = new UsuarioService()
-            const respuesta = await usuario_service.Insertar_Usuario(result.data, req.usuario?.usuario) //INVOCAR FUNCION PARA INSERTAR EL USUARIO
+            const respuesta = await usuario_service.Insertar_Usuario(req.body, req.usuario?.usuario) //INVOCAR FUNCION PARA INSERTAR EL USUARIO
             if (respuesta.error) { //SI LA RESPUESTA LLEGA CORRECTAMENTE
                 return res.status(404).json(respuesta) //!ERROR
             }
@@ -140,6 +140,7 @@ export default class UsuarioController {
     public async Editar_Usuario(req: Request, res: Response) {
         const { perfiles, roles } = req.body //OBTENER LA INFORMACION ENVIADA
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO POR PARAMETROS
+        const { usuario } = req
         //VALIDACION DE DATOS
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(400).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }) //!Error
@@ -166,11 +167,11 @@ export default class UsuarioController {
             if (respuesta?.error) { //VALIDAR SI HAY UN ERROR
                 return res.status(400).json(respuesta) //!ERROR
             }
-            const perfilesEditados: any = await usuario_service.Editar_Perfiles_Usuario(perfiles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
+            const perfilesEditados: any = await usuario_service.Editar_Perfiles_Usuario(perfiles, +id_usuario, usuario.usuario, req.body) //INVOCAR FUNCION PARA EDITAR LOS PERFILES DEL USUARIO
             if (perfilesEditados?.error) { //VALIDAR SI HAY UN ERROR
                 return res.status(400).json(perfilesEditados) //!ERROR
             }
-            const permisoEditado = await usuario_service.Editar_Permisos_Usuario(roles, +id_usuario) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
+            const permisoEditado = await usuario_service.Editar_Permisos_Usuario(roles, +id_usuario, usuario.usuario, req.body) //INVOCAR FUNCION PARA EDITAR LOS ROLES DEL USUARIO
             if (permisoEditado?.error) {//VALIDAR SI HAY UN ERROR
                 return res.status(400).json(permisoEditado) //!ERROR
             }
@@ -187,7 +188,7 @@ export default class UsuarioController {
 
     public async Cambiar_Estado_Usuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
-        let { estado } = req.query as { estado: string }//OBTENER EL ESTADO QUE TENDRA EL USUARIO
+        let { estado, info } = req.query as { estado: string, info: string }//OBTENER EL ESTADO QUE TENDRA EL USUARIO
 
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }) //!ERROR
@@ -201,7 +202,7 @@ export default class UsuarioController {
         }
         try {
             const usuario_service = new UsuarioService()
-            const busqueda = await usuario_service.Cambiar_Estado_Usuario({ usuario: +id_usuario, estado: estado }) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
+            const busqueda = await usuario_service.Cambiar_Estado_Usuario({ usuario: +id_usuario, estado: estado }, JSON.parse(info), req.usuario.usuario) //INVOCAR FUNCION PARA CAMBIAR EL ESTADO DEL USUARIO
             if (busqueda?.error) { //VALIDAR SI HAY ALGUN ERROR
                 return res.status(400).json(busqueda) //!ERROR
             }
@@ -217,6 +218,7 @@ export default class UsuarioController {
 
     public async Cambiar_Clave_Usuario(req: Request, res: Response) {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
+        const { info } = req.query as { info: string }
 
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }) //!ERROR
@@ -231,13 +233,13 @@ export default class UsuarioController {
             if (clave === '') {
                 return res.status(400).json({ error: true, message: 'Error al generar clave' }) //!ERROR
             }
-            const Usuario_Change = await usuario_service.Cambiar_Clave_Usuario(+id_usuario, clave, true)
+            const Usuario_Change = await usuario_service.Cambiar_Clave_Usuario(+id_usuario, clave, true, JSON.parse(info), req.usuario.usuario)
             if (Usuario_Change.error) {
                 return res.status(400).json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }
 
             //ENVIAR CORREO AL USUARIO PARA RESTABLECER LA CONTRASEÑA DEL USUARIO
-            const info = await transporter.sendMail({
+            const info_mail = await transporter.sendMail({
                 from: '"SUMA" <mazomoises@gmail.com>', // sender address
                 to: Usuario_Change.data_usuario?.correo, // list of receivers
                 subject: "Recuperación de contraseña", // Subject line
@@ -257,7 +259,7 @@ export default class UsuarioController {
                     `,
             });
 
-            if (!info.accepted) {
+            if (!info_mail.accepted) {
                 return res.status(500).json({ error: true, message: 'Error al restablecer la clave del usuario' }); //!ERROR
             }
 
@@ -272,6 +274,8 @@ export default class UsuarioController {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
         const { clave } = req.body //OBTENER LA NUEVA CLAVE DEL USUARIO
 
+        const { info } = req.params as { info: string }
+
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }) //!ERROR
         }
@@ -284,7 +288,7 @@ export default class UsuarioController {
 
         try {
             const usuario_service = new UsuarioService()
-            const Usuario_Change = await usuario_service.Cambiar_Clave_Usuario(+id_usuario, clave, false)
+            const Usuario_Change = await usuario_service.Cambiar_Clave_Usuario(+id_usuario, clave, false, JSON.parse(info), req.usuario.usuario)
             if (Usuario_Change.error) {
                 return res.status(400).json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
             }

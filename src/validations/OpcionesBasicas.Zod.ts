@@ -10,8 +10,6 @@ export const UnidadMedidaSchema = z.object({
     unidad: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'El nombre de la unidad es requerida'
-    }).regex(/^[a-zA-Z0-9\s]*$/, {
-        message: 'No se permiten caracteres especiales'
     })
 })
 

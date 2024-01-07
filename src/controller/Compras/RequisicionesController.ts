@@ -7,7 +7,7 @@ export default class RequisicionesController {
 
     public async Obtener_Requisiciones_Filtro(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { estado, empresa, tipo_orden } = req.query as { estado: string, empresa: string, requisicion: string, tipo_orden:string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        const { estado, empresa, tipo_orden } = req.query as { estado: string, empresa: string, requisicion: string, tipo_orden: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
@@ -92,7 +92,7 @@ export default class RequisicionesController {
 
         try {
             const familias_producto_service = new RequisicionesService()
-            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario?.id_usuario)
+            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -148,7 +148,7 @@ export default class RequisicionesController {
 
         try {
             const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario?.id_usuario)
+            const respuesta = await requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
@@ -167,7 +167,7 @@ export default class RequisicionesController {
     public async Cambiar_Estado_Requisicion(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_requisicion } = req.params
-        const { estado } = req.query
+        const { estado, info } = req.query as { estado: string, info: string }
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -181,7 +181,7 @@ export default class RequisicionesController {
 
         try {
             const requisiciones_service = new RequisicionesService()
-            const familia_estado = await requisiciones_service.Cambiar_Estado_Requisicion(+id_requisicion, +estado)
+            const familia_estado = await requisiciones_service.Cambiar_Estado_Requisicion(+id_requisicion, +estado, JSON.parse(info), usuario.usuario)
             if (familia_estado.error) {
                 return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
             }
@@ -224,6 +224,7 @@ export default class RequisicionesController {
         const { usuario } = req
         const { id_requisicion } = req.params
         const { detalles } = req.body
+        const {info} = req.query as {info:string}
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -237,7 +238,7 @@ export default class RequisicionesController {
 
         try {
             const requisiciones_service = new RequisicionesService()
-            const respuesta: any = await requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario)
+            const respuesta: any = await requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario, JSON.parse(info))
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }

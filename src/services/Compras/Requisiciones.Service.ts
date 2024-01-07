@@ -8,6 +8,7 @@ import { transporter } from "../../config/mailer";
 import { EstadosTablas } from "../../helpers/constants";
 import QueryUsuario from "../../querys/Configuracion/QuerysUsuario";
 import _QueryTipoOrdenes from "../../querys/Opciones_Basicas/Compras/QueryTipoOrdenes";
+import Querys from "../../querys/Querys";
 
 interface productos_pendiente {
     id_requisicion: number,
@@ -21,12 +22,14 @@ export class RequisicionesService {
     private _Query_Requisiciones: QueryRequisiciones;
     private _Query_Usuarios: QueryUsuario;
     private _Query_Tipo_Ordenes: _QueryTipoOrdenes;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Requisiciones = new QueryRequisiciones();
         this._Query_Usuarios = new QueryUsuario();
         this._Query_Tipo_Ordenes = new _QueryTipoOrdenes();
+        this._Querys = new Querys();
     }
 
     private Reduce_Productos_Pendientes(result: productos_pendiente[], productos_pendientes: productos_pendiente[]) {
@@ -120,15 +123,22 @@ export class RequisicionesService {
         }
     }
 
-    public async Insertar_Requisicion(requisicion_request: Requisicion_Enc, usuario_creacion: string) {
+    public async Insertar_Requisicion(requisicion_request: Requisicion_Enc, usuario_creacion: any) {
+        const { id_usuario, usuario } = usuario_creacion
         try {
             const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_Consecutivo(requisicion_request)
             if (requisicion_filtrada?.length > 0) {
                 return { error: true, message: 'Ya existe este consecutivo' } //!ERROR
             }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, requisicion_request.ip, requisicion_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${requisicion_request.ip}, UBICACIÓN: \n ${requisicion_request?.ubicacion}`)
+            }
+
             // INSERTAR ENCABEZADO DE LA REQUISICION
-            const requisicion_enc = await this._Query_Requisiciones.Insertar_Requisicion_Enc(requisicion_request, usuario_creacion)
+            const requisicion_enc = await this._Query_Requisiciones.Insertar_Requisicion_Enc(requisicion_request, id_usuario)
             if (!requisicion_enc) {
                 return { error: true, message: 'No se ha podido crear la requisicion' } //!ERROR
             }
@@ -138,7 +148,13 @@ export class RequisicionesService {
             if (det_requisicion) {
                 let detalle: Requisicion_Det
                 for (detalle of det_requisicion) {
-                    const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, requisicion_enc[0].id_requisicion, usuario_creacion)
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._Querys.Insertar_Log_Auditoria(usuario, requisicion_request.ip, requisicion_request?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${requisicion_request.ip}, UBICACIÓN: \n ${requisicion_request?.ubicacion}`)
+                    }
+
+                    const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, requisicion_enc[0].id_requisicion, id_usuario)
                     if (!requisicion_det) {
                         return { error: true, message: `Error al insertar el producto ${detalle.id_producto}` } //!ERROR
                     }
@@ -204,12 +220,19 @@ export class RequisicionesService {
         }
     }
 
-    public async Editar_Requisicion(id_requisicion: number, requisicion_request: Requisicion_Enc, usuario_modificacion: string) {
+    public async Editar_Requisicion(id_requisicion: number, requisicion_request: Requisicion_Enc, usuario_modificacion: any) {
+        const { id_usuario, usuario } = usuario_modificacion
         try {
             const respuesta: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, false)
 
             if (!respuesta) {
                 return { error: true, message: 'No se ha encontrado la requisicion' } //!ERROR
+            }
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, requisicion_request.ip, requisicion_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${requisicion_request.ip}, UBICACIÓN: \n ${requisicion_request?.ubicacion}`)
             }
 
             const req_enc = await this._Query_Requisiciones.Editar_Requisicion_Enc(id_requisicion, requisicion_request)
@@ -221,15 +244,21 @@ export class RequisicionesService {
             if (det_requisicion) {
                 let detalle: Requisicion_Det
                 for (detalle of det_requisicion) {
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._Querys.Insertar_Log_Auditoria(usuario, requisicion_request.ip, requisicion_request?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${requisicion_request.ip}, UBICACIÓN: \n ${requisicion_request?.ubicacion}`)
+                    }
+
                     if (typeof detalle.id_detalle !== 'string') {
                         // EDITAR DETALLE
-                        const requisicion_det = await this._Query_Requisiciones.Editar_Requisicion_Det(detalle, usuario_modificacion)
+                        const requisicion_det = await this._Query_Requisiciones.Editar_Requisicion_Det(detalle, id_usuario)
                         if (!requisicion_det) {
                             return { error: true, message: `Error al editar el detalle ${detalle.id_producto}` } //!ERROR
                         }
                     } else {
                         // INSERTAR DETALLE
-                        const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, id_requisicion, usuario_modificacion)
+                        const requisicion_det = await this._Query_Requisiciones.Insertar_Requisicion_Det(detalle, id_requisicion, id_usuario)
                         if (!requisicion_det) {
                             return { error: true, message: `Error al crear el detalle ${detalle.id_producto}` } //!ERROR
                         }
@@ -246,11 +275,17 @@ export class RequisicionesService {
         }
     }
 
-    public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number) {
+    public async Cambiar_Estado_Requisicion(id_requisicion: number, estado: number, info_user: any, usuario_modi: string) {
         try {
             const requisicion_filtrada: any = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, false)
             if (requisicion_filtrada?.length <= 0) {
                 return { error: true, message: 'No se ha encontrado esta la requisicion' } //!ERROR
+            }
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modi, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
             }
 
             const requisicion = await this._Query_Requisiciones.Cambiar_Estado_Requisicion(id_requisicion, estado)
@@ -649,7 +684,8 @@ export class RequisicionesService {
         }
     }
 
-    public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: [{ id_detalle: number, id_estado: number }], usuario: any) {
+    public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: [{ id_detalle: number, id_estado: number }], usuario_aprobador: any, info_user: any) {
+        const { id_usuario, usuario } = usuario_aprobador
         const estados_det_requi: any = { '3': true, '4': true, '5': true }
         try {
             const requisicion = await this._Query_Requisiciones.Buscar_Requisicion_ID(id_requisicion, false)
@@ -662,13 +698,19 @@ export class RequisicionesService {
             }
 
             // EDITAR EL USUARIO QUE REVISA LA REQUISICION
-            const requisicion_edit = await this._Query_Requisiciones.Editar_Usuario_Revi_Requisicion(id_requisicion, usuario.id_usuario)
+            const requisicion_edit = await this._Query_Requisiciones.Editar_Usuario_Revi_Requisicion(id_requisicion, id_usuario)
             if (requisicion_edit?.rowCount !== 1) {
                 return { error: true, message: 'Error al editar el usuario que califica la requisicion' }
             }
 
             // CALIFICAR DETALLES
             for (let detalle of detalles) {
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+                }
+
                 // VERIFICAR SI EL DETALLE PERTENECE A LA REQUISICION
                 const detalle_verifi = await this._Query_Requisiciones.Buscar_Detalle_ID(detalle.id_detalle)
                 if (detalle_verifi.id_requisicion !== id_requisicion) {
@@ -688,13 +730,19 @@ export class RequisicionesService {
                 }
             }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
+
             const requisicion_verificada = await this._Query_Requisiciones.Cambiar_Estado_Requisicion(id_requisicion, EstadosTablas.ESTADO_VERIFICADO)
             if (requisicion_verificada?.rowCount != 1) {
                 return { error: true, message: 'Error al cambiar el estado de la requisicion' }
             }
-            
+
             const pdf_requisicion = await this.Generar_PDF_Requisicion(requisicion.id_requisicion)
-            if(pdf_requisicion?.error){
+            if (pdf_requisicion?.error) {
                 return { error: true, message: 'Error al generar la requisición' }
             }
             //ENVIAR CORREO ELECTRONICO AL RESPONSABLE DEL CENTRO
@@ -718,8 +766,8 @@ export class RequisicionesService {
                     `,
                 attachments: [
                     {
-                        filename:`Requisición ${requisicion.requisicion}`,
-                        path:pdf_requisicion?.data
+                        filename: `Requisición ${requisicion.requisicion}`,
+                        path: pdf_requisicion?.data
                     }
                 ]
             });

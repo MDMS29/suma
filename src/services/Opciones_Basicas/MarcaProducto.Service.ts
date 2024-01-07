@@ -1,12 +1,15 @@
 import QueryMarcaProducto from "../../querys/Opciones_Basicas/QueryMarcaProducto";
 import { Marca_Producto } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
+import Querys from "../../querys/Querys";
 
 export class MarcaProductoService {
     private _Query_Marca_Producto: QueryMarcaProducto;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Marca_Producto = new QueryMarcaProducto();
+        this._Querys = new Querys();
     }
 
     public async Obtener_Marcas_Producto(): Promise<any> {
@@ -30,6 +33,12 @@ export class MarcaProductoService {
             const marca_filtrada: any = await this._Query_Marca_Producto.Buscar_Marca_Producto(marca_producto_request)
             if (marca_filtrada?.length > 0) {
                 return { error: true, message: 'Ya existe esta marca' } //!ERROR
+            }
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, marca_producto_request.ip, marca_producto_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${marca_producto_request.ip}, UBICACIÓN: \n ${marca_producto_request?.ubicacion}`)
             }
 
             //INVOCAR FUNCION PARA INSERTAR MENU
@@ -65,7 +74,7 @@ export class MarcaProductoService {
         }
     }
 
-    public async Editar_Marca_Producto(id_marca_producto: number, marca_producto_request: Marca_Producto) {
+    public async Editar_Marca_Producto(id_marca_producto: number, marca_producto_request: Marca_Producto, usuario_modi:string) {
         try {
             const respuesta: any = await this._Query_Marca_Producto.Buscar_Marca_Producto_ID(id_marca_producto)
 
@@ -76,6 +85,11 @@ export class MarcaProductoService {
 
             marca_producto_request.marca = respuesta[0]?.marca === marca_producto_request.marca ? respuesta[0]?.marca : marca_producto_request.marca
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modi, marca_producto_request.ip, marca_producto_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${marca_producto_request.ip}, UBICACIÓN: \n ${marca_producto_request?.ubicacion}`)
+            }
             const res = await this._Query_Marca_Producto.Editar_Marca_Producto(id_marca_producto, marca_producto_request)
             if (res?.rowCount != 1) {
                 return { error: true, message: 'Error al actualizar la marca' } //!ERROR

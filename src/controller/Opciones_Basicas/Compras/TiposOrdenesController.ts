@@ -45,7 +45,7 @@ export default class TipoOrdenesController {
 
         try {
             const ordenes_service = new _TipoOrdenesService()
-            const respuesta = await ordenes_service.Insertar_Tipo_Orden(result.data)
+            const respuesta = await ordenes_service.Insertar_Tipo_Orden(req.body, usuario.usuario)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -103,7 +103,7 @@ export default class TipoOrdenesController {
 
         try {
             const ordenes_service = new _TipoOrdenesService()
-            const respuesta = await ordenes_service.Editar_Tipo_Orden(result.data, +id_tipo_orden)
+            const respuesta = await ordenes_service.Editar_Tipo_Orden(req.body, +id_tipo_orden, usuario.usuario)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }

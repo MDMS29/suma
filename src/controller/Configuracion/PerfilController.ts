@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PerfilService } from "../../services/Configuracion/Perfil.Service";
+import { PerfilService } from "../../services/Configuracion/Perfil.service";
 import { PerfilesSchema } from "../../validations/Configuracion.Zod";
 import { EstadosTablas } from "../../helpers/constants";
 
@@ -78,7 +78,7 @@ export class _PerfilController {
 
         try {
             const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.Insertar_Perfil(nombre_perfil, usuario.usuario, modulos)
+            const respuesta = await _PerfilService.Insertar_Perfil(req.body, usuario.usuario)
 
             if (respuesta?.error) {
                 return res.status(404).json(respuesta)
@@ -116,12 +116,12 @@ export class _PerfilController {
         try {
             const _PerfilService = new PerfilService()
 
-            const respuesta = await _PerfilService.Editar_Perfil(+id_perfil, nombre_perfil, usuario.usuario)
+            const respuesta = await _PerfilService.Editar_Perfil(+id_perfil, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(404).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const modulosEditado = await _PerfilService.Editar_Modulos_Perfil(+id_perfil, modulos)
+            const modulosEditado = await _PerfilService.Editar_Modulos_Perfil(+id_perfil, req.body, usuario.usuario)
             if (modulosEditado.error) {
                 return res.status(404).json({ error: modulosEditado.error, message: modulosEditado.message })
             }
@@ -137,7 +137,7 @@ export class _PerfilController {
     public async Cambiar_Estado_Perfil(req: Request, res: Response) {
         const { usuario } = req
         const { id_perfil } = req.params
-        const { estado } = req.query as { estado: string }
+        const { estado, info } = req.query as { estado: string, info: string }
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
@@ -150,7 +150,7 @@ export class _PerfilController {
 
         try {
             const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.Cambiar_Estado_Perfil(+id_perfil, +estado)
+            const respuesta = await _PerfilService.Cambiar_Estado_Perfil(+id_perfil, +estado, JSON.parse(info), usuario.usuario)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }

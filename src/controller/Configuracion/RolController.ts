@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RolService } from "../../services/Configuracion/Rol.Service";
+import { RolService } from "../../services/Configuracion/Rol.service";
 import { EstadosTablas } from "../../helpers/constants";
 import { RolesSchema } from "../../validations/Configuracion.Zod";
 
@@ -49,7 +49,7 @@ export class _RolController {
 
         try {
             const _RolService = new RolService()
-            const respuesta = await _RolService.Insertar_Rol(nombre, descripcion, usuario?.usuario) 
+            const respuesta = await _RolService.Insertar_Rol(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -110,7 +110,7 @@ export class _RolController {
         try {
             const _RolService = new RolService()
 
-            const respuesta = await _RolService.Editar_Rol(+id_rol, nombre, descripcion, usuario.usuario)
+            const respuesta = await _RolService.Editar_Rol(+id_rol, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
@@ -129,7 +129,7 @@ export class _RolController {
     public async Cambiar_Estado_Rol(req: Request, res: Response) {
         const { usuario } = req
         const { id_rol } = req.params
-        const { estado } = req.query as { estado: string }
+        const { estado, info } = req.query as { estado: string, info: string }
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
@@ -142,7 +142,7 @@ export class _RolController {
 
         try {
             const _RolService = new RolService()
-            const respuesta = await _RolService.Cambiar_Estado_Rol(+id_rol, +estado)
+            const respuesta = await _RolService.Cambiar_Estado_Rol(+id_rol, +estado, JSON.parse(info), usuario.usuario)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }

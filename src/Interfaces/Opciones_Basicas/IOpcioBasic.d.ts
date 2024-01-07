@@ -1,20 +1,22 @@
-export interface Unidad_Medida {
+import { Logs_Info } from "../IConstants"
+
+export interface Unidad_Medida extends Logs_Info {
     id_unidad?: number
     id_empresa: number
     unidad: string
 }
 
-export interface Tipo_Producto {
+export interface Tipo_Producto extends Logs_Info  {
     id_tipo_producto?: number
     id_empresa: number
     descripcion: string
 }
 
-export interface Marca_Producto {
+export interface Marca_Producto extends Logs_Info {
     id_marca?: number
     marca: string
 }
-export interface Familia_Producto {
+export interface Familia_Producto extends Logs_Info {
     id_familia?: number
     id_empresa: number
     referencia: string
@@ -22,7 +24,7 @@ export interface Familia_Producto {
     id_estado: number
 }
 
-export interface Procesos_Empresa {
+export interface Procesos_Empresa extends Logs_Info {
     id_proceso?: number
     id_empresa: number
     codigo: string
@@ -47,7 +49,7 @@ export interface Centro_Costo {
     ubicacion?: string | undefined
 }
 
-export interface Producto_Empresa {
+export interface Producto_Empresa extends Logs_Info {
     id_producto?: number;
     id_empresa: number;
     id_familia: number;
@@ -67,7 +69,7 @@ export interface Producto_Empresa {
 }
 
 
-export interface Iva {
+export interface Iva extends Logs_Info {
     id_iva?: number;
     descripcion: string;
     porcentaje: number;
@@ -81,7 +83,7 @@ export interface Tipo_Producto_Orden {
     id_estado: number;
 }
 
-export interface Tipo_Orden {
+export interface Tipo_Orden extends Logs_Info {
     id_tipo_orden?: number;
     id_empresa: number;
     tipo_orden: string;

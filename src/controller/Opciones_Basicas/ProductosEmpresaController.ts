@@ -50,7 +50,7 @@ export default class ProductosEmpresaController {
 
         try {
             const producto_empresa_service = new ProductosEmpresaService()
-            const respuesta = await producto_empresa_service.Insertar_Producto_Empresa(req.body, usuario?.id_usuario)
+            const respuesta = await producto_empresa_service.Insertar_Producto_Empresa(req.body, usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -116,7 +116,7 @@ export default class ProductosEmpresaController {
         try {
             const producto_empresa_service = new ProductosEmpresaService()
 
-            const respuesta = await producto_empresa_service.Editar_Producto_Empresa(+id_producto, result.data, usuario?.id_usuario)
+            const respuesta = await producto_empresa_service.Editar_Producto_Empresa(+id_producto, req.body, usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
@@ -135,7 +135,7 @@ export default class ProductosEmpresaController {
     public async Cambiar_Estado_Producto(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_producto } = req.params
-        const { estado } = req.query
+        const { estado, info } = req.query as {estado: string, info:string}
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -149,7 +149,7 @@ export default class ProductosEmpresaController {
 
         try {
             const producto_empresa_service = new ProductosEmpresaService()
-            const producto = await producto_empresa_service.Cambiar_Estado_Producto(+id_producto, +estado)
+            const producto = await producto_empresa_service.Cambiar_Estado_Producto(+id_producto, +estado, JSON.parse(info), usuario.usuario)
             if (producto.error) {
                 return res.status(400).json({ error: true, message: producto.message }) //!ERROR
             }

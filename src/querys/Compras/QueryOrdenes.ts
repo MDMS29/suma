@@ -7,7 +7,6 @@ import {
     _editar_detalle_orden, _editar_encabezado_orden, _eliminar_restaurar_orden,
     _insertar_orden, _insertar_orden_detalle, _obtener_ordenes,
 } from "../../dao/Compras/DaoOrdenes";
-import { formatear_fecha } from "../../helpers/utils";
 
 export default class QueryOrdenes extends Database {
     private pool;
@@ -203,9 +202,9 @@ export default class QueryOrdenes extends Database {
                 [
                     id_orden,
                     id_tipo_orden, id_tercero, orden,
-                    formatear_fecha(fecha_orden), id_forma_pago,
+                    fecha_orden, id_forma_pago,
                     id_lugar_entrega, observaciones, cotizacion,
-                    formatear_fecha(fecha_entrega), total_orden, anticipo
+                    fecha_entrega, total_orden, anticipo
                 ]);
             return result.rowCount
         } catch (error) {

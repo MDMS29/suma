@@ -1,13 +1,17 @@
-import { MessageError, ModulosUsuario } from '../../Interfaces/Configuracion/IConfig'
+import { MessageError } from '../../Interfaces/Configuracion/IConfig'
 import QueryPerfil from "../../querys/Configuracion/QuerysPerfil"
 import { EstadosTablas } from "../../helpers/constants";
+import Querys from '../../querys/Querys';
+import { Logs_Info } from '../../Interfaces/IConstants';
 
 export class PerfilService {
     private _Query_Perfil: QueryPerfil;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Perfil = new QueryPerfil();
+        this._Querys = new Querys();
     }
 
     private ReduceModulos(result: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>, modulos: Array<{ id_modulo: number; cod_modulo: string; nombre_modulo: string, permisos?: any }>) {
@@ -73,13 +77,20 @@ export class PerfilService {
         }
     }
 
-    public async Insertar_Perfil(nombre_perfil: string, usuario_creacion: string, modulos: Omit<ModulosUsuario, 'menus' | 'permisos'>): Promise<MessageError | any> {
+    public async Insertar_Perfil(request_perfil: any, usuario_creacion: string): Promise<MessageError | any> {
+        const { nombre_perfil, modulos } = request_perfil
         try {
             // const Query_Perfil = new QueryPerfil()
             //VALIDAR SI EL PERFIL EXISTE
             const Bperfil: any = await this._Query_Perfil.Buscar_Perfil_Nombre(nombre_perfil)
             if (Bperfil?.length > 0) {
                 return { error: true, message: 'Ya existe este perfil' } //!ERROR
+            }
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, request_perfil.ip, request_perfil?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${request_perfil.ip}, UBICACIÓN: \n ${request_perfil?.ubicacion}`)
             }
 
             //INVOCAR FUNCION PARA INSERTAR PERFIL
@@ -91,6 +102,12 @@ export class PerfilService {
             //COMPROBAR SI LOS MODULOS VIENEN TIPO ARRAY
             const modulosArray = Array.isArray(modulos) ? modulos : [modulos]
             for (let modulo of modulosArray) {
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, request_perfil.ip, request_perfil?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${request_perfil.ip}, UBICACIÓN: \n ${request_perfil?.ubicacion}`)
+                }
+
                 //INVOCAR FUNCION PARA INSERTAR LOS MODULOS DEL PERFIL
                 const modulos = await this._Query_Perfil.Insertar_Modulo_Perfil(respuesta[0].id_perfil, modulo.id_modulo)
                 if (!modulos) {
@@ -115,7 +132,8 @@ export class PerfilService {
         }
     }
 
-    public async Editar_Perfil(id_perfil: number, nombre_perfil: string, usuario_creacion: string) {
+    public async Editar_Perfil(id_perfil: number, request_perfil: any, usuario_creacion: string) {
+        const { nombre_perfil } = request_perfil
         let nombre_editado: string
         try {
             const perfil_filtrado: any = await this._Query_Perfil.Buscar_Perfil_ID(id_perfil)
@@ -126,11 +144,12 @@ export class PerfilService {
             }
 
 
-            const respuesta = await this._Query_Perfil.Buscar_Perfil_ID(id_perfil)
-            if (respuesta?.nombre_perfil === nombre_perfil) {
-                nombre_editado = respuesta.nombre_perfil
-            } else {
-                nombre_editado = nombre_perfil
+            nombre_editado = nombre_perfil
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, request_perfil.ip, request_perfil?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${request_perfil.ip}, UBICACIÓN: \n ${request_perfil?.ubicacion}`)
             }
 
             const res = await this._Query_Perfil.Editar_Perfil({ id_perfil, nombre_editado, usuario_creacion })
@@ -145,8 +164,16 @@ export class PerfilService {
         }
     }
 
-    public async Editar_Modulos_Perfil(id_perfil: number, modulos: any) {
+    public async Editar_Modulos_Perfil(id_perfil: number, request_perfil: any, usuario_creacion: string) {
+        const { modulos } = request_perfil
+
         for (let modulo of modulos) {
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, request_perfil.ip, request_perfil?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${request_perfil.ip}, UBICACIÓN: \n ${request_perfil?.ubicacion}`)
+            }
+
             const B_Modulo = await this._Query_Perfil.Buscar_Modulo_Perfil(id_perfil, modulo.id_modulo)
             if (!B_Modulo || B_Modulo?.length <= 0) {
                 ///INSERTAR
@@ -177,8 +204,13 @@ export class PerfilService {
         return { error: false, message: 'Modulos del perfil editados con éxito' } //!ERROR
     }
 
-    public async Cambiar_Estado_Perfil(id_perfil: number, estado: number) {
+    public async Cambiar_Estado_Perfil(id_perfil: number, estado: number, info_user: Logs_Info, usuario: string) {
         try {
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
 
             const perfil_editado = await this._Query_Perfil.Cambiar_Estado_Perfil(id_perfil, estado);
             if (!perfil_editado?.rowCount) {

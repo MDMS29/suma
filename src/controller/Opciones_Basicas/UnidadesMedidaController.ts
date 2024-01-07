@@ -111,7 +111,7 @@ export default class UnidadesMedidaController {
         try {
             const menu_service = new UnidadesMedidaService()
 
-            const respuesta = await menu_service.Editar_Unidad_Medida(+id_unidad, req.body)
+            const respuesta = await menu_service.Editar_Unidad_Medida(+id_unidad, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }

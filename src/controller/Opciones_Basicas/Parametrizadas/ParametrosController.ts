@@ -85,7 +85,7 @@ export default class ParametrosController {
 
         try {
             const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Insertar_Iva(result.data)
+            const respuesta = await unidades_medidas_service.Insertar_Iva(req.body, usuario.usuario)
             if ('error' in respuesta) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -139,7 +139,7 @@ export default class ParametrosController {
 
         try {
             const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Editar_Iva(+iva_id, result.data)
+            const respuesta = await unidades_medidas_service.Editar_Iva(+iva_id, req.body, usuario.usuario)
             if ('error' in respuesta) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }

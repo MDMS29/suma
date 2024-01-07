@@ -1,12 +1,15 @@
 import { Iva } from "../../../Interfaces/Opciones_Basicas/IOpcioBasic";
 import QueryParametros from "../../../querys/Opciones_Basicas/Parametrizadas/QueryParametros";
+import Querys from "../../../querys/Querys";
 
 export class ParametrosService {
     private _Query_Parametros: QueryParametros;
+    private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Parametros = new QueryParametros();
+        this._Querys = new Querys();
     }
 
     public async Obtener_Tipos_Documento(): Promise<any> {
@@ -54,7 +57,7 @@ export class ParametrosService {
         }
     }
 
-    public async Insertar_Iva(iva_request: Iva) {
+    public async Insertar_Iva(iva_request: Iva, usuario_creacion:string) {
 
         const iva_filtrado_nombre = await this._Query_Parametros.Buscar_Iva_Nombre(iva_request.descripcion)
         if (iva_filtrado_nombre.length > 0) {
@@ -63,6 +66,13 @@ export class ParametrosService {
         }
 
         try {
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, iva_request.ip, iva_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${iva_request.ip}, UBICACIÓN: \n ${iva_request?.ubicacion}`)
+            }
+
             const respuesta = await this._Query_Parametros.Insertar_Iva(iva_request)
 
             if (!respuesta) {
@@ -93,13 +103,19 @@ export class ParametrosService {
         }
     }
 
-    public async Editar_Iva(iva_id:number, iva_request: Iva) {
+    public async Editar_Iva(iva_id:number, iva_request: Iva, usuario_modi:string) {
         const iva_filtrado_nombre = await this._Query_Parametros.Buscar_Iva_Nombre(iva_request.descripcion)
         if (iva_filtrado_nombre.length > 0 && iva_id !== iva_filtrado_nombre[0].id_iva) {
             return { error: true, message: 'Ya existe este nombre de iva' } //!ERROR
         }
 
         try {
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modi, iva_request.ip, iva_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${iva_request.ip}, UBICACIÓN: \n ${iva_request?.ubicacion}`)
+            }
+
             const respuesta = await this._Query_Parametros.Editar_Iva(iva_id, iva_request)
 
             if (respuesta !== 1 ) {

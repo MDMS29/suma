@@ -107,7 +107,7 @@ export default class TipoProductoController {
         try {
             const tipos_producto_service = new TiposProductoService()
 
-            const respuesta = await tipos_producto_service.Editar_Tipo_Producto(+id_tipo_producto, req.body)
+            const respuesta = await tipos_producto_service.Editar_Tipo_Producto(+id_tipo_producto, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }

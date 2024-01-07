@@ -120,7 +120,7 @@ export default class FamiliaProductoController {
         try {
             const familia_producto_service = new FamiliaProductoService()
 
-            const respuesta = await familia_producto_service.Editar_Familia_Producto(+id_familia_producto, req.body)
+            const respuesta = await familia_producto_service.Editar_Familia_Producto(+id_familia_producto, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
@@ -139,7 +139,7 @@ export default class FamiliaProductoController {
     public async Cambiar_Estado_Familia(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_familia_producto } = req.params
-        const { estado } = req.query
+        const { estado, info } = req.query as { estado: string, info: string }
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -153,7 +153,7 @@ export default class FamiliaProductoController {
 
         try {
             const familia_producto_service = new FamiliaProductoService()
-            const familia_estado = await familia_producto_service.Cambiar_Estado_Familia(+id_familia_producto, +estado)
+            const familia_estado = await familia_producto_service.Cambiar_Estado_Familia(+id_familia_producto, +estado, JSON.parse(info), usuario.usuario)
             if (familia_estado.error) {
                 return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
             }

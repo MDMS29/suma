@@ -116,7 +116,7 @@ export default class ProcesosEmpresaController {
         try {
             const proceso_empresa_service = new ProcesosEmpresaService()
 
-            const respuesta = await proceso_empresa_service.Editar_Proceso_Empresa(+id_proceso, req.body)
+            const respuesta = await proceso_empresa_service.Editar_Proceso_Empresa(+id_proceso, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }

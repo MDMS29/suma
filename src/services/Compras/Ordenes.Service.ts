@@ -1,15 +1,15 @@
-import {jsPDF as JSPDF} from "jspdf";
+import { jsPDF as JSPDF } from "jspdf";
 import {
     Encabezado_Orden,
     Filtro_Ordenes,
 } from "../../Interfaces/Compras/ICompras";
-import {EstadosTablas} from "../../helpers/constants";
+import { EstadosTablas } from "../../helpers/constants";
 import QueryOrdenes from "../../querys/Compras/QueryOrdenes";
 import Querys from "../../querys/Querys";
-import {RequisicionesService} from "./Requisiciones.Service";
-import {transporter} from "../../config/mailer";
-import {MessageError} from "../../Interfaces/Configuracion/IConfig";
-import {formatear_cantidad} from "../../helpers/utils";
+import { RequisicionesService } from "./Requisiciones.Service";
+import { transporter } from "../../config/mailer";
+import { MessageError } from "../../Interfaces/Configuracion/IConfig";
+import { formatear_cantidad } from "../../helpers/utils";
 
 import fs from "node:fs";
 
@@ -62,9 +62,9 @@ export class OrdenesService {
             ],
         });
         if (!correo_confir.accepted) {
-            return {error: true, message: "Error al enviar correo de confirmación"}; //!ERROR
+            return { error: true, message: "Error al enviar correo de confirmación" }; //!ERROR
         }
-        return {error: false, message: ''}
+        return { error: false, message: '' }
     }
 
     private async Enviar_Correo_Proveedor(orden: Encabezado_Orden, correo_responsables: string[], pdf: string | undefined): Promise<MessageError> {
@@ -112,17 +112,17 @@ export class OrdenesService {
             ]
         });
         if (!correo_confir.accepted) {
-            return {error: true, message: 'Error al enviar correo de confirmación'}; //!ERROR
+            return { error: true, message: 'Error al enviar correo de confirmación' }; //!ERROR
         }
 
-        return {error: false, message: ''}
+        return { error: false, message: '' }
     }
 
     public async Obtener_Ordenes_Filtro(estado: string, empresa: number, usuario: string, filtros: Partial<Filtro_Ordenes>) {
         let ordenes
         try {
             if (!Object.keys(filtros)) {
-                return {error: true, message: "No hay existen filtros a realizar"}
+                return { error: true, message: "No hay existen filtros a realizar" }
             }
 
 
@@ -130,14 +130,14 @@ export class OrdenesService {
 
 
             if (ordenes?.length === 0 || !ordenes) {
-                return {error: true, message: "No se han encontrado ordenes con estos criterios"}
+                return { error: true, message: "No se han encontrado ordenes con estos criterios" }
             }
 
             return ordenes
 
         } catch (error) {
             console.log(error)
-            return {error: true, message: "Error al filtrar las ordenes"}
+            return { error: true, message: "Error al filtrar las ordenes" }
         }
     }
 
@@ -145,16 +145,18 @@ export class OrdenesService {
         try {
             const respuesta: any = await this._Query_Ordenes.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta?.length <= 0) {
-                return {error: false, message: 'No se han encontrado ordenes'} //!ERROR
+                return { error: false, message: 'No se han encontrado ordenes' } //!ERROR
             }
             return respuesta
         } catch (error) {
             console.log(error)
-            return {error: true, message: 'Error al cargar las ordenes'} //!ERROR
+            return { error: true, message: 'Error al cargar las ordenes' } //!ERROR
         }
     }
 
-    public async Insertar_Orden(req_body: Encabezado_Orden, usuario_id: string) {
+    public async Insertar_Orden(req_body: Encabezado_Orden, usuario_creacion: any) {
+
+        const { id_usuario, usuario } = usuario_creacion
         try {
             const numero_orden = await this._Query_Ordenes.Buscar_Numero_Orden(
                 req_body
@@ -167,21 +169,26 @@ export class OrdenesService {
             }
 
             try {
-                const direccion_insertada = await this._QuerysG.Insertar_Direccion(
-                    req_body.lugar_entrega
-                );
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._QuerysG.Insertar_Log_Auditoria(usuario, req_body.ip, req_body?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${req_body.ip}, UBICACIÓN: \n ${req_body?.ubicacion}`)
+                }
+
+                const direccion_insertada = await this._QuerysG.Insertar_Direccion(req_body.lugar_entrega);
                 if (direccion_insertada.length <= 0) {
-                    return {error: true, message: "Error al insertar la dirección"}; //!ERROR
+                    return { error: true, message: "Error al insertar la dirección" }; //!ERROR
                 }
 
                 req_body.lugar_entrega = direccion_insertada[0].id_direccion;
 
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log_2 = await this._QuerysG.Insertar_Log_Auditoria(usuario, req_body.ip, req_body?.ubicacion)
+                if (log_2 !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${req_body.ip}, UBICACIÓN: \n ${req_body?.ubicacion}`)
+                }
                 //INSERTAR ENCABEZADO DE LA ORDEN
-                const orden = await this._Query_Ordenes.Insertar_Orden_Encabezado(
-                    req_body,
-                    0,
-                    usuario_id
-                );
+                const orden = await this._Query_Ordenes.Insertar_Orden_Encabezado(req_body, 0, id_usuario);
                 if (!orden) {
                     return {
                         error: true,
@@ -191,22 +198,21 @@ export class OrdenesService {
 
                 ///INSERTAR DETALLES DE LA ORDEN
                 for (let detalle of req_body.detalles_orden) {
-                    const orden_detalle =
-                        await this._Query_Ordenes.Insertar_Orden_Detalle(
-                            detalle,
-                            orden[0].id_orden
-                        );
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._QuerysG.Insertar_Log_Auditoria(usuario, req_body.ip, req_body?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${req_body.ip}, UBICACIÓN: \n ${req_body?.ubicacion}`)
+                    }
+
+                    const orden_detalle = await this._Query_Ordenes.Insertar_Orden_Detalle(detalle, orden[0].id_orden);
                     if (orden_detalle?.length == 0 && !orden_detalle) {
-                        return {error: true, message: "Error al insertar los detalles"}; //!ERROR
+                        return { error: true, message: "Error al insertar los detalles" }; //!ERROR
                     }
                 }
 
-                const orden_insertada: any = await this._Query_Ordenes.Buscar_Orden_ID(
-                    orden[0].id_orden,
-                    req_body.id_empresa
-                );
+                const orden_insertada: any = await this._Query_Ordenes.Buscar_Orden_ID(orden[0].id_orden, req_body.id_empresa);
                 if (orden_insertada?.length <= 0) {
-                    return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
+                    return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
                 }
 
                 return orden_insertada[0];
@@ -227,12 +233,12 @@ export class OrdenesService {
         try {
             const [orden_aprobar] = await this._Query_Ordenes.Buscar_Encabezado_Doc(orden_id, empresa_id)
             if (!orden_aprobar) {
-                return {error: true, message: 'No se ha encontrado la orden'} //!ERROR
+                return { error: true, message: 'No se ha encontrado la orden' } //!ERROR
             }
 
             const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Doc(orden_id)
             if (dellate_orden && dellate_orden?.length <= 0) {
-                return {error: true, message: `No se han encontrado los detalle de la orden ${orden_aprobar.orden}`} //!ERROR
+                return { error: true, message: `No se han encontrado los detalle de la orden ${orden_aprobar.orden}` } //!ERROR
             }
 
             orden_aprobar.detalles_orden = dellate_orden
@@ -240,7 +246,7 @@ export class OrdenesService {
             //? GENERAR PDF DE LA ORDEN PARA ENVIAR
             const pdf = await this.Generar_Documento_Orden(orden_id, empresa_id)
             if (!pdf) {
-                return {error: true, message: `Error al generar documento`} //!ERROR
+                return { error: true, message: `Error al generar documento` } //!ERROR
             }
 
             //?ENVIAR CORREO DE CONFIRMACIÓN AL PROVEEDOR
@@ -249,11 +255,11 @@ export class OrdenesService {
                 return es_correo
             }
 
-            return {error: false, message: `Correo enviado al proveedor ${orden_aprobar.nombre_proveedor}`}
+            return { error: false, message: `Correo enviado al proveedor ${orden_aprobar.nombre_proveedor}` }
 
         } catch (error) {
             console.log(error)
-            return {error: true, message: "Error al enviar correo de aprobación"} //!ERROR
+            return { error: true, message: "Error al enviar correo de aprobación" } //!ERROR
         }
     }
 
@@ -264,7 +270,7 @@ export class OrdenesService {
                 id_empresa
             );
             if (respuesta?.length <= 0) {
-                return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
+                return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
             }
 
             const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden(
@@ -282,41 +288,41 @@ export class OrdenesService {
             return respuesta[0];
         } catch (error) {
             console.log(error);
-            return {error: true, message: "Error al encontrar la orden"}; //!ERROR
+            return { error: true, message: "Error al encontrar la orden" }; //!ERROR
         }
     }
 
-    public async Editar_Orden(req_body: Encabezado_Orden, id_orden: number) {
+    public async Editar_Orden(req_body: Encabezado_Orden, id_orden: number, usuario_modi: string) {
         try {
             const numero_orden = await this._Query_Ordenes.Buscar_Numero_Orden(
                 req_body
             );
             if (
-                numero_orden &&
-                numero_orden?.length > 0 &&
-                id_orden !== numero_orden[0].id_orden
-            ) {
+                numero_orden && numero_orden?.length > 0 && id_orden !== numero_orden[0].id_orden) {
                 return {
                     error: true,
                     message: `Ya existe el numero de orden ${req_body.orden}`,
                 }; //!ERROR
             }
 
-            const direccion_editada = await this._QuerysG.Editar_Direccion(
-                req_body.lugar_entrega.id_lugar_entrega ?? 0,
-                req_body.lugar_entrega
-            );
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._QuerysG.Insertar_Log_Auditoria(usuario_modi, req_body.ip, req_body?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${req_body.ip}, UBICACIÓN: \n ${req_body?.ubicacion}`)
+            }
+            const direccion_editada = await this._QuerysG.Editar_Direccion(req_body.lugar_entrega.id_lugar_entrega ?? 0, req_body.lugar_entrega);
             if (direccion_editada !== 1) {
-                return {error: true, message: "Error al editar la dirección"}; //!ERROR
+                return { error: true, message: "Error al editar la dirección" }; //!ERROR
             }
 
             try {
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._QuerysG.Insertar_Log_Auditoria(usuario_modi, req_body.ip, req_body?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${req_body.ip}, UBICACIÓN: \n ${req_body?.ubicacion}`)
+                }
                 //INSERTAR ENCABEZADO DE LA ORDEN
-                const orden = await this._Query_Ordenes.Editar_Orden_Encabezado(
-                    req_body,
-                    0,
-                    id_orden
-                );
+                const orden = await this._Query_Ordenes.Editar_Orden_Encabezado(req_body, 0, id_orden);
                 if (orden !== 1) {
                     return {
                         error: true,
@@ -326,18 +332,18 @@ export class OrdenesService {
 
                 ///INSERTAR DETALLES DE LA ORDEN
                 for (let detalle of req_body.detalles_orden) {
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._QuerysG.Insertar_Log_Auditoria(usuario_modi, req_body.ip, req_body?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${req_body.ip}, UBICACIÓN: \n ${req_body?.ubicacion}`)
+                    }
                     // BUSCAR SI EL DETALLE DE LA ORDEN YA EXISTE
-                    const existe_detalle = await this._Query_Ordenes.Buscar_Detalle_Orden(
-                        id_orden
-                    );
+                    const existe_detalle = await this._Query_Ordenes.Buscar_Detalle_Orden(id_orden);
 
-                    const esDetalle = existe_detalle.filter(
-                        (ex_detalle) => ex_detalle.id_detalle == detalle.id_detalle
-                    );
+                    const esDetalle = existe_detalle.filter((ex_detalle) => ex_detalle.id_detalle == detalle.id_detalle);
                     if (esDetalle.length > 0) {
                         // SI EXISTE EL DETALLE EN LA ORDEN LO EDITARA
-                        const orden_detalle =
-                            await this._Query_Ordenes.Editar_Detalle_Orden(detalle);
+                        const orden_detalle = await this._Query_Ordenes.Editar_Detalle_Orden(detalle);
                         if (orden_detalle !== 1 && !orden_detalle) {
                             return {
                                 error: true,
@@ -346,23 +352,16 @@ export class OrdenesService {
                         }
                     } else {
                         // SI EL DETALLE NO EXISTE LO INSERTA
-                        const orden_detalle =
-                            await this._Query_Ordenes.Insertar_Orden_Detalle(
-                                detalle,
-                                id_orden
-                            );
+                        const orden_detalle = await this._Query_Ordenes.Insertar_Orden_Detalle(detalle, id_orden);
                         if (orden_detalle?.length == 0 && !orden_detalle) {
-                            return {error: true, message: "Error al insertar los detalles"}; //!ERROR
+                            return { error: true, message: "Error al insertar los detalles" }; //!ERROR
                         }
                     }
                 }
 
-                const orden_editada: any = await this._Query_Ordenes.Buscar_Orden_ID(
-                    id_orden,
-                    req_body.id_empresa
-                );
+                const orden_editada: any = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, req_body.id_empresa);
                 if (orden_editada?.length <= 0) {
-                    return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
+                    return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
                 }
                 return orden_editada[0];
             } catch (error) {
@@ -378,12 +377,14 @@ export class OrdenesService {
         }
     }
 
-    public async Eliminar_Restaurar_Orden(id_orden: number, id_estado: number) {
+    public async Eliminar_Restaurar_Orden(id_orden: number, id_estado: number, info_user: any, usuario: string) {
         try {
-            const respuesta: any = await this._Query_Ordenes.Eliminar_Restaurar_Orden(
-                id_orden,
-                id_estado
-            );
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._QuerysG.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
+            const respuesta: any = await this._Query_Ordenes.Eliminar_Restaurar_Orden(id_orden, id_estado);
             if (respuesta != 1) {
                 return {
                     error: true,
@@ -400,27 +401,21 @@ export class OrdenesService {
             }; //!ERROR
         } catch (error) {
             console.log(error);
-            return {error: true, message: "Error al cambiar el estado de la orden"}; //!ERROR
+            return { error: true, message: "Error al cambiar el estado de la orden" }; //!ERROR
         }
     }
 
-    public async Aprobar_Orden(id_orden: number, empresa_id: number, usuario_id: number) {
+    public async Aprobar_Orden(id_orden: number, usuario_aprobar: any, info_user: any) {
+        const { id_empresa, id_usuario, usuario } = usuario_aprobar
         try {
-            let array_requisiciones: {
-                id_requisicion: number;
-                requisicion: string;
-            }[] = [];
+            let array_requisiciones: { id_requisicion: number; requisicion: string; }[] = [];
 
-            const [orden_aprobar] = await this._Query_Ordenes.Buscar_Orden_ID(
-                id_orden,
-                empresa_id
-            );
+            const [orden_aprobar] = await this._Query_Ordenes.Buscar_Orden_ID(id_orden, id_empresa);
             if (!orden_aprobar) {
-                return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
+                return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
             }
 
-            const dellate_orden =
-                await this._Query_Ordenes.Buscar_Detalle_Orden_Pendientes(id_orden);
+            const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Pendientes(id_orden);
             if (dellate_orden && dellate_orden?.length <= 0) {
                 return {
                     error: true,
@@ -438,19 +433,18 @@ export class OrdenesService {
                         productos_pendientes: number;
                     };
 
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._QuerysG.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+                    }
+
                     // --- COMPROBAR QUE LOS PRODUCTOS PENDIENTES SEA VALIDO CON RESPECTO A LOS DETALLES DE LA ORDEN ---
                     // ---BUSCAR LOS PRODUCTO PENDIENTES
-                    const productos_pendientes =
-                        await this._Service_Requisicion.Buscar_Requisicion(
-                            detalle.id_requisicion,
-                            true
-                        );
+                    const productos_pendientes = await this._Service_Requisicion.Buscar_Requisicion(detalle.id_requisicion, true);
 
                     // VALIDAR QUE EL PRODUCTO SI TENGA PENDIENTES
-                    const producto_pendiente = productos_pendientes.filter(
-                        (producto: TProductosPpendiente) =>
-                            producto.id_producto == detalle.id_producto
-                    );
+                    const producto_pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto == detalle.id_producto);
                     //EL PRODUCTO NO TIENE PENDIENTES - DEVOLVER ERROR
                     if (producto_pendiente.length <= 0) {
                         return {
@@ -460,11 +454,7 @@ export class OrdenesService {
                     }
 
                     // VALIDAR QUE LA CANTIDAD NO PASE DE LOS PRODUCTOS PENDIENTES
-                    const pendiente = productos_pendientes.filter(
-                        (producto: TProductosPpendiente) =>
-                            producto.id_producto === detalle.id_producto &&
-                            producto.productos_pendientes < detalle.cantidad
-                    );
+                    const pendiente = productos_pendientes.filter((producto: TProductosPpendiente) => producto.id_producto === detalle.id_producto && producto.productos_pendientes < detalle.cantidad);
                     //LA CANTIDAD REQUEST ES MAYOR A LA CANTIDAD DE LOS PENDIENTES - DEVOLVER ERROR
                     if (pendiente.length > 0) {
                         return {
@@ -475,10 +465,7 @@ export class OrdenesService {
                     // --- FIN DE VALIDACIONES PARA LOS PRODUCTOS PENDIENTES ---
 
                     //APROBAR EL DETALLE DE LA ORDEN
-                    const detalle_aprobado = await this._Query_Ordenes.Aprobar_Detalle(
-                        detalle.id_detalle,
-                        EstadosTablas.ESTADO_APROBADO
-                    );
+                    const detalle_aprobado = await this._Query_Ordenes.Aprobar_Detalle(detalle.id_detalle, EstadosTablas.ESTADO_APROBADO);
                     if (detalle_aprobado !== 1) {
                         return {
                             error: true,
@@ -492,13 +479,13 @@ export class OrdenesService {
                     });
                 }
 
+                const log = await this._QuerysG.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+                }
+
                 // APROBAR EL ENCABEZADO DE LA ORDEN
-                const aprobar_encabezado_orden =
-                    await this._Query_Ordenes.Aprobar_Encabezado_Orden(
-                        id_orden,
-                        EstadosTablas.ESTADO_APROBADO,
-                        usuario_id
-                    );
+                const aprobar_encabezado_orden = await this._Query_Ordenes.Aprobar_Encabezado_Orden(id_orden, EstadosTablas.ESTADO_APROBADO, id_usuario);
                 if (aprobar_encabezado_orden !== 1) {
                     return {
                         error: true,
@@ -507,16 +494,13 @@ export class OrdenesService {
                 }
 
                 //? OBTENER LOS CORREOS DE LOS RESPONSABLES DE LOS CENTROS DE COSTO DE LAS REQUISICIONES
-                const correo_responsables =
-                    await this._Service_Requisicion.Obtener_Correo_Responsables(
-                        array_requisiciones
-                    );
+                const correo_responsables = await this._Service_Requisicion.Obtener_Correo_Responsables(array_requisiciones);
                 if ("error" in correo_responsables) {
                     return correo_responsables;
                 }
 
                 //? GENERAR PDF DE LA ORDEN PARA ENVIAR
-                const pdf = await this.Generar_Documento_Orden(id_orden, empresa_id);
+                const pdf = await this.Generar_Documento_Orden(id_orden, id_empresa);
                 if (!pdf) {
                     return {
                         error: true,
@@ -525,11 +509,7 @@ export class OrdenesService {
                 }
 
                 //?ENVIAR CORREO DE CONFIRMACIÓN
-                const es_correo = await this.Enviar_Correo(
-                    orden_aprobar,
-                    correo_responsables,
-                    pdf.data
-                );
+                const es_correo = await this.Enviar_Correo(orden_aprobar, correo_responsables, pdf.data);
                 if (es_correo.error) {
                     return es_correo;
                 }
@@ -547,7 +527,7 @@ export class OrdenesService {
             }
         } catch (error) {
             console.log(error);
-            return {error: true, message: `Error al aprobar la orden`}; //!ERROR
+            return { error: true, message: `Error al aprobar la orden` }; //!ERROR
         }
     }
 
@@ -559,7 +539,7 @@ export class OrdenesService {
                 id_empresa
             );
             if (!orden) {
-                return {error: true, message: "No se ha encontrado la orden"}; //!ERROR
+                return { error: true, message: "No se ha encontrado la orden" }; //!ERROR
             }
 
             const dellate_orden = await this._Query_Ordenes.Buscar_Detalle_Orden_Doc(
@@ -576,7 +556,7 @@ export class OrdenesService {
             let descuento_total = 0;
             let subtotal = 0;
             for (let detalle of dellate_orden) {
-                const {cantidad, precio_compra, porcentaje, descuento} = detalle;
+                const { cantidad, precio_compra, porcentaje, descuento } = detalle;
 
                 let subtotal_local = cantidad * precio_compra;
                 let iva_local = subtotal_local * (porcentaje / 100);
@@ -609,7 +589,7 @@ export class OrdenesService {
                 }; //!ERROR
             }
 
-            return {data: pdf, nombre: orden.orden};
+            return { data: pdf, nombre: orden.orden };
         } catch (error) {
             console.log(error);
             return {
@@ -635,7 +615,7 @@ export class OrdenesService {
         } = orden;
 
         // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
-        const doc = new JSPDF({orientation: "l"});
+        const doc = new JSPDF({ orientation: "l" });
 
         // CABECERA DOCUMENTO
         doc.setFontSize(12); // (size)

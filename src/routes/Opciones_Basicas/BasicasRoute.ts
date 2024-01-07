@@ -7,7 +7,7 @@ import FamiliaProductoController from "../../controller/Opciones_Basicas/Familia
 import ProcesosEmpresaController from "../../controller/Opciones_Basicas/ProcesosEmpresaController";
 import CentroCostoEmpresa from "../../controller/Opciones_Basicas/CentroCostoEmpresaController";
 import ParametrosController from "../../controller/Opciones_Basicas/Parametrizadas/ParametrosController";
-import TipoOrdenesController from "../../controller/Opciones_Basicas/Compras/TiposOrdenes";
+import TipoOrdenesController from "../../controller/Opciones_Basicas/Compras/TiposOrdenesController";
 
 export const _OpcionesBasicasRouter = Router()
 

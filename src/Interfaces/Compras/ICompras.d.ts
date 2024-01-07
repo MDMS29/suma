@@ -1,4 +1,4 @@
-import { Direccion } from "../IConstants"
+import { Direccion, Logs_Info } from "../IConstants"
 
 export interface Requisicion_Det {
     id_detalle?: number
@@ -8,7 +8,7 @@ export interface Requisicion_Det {
     justificacion: string
 }
 
-export interface Requisicion_Enc {
+export interface Requisicion_Enc extends Logs_Info {
     id_requisicion?: number
     id_empresa: number
     consecutivo: string
@@ -48,7 +48,7 @@ export interface Filtro_Requisiciones {
 
 /****************  INTERFACES PARA LOS PROVEEDORES  ****************/
 
-export interface Tercero {
+export interface Tercero extends Logs_Info {
     id_tercero?: number
     id_empresa: number
     id_tipo_tercero: number
@@ -79,7 +79,7 @@ interface Detalle_Orden {
     id_estado: number;
 }
 
-interface Encabezado_Orden {
+interface Encabezado_Orden extends Logs_Info {
     id_orden: number;
     id_empresa: number;
     id_tipo_orden: number;

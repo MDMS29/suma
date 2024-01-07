@@ -69,7 +69,8 @@ export class ProveedoresService {
         }
     }
 
-    public async Insertar_Proveedor(proveedor_request: Tercero, usuario_creacion: string) {
+    public async Insertar_Proveedor(proveedor_request: Tercero, usuario_creacion: any) {
+        const { id_usuario, usuario } = usuario_creacion
         try {
             const documento_proveedor_filtro: any = await this._Query_Proveedores.Buscar_Proveedor_Documento(proveedor_request)
             if (documento_proveedor_filtro?.length > 0) {
@@ -81,6 +82,11 @@ export class ProveedoresService {
                 return { error: true, message: 'Ya existe este correo' } //!ERROR
             }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, proveedor_request.ip, proveedor_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${proveedor_request.ip}, UBICACIÓN: \n ${proveedor_request?.ubicacion}`)
+            }
             const direccion_insertada = await this._Querys.Insertar_Direccion(proveedor_request.direccion)
             if (direccion_insertada.length <= 0) {
                 return { error: true, message: 'Error al insertar la dirección' } //!ERROR
@@ -88,8 +94,14 @@ export class ProveedoresService {
 
             proveedor_request.direccion = direccion_insertada[0].id_direccion
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log_2 = await this._Querys.Insertar_Log_Auditoria(usuario, proveedor_request.ip, proveedor_request?.ubicacion)
+            if (log_2 !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${proveedor_request.ip}, UBICACIÓN: \n ${proveedor_request?.ubicacion}`)
+            }
+
             // INSERTAR EL PROVEEDOR
-            const proveedor_insert = await this._Query_Proveedores.Insertar_Proveedor(proveedor_request, usuario_creacion)
+            const proveedor_insert = await this._Query_Proveedores.Insertar_Proveedor(proveedor_request, id_usuario)
             if (!proveedor_insert) {
                 return { error: true, message: 'No se ha podido crear el proveedor' } //!ERROR
             }
@@ -97,6 +109,11 @@ export class ProveedoresService {
             // INSERTAR SUMINISTROS PARA EL PROVEEDOR
             if (proveedor_request.suministros) {
                 for (let suministro of proveedor_request.suministros) {
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._Querys.Insertar_Log_Auditoria(usuario, proveedor_request.ip, proveedor_request?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${proveedor_request.ip}, UBICACIÓN: \n ${proveedor_request?.ubicacion}`)
+                    }
                     const suministro_editado = await this._Query_Proveedores.Insertar_Sumnistro(suministro, proveedor_insert[0].id_tercero)
                     if (!suministro_editado) {
                         return { error: true, message: `Error al guardar el suministro` } //!ERROR
@@ -162,18 +179,28 @@ export class ProveedoresService {
         }
     }
 
-    public async Editar_Proveedor(id_proveedor: number, proveedor_request: Tercero) {
+    public async Editar_Proveedor(id_proveedor: number, proveedor_request: Tercero, usuario_modi: string) {
         try {
             const correo_proveedor_filtro: any = await this._Query_Proveedores.Buscar_Proveedor_Correo(proveedor_request)
             if (correo_proveedor_filtro?.length > 0 && correo_proveedor_filtro.filter((correo: any) => correo.id_tercero !== id_proveedor).length > 0) {
                 return { error: true, message: 'Este correo ya existe' } //!ERROR
             }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modi, proveedor_request.ip, proveedor_request?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${proveedor_request.ip}, UBICACIÓN: \n ${proveedor_request?.ubicacion}`)
+            }
             const direccion_editada = await this._Querys.Editar_Direccion(proveedor_request.direccion.id_direccion ?? 0, proveedor_request.direccion)
             if (direccion_editada !== 1) {
                 return { error: true, message: 'Error al editar la dirección' } //!ERROR
             }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log_2 = await this._Querys.Insertar_Log_Auditoria(usuario_modi, proveedor_request.ip, proveedor_request?.ubicacion)
+            if (log_2 !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${proveedor_request.ip}, UBICACIÓN: \n ${proveedor_request?.ubicacion}`)
+            }
             const proveedor_editado = await this._Query_Proveedores.Editar_Proveedor(id_proveedor, proveedor_request)
             if (proveedor_editado?.rowCount != 1) {
                 return { error: true, message: 'Error al actualizar el proveedor' } //!ERROR
@@ -181,6 +208,11 @@ export class ProveedoresService {
 
             if (proveedor_request.suministros) {
                 for (let suministro of proveedor_request.suministros) {
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._Querys.Insertar_Log_Auditoria(usuario_modi, proveedor_request.ip, proveedor_request?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modi}, IP: \n ${proveedor_request.ip}, UBICACIÓN: \n ${proveedor_request?.ubicacion}`)
+                    }
                     const suministro_encontrado = await this._Query_Proveedores.Buscar_Suministro_Proveedor(suministro, id_proveedor)
                     if (suministro_encontrado) {
                         // EDITAR DETALLE
@@ -227,11 +259,17 @@ export class ProveedoresService {
         }
     }
 
-    public async Cambiar_Estado_Proveedor(id_proveedor: number, estado: number) {
+    public async Cambiar_Estado_Proveedor(id_proveedor: number, estado: number, info_user:any, usuario:string) {
         try {
-            const proveedor_filtradp: any = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
-            if (proveedor_filtradp?.length <= 0) {
+            const proveedor_filtrado: any = await this._Query_Proveedores.Buscar_Proveedor_ID(id_proveedor)
+            if (proveedor_filtrado?.length <= 0) {
                 return { error: true, message: 'No se ha encontrado este proveedor' } //!ERROR
+            }
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
             }
 
             const requisicion = await this._Query_Proveedores.Cambiar_Estado_Proveedor(id_proveedor, estado)
@@ -239,7 +277,7 @@ export class ProveedoresService {
                 return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR
             }
 
-            return { error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? `Se ha restaurado el proveedor '${proveedor_filtradp[0].nombre}'` : `Se ha inactivado el proveedor '${proveedor_filtradp[0].nombre}'` }
+            return { error: false, message: +estado == EstadosTablas.ESTADO_ACTIVO ? `Se ha restaurado el proveedor '${proveedor_filtrado[0].nombre}'` : `Se ha inactivado el proveedor '${proveedor_filtrado[0].nombre}'` }
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cambiar el estado del proveedor' } //!ERROR

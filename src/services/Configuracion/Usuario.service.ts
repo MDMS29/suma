@@ -3,12 +3,16 @@ import { PerfilUsuario, UsuarioLogin } from '../../Interfaces/Configuracion/ICon
 import { Generar_JWT } from "../../helpers/utils";
 
 import bcrypt from "bcryptjs";
+import Querys from "../../querys/Querys";
+import { Logs_Info } from "../../Interfaces/IConstants";
 
 export default class UsuarioService {
     private _Query_Usuario: QueryUsuario;
+    private _Querys: Querys;
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
         this._Query_Usuario = new QueryUsuario();
+        this._Querys = new Querys();
     }
 
     public async Autenticar_Usuario(object: Omit<UsuarioLogin, 'captcha'>) {
@@ -50,7 +54,7 @@ export default class UsuarioService {
             //EJECUTAR FUNCION ALMACENADA PARA GUARDAR EL REGISTRO DE LOS INICIOS Y CIERRES DE SESION
             await this._Query_Usuario.Inicio_Cierre_Sesion(usuario, 'S', ip ?? '', ubicacion ?? '')
 
-            
+
             //RETORNO DE LA ESTRUCTURA DEL USUARIO Y MODULOS
             return {
                 usuario:
@@ -74,7 +78,7 @@ export default class UsuarioService {
     }
 
     public async Obtener_Usuarios(estado: string, empresa: number) {
-                try {
+        try {
             const respuesta = await this._Query_Usuario.Obtener_Usuarios(estado, empresa) //INVOCAR FUNCION PARA OBTENER LOS USUARIOS
             if (respuesta) { //VALIDACION SI HAY ALGUNA RESPUESTA
                 return respuesta //RETORNAR LA RESPUESTA
@@ -101,22 +105,42 @@ export default class UsuarioService {
             const saltRounds = 10
             const hash = await bcrypt.hash(clave, saltRounds)
             RequestUsuario.clave = hash
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(UsuarioCreador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${UsuarioCreador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+            }
             //FUNCIOÓN PARA REGISTRAR LA INFORMACIÓN PRINCIPAL DEL USUARIO 
             const respuesta = await this._Query_Usuario.Insertar_Usuario(RequestUsuario, UsuarioCreador)
             if (respuesta) {
                 for (let perfil of RequestUsuario.perfiles) {
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._Querys.Insertar_Log_Auditoria(UsuarioCreador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${UsuarioCreador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+                    }
                     const res = await this._Query_Usuario.Insertar_Perfil_Usuario(respuesta, perfil) // GUARDAR PERFILES DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         throw new Error('Error al insertar el perfil') //!ERROR
                     }
                 }
                 for (let rol of RequestUsuario.roles) {
+                    // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                    const log = await this._Querys.Insertar_Log_Auditoria(UsuarioCreador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+                    if (log !== 1) {
+                        console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${UsuarioCreador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+                    }
                     const res = await this._Query_Usuario.Insertar_Rol_Modulo(respuesta, rol)// GUARDAR ROLES DE USUARIO POR EL ID RETORNADO
                     if (!res) {
                         throw new Error('Error al insertar el rol') //!ERROR
                     }
                 }
 
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._Querys.Insertar_Log_Auditoria(UsuarioCreador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${UsuarioCreador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+                }
                 const empresa_usuario = await this._Query_Usuario.Insertar_Empresa_Usuario(respuesta, RequestUsuario.id_empresa, UsuarioCreador)
 
                 if (empresa_usuario?.rowCount !== 1) {
@@ -236,7 +260,7 @@ export default class UsuarioService {
         if (usuario_filtrado_correo?.length > 0 && usuario_filtrado_correo[0].correo !== respuesta[0].correo) {
             return { error: true, message: 'Ya existe este correo de usuario' } //!ERROR
         }
-        
+
         const usuario_filtrado: any = await this._Query_Usuario.Buscar_Usuario_Correo(RequestUsuario.usuario, '')
         if (usuario_filtrado?.length > 0 && usuario_filtrado[0].usuario !== respuesta[0].usuario) {
             return { error: true, message: 'Ya existe este usuario' } //!ERROR
@@ -265,8 +289,19 @@ export default class UsuarioService {
                 }
             }
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(UsuarioModificador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${UsuarioModificador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+            }
             //INVOCAR FUNCION PARA EDITAR EL USUARIO
             const result = await this._Query_Usuario.Editar_Usuario({ id_usuario, Usuario_Editado, Nombre_Editado, Correo_Editado, Clave_Editada }, UsuarioModificador)
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log_2 = await this._Querys.Insertar_Log_Auditoria(UsuarioModificador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+            if (log_2 !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${UsuarioModificador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+            }
             await this._Query_Usuario.Editar_Empresa_Usuario(RequestUsuario.id_empresa, id_usuario, UsuarioModificador)
             return result //RETORNAR EL USUARIO EDITADO
         } catch (error) {
@@ -275,9 +310,14 @@ export default class UsuarioService {
         }
     }
 
-    public async Editar_Perfiles_Usuario(perfiles: any, usuario: number) {
+    public async Editar_Perfiles_Usuario(perfiles: any, usuario: number, usuario_modificador: string, RequestUsuario: Logs_Info) {
         try {
             for (let perfil of perfiles) {
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._Querys.Insertar_Log_Auditoria(usuario_modificador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modificador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+                }
                 const perfilExistente: any = await this._Query_Usuario.Buscar_Perfil_Usuario(perfil.id_perfil, usuario) //INVOCAR FUNCION PARA BUSCAR EL PERFIL DEL USUARIO
                 if (perfilExistente.length == 0) {
                     // SI EL PERFIL NO EXISTE LO AGREGARA
@@ -299,9 +339,14 @@ export default class UsuarioService {
         }
     }
 
-    public async Editar_Permisos_Usuario(permisos: any, usuario: number) {
+    public async Editar_Permisos_Usuario(permisos: any, usuario: number, usuario_modificador: string, RequestUsuario: Logs_Info) {
         try {
             for (let permiso of permisos) {
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._Querys.Insertar_Log_Auditoria(usuario_modificador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modificador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+                }
                 const permisoExistente: any = await this._Query_Usuario.Buscar_Rol_Usuario(permiso.id_rol, usuario) //INVOCAR FUNCION PARA BUSCAR EL ROL DEL USUARIO
                 if (permisoExistente.length == 0) { //VERIFICAR SI EL USUARIO TIENE UN ROL
                     // SI EL ESTADO NO EXISTE LO AGREGARA
@@ -324,11 +369,16 @@ export default class UsuarioService {
         }
     }
 
-    public async Cambiar_Estado_Usuario({ usuario, estado }: { usuario: number; estado: string; }) {
+    public async Cambiar_Estado_Usuario({ usuario, estado }: { usuario: number; estado: string; }, info_user: any, usuario_gen:string) {
         try {
             const busqueda = await this._Query_Usuario.Buscar_Usuario_ID(usuario)
             if (busqueda.length <= 0) {
                 return { error: true, message: 'No se ha encontrado el usuario' }
+            }
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_gen, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_gen}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
             }
             const res = await this._Query_Usuario.Cambiar_Estado_Usuario(usuario, estado)
             if (!res) {
@@ -341,11 +391,16 @@ export default class UsuarioService {
         return
     }
 
-    public async Cambiar_Clave_Usuario(id_usuario: number, clave: string, cm_clave: boolean) {
+    public async Cambiar_Clave_Usuario(id_usuario: number, clave: string, cm_clave: boolean, info_user: any, usuario_gem: string) {
         let _Nueva_Clave: string
         try {
             const usuario: any = await this._Query_Usuario.Buscar_Usuario_ID(id_usuario)
 
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_gem, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_gem}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
             //SI SE VA A ENVIAR LA CLAVE DEL USUARIO POR CORREO
             if (cm_clave) {
 
@@ -359,6 +414,8 @@ export default class UsuarioService {
 
                     _Nueva_Clave = hash
                 }
+
+
 
                 const res = await this._Query_Usuario.Cambiar_Clave_Usuario(id_usuario, _Nueva_Clave, cm_clave)
                 if (!res?.rowCount) {

@@ -47,7 +47,7 @@ export default class ProveedoresController {
 
         try {
             const proveedores_service = new ProveedoresService()
-            const respuesta = await proveedores_service.Insertar_Proveedor(req.body, usuario?.id_usuario)
+            const respuesta = await proveedores_service.Insertar_Proveedor(req.body, usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -101,7 +101,7 @@ export default class ProveedoresController {
 
         try {
             const proveedores_service = new ProveedoresService()
-            const respuesta = await proveedores_service.Editar_Proveedor(+id_proveedor, req.body)
+            const respuesta = await proveedores_service.Editar_Proveedor(+id_proveedor, req.body, usuario.usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -116,7 +116,7 @@ export default class ProveedoresController {
     public async Cambiar_Estado_Proveedor(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_proveedor } = req.params
-        const { estado } = req.query
+        const { estado, info } = req.query as {estado:string, info:string}
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -130,7 +130,7 @@ export default class ProveedoresController {
 
         try {
             const proveedor_request = new ProveedoresService()
-            const proveedor_estado = await proveedor_request.Cambiar_Estado_Proveedor(+id_proveedor, +estado)
+            const proveedor_estado = await proveedor_request.Cambiar_Estado_Proveedor(+id_proveedor, +estado, JSON.parse(info), usuario.usuario)
             if (proveedor_estado.error) {
                 return res.status(400).json({ error: true, message: proveedor_estado.message }) //!ERROR
             }

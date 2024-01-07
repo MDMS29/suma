@@ -162,7 +162,7 @@ export default class CentroCostoEmpresa {
     public async Cambiar_Estado_Centro(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { id_centro_costo } = req.params
-        const { estado } = req.query
+        const { estado, info } = req.query as { estado: string, info: string }
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -176,7 +176,7 @@ export default class CentroCostoEmpresa {
 
         try {
             const centro_costo_service = new CentroCostoEmpresaService()
-            const centro_cambio_estado = await centro_costo_service.Cambiar_Estado_Centro(+id_centro_costo, +estado)
+            const centro_cambio_estado = await centro_costo_service.Cambiar_Estado_Centro(+id_centro_costo, +estado, JSON.parse(info), usuario.usuario)
             if (centro_cambio_estado.error) {
                 return res.status(400).json({ error: true, message: centro_cambio_estado.message }) //!ERROR
             }

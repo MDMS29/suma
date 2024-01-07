@@ -86,7 +86,7 @@ export default class OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Insertar_Orden(result.data, usuario.id_usuario)
+            const respuesta = await ordenes_service.Insertar_Orden(req.body, usuario)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -139,7 +139,7 @@ export default class OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Editar_Orden(result.data, +id_orden)
+            const respuesta = await ordenes_service.Editar_Orden(req.body, +id_orden, usuario.usuario)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -154,6 +154,7 @@ export default class OrdenesController {
     async Aprobar_Orden(req: Request, res: Response) {
         const { usuario } = req
         const { id_orden_aprobar } = req.params as { id_orden_aprobar: string }
+        const { info } = req.query as { info: string }
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -161,7 +162,7 @@ export default class OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden_aprobar, usuario?.id_empresa, usuario.id_usuario ?? 0)
+            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden_aprobar, usuario, JSON.parse(info))
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -176,7 +177,7 @@ export default class OrdenesController {
     async Eliminar_Restaurar_Orden(req: Request, res: Response) {
         const { usuario } = req
         const { id_orden } = req.params
-        const { estado } = req.query
+        const { estado, info } = req.query as { estado: string, info: string }
 
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -191,7 +192,7 @@ export default class OrdenesController {
 
         try {
             const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Eliminar_Restaurar_Orden(+id_orden, +estado)
+            const respuesta = await ordenes_service.Eliminar_Restaurar_Orden(+id_orden, +estado, JSON.parse(info), usuario.usuario)
             if (!respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }

@@ -20,7 +20,7 @@ export default class _ModuloController {
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
-            
+
             return res.status(200).json(respuesta)
         } catch (error) {
             console.log(error)
@@ -60,7 +60,7 @@ export default class _ModuloController {
         try {
             const _ModuloService = new ModuloService()
             const respuesta = await _ModuloService.Insertar_Modulo(req.body, usuario?.usuario, roles)
-            
+
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -152,7 +152,9 @@ export default class _ModuloController {
     public async Cambiar_Estado_Modulo(req: Request, res: Response) {
         const { id_modulo } = req.params
         const { usuario } = req
-        const { estado } = req.query as { estado: string }
+        const { estado, info } = req.query as { estado: string, info: string }
+
+        console.log(info)
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -167,7 +169,7 @@ export default class _ModuloController {
         try {
             const _ModuloService = new ModuloService()
 
-            const respuesta = await _ModuloService.Cambiar_Estado_Modulo(+id_modulo, +estado)
+            const respuesta = await _ModuloService.Cambiar_Estado_Modulo(+id_modulo, JSON.parse(info), +estado, usuario?.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }
