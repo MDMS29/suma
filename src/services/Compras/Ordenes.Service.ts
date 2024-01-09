@@ -1,5 +1,7 @@
 import { jsPDF as JSPDF } from "jspdf";
 import {
+    Detalle_Orden,
+    // Detalle_Orden,
     Encabezado_Orden,
     Filtro_Ordenes,
 } from "../../Interfaces/Compras/ICompras";
@@ -600,150 +602,673 @@ export class OrdenesService {
     }
 
     // GENERA EL PDF Y RETORNA EL BASE64
-    private Generar_PDF_Orden(orden: Encabezado_Orden) {
+    private Generar_PDF_Orden(orden_completa: Encabezado_Orden) {
         const {
-            nombre_proveedor,
             nit_empresa,
-            forma_pago,
-            direccion_proveedor,
-            fecha_orden,
-            telefono_proveedor,
-            id_orden,
-            cotizacion,
             razon_social,
-            nit_proveedor
-        } = orden;
+
+            orden,
+            tipo_orden,
+            cotizacion,
+
+            nombre_proveedor,
+            nit_proveedor,
+            forma_pago,
+
+            lugar_entrega,
+            fecha_orden,
+
+            telefono_empresa,
+            fecha_entrega,
+
+            detalle_orden
+        } = orden_completa;
 
         // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
         const doc = new JSPDF({ orientation: "l" });
 
         // CABECERA DOCUMENTO
-        doc.setFontSize(12); // (size)
-        doc.setFont("helvetica", "normal", "normal");
+        doc.setFontSize(11); // (size)
+        doc.setFont("helvetica", "normal", "bold");
+        // doc.setFont("helvetica", "normal", "normal");
 
         //!ENCABEZADO DOCUMENTO
 
-        console.log("------------------ORDEN ----------------\n", orden);
-        // RECUADRO PARA LA CABECERA
+        console.log("------------------ORDEN ----------------\n", orden_completa);
 
         // CABECERA - IZQUIERDA
         const imageData = fs.readFileSync("resources/logo_empresa_short.png");
-
-        doc.addImage(imageData, "PNG", 14, 10, 30, 13.5);
+        let HRectCabePie = 15;
+        let proveedor = `${nombre_proveedor} - ${nit_proveedor}`;
 
         //TITULO DE LA ORDEN
-        doc.setFont("helvetica", "normal", "bold");
-        doc.text(`${razon_social} NIT. ${nit_empresa}`, 115, 20);
-        doc.text("ORDEN DE COMPRA", 128, 35);
+        doc.addImage(imageData, "PNG", 14, 10, 30, 13.5);
+        doc.text(`${razon_social} - NIT. ${nit_empresa}`.toLocaleUpperCase(), 115, 20);
 
-        let HRectCabePie = 48;
-        let proveedor = `${nombre_proveedor} - ${nit_proveedor}`;
-        let tipo_pago = `${forma_pago}`;
-        let direccion = `${direccion_proveedor}`;
-        let fechaOrden = `${fecha_orden}`;
-        let telefono = `${telefono_proveedor}`;
-        let noOrden = `${id_orden}`;
-        let noCotizacion = `${cotizacion}`;
-        let JumLine = 46;
+        let JumLine = 45
 
-        let FirstLine = 37;
+        // ------PRIMER RECUADRO DE CABECERA ------
+        //NO. ORDEN
+        doc.text("No. Orden", 21, 36); // (texto, x, y)
+        doc.text(`${orden}`, 44, 36.5);
+        doc.line(60, 30, 60, 40);//(x1, y1, x2, y2)
 
-        //RECUADRO DE NO. COTIZACION
-        doc.rect(20, 30, 40, 10); //(x, y, ancho, alto)
-        doc.text("COT.#", 242, 37)
-        const textNoCotizacion = doc.splitTextToSize(noCotizacion ?? "", 10);
-        for (let line of textNoCotizacion) {
-            doc.text(line, 255, FirstLine);
-            if (textNoCotizacion.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                FirstLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+        // TIPO DE ORDEN
+        doc.text(`${tipo_orden.toLocaleUpperCase()}`, 122, 36.5); //(text, x, y, options)
+        doc.line(20, 40, 280, 40); //(x1, y1, x2, y2)
+
+        //NO. COTIZACION
+        doc.line(240, 30, 240, 40);//(x1, y1, x2, y2)
+        doc.text("COT.#", 242, 36.5)
+        doc.text(`${cotizacion ?? ""}`, 255, 36);
+
+
+        // SEGUNDA FILA DE LA CABECERA
+        doc.text("Proveedor:", 21, 45); // (texto, x, y)
+        doc.text("Forma de pago:", 177, 45); // (texto, x, y)
+
+        const textProveeedor = doc.splitTextToSize(proveedor ?? "", 100);
+        const textFormaPago = doc.splitTextToSize(forma_pago ?? "", 30);
+
+
+        let lastY = JumLine
+        if (textProveeedor.length > textFormaPago.length) {
+            for (let line of textProveeedor) {
+                doc.text(line, 44, JumLine, { align: 'center' });
+                if (textProveeedor.length > 1) {
+                    HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                    JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                }
+            }
+
+            for (let line of textFormaPago) {
+                doc.text(line, 260, lastY);
+                if (textFormaPago.length > 1) {
+                    // HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                    lastY += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                }
+            }
+        } else {
+            for (let line of textFormaPago) {
+                doc.text(line, 260, JumLine, { align: 'center' });
+                if (textFormaPago.length > 1) {
+                    HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                    JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                }
+            }
+
+            for (let line of textProveeedor) {
+                doc.text(line, 44, lastY);
+                if (textProveeedor.length > 1) {
+                    // HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                    lastY += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                }
             }
         }
-        //RECUADRO DE NO. ORDEN
-        doc.rect(240, 30, 40, 10); //(x, y, ancho, alto)
-        doc.text("No. Orden", 21, 37); // (texto, x, y)
-        const textNoOrden = doc.splitTextToSize(noOrden ?? "", 10);
-        for (let line of textNoOrden) {
-            doc.text(line, 44, FirstLine);
-            if (textNoOrden.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                FirstLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+        JumLine += 1
+
+        // LINEA DIVISORA DE SEGUNDA LINEA CON TERCERA
+        doc.line(20, JumLine, 280, JumLine);//(x1, y1, x2, y2)
+
+        // JumLine += 4.5
+
+        // TERCER FILA DE LA CABECERA
+        doc.text("Dirección:", 21, JumLine + 4.5);
+        doc.text("Fecha de compra", 177, JumLine + 4.5);
+
+        // FECHA DE ORDEN
+        doc.text(`${fecha_orden}`, 248, JumLine + 4.5);
+
+        // DIRECCION
+        const textDireccion = doc.splitTextToSize(`${lugar_entrega}` ?? "", 100);
+        for (let line of textDireccion) {
+            doc.text(line, 44, JumLine + 4.5);
+            if (textDireccion.length > 1) {
+                HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
             }
         }
+        JumLine += 2
 
-        //RECUADRO PARA CABECERA DE LA ORDEN
-        doc.rect(20, 40, 260, 38); //(x, y, ancho, alto)
+        // LINEA DIVISORA DE TERCERA LINEA CON CUARTA
+        doc.line(20, JumLine - 1, 280, JumLine - 1);//(x1, y1, x2, y2)
+
+        // CUARTA FILA DE LA CABECERA
+        doc.text("Teléfono:", 21, JumLine + 3.5);
+        doc.text("Fecha de entrega", 177, JumLine + 3.5);
+
+        // TELÉFONO
+        doc.text(`${telefono_empresa}`, 44, JumLine + 3.5);
+
+        // FECHA ENTREGA
+        doc.text(`${fecha_entrega}`, 248, JumLine + 3.5);
+
+        // SUMAR AL SALTO DE LINEA
+        JumLine += 4.5
+
+        // LINEA DIVISORA DE CUARTA LINEA CON QUINTA
+        doc.line(20, JumLine, 280, JumLine);//(x1, y1, x2, y2)
+
+        HRectCabePie += 5.5
+
+        // QUINTA FILA DE LA CABECERA
+        doc.text("Con base en la cotizacion presentada por su empresa DEVITECH, sírvase remitir los bienes o servicios que a continuación se detallan", 21, JumLine + 4);
 
         //LÍNEA VERTICAL QUE DIVIDE LA CABECERA EN DOS
-        doc.line(150, 40, 150, 78);
+        doc.line(150, 40, 150, JumLine);//(x1, y1, x2, y2)
 
-        doc.text("Proveedor:", 21, 46); // (texto, x, y)
+        JumLine += 5.5
+        HRectCabePie += 11
 
-        const textProveeedor = doc.splitTextToSize(proveedor ?? "", 180);
-        for (let line of textProveeedor) {
-            doc.text(line, 44, JumLine);
-            if (textProveeedor.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+        //RECUADRO PARA CABECERA DE LA ORDEN
+        doc.rect(20, 30, 260, HRectCabePie + 3.5); //(x, y, ancho, alto)
+
+        // LINEA DIVISORA DE QUINTA LINEA CON CUERPO DEL DOCUMENTO
+        doc.line(20, JumLine, 280, JumLine);//(x1, y1, x2, y2)
+
+
+        //  ----- CABECERA DEL CUERPO DEL DOCUMENTO -----
+        doc.text("Requisición", 22, JumLine + 4);
+        doc.line(45, JumLine, 45, JumLine + 6);
+
+        doc.text("Item", 53, JumLine + 4);
+        doc.line(68, JumLine, 68, JumLine + 6);
+
+        doc.text("Descripcion", 76, JumLine + 4);
+        doc.line(103, JumLine, 103, JumLine + 6);
+
+        doc.text("Unidad", 106, JumLine + 4);
+        doc.line(121, JumLine, 121, JumLine + 6);
+
+        doc.text("Cantidad", 123, JumLine + 4);
+        doc.line(141, JumLine, 141, JumLine + 6);
+
+        doc.text("Precio Unitario", 145, JumLine + 4);
+        doc.line(178, JumLine, 178, JumLine + 6);
+
+        doc.text("Descuento", 183, JumLine + 4);
+        doc.line(206, JumLine, 206, JumLine + 6);
+
+        doc.text("Subtotal", 212, JumLine + 4);
+        doc.line(229, JumLine, 229, JumLine + 6);
+
+        doc.text("IVA", 238, JumLine + 4);
+        doc.line(255, JumLine, 255, JumLine + 6);
+
+        doc.text("Precio Total", 257, JumLine + 4);
+
+        let JumpLineBody = JumLine + 5
+        let item = 0
+
+        if (!detalle_orden) {
+            doc.text("NO HAY DETALLES EN LA ORDEN", 257, JumpLineBody);
+        } else {
+            let firstLineBody = JumpLineBody
+            let detalle: Detalle_Orden
+            let keyJumps: any = []
+            for (detalle of detalle_orden) {
+                const { requisicion, codigo_producto, nombre_producto, unidad, cantidad, precio_compra, porcentaje, descuento } = detalle
+
+                item += 1
+                if (item > 1) {
+                    // INSERTAR LA LINEA DIVISORA ENTRE CADA FILA
+                    doc.line(20, JumpLineBody, 280, JumpLineBody); // LINEA
+                }
+
+                let subtotal_local = cantidad * precio_compra;
+                let iva_local = subtotal_local * (porcentaje / 100);
+                let total_local = subtotal_local + iva_local;
+
+                doc.setFont("helvetica", "normal", "normal");
+                doc.text(`${requisicion}`, 22, JumpLineBody + 5); //NUMERO DE REQUISICIÓN
+
+                doc.text(`${codigo_producto}`, 52, JumpLineBody + 5); //ID DEL PRODUCTO
+
+                doc.text(`${cantidad}`, 139, JumpLineBody + 5, { align: 'right' }); // CANTIDAD
+
+                doc.text(`${precio_compra}`, 177, JumpLineBody + 5, { align: 'right' }); //PRECIO UNITARIO
+
+                doc.text(`${descuento}`, 203, JumpLineBody + 5, { align: 'right' }); //DESCUENTO POR PRODUCTO
+
+                doc.text(`${subtotal_local}`, 228, JumpLineBody + 5, { align: 'right' }); //SUBTOTAL POR PRODUCTO
+
+                doc.text(`${Math.round(iva_local)}`, 254, JumpLineBody + 5, { align: 'right' }); //IVA POR PRODUCTO
+
+                doc.text(`${Math.round(total_local)}`, 279, JumpLineBody + 5, { align: 'right' }); //PRECIO TOTAL POR PRODUCTO
+
+
+                function imprimirTextoConSalto(doc: any, lines: any, x: any, y: any, incremento: any) {
+                    for (let line of lines) {
+                        doc.text(`${line}`, x, y, { align: 'right' });
+
+                        if (lines.length > 1) {
+                            y += incremento;
+                        }
+                    }
+
+                    return y; // Devuelve la nueva posición del salto de línea
+                }
+
+                
+                // // let lastJumBody = JumpLineBody
+
+                const txtRequisicion = doc.splitTextToSize(`${requisicion}` ?? "", 20);
+                keyJumps = [...keyJumps, { requisicion: txtRequisicion.length }]
+
+                const txtCodigo = doc.splitTextToSize(`${codigo_producto}` ?? "", 20);
+                keyJumps = [...keyJumps, { codigo: txtCodigo.length }]
+
+                const txtCantidad = doc.splitTextToSize(`${cantidad}` ?? "", 20);
+                keyJumps = [...keyJumps, { cantidad: txtCantidad.length }]
+
+                const txtPrecioC = doc.splitTextToSize(`${precio_compra}` ?? "", 20);
+                keyJumps = [...keyJumps, { precioC: txtPrecioC.length }]
+
+                const txtDescuento = doc.splitTextToSize(`${descuento}` ?? "", 20);
+                keyJumps = [...keyJumps, { descuento: txtDescuento.length }]
+
+                const txtSubtotal = doc.splitTextToSize(`${subtotal_local}` ?? "", 20);
+                keyJumps = [...keyJumps, { subtotal: txtSubtotal.length }]
+
+                const txtIvaLocal = doc.splitTextToSize(`${iva_local}` ?? "", 20);
+                keyJumps = [...keyJumps, { iva_local: txtIvaLocal.length }]
+
+                const txtTotalLocal = doc.splitTextToSize(`${total_local}` ?? "", 20);
+                keyJumps = [...keyJumps, { total_local: txtTotalLocal.length }]
+
+                const txtUnidada = doc.splitTextToSize(`${unidad}` ?? "", 20);
+                keyJumps = [...keyJumps, { unidad: txtUnidada.length }]
+
+                const txtNombrePro = doc.splitTextToSize(`${nombre_producto}` ?? "", 20);
+                keyJumps = [...keyJumps, { nombre_pro: txtNombrePro.length }]
+
+                let maxNumber = -Infinity;
+                let maxKey = '';
+
+                for (let i = 0; i < keyJumps.length; i++) {
+                    let obj = keyJumps[i];
+                    for (let key in obj) {
+                        if (obj[key] > maxNumber) {
+                            maxNumber = obj[key];
+                            maxKey = key;
+                        }
+                    }
+                }
+
+                let salto = JumpLineBody
+
+                switch (maxKey) {
+                    case 'requisicion':
+                        JumpLineBody = imprimirTextoConSalto(doc, txtRequisicion, 22, salto + 5, 5);
+                        console.log('requisicion')
+                        break;
+                    case 'codigo':
+                        JumpLineBody = imprimirTextoConSalto(doc, txtCodigo, 52, salto + 5, 5);
+                        console.log('codigo')
+                        break;
+                    case 'nombre_pro':
+                        JumpLineBody = imprimirTextoConSalto(doc, txtNombrePro, 100, salto + 5, 5);
+                        console.log('nombre')
+                        break;
+                    // ... (otros casos)
+                
+                    default:
+                        console.log('NINGUNA')
+                        break;
+                }
+
+                // salto = imprimirTextoConSalto(doc, lines, x, salto + 5, 5);
+
+                // switch (maxKey) {
+                //     case 'requisicion':
+                //         for (let line of txtRequisicion) {
+                //             doc.text(`${line}`, 22, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtRequisicion.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+
+                //         for (let line of txtCodigo) {
+                //             doc.text(`${line}`, 52, salto + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtCodigo.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 salto += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+
+                //         console.log('requisicion')
+                //         break;
+                //     case 'codigo':
+                //         for (let line of txtCodigo) {
+                //             doc.text(`${line}`, 52, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtCodigo.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('codigo')
+                //         break;
+                //     case 'cantidad':
+                //         for (let line of txtCantidad) {
+                //             doc.text(`${line}`, 139, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtCantidad.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('cantidad')
+                //         break;
+                //     case 'precioC':
+                //         for (let line of txtPrecioC) {
+                //             doc.text(`${line}`, 177, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtPrecioC.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('precioC')
+                //         break;
+                //     case 'descuento':
+                //         for (let line of txtDescuento) {
+                //             doc.text(`${line}`, 203, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtDescuento.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('descuento')
+                //         break;
+                //     case 'subtotal':
+                //         for (let line of txtSubtotal) {
+                //             doc.text(`${line}`, 228, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtSubtotal.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('subtotal')
+                //         break;
+                //     case 'iva_local':
+                //         for (let line of txtIvaLocal) {
+                //             doc.text(`${line}`, 254, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtIvaLocal.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('iva_local')
+                //         break;
+                //     case 'total_local':
+                //         for (let line of txtTotalLocal) {
+                //             doc.text(`${line}`, 279, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtTotalLocal.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('total_local')
+                //         break;
+                //     case 'unidad':
+                //         for (let line of txtUnidada) {
+                //             doc.text(`${line}`, 119, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtUnidada.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('unidad')
+                //         break;
+                //     case 'nombre_pro':
+                //         for (let line of txtNombrePro) {
+                //             doc.text(`${line}`, 100, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtNombrePro.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+
+                //         for (let line of txtUnidada) {
+                //             doc.text(`${line}`, 119, salto + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //             if (txtUnidada.length > 1) {
+                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //                 salto += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //             }
+                //         }
+                //         console.log('nombre_pro')
+                //         break;
+
+                //     default:
+                //         console.log('NINGUNA')
+                //         break;
+                // }
+
+
+                // UNIDAD
+                // const txtUnidad = doc.splitTextToSize(`${unidad}` ?? "", 14);
+                // for (let line of txtUnidad) {
+                //     doc.text(`${line}`, 119, lastJumBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //     if (txtUnidad.length > 1) {
+                //         // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //         lastJumBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //     }
+                // }
+
+                // // NOMBRE PRODUCTO
+                // const txtNombreProducto = doc.splitTextToSize(`${nombre_producto}` ?? "", 25);
+                // for (let line of txtNombreProducto) {
+                //     doc.text(`${line}`, 100, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
+                //     if (txtNombreProducto.length > 1) {
+                //         // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                //         JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                //     }
+                // }
+
+                // SALTO DE LINEA PARA EL SIGUIENTE DETALLE
+                JumpLineBody += 5
+
+                doc.line(20, firstLineBody, 20, JumpLineBody);
+                doc.line(45, firstLineBody, 45, JumpLineBody);
+                doc.line(68, firstLineBody, 68, JumpLineBody);
+                doc.line(103, firstLineBody, 103, JumpLineBody);
+                doc.line(121, firstLineBody, 121, JumpLineBody);
+                doc.line(141, firstLineBody, 141, JumpLineBody);
+                doc.line(178, firstLineBody, 178, JumpLineBody);
+                doc.line(206, firstLineBody, 206, JumpLineBody);
+                doc.line(229, firstLineBody, 229, JumpLineBody);
+                doc.line(255, firstLineBody, 255, JumpLineBody);
+                doc.line(280, firstLineBody, 280, JumpLineBody);
+                doc.line(20, JumpLineBody, 280, JumpLineBody);
+
+                // let lastJumLineBody = JumpLineBody 
+                let limitePag = 160
+                if (limitePag < JumpLineBody) {
+                    doc.addPage()
+                    limitePag += limitePag
+
+
+                    doc.setFont("helvetica", "normal", "bold");
+
+                    // CABECERA - IZQUIERDA
+                    const imageData = fs.readFileSync("resources/logo_empresa_short.png");
+                    HRectCabePie = 15;
+                    // let proveedor = `${nombre_proveedor} - ${nit_proveedor}`;
+
+                    //TITULO DE LA ORDEN
+                    doc.addImage(imageData, "PNG", 14, 10, 30, 13.5);
+                    doc.text(`${razon_social} - NIT. ${nit_empresa}`.toLocaleUpperCase(), 115, 20);
+
+                    JumLine = 45
+
+
+                    // ------PRIMER RECUADRO DE CABECERA ------
+                    //NO. ORDEN
+                    doc.text("No. Orden", 21, 36); // (texto, x, y)
+                    doc.text(`${orden}`, 44, 36.5);
+                    doc.line(60, 30, 60, 40);//(x1, y1, x2, y2)
+
+                    // TIPO DE ORDEN
+                    doc.text(`${tipo_orden.toLocaleUpperCase()}`, 122, 36.5); //(text, x, y, options)
+                    doc.line(20, 40, 280, 40); //(x1, y1, x2, y2)
+
+                    //NO. COTIZACION
+                    doc.line(240, 30, 240, 40);//(x1, y1, x2, y2)
+                    doc.text("COT.#", 242, 36.5)
+                    doc.text(`${cotizacion ?? ""}`, 255, 36);
+
+
+                    // SEGUNDA FILA DE LA CABECERA
+                    doc.text("Proveedor:", 21, 45); // (texto, x, y)
+                    doc.text("Forma de pago:", 177, 45); // (texto, x, y)
+
+                    const textProveeedor = doc.splitTextToSize(proveedor ?? "", 100);
+                    const textFormaPago = doc.splitTextToSize(forma_pago ?? "", 30);
+
+
+                    lastY = JumLine
+                    if (textProveeedor.length > textFormaPago.length) {
+                        for (let line of textProveeedor) {
+                            doc.text(line, 44, JumLine, { align: 'center' });
+                            if (textProveeedor.length > 1) {
+                                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                            }
+                        }
+
+                        for (let line of textFormaPago) {
+                            doc.text(line, 260, lastY);
+                            if (textFormaPago.length > 1) {
+                                // HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                                lastY += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                            }
+                        }
+                    } else {
+                        for (let line of textFormaPago) {
+                            doc.text(line, 260, JumLine, { align: 'center' });
+                            if (textFormaPago.length > 1) {
+                                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                            }
+                        }
+
+                        for (let line of textProveeedor) {
+                            doc.text(line, 44, lastY);
+                            if (textProveeedor.length > 1) {
+                                // HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABECERA
+                                lastY += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                            }
+                        }
+                    }
+                    JumLine += 1
+
+                    // LINEA DIVISORA DE SEGUNDA LINEA CON TERCERA
+                    doc.line(20, JumLine, 280, JumLine);//(x1, y1, x2, y2)
+
+                    // JumLine += 4.5
+
+                    // TERCER FILA DE LA CABECERA
+                    doc.text("Dirección:", 21, JumLine + 4.5);
+                    doc.text("Fecha de compra", 177, JumLine + 4.5);
+
+                    // FECHA DE ORDEN
+                    doc.text(`${fecha_orden}`, 248, JumLine + 4.5);
+
+                    // DIRECCION
+                    const textDireccion = doc.splitTextToSize(`${lugar_entrega}` ?? "", 100);
+                    for (let line of textDireccion) {
+                        doc.text(line, 44, JumLine + 4.5);
+                        if (textDireccion.length > 1) {
+                            HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
+                            JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                        }
+                    }
+                    JumLine += 2
+
+                    // LINEA DIVISORA DE TERCERA LINEA CON CUARTA
+                    doc.line(20, JumLine - 1, 280, JumLine - 1);//(x1, y1, x2, y2)
+
+                    // CUARTA FILA DE LA CABECERA
+                    doc.text("Teléfono:", 21, JumLine + 3.5);
+                    doc.text("Fecha de entrega", 177, JumLine + 3.5);
+
+                    // TELÉFONO
+                    doc.text(`${telefono_empresa}`, 44, JumLine + 3.5);
+
+                    // FECHA ENTREGA
+                    doc.text(`${fecha_entrega}`, 248, JumLine + 3.5);
+
+                    // SUMAR AL SALTO DE LINEA
+                    JumLine += 4.5
+
+                    // LINEA DIVISORA DE CUARTA LINEA CON QUINTA
+                    doc.line(20, JumLine, 280, JumLine);//(x1, y1, x2, y2)
+
+                    HRectCabePie += 5.5
+
+                    // QUINTA FILA DE LA CABECERA
+                    doc.text("Con base en la cotizacion presentada por su empresa DEVITECH, sírvase remitir los bienes o servicios que a continuación se detallan", 21, JumLine + 4);
+
+                    //LÍNEA VERTICAL QUE DIVIDE LA CABECERA EN DOS
+                    doc.line(150, 40, 150, JumLine);//(x1, y1, x2, y2)
+
+                    JumLine += 5.5
+                    HRectCabePie += 11
+
+                    //RECUADRO PARA CABECERA DE LA ORDEN
+                    doc.rect(20, 30, 260, HRectCabePie + 3.5); //(x, y, ancho, alto)
+
+                    // LINEA DIVISORA DE QUINTA LINEA CON CUERPO DEL DOCUMENTO
+                    doc.line(20, JumLine, 280, JumLine);//(x1, y1, x2, y2)
+
+
+                    //  ----- CABECERA DEL CUERPO DEL DOCUMENTO -----
+                    doc.text("Requisición", 22, JumLine + 4);
+                    doc.line(45, JumLine, 45, JumLine + 6);
+
+                    doc.text("Item", 53, JumLine + 4);
+                    doc.line(68, JumLine, 68, JumLine + 6);
+
+                    doc.text("Descripcion", 76, JumLine + 4);
+                    doc.line(103, JumLine, 103, JumLine + 6);
+
+                    doc.text("Unidad", 106, JumLine + 4);
+                    doc.line(121, JumLine, 121, JumLine + 6);
+
+                    doc.text("Cantidad", 123, JumLine + 4);
+                    doc.line(141, JumLine, 141, JumLine + 6);
+
+                    doc.text("Precio Unitario", 145, JumLine + 4);
+                    doc.line(178, JumLine, 178, JumLine + 6);
+
+                    doc.text("Descuento", 183, JumLine + 4);
+                    doc.line(206, JumLine, 206, JumLine + 6);
+
+                    doc.text("Subtotal", 212, JumLine + 4);
+                    doc.line(229, JumLine, 229, JumLine + 6);
+
+                    doc.text("IVA", 238, JumLine + 4);
+                    doc.line(255, JumLine, 255, JumLine + 6);
+
+                    doc.text("Precio Total", 257, JumLine + 4);
+
+                    JumpLineBody = JumLine + 5
+                    // lastJumBody = JumpLineBody
+                    item = 0
+                }
             }
+            // LINEAS DE DIVISION ENTRE COLUMNAS DEL CUERPO
         }
-        doc.line(240, 40, 240, 78);
 
-        doc.text("Forma de pago", 177, 46); // (texto, x, y)
-        const textFormaPago = doc.splitTextToSize(tipo_pago ?? "", 30);
-        for (let line of textFormaPago) {
-            doc.text(line, 245, JumLine);
-            if (textFormaPago.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-            }
-        }
-        doc.line(20, HRectCabePie, 280, HRectCabePie);
 
-        doc.text("Dirección:", 21, HRectCabePie + 5);
-        const textDireccion = doc.splitTextToSize(direccion ?? "", 180);
-        for (let line of textDireccion) {
-            doc.text(line, 44, HRectCabePie + 5);
-            if (textDireccion.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-            }
-        }
-        doc.line(20, HRectCabePie + 10, 280, HRectCabePie + 10);
 
-        doc.text("Fecha de compra", 175, HRectCabePie + 5);
-        const textFechaCompra = doc.splitTextToSize(fechaOrden ?? "", 25);
-        for (let line of textFechaCompra) {
-            doc.text(line, 248, HRectCabePie + 5);
-            if (textFechaCompra.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-            }
-        }
-        doc.line(20, HRectCabePie + 10, 280, HRectCabePie + 10);
-        // doc.line(20, 46, 280, 46); // horizontal
 
-        doc.text("Telefono:", 21, HRectCabePie + 15);
-        const textTelefono = doc.splitTextToSize(telefono ?? "", 180);
-        for (let line of textTelefono) {
-            doc.text(line, 44, HRectCabePie + 15);
-            if (textTelefono.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-            }
-        }
-        doc.line(20, HRectCabePie + 10, 280, HRectCabePie + 10);
 
-        doc.text("Fecha de entrega", 175, HRectCabePie + 15);
-        const textFechaEntrega = doc.splitTextToSize(fechaOrden ?? "", 25);
-        for (let line of textFechaEntrega) {
-            doc.text(line, 248, HRectCabePie + 15);
-            if (textFechaEntrega.length > 1) {
-                HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-            }
-        }
-        doc.line(20, HRectCabePie + 10, 280, HRectCabePie + 10);
+
+        // RECUADRO PARA LA CABECERA DE DOCUMENTO
+        // doc.rect(5, 35, 280, HRectCabePie); // (x, y, ancho, alto)
+
+
+        // doc.line(20, HRectCabePie + 10, 280, HRectCabePie + 10);
 
         // doc.line(20, 54, 280, 54);
 
@@ -757,44 +1282,13 @@ export class OrdenesService {
         // doc.rect(20, 68, 260, 9);
 
         // doc.setFontSize(10);
-        // doc.text(
-        //   "Con base en la cotizacion presentada por su empresa DEVICES & TECHNOLOGY, sírvase remitir los bienes o servicios que a continuación se detallan",
-        //   21,
-        //   75
-        // );
+
 
         // doc.rect(20, 77, 260, 10);
 
         // //PRODUCTOS/SERVICIOS DE LA ORDEN
 
-        // doc.line(45, 77, 45, 87);
-        // doc.text("Requisición", 22, 83);
 
-        // doc.line(68, 77, 68, 87);
-        // doc.text("Item", 53, 83);
-
-        // doc.line(103, 77, 103, 87);
-        // doc.text("Descripcion", 76, 83);
-
-        // doc.line(121, 77, 121, 87);
-        // doc.text("Unidad", 106, 83);
-
-        // doc.line(141, 77, 141, 87);
-        // doc.text("Cantidad", 123, 83);
-
-        // doc.line(178, 77, 178, 107);
-        // doc.text("Precio Unitario", 148, 83);
-
-        // doc.line(206, 77, 206, 107);
-        // doc.text("Descuento", 183, 83);
-
-        // doc.line(229, 137, 229, 77);
-        // doc.text("Subtotal", 212, 83);
-
-        // doc.line(255, 137, 255, 77);
-        // doc.text("IVA", 238, 83);
-
-        // doc.text("Precio Total", 258, 83);
 
         // doc.rect(20, 87, 260, 20);
 

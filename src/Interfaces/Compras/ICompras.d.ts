@@ -66,20 +66,26 @@ export interface Tercero extends Logs_Info {
 }
 
 /****************  INTERFACES PARA LAS ORDENES  ****************/
-interface Detalle_Orden {
+export interface Detalle_Orden {
     id_detalle?: number;
     id_orden?: number;
     id_requisicion: number;
+    requisicion?: string
     id_producto: number;
+    nombre_producto?: string
+    codigo_producto?: string
+    unidad?: string
     cantidad: number;
     precio_compra: number;
     id_iva: number;
     cotizacion: number;
     descuento: number;
+    porcentaje: number;
+    total_detalle: number;
     id_estado: number;
 }
 
-interface Encabezado_Orden extends Logs_Info {
+export interface Encabezado_Orden extends Logs_Info {
     id_orden: number;
     id_empresa: number;
     id_tipo_orden: number;
@@ -104,11 +110,12 @@ interface Encabezado_Orden extends Logs_Info {
     descuento_total?: number;
     iva_total?: number;
     anticipo: number
-    telefono_proveedor: number
+    telefono_empresa: number
     detalles_orden: DetalleOrden[];
+    detalle_orden?: DetalleOrden[];
 }
 
-interface Filtro_Ordenes {
+export interface Filtro_Ordenes {
     proveedor: number;
     tipo_orden: number;
     fecha_inicial: string;

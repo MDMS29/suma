@@ -196,7 +196,7 @@ export const _aprobar_detalle_orden = `
 export const _buscar_orden_encabezado_pdf = `
     SELECT 
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
-        te.razon_social, te.nit AS nit_empresa,
+        te.razon_social, te.nit AS nit_empresa, te.telefono AS telefono_empresa,
         tto.tipo_orden, tor.orden,
         tt.nombre AS nombre_proveedor, tt.documento AS nit_proveedor, tt.correo AS correo_proveedor, 
         tfp.forma_pago,

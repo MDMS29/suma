@@ -684,7 +684,7 @@ export class RequisicionesService {
         }
     }
 
-    public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: [{ id_detalle: number, id_estado: number }], usuario_aprobador: any, info_user: any) {
+    public async Aprobar_Desaprobar_Detalle(id_requisicion: number, detalles: any, usuario_aprobador: any) {
         const { id_usuario, usuario } = usuario_aprobador
         const estados_det_requi: any = { '3': true, '4': true, '5': true }
         try {
@@ -706,9 +706,9 @@ export class RequisicionesService {
             // CALIFICAR DETALLES
             for (let detalle of detalles) {
                 // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
-                const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+                const log = await this._Querys.Insertar_Log_Auditoria(usuario, detalle.ip, detalle?.ubicacion)
                 if (log !== 1) {
-                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${detalle.ip}, UBICACIÓN: \n ${detalle?.ubicacion}`)
                 }
 
                 // VERIFICAR SI EL DETALLE PERTENECE A LA REQUISICION
@@ -731,9 +731,9 @@ export class RequisicionesService {
             }
 
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
-            const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, detalles[0].ip, detalles[0]?.ubicacion)
             if (log !== 1) {
-                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${detalles[0].ip}, UBICACIÓN: \n ${detalles[0]?.ubicacion}`)
             }
 
             const requisicion_verificada = await this._Query_Requisiciones.Cambiar_Estado_Requisicion(id_requisicion, EstadosTablas.ESTADO_VERIFICADO)

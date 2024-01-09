@@ -224,7 +224,6 @@ export default class RequisicionesController {
         const { usuario } = req
         const { id_requisicion } = req.params
         const { detalles } = req.body
-        const {info} = req.query as {info:string}
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -238,7 +237,7 @@ export default class RequisicionesController {
 
         try {
             const requisiciones_service = new RequisicionesService()
-            const respuesta: any = await requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario, JSON.parse(info))
+            const respuesta: any = await requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }
