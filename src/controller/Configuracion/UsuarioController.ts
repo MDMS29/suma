@@ -274,7 +274,7 @@ export default class UsuarioController {
         const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO ENVIADO POR PARAMETROS
         const { clave } = req.body //OBTENER LA NUEVA CLAVE DEL USUARIO
 
-        const { info } = req.params as { info: string }
+        const { info } = req.query as { info: string }
 
         if (!req.usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
             return res.status(401).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }) //!ERROR

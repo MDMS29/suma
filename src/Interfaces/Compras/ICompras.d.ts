@@ -80,6 +80,8 @@ export interface Detalle_Orden {
     id_iva: number;
     cotizacion: number;
     descuento: number;
+    critico?: boolean
+    ficha?: boolean
     porcentaje: number;
     total_detalle: number;
     id_estado: number;
@@ -111,8 +113,11 @@ export interface Encabezado_Orden extends Logs_Info {
     iva_total?: number;
     anticipo: number
     telefono_empresa: number
+    correo_empresa: string
     detalles_orden: DetalleOrden[];
     detalle_orden?: DetalleOrden[];
+    usuario_creador?:string
+    usuario_aprobador ?:string
 }
 
 export interface Filtro_Ordenes {

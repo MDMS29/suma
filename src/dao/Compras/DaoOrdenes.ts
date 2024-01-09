@@ -196,7 +196,7 @@ export const _aprobar_detalle_orden = `
 export const _buscar_orden_encabezado_pdf = `
     SELECT 
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
-        te.razon_social, te.nit AS nit_empresa, te.telefono AS telefono_empresa,
+        te.razon_social, te.nit AS nit_empresa, te.telefono AS telefono_empresa, te.correo as correo_empresa,
         tto.tipo_orden, tor.orden,
         tt.nombre AS nombre_proveedor, tt.documento AS nit_proveedor, tt.correo AS correo_proveedor, 
         tfp.forma_pago,
@@ -233,11 +233,11 @@ export const _buscar_orden_encabezado_pdf = `
         vwu.nombre_completo AS usuario_aprobador
     FROM
         public.tbl_ordenes tor
-    LEFT JOIN public.tbl_direcciones tdir   ON tdir.id_direccion = tor.id_lugar_entrega
+    INNER JOIN public.tbl_terceros tt       ON tt.id_tercero = tor.id_tercero 
+    LEFT JOIN public.tbl_direcciones tdir   ON tdir.id_direccion = tt.id_direccion
     LEFT JOIN public.vw_direcciones vwdir   ON vwdir.id_direccion = tor.id_lugar_entrega
     INNER JOIN public.tbl_tipo_orden tto    ON tto.id_tipo_orden = tor.id_tipo_orden
     INNER JOIN public.tbl_forma_pago tfp    ON tfp.id_forma_pago = tor.id_forma_pago
-    INNER JOIN public.tbl_terceros tt       ON tt.id_tercero = tor.id_tercero 
     INNER JOIN seguridad.tbl_empresas te    ON te.id_empresa = tor.id_empresa 
     INNER JOIN seguridad.tbl_usuario tu     ON tu.id_usuario = tor.usuario_creacion 
     LEFT JOIN seguridad.vw_usuarios vwu     ON vwu.id_usuario = tor.usuario_aprobacion 
@@ -250,8 +250,8 @@ export const _buscar_orden_encabezado_pdf = `
 export const _buscar_detalle_orden_pdf = `
     SELECT 
         tod.id_detalle, tod.id_orden, tod.id_requisicion, tod.id_producto,  tod.id_iva,
-        tr.requisicion, tp.referencia AS codigo_producto, tp.descripcion as nombre_producto,
-        tu.unidad, tod.cantidad, tod.precio_compra, tod.descuento, ti.porcentaje
+        tr.requisicion, tp.referencia AS codigo_producto, tp.descripcion as nombre_producto, 
+        tp.critico, tp.ficha, tu.unidad, tod.cantidad, tod.precio_compra, tod.descuento, ti.porcentaje
     FROM 
         public.tbl_orden_detalle tod
     INNER JOIN public.tbl_requisiciones tr ON tr.id_requisicion = tod.id_requisicion
