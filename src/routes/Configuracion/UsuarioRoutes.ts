@@ -17,7 +17,11 @@ _UsuarioRouter.route('/')
     .post(_Autorizacion, _UsuarioController.Crear_Usuario);//CREACIÓN DEL USUARIO
 
 // OBTENER EL PERFIL DEL USUARIO 
-_UsuarioRouter.get('/perfil', _Autorizacion, _UsuarioController.Perfil_Usuario)
+_UsuarioRouter.route('/perfil')
+    .get(_Autorizacion, _UsuarioController.Perfil_Usuario)
+
+_UsuarioRouter.route('/perfil/:id_usuario')
+    .patch(_Autorizacion, _UsuarioController.Actualizar_Perfil)
 
 _UsuarioRouter.route('/:id_usuario')
     .get(_Autorizacion, _UsuarioController.Buscar_Usuario)//BUSCAR USUARIO CON POR MEDIO DE SU ID

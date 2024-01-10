@@ -97,6 +97,9 @@ export interface Encabezado_Orden extends Logs_Info {
     razon_social?: string
     orden: string;
     nit_empresa: string;
+    telefono_empresa: number
+    direccion_empresa: string;
+    correo_empresa: string
     nit_proveedor: string;
     direccion_proveedor: string;
     fecha_orden: Date;
@@ -112,8 +115,6 @@ export interface Encabezado_Orden extends Logs_Info {
     descuento_total?: number;
     iva_total?: number;
     anticipo: number
-    telefono_empresa: number
-    correo_empresa: string
     detalles_orden: DetalleOrden[];
     detalle_orden?: DetalleOrden[];
     usuario_creador?:string

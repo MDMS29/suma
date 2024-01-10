@@ -299,4 +299,34 @@ export default class UsuarioController {
             return res.status(500).json({ error: true, message: 'Error al cambiar la contraseña del usuario' }) //!ERROR
         }
     }
+
+    public async Actualizar_Perfil(req: Request, res: Response) {
+        const { id_usuario } = req.params //OBTENER EL ID DEL USUARIO POR PARAMETROS
+        const { usuario } = req
+        //VALIDACION DE DATOS
+        if (!usuario?.id_usuario) { //VALIDAR SI EL USUARIO ESTA LOGUEADO
+            return res.status(400).json({ error: true, message: "Debe iniciar sesión para realizar esta acción" }) //!Error
+        }
+        if (!id_usuario) { //VALIDAR QUE SI SE HA ENVIADO UN ID
+            return res.status(400).json({ error: true, message: "Usuario no definido" }) //!ERROR
+        }
+
+        const result = UsuarioSchema.partial().safeParse(req.body) //VALIDAR QUE LOS TIPOS DE DATOS SEAN CORRECTOS
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.json({ error: true, message: result.error.issues[0].message }) //!ERROR
+        }
+
+        try {
+            const usuario_service = new UsuarioService()
+            const respuesta: any = await usuario_service.Actualizar_Perfil(req.body, +id_usuario, req.usuario?.usuario) //INVOCAR FUNCION PARA EDITAR EL USUARIO
+            if (respuesta?.error) { //VALIDAR SI HAY UN ERROR
+                return res.status(400).json(respuesta) //!ERROR
+            }
+            
+            return res.status(200).json(respuesta) //RETORNO DE USUARIO EDITADO
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: 'Error al editar el usuario' }) //!ERROR
+        }
+    }
 }

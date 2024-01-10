@@ -369,7 +369,7 @@ export default class UsuarioService {
         }
     }
 
-    public async Cambiar_Estado_Usuario({ usuario, estado }: { usuario: number; estado: string; }, info_user: any, usuario_gen:string) {
+    public async Cambiar_Estado_Usuario({ usuario, estado }: { usuario: number; estado: string; }, info_user: any, usuario_gen: string) {
         try {
             const busqueda = await this._Query_Usuario.Buscar_Usuario_ID(usuario)
             if (busqueda.length <= 0) {
@@ -384,11 +384,11 @@ export default class UsuarioService {
             if (!res) {
                 return { error: true, message: 'No se pudo cambiar el estado del usuario' }
             }
+            return { error: false, message: '' }
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al cambiar el estado del usuario' }
         }
-        return
     }
 
     public async Cambiar_Clave_Usuario(id_usuario: number, clave: string, cm_clave: boolean, info_user: any, usuario_gem: string) {
@@ -453,6 +453,44 @@ export default class UsuarioService {
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al restablecer la clave del usuario' } //!ERROR
+        }
+    }
+
+    public async Actualizar_Perfil(RequestUsuario: any, usuario_id: number, UsuarioModificador: string) {
+        //BUSCAR LA INFORMACIÓN DEL USUARIO        
+        const respuesta = await this._Query_Usuario.Buscar_Usuario_ID(usuario_id) //INVOCAR FUNCION PARA BUSCAR EL USUARIO POR ID
+        if (respuesta.length == 0) { //SI LA RESPUESTA ES VACIA ENVIAR ERROR
+            return { error: true, message: "No se ha encontrado el usuario" } //!ERROR
+        }
+
+        const usuario_filtrado_correo: any = await this._Query_Usuario.Buscar_Usuario_Correo('', RequestUsuario.correo)
+        if (usuario_filtrado_correo?.length > 0 && usuario_filtrado_correo[0].correo !== respuesta[0].correo) {
+            return { error: true, message: 'Ya existe este correo de usuario' } //!ERROR
+        }
+
+        const usuario_filtrado: any = await this._Query_Usuario.Buscar_Usuario_Correo(RequestUsuario.usuario, '')
+        if (usuario_filtrado?.length > 0 && usuario_filtrado[0].usuario !== respuesta[0].usuario) {
+            return { error: true, message: 'Ya existe este usuario' } //!ERROR
+        }
+
+
+        try {
+
+            // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+            const log = await this._Querys.Insertar_Log_Auditoria(UsuarioModificador, RequestUsuario.ip, RequestUsuario?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${UsuarioModificador}, IP: \n ${RequestUsuario.ip}, UBICACIÓN: \n ${RequestUsuario?.ubicacion}`)
+            }
+            //INVOCAR FUNCION PARA EDITAR EL USUARIO
+            const result = await this._Query_Usuario.Actualizar_perfil(RequestUsuario, usuario_id, UsuarioModificador)
+            if(result !== 1){
+                return {error:true, message: 'Error al editar su perfil'}
+            }
+
+            return {error:false, message: 'Se ha editado su perfil'}
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: "Error al editar el usuario" } //!ERROR
         }
     }
 }

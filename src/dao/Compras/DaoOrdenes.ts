@@ -196,51 +196,27 @@ export const _aprobar_detalle_orden = `
 export const _buscar_orden_encabezado_pdf = `
     SELECT 
         tor.id_orden, tor.id_tipo_orden, tor.id_forma_pago, tor.id_tercero, 
-        te.razon_social, te.nit AS nit_empresa, te.telefono AS telefono_empresa, te.correo as correo_empresa,
+        te.razon_social, te.nit AS nit_empresa, te.telefono AS telefono_empresa, te.correo as correo_empresa, (SELECT * FROM fnc_obtener_direccion_concat(te.id_direccion)) AS direccion_empresa,
         tto.tipo_orden, tor.orden,
         tt.nombre AS nombre_proveedor, tt.documento AS nit_proveedor, tt.correo AS correo_proveedor, 
         tfp.forma_pago,
-        CONCAT(
-            tdir.tipo_via, ' ', tdir.numero_u, 
-            CASE WHEN tdir.letra_u IS NOT NULL AND tdir.letra_u != '' THEN CONCAT(' ',tdir.letra_u) ELSE '' END,
-            CASE WHEN tdir.numero_d IS NOT NULL AND tdir.numero_d != '' THEN CONCAT(' ',tdir.numero_d) ELSE '' END,
-            CASE WHEN tdir.complemento_u IS NOT NULL AND tdir.complemento_u != '' THEN CONCAT(' ',tdir.complemento_u) ELSE '' END,
-            ' #',tdir.numero_t, 
-            CASE WHEN tdir.letra_d IS NOT NULL AND tdir.letra_d != '' THEN CONCAT(' ',tdir.letra_d) ELSE '' END,
-            CASE WHEN tdir.complemento_d IS NOT NULL AND tdir.complemento_d != '' THEN CONCAT(' ',tdir.complemento_d) ELSE '' END,
-            ' - ', tdir.numero_c, 
-            CASE WHEN tdir.complemento_f IS NOT NULL AND tdir.complemento_f != '' THEN CONCAT(' ',tdir.complemento_f) ELSE '' END,
-            ' (', tdir.departamento, '/',tdir.municipio, ')'
-        ) AS direccion_proveedor,
+        (SELECT * FROM fnc_obtener_direccion_concat(tt.id_direccion)) AS direccion_proveedor,
         SUBSTRING(CAST(tor.fecha_orden AS VARCHAR) FROM 1 FOR 10) AS fecha_orden, 
         tt.telefono AS telefono_proveedor,  SUBSTRING(CAST(tor.fecha_entrega AS VARCHAR) FROM 1 FOR 10) AS fecha_entrega,
-        CONCAT(
-            vwdir.tipo_via, ' ', vwdir.numero_u, 
-            CASE WHEN vwdir.letra_u IS NOT NULL AND vwdir.letra_u != '' THEN CONCAT(' ',vwdir.letra_u) ELSE '' END,
-            CASE WHEN vwdir.numero_d IS NOT NULL AND vwdir.numero_d != '' THEN CONCAT(' ',vwdir.numero_d) ELSE '' END,
-            CASE WHEN vwdir.complemento_u IS NOT NULL AND vwdir.complemento_u != '' THEN CONCAT(' ',vwdir.complemento_u) ELSE '' END,
-            ' #',vwdir.numero_t, 
-            CASE WHEN vwdir.letra_d IS NOT NULL AND vwdir.letra_d != '' THEN CONCAT(' ',vwdir.letra_d) ELSE '' END,
-            CASE WHEN vwdir.complemento_d IS NOT NULL AND vwdir.complemento_d != '' THEN CONCAT(' ',vwdir.complemento_d) ELSE '' END,
-            ' - ', vwdir.numero_c, 
-            CASE WHEN vwdir.complemento_f IS NOT NULL AND vwdir.complemento_f != '' THEN CONCAT(' ',vwdir.complemento_f) ELSE '' END,
-            ' (', vwdir.departamento, '/',vwdir.municipio, ')'
-        ) AS lugar_entrega,
+        (SELECT * FROM fnc_obtener_direccion_concat(tor.id_lugar_entrega)) AS lugar_entrega,
         tor.cotizacion,
         tor.observaciones, 
         tor.total_orden,
         tu.nombre_completo AS usuario_creador,
         vwu.nombre_completo AS usuario_aprobador
     FROM
-        public.tbl_ordenes tor
-    INNER JOIN public.tbl_terceros tt       ON tt.id_tercero = tor.id_tercero 
-    LEFT JOIN public.tbl_direcciones tdir   ON tdir.id_direccion = tt.id_direccion
-    LEFT JOIN public.vw_direcciones vwdir   ON vwdir.id_direccion = tor.id_lugar_entrega
-    INNER JOIN public.tbl_tipo_orden tto    ON tto.id_tipo_orden = tor.id_tipo_orden
-    INNER JOIN public.tbl_forma_pago tfp    ON tfp.id_forma_pago = tor.id_forma_pago
-    INNER JOIN seguridad.tbl_empresas te    ON te.id_empresa = tor.id_empresa 
-    INNER JOIN seguridad.tbl_usuario tu     ON tu.id_usuario = tor.usuario_creacion 
-    LEFT JOIN seguridad.vw_usuarios vwu     ON vwu.id_usuario = tor.usuario_aprobacion 
+            public.tbl_ordenes tor
+        INNER JOIN public.tbl_terceros tt       ON tt.id_tercero = tor.id_tercero 
+        INNER JOIN public.tbl_tipo_orden tto    ON tto.id_tipo_orden = tor.id_tipo_orden
+        INNER JOIN public.tbl_forma_pago tfp    ON tfp.id_forma_pago = tor.id_forma_pago
+        INNER JOIN seguridad.tbl_empresas te    ON te.id_empresa = tor.id_empresa 
+        INNER JOIN seguridad.tbl_usuario tu     ON tu.id_usuario = tor.usuario_creacion 
+        LEFT JOIN seguridad.vw_usuarios vwu     ON vwu.id_usuario = tor.usuario_aprobacion 
     WHERE 
         tor.id_orden = $1 AND
         tor.id_empresa = $2

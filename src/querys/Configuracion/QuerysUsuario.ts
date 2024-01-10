@@ -6,7 +6,7 @@ import {
     _FABuscarUsuarioCorreo, _PAInsertarRolModuloUsuario, _PAInsertarPerfilUsuario,
     _FAObtenerUsuario, _EditarUsuario, _BuscarPerfilUsuario,
     _EditarPerfilUsuario, _BuscarRolUsuario, _EditarRolUsuario,
-    _CambiarEstadoUsuario, _CambiarClaveUsuario, _Insertar_Empresa_Usuario, _Editar_Empresa_Usuario, _FAIncio_Cierre_Sesion
+    _CambiarEstadoUsuario, _CambiarClaveUsuario, _Insertar_Empresa_Usuario, _Editar_Empresa_Usuario, _FAIncio_Cierre_Sesion, _actualizar_perfil
 } from "../../dao/Configuracion/DaoUsuario";
 
 import {
@@ -44,7 +44,7 @@ export default class QueryUsuario extends Database {
     public async Inicio_Cierre_Sesion(usuario: string, accion: string, ip: string, ubicacion: string) {
         try {
             //FUNCIÓN ALMACENADA PARA BUSCAR LA INFORMACIÓN DEL USUARIO DEPENDIENDO DEL CAMPO DE "USUARIO"
-            const result = await _DB.func(_FAIncio_Cierre_Sesion, [usuario, accion, ip,ubicacion])
+            const result = await _DB.func(_FAIncio_Cierre_Sesion, [usuario, accion, ip, ubicacion])
             return result
         } catch (error) {
             console.log(error)
@@ -291,6 +291,22 @@ export default class QueryUsuario extends Database {
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Actualizar_perfil(usuario_request: any, usuario_id: number, UsuarioModificador: string) {
+        const client = await this.pool.connect(); // Obtiene una conexión de la piscina
+
+        const { nombre_completo, correo } = usuario_request
+
+        try {
+            const result = await client.query(_actualizar_perfil, [usuario_id, nombre_completo, correo, UsuarioModificador])
+            return result.rowCount ?? 0
+        } catch (error) {
+            console.log(error)
+            return 0
         } finally {
             client.release();
         }

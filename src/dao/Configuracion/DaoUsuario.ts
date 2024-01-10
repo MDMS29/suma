@@ -93,3 +93,14 @@ export const _Editar_Empresa_Usuario = `
     WHERE 
         id_usuario = $1
 `
+
+export const _actualizar_perfil = `
+    UPDATE 
+        seguridad.tbl_usuario
+    SET 
+        nombre_completo=$2, correo=$3, fecha_modificacion=now(), 
+        usuario_modificacion=$4
+    WHERE 
+        id_usuario=$1;
+
+`
