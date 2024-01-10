@@ -20,4 +20,4 @@ export const Generar_Llaves_Secretas = () => {
 export const formatear_fecha = (fecha: Date) => fecha.toISOString().split('T')[0]
 
 //FUNCION PARA FORMATEAR LAS CANTIDADES 
-export const formatear_cantidad = (cantidad: number) => cantidad.toLocaleString("en-US", { style: "currency", currency: "USD", });
+export const formatear_cantidad = (cantidad: number) => cantidad.toLocaleString("en-CO", { style: "currency", currency: "COP", }).split('COP')[1].split('.')[0];

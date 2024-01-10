@@ -39,7 +39,7 @@ export class OrdenesService {
                     <p>A continuación, se detallan los elementos clave de su orden:</p>
                     <p>Número de Orden: <strong> ${orden.orden} </strong></p>
                     <p>Fecha de Aprobacion: <strong> ${orden.fecha_entrega} </strong></p>
-                    <p>Total de la Orden: <strong> ${formatear_cantidad(orden.total_orden ?? 0)} </strong></p>
+                    <p>Total de la Orden: <strong> $${formatear_cantidad(orden.total_orden ?? 0)} </strong></p>
                     <p>Por favor, tenga en cuenta que este correo electrónico sirve como confirmación oficial de la aprobación de su orden.</p>
                     <p>Si tiene alguna pregunta o necesita más información, no dude en responder a este correo electrónico.</p>
                     <br />
@@ -613,7 +613,7 @@ export class OrdenesService {
 
             fecha_orden,
             direccion_proveedor,
-            // lugar_entrega,
+            observaciones,
 
             telefono_empresa,
             fecha_entrega,
@@ -630,7 +630,7 @@ export class OrdenesService {
 
         //!ENCABEZADO DOCUMENTO
 
-        console.log("------------------ORDEN ----------------\n", orden_completa);
+        // console.log("------------------ORDEN ----------------\n", orden_completa);
 
         // CABECERA - IZQUIERDA
         const imageData = fs.readFileSync("resources/logo_empresa_short.png");
@@ -777,15 +777,8 @@ export class OrdenesService {
         let lastJumpLine = JumLine + 1
         JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
         HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-        // JumLineCabe += 5
 
-        //LÍNEA VERTICAL QUE DIVIDE LA CABECERA EN DOS
-        // doc.line(150, 40, 150, JumLine);//(x1, y1, x2, y2)
-
-        // JumLine += 5.5
-        // HRectCabePie += 11
         JumLineCabe += 4.5 //AUMENTAR LA ALTURA DE LAS LINEAS DIVISORAS DE CADA FILA 
-
 
         // LINEA DIVISORA DE QUINTA LINEA CON CUERPO DEL DOCUMENTO
         doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
@@ -816,9 +809,6 @@ export class OrdenesService {
         doc.line(210, lastJumpLine, 210, JumLine + 1);
 
         doc.text("Descuento", 211, JumLine);
-        // doc.line(200, lastJumpLine, 200, JumLine + 1);
-
-        // // doc.text("Subtotal", 218, JumLine);
         doc.line(232, lastJumpLine, 232, JumLine + 1);
 
         doc.text("IVA", 240, JumLine);
@@ -827,10 +817,6 @@ export class OrdenesService {
         doc.text("Precio Total", 257, JumLine);
 
         HRectCabePie += 5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-
-        function formatear_cantidad_COP(numero: number) {
-            return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'COP' }).format(numero).split(',')[0]
-        }
 
         //RECUADRO PARA CABECERA DE LA ORDEN
         doc.rect(20, 30, 260, HRectCabePie); //(x, y, ancho, alto)
@@ -879,223 +865,18 @@ export class OrdenesService {
                 doc.text(`${cantidad}`, 184.5, JumpLineBody + 5, { align: 'right' }); // CANTIDAD
 
                 doc.setFontSize(10); // (size)
-                doc.text(`$${formatear_cantidad_COP(precio_compra)}`, 209, JumpLineBody + 5, { align: 'right' }); //PRECIO UNITARIO
+                doc.text(`$${formatear_cantidad(precio_compra)}`, 210.5, JumpLineBody + 5, { align: 'right' }); //PRECIO UNITARIO
 
-                doc.text(`$${formatear_cantidad_COP(descuento)}`, 231, JumpLineBody + 5, { align: 'right' }); //DESCUENTO POR PRODUCTO
+                doc.text(`$${formatear_cantidad(descuento)}`, 232.5, JumpLineBody + 5, { align: 'right' }); //DESCUENTO POR PRODUCTO
 
-                // // doc.text(`${subtotal_local}`, 235, JumpLineBody + 5, { align: 'right' }); //SUBTOTAL POR PRODUCTO
+                doc.text(`$${formatear_cantidad(Math.round(iva_local))}`, 255.5, JumpLineBody + 5, { align: 'right' }); //IVA POR PRODUCTO
 
-                doc.text(`$${formatear_cantidad_COP(Math.round(iva_local))}`, 254, JumpLineBody + 5, { align: 'right' }); //IVA POR PRODUCTO
-
-                doc.text(`$${formatear_cantidad_COP(Math.round(total_local))}`, 279, JumpLineBody + 5, { align: 'right' }); //PRECIO TOTAL POR PRODUCTO
+                doc.text(`$${formatear_cantidad(Math.round(total_local))}`, 280.5, JumpLineBody + 5, { align: 'right' }); //PRECIO TOTAL POR PRODUCTO
 
                 doc.setFontSize(11); // (size)
-                // function imprimirTextoConSalto(doc: any, lines: any, x: any, y: any, incremento: any) {
-                //     for (let line of lines) {
-                //         doc.text(`${line}`, x, y, { align: 'right' });
-
-                //         if (lines.length > 1) {
-                //             y += incremento;
-                //         }
-                //     }
-
-                //     return y; // Devuelve la nueva posición del salto de línea
-                // }
 
 
                 let lastJumBody = JumpLineBody
-
-                // const txtRequisicion = doc.splitTextToSize(`${requisicion ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { requisicion: txtRequisicion.length }]
-
-                // const txtCodigo = doc.splitTextToSize(`${codigo_producto ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { codigo: txtCodigo.length }]
-
-                // const txtCantidad = doc.splitTextToSize(`${cantidad ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { cantidad: txtCantidad.length }]
-
-                // const txtPrecioC = doc.splitTextToSize(`${precio_compra ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { precioC: txtPrecioC.length }]
-
-                // const txtDescuento = doc.splitTextToSize(`${descuento ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { descuento: txtDescuento.length }]
-
-                // const txtSubtotal = doc.splitTextToSize(`${subtotal_local ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { subtotal: txtSubtotal.length }]
-
-                // const txtIvaLocal = doc.splitTextToSize(`${iva_local ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { iva_local: txtIvaLocal.length }]
-
-                // const txtTotalLocal = doc.splitTextToSize(`${total_local ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { total_local: txtTotalLocal.length }]
-
-                // const txtUnidada = doc.splitTextToSize(`${unidad ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { unidad: txtUnidada.length }]
-
-                // const txtNombrePro = doc.splitTextToSize(`${nombre_producto ?? ""}`, 20);
-                // keyJumps = [...keyJumps, { nombre_pro: txtNombrePro.length }]
-
-                // let maxNumber = -Infinity;
-                // let maxKey = '';
-
-                // for (let i of keyJumps.length) {
-                //     let obj = keyJumps[i];
-                //     for (let key in obj) {
-                //         if (obj[key] > maxNumber) {
-                //             maxNumber = obj[key];
-                //             maxKey = key;
-                //         }
-                //     }
-                // }
-
-                // let salto = JumpLineBody
-
-                // switch (maxKey) {
-                //     case 'requisicion':
-                //         JumpLineBody = imprimirTextoConSalto(doc, txtRequisicion, 22, salto + 5, 5);
-                //         console.log('requisicion')
-                //         break;
-                //     case 'codigo':
-                //         JumpLineBody = imprimirTextoConSalto(doc, txtCodigo, 52, salto + 5, 5);
-                //         console.log('codigo')
-                //         break;
-                //     case 'nombre_pro':
-                //         JumpLineBody = imprimirTextoConSalto(doc, txtNombrePro, 100, salto + 5, 5);
-                //         console.log('nombre')
-                //         break;
-                //     // ... (otros casos)
-
-                //     default:
-                //         console.log('NINGUNA')
-                //         break;
-                // }
-
-                // salto = imprimirTextoConSalto(doc, lines, x, salto + 5, 5);
-
-                // switch (maxKey) {
-                //     case 'requisicion':
-                //         for (let line of txtRequisicion) {
-                //             doc.text(`${line}`, 22, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtRequisicion.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-
-                //         for (let line of txtCodigo) {
-                //             doc.text(`${line}`, 52, salto + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtCodigo.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 salto += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-
-                //         console.log('requisicion')
-                //         break;
-                //     case 'codigo':
-                //         for (let line of txtCodigo) {
-                //             doc.text(`${line}`, 52, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtCodigo.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('codigo')
-                //         break;
-                //     case 'cantidad':
-                //         for (let line of txtCantidad) {
-                //             doc.text(`${line}`, 139, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtCantidad.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('cantidad')
-                //         break;
-                //     case 'precioC':
-                //         for (let line of txtPrecioC) {
-                //             doc.text(`${line}`, 177, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtPrecioC.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('precioC')
-                //         break;
-                //     case 'descuento':
-                //         for (let line of txtDescuento) {
-                //             doc.text(`${line}`, 203, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtDescuento.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('descuento')
-                //         break;
-                //     case 'subtotal':
-                //         for (let line of txtSubtotal) {
-                //             doc.text(`${line}`, 228, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtSubtotal.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('subtotal')
-                //         break;
-                //     case 'iva_local':
-                //         for (let line of txtIvaLocal) {
-                //             doc.text(`${line}`, 254, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtIvaLocal.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('iva_local')
-                //         break;
-                //     case 'total_local':
-                //         for (let line of txtTotalLocal) {
-                //             doc.text(`${line}`, 279, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtTotalLocal.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('total_local')
-                //         break;
-                //     case 'unidad':
-                //         for (let line of txtUnidada) {
-                //             doc.text(`${line}`, 119, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtUnidada.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('unidad')
-                //         break;
-                //     case 'nombre_pro':
-                //         for (let line of txtNombrePro) {
-                //             doc.text(`${line}`, 100, JumpLineBody + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtNombrePro.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-
-                //         for (let line of txtUnidada) {
-                //             doc.text(`${line}`, 119, salto + 5, { align: 'right' }); //NOMBRE DEL PRODUCTO
-                //             if (txtUnidada.length > 1) {
-                //                 // HRectCabePie += 4; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                //                 salto += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
-                //             }
-                //         }
-                //         console.log('nombre_pro')
-                //         break;
-
-                //     default:
-                //         console.log('NINGUNA')
-                //         break;
-                // }
-
 
                 // UNIDAD
                 const txtUnidad = doc.splitTextToSize(`${unidad?.slice(0, 4) ?? ""}`, 14);
@@ -1354,32 +1135,40 @@ export class OrdenesService {
             doc.line(255, JumpLineBody, 255, JumpLineBody + 35);
 
 
+            let JumpObservaciones = JumpLineBody + 5
+            const txtObservaciones = doc.splitTextToSize(`${observaciones ?? ""}`, 200);
+            for (let line of txtObservaciones) {
+                doc.text(line, 21, JumpObservaciones);
+                JumpObservaciones += 3.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+            }
+            // doc.text(`${observaciones}`, 21, JumpLineBody);//(text, x, y, options)
+
             JumpLineBody += 5
             doc.setFontSize(9)
             doc.text("TOTAL BRUTO", 232.5, JumpLineBody);//(text, x, y, options)
             doc.line(232, JumpLineBody + 3, 280, JumpLineBody + 3);
-            doc.text(`$${formatear_cantidad_COP(total_bruto)}`, 279, JumpLineBody, { align: 'right' });//(text, x, y, options)
+            doc.text(`$${formatear_cantidad(total_bruto)}`, 280.5, JumpLineBody, { align: 'right' });//(text, x, y, options)
 
 
             JumpLineBody += 5
             doc.text("DESCUENTOS", 232.5, JumpLineBody + 2);//(text, x, y, options)
             doc.line(232, JumpLineBody + 5, 280, JumpLineBody + 5);
-            doc.text(`$${formatear_cantidad_COP(descuento_orden)}`, 279, JumpLineBody + 2, { align: 'right' });//(text, x, y, options)
+            doc.text(`$${formatear_cantidad(descuento_orden)}`, 280.5, JumpLineBody + 2, { align: 'right' });//(text, x, y, options)
 
 
             JumpLineBody += 5
             doc.text("SUBTOTAL", 232.5, JumpLineBody + 4.5);//(text, x, y, options)
             doc.line(232, JumpLineBody + 7, 280, JumpLineBody + 7);
-            doc.text(`$${formatear_cantidad_COP(subtotal_orden)}`, 279, JumpLineBody + 4.5, { align: 'right' });//(text, x, y, options)
+            doc.text(`$${formatear_cantidad(subtotal_orden)}`, 280.5, JumpLineBody + 4.5, { align: 'right' });//(text, x, y, options)
 
             JumpLineBody += 5
             doc.text("IVA", 232.5, JumpLineBody + 6);//(text, x, y, options)
             doc.line(232, JumpLineBody + 9, 280, JumpLineBody + 9);
-            doc.text(`$${formatear_cantidad_COP(iva_orden)}`, 279, JumpLineBody + 6, { align: 'right' });//(text, x, y, options)
+            doc.text(`$${formatear_cantidad(iva_orden)}`, 280.5, JumpLineBody + 6, { align: 'right' });//(text, x, y, options)
 
             JumpLineBody += 5
             doc.text("TOTAL", 232.5, JumpLineBody + 8);//(text, x, y, options)
-            doc.text(`$${formatear_cantidad_COP(subtotal_orden + iva_orden - descuento_orden)}`, 279, JumpLineBody + 8, { align: 'right' });//(text, x, y, options)
+            doc.text(`$${formatear_cantidad(subtotal_orden + iva_orden - descuento_orden)}`, 280.5, JumpLineBody + 8, { align: 'right' });//(text, x, y, options)
 
 
             doc.setFontSize(11)

@@ -1,21 +1,12 @@
 export const _obtener_logs_auditoria = `
     SELECT 
-        schema_name, table_name, user_name, action_tstamp,
-        CASE 
-            WHEN original_data IS NULL THEN 'NO DATA'
-            ELSE original_data
-        END AS original_data,
-
-        CASE 
-            WHEN new_data IS NULL THEN 'NO DATA'
-            ELSE new_data
-        END AS new_data,
-
-        CASE 
-            WHEN query IS NULL THEN 'NO DATA'
-            ELSE query
-        END AS query,
-
+        schema_name,
+        table_name,
+        user_name,
+        action_tstamp - INTERVAL '5 hours' AS action_tstamp,
+        COALESCE(original_data, 'NO DATA') AS original_data,
+        COALESCE(new_data, 'NO DATA') AS new_data,
+        COALESCE(query, 'NO DATA') AS query,
         CASE action 
             WHEN 'U' THEN 'Actualizacion'
             WHEN 'I' THEN 'Insercion'
@@ -23,13 +14,12 @@ export const _obtener_logs_auditoria = `
             WHEN 'CS' THEN 'Cierre Sesion'
             WHEN 'D' THEN 'Eliminacion'
         END AS acciones,
-
-        ip, ubicacion
+        ip,
+        ubicacion
     FROM 
-    auditoria.logged_actions
+        auditoria.logged_actions
     ORDER BY action_tstamp DESC 
     LIMIT 20;
-
 `
 
 export const _FAFiltro_logs_auditoria ='auditoria.logs_auditoria_filtro'

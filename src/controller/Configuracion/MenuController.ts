@@ -139,8 +139,6 @@ export default class _MenuController {
         const { id_menu } = req.params
         const { estado, info } = req.query as { estado: string, info: string }
 
-        console.log(JSON.parse(info))
-
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
