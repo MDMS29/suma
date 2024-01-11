@@ -1,6 +1,6 @@
 import { Database } from "../../config/db";
 import {
-    _BuscarMenuID, _BuscarMenuNombre, _CambiarEstadoMenu,
+    _BuscarMenuID, _BuscarMenuNombre, _BuscarMenuOrden, _BuscarMenuOrdenModulo, _CambiarEstadoMenu,
     _EditarMenu, _InsertarMenu, _ObtenerUltimoIDMenu, _Obtener_Menu
 } from "../../dao/Configuracion/DaoMenu";
 
@@ -23,13 +23,13 @@ export default class QueryMenu extends Database {
         }
     }
 
-    public async Insertar_Menu(nombre_rol: string, link_menu: string, id_modulo: string, usuario_creacion: string) {
+    public async Insertar_Menu(nombre_rol: string, link_menu: string, id_modulo: string, usuario_creacion: string, n_orden: string) {
         const client = await this.pool.connect()
 
         try {
             let ultimo_id = await client.query(_ObtenerUltimoIDMenu);
             ultimo_id = ultimo_id.rows[0].id_menu + 1
-            let result = await client.query(_InsertarMenu, [ultimo_id, nombre_rol, link_menu, id_modulo, usuario_creacion]);
+            let result = await client.query(_InsertarMenu, [ultimo_id, nombre_rol, link_menu, id_modulo, usuario_creacion, n_orden]);
             return result.rows
         } catch (error) {
             console.log(error)
@@ -48,6 +48,26 @@ export default class QueryMenu extends Database {
         } catch (error) {
             console.log(error)
             return
+        } finally {
+            client.release();
+        }
+    }
+
+    public async Buscar_Orden_Menu(modulo_id: string, orden_menu: string) {
+        const client = await this.pool.connect()
+
+        try {
+            let result 
+
+            if(modulo_id !== ""){
+                result = await client.query(_BuscarMenuOrdenModulo, [modulo_id, orden_menu]);
+            }else{
+                result = await client.query(_BuscarMenuOrden, [orden_menu]);
+            }
+            return result.rows ?? []
+        } catch (error) {
+            console.log(error)
+            return []
         } finally {
             client.release();
         }

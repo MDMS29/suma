@@ -36,7 +36,7 @@ export default class _MenuController {
     public async Insertar_Menu(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
         const { id_modulo } = req.params
-        const { nombre_menu, link_menu } = req.body
+        const { nombre_menu, link_menu, n_orden } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -49,6 +49,9 @@ export default class _MenuController {
         }
         if (!link_menu || link_menu === "") {
             return res.status(400).json({ error: true, message: 'Debe ingresar una url para el menu' }) //!ERROR
+        }
+        if (!n_orden || n_orden === "") {
+            return res.status(400).json({ error: true, message: 'Debe ingresar un numero de orden para el menu' }) //!ERROR
         }
 
         const result: any = MenuSchema.safeParse(req.body)

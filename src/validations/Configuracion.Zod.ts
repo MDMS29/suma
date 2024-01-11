@@ -126,5 +126,9 @@ export const MenuSchema = z.object({
     link_menu: z.string({
         invalid_type_error: 'El tipo de dato es invalido',
         required_error: 'El link del menu es requerido'
+    }),
+    n_orden: z.string({
+        invalid_type_error: 'El tipo de dato es invalido',
+        required_error: 'El orden del menu es requerido'
     })
 })

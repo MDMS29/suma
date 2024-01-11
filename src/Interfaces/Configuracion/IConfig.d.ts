@@ -20,6 +20,7 @@ export interface MenusModulos extends Logs_Info {
     id_menu: number
     link_menu: string
     nombre_menu: string
+    n_orden:string
 }
 
 export interface ModulosUsuario extends Logs_Info {

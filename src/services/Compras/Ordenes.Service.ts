@@ -10,7 +10,7 @@ import Querys from "../../querys/Querys";
 import { RequisicionesService } from "./Requisiciones.Service";
 import { transporter } from "../../config/mailer";
 import { MessageError } from "../../Interfaces/Configuracion/IConfig";
-import { formatear_cantidad } from "../../helpers/utils";
+import { formatear_cantidad, formatear_fecha } from "../../helpers/utils";
 
 import fs from "node:fs";
 
@@ -619,40 +619,36 @@ export class OrdenesService {
             fecha_entrega,
 
             detalle_orden,
-            usuario_aprobador
+            usuario_aprobador,
+            usuario_creador
         } = orden_completa;
 
         // INICIALIZAR LA LIBRERIA PARA CREAR EL PDF
         const doc = new JSPDF({ orientation: "l" });
 
-        // CABECERA DOCUMENTO
-
-
         //!ENCABEZADO DOCUMENTO
-
-        // console.log("------------------ORDEN ----------------\n", orden_completa);
 
         // CABECERA - IZQUIERDA
         const imageData = fs.readFileSync("resources/logo_empresa_short.png");
-        let HRectCabePie = 16
-        let JumLine = 44
-        let JumLineCabe = 40
+        let HRectCabePie = 15
+        let JumLine = 39
+        let JumLineCabe = 36
         let proveedor = `${nombre_proveedor} - NIT. ${nit_proveedor}`;
 
         //TITULO DE LA ORDEN
         doc.setFontSize(12); // (size)
         doc.setFont("helvetica", "normal", "bold");
 
-        doc.addImage(imageData, "PNG", 14, 10, 30, 13.5);
-        doc.text(`${razon_social}`.toLocaleUpperCase(), 115, 17);
+        doc.addImage(imageData, "PNG", 14, 5, 30, 13.5);
+        doc.text(`${razon_social}`.toLocaleUpperCase(), 125, 10);
 
         doc.setFontSize(9); // (size)
         doc.setFont("helvetica", "normal", "normal");
-        doc.text(`NIT. ${nit_empresa}`, 130, 20);
+        doc.text(`NIT. ${nit_empresa}`, 140, 13);
 
-        doc.text(`${direccion_empresa}`, 100, 23);
+        doc.text(`${direccion_empresa}`, 105, 16);
 
-        doc.text(`Teléfono: ${telefono_empresa}  Correo: ${correo_empresa}`, 110, 26);
+        doc.text(`Teléfono: ${telefono_empresa}  Correo: ${correo_empresa}`, 115, 19);
 
         doc.setFontSize(11); // (size)
 
@@ -661,23 +657,24 @@ export class OrdenesService {
 
         // ------PRIMER RECUADRO DE CABECERA ------
         //NO. ORDEN
-        doc.text("No. Orden", 21, 36.5); // (texto, x, y)
-        doc.text(`${orden}`, 44, 36.5);
-        doc.line(60, 30, 60, 40);//(x1, y1, x2, y2)
+        doc.text("No. Orden", 21, 32.5); // (texto, x, y)
+        doc.text(`${orden}`, 44, 32.5);
+        doc.line(60, 27, 60, 35);//(x1, y1, x2, y2)
 
         // TIPO DE ORDEN
-        doc.text(`${tipo_orden.toLocaleUpperCase()}`, 122, 36.5); //(text, x, y, options)
-        doc.line(20, 40, 280, 40); //(x1, y1, x2, y2)
+        doc.text(`${tipo_orden.toLocaleUpperCase()}`, 122, 32.5); //(text, x, y, options)
+        doc.line(20, 35, 280, 35); //(x1, y1, x2, y2)
 
         //NO. COTIZACION
-        doc.line(240, 30, 240, 40);//(x1, y1, x2, y2)
-        doc.text("COT.#", 242, 36.5)
-        doc.text(`${cotizacion ?? ""}`, 255, 36.5);
+        doc.text("COT.#", 242, 32.5)
+        doc.text(`${cotizacion ?? ""}`, 255, 32.5);
 
 
         // SEGUNDA FILA DE LA CABECERA
+        doc.setFont("helvetica", "normal", "bold");
         doc.text("Proveedor:", 21, JumLine); // (texto, x, y)
-        doc.text("Forma de pago:", 177, JumLine); // (texto, x, y)
+        doc.text("Forma de pago:", 195, JumLine); // (texto, x, y)
+        doc.setFont("helvetica", "normal", "normal");
 
         const textProveeedor = doc.splitTextToSize(proveedor ?? "", 100);
         const textFormaPago = doc.splitTextToSize(forma_pago ?? "", 30);
@@ -724,11 +721,14 @@ export class OrdenesService {
         // LINEA DIVISORA DE SEGUNDA LINEA CON TERCERA
         doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
 
-        JumLine += 1
+        JumLine += 1.5
 
         // TERCER FILA DE LA CABECERA
+        doc.setFont("helvetica", "normal", "bold");
         doc.text("Dirección:", 21, JumLine);
-        doc.text("Fecha de compra:", 177, JumLine);
+        doc.text("Fecha de orden:", 195, JumLine);
+
+        doc.setFont("helvetica", "normal", "normal");
 
         // FECHA DE ORDEN
         doc.text(`${fecha_orden}`, 260, JumLine, { align: 'center' });
@@ -747,14 +747,17 @@ export class OrdenesService {
             JumLine += 3.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
         }
 
-        JumLine += 1
+        JumLine += 1.5
 
         // LINEA DIVISORA DE TERCERA LINEA CON CUARTA
         doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
 
         // CUARTA FILA DE LA CABECERA
+        doc.setFont("helvetica", "normal", "bold");
         doc.text("Teléfono:", 21, JumLine);
-        doc.text("Fecha de entrega", 177, JumLine);
+        doc.text("Fecha de entrega", 195, JumLine);
+
+        doc.setFont("helvetica", "normal", "normal");
 
         // TELÉFONO
         doc.text(`${telefono_empresa}`, 44, JumLine);
@@ -766,13 +769,20 @@ export class OrdenesService {
         HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
         JumLineCabe += 5 //AUMENTAR LA ALTURA DE LAS LINEAS DIVISORAS DE CADA FILA 
 
+        //LINEA DIVISORA CABECERA - INFORMACION DERECHA
+        doc.line(240, 27, 240, JumLineCabe);//(x1, y1, x2, y2)
+
+        //LINEA DIVISORA CABECERA - INFORMACION IZQUIERDA DE DERECHA
+        doc.line(174, 35, 174, JumLineCabe);//(x1, y1, x2, y2)
+
+
         // LINEA DIVISORA DE CUARTA LINEA CON QUINTA
         doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
 
 
-        // QUINTA FILA DE LA CABECERA
-        // Con base en la cotizacion presentada por su empresa DEVITECH, sírvase remitir los bienes o servicios que a continuación se detallan
-        doc.text("", 23, JumLine);
+        // QUINTA FILA DE LA CABECERA        
+        doc.text("Con base en la cotizacion presentada por su empresa DEVITECH, sírvase remitir los bienes o servicios que a continuación se detallan", 30, JumLine);
+        doc.setFont("helvetica", "normal", "bold");
 
         let lastJumpLine = JumLine + 1
         JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
@@ -785,43 +795,44 @@ export class OrdenesService {
 
         //  ----- CABECERA DEL CUERPO DEL DOCUMENTO -----
         doc.text("Requisición", 21, JumLine);
-        doc.line(45, lastJumpLine, 45, JumLine + 1);
+        doc.line(45, lastJumpLine, 45, JumLine);
 
         doc.text("Item", 50, JumLine);
-        doc.line(63, lastJumpLine, 63, JumLine + 1);
+        doc.line(63, lastJumpLine, 63, JumLine);
 
         doc.text("Descripcion", 90, JumLine);
-        doc.line(135, lastJumpLine, 135, JumLine + 1);
+        doc.line(135, lastJumpLine, 135, JumLine);
 
         doc.text("Criti.", 137, JumLine);
-        doc.line(147, lastJumpLine, 147, JumLine + 1);
+        doc.line(147, lastJumpLine, 147, JumLine);
 
         doc.text("Ficha", 148, JumLine);
-        doc.line(159, lastJumpLine, 159, JumLine + 1);
+        doc.line(159, lastJumpLine, 159, JumLine);
 
         doc.text("Unidad", 160, JumLine);
-        doc.line(174, lastJumpLine, 174, JumLine + 1);
+        doc.line(174, lastJumpLine, 174, JumLine);
 
         doc.text("Cant.", 175, JumLine);
-        doc.line(186, lastJumpLine, 186, JumLine + 1);
+        doc.line(186, lastJumpLine, 186, JumLine);
 
         doc.text("Precio Unit.", 187, JumLine);
-        doc.line(210, lastJumpLine, 210, JumLine + 1);
+        doc.line(210, lastJumpLine, 210, JumLine);
 
         doc.text("Descuento", 211, JumLine);
-        doc.line(232, lastJumpLine, 232, JumLine + 1);
+        doc.line(232, lastJumpLine, 232, JumLine);
 
         doc.text("IVA", 240, JumLine);
-        doc.line(255, lastJumpLine, 255, JumLine + 1);
+        doc.line(255, lastJumpLine, 255, JumLine);
 
         doc.text("Precio Total", 257, JumLine);
 
         HRectCabePie += 5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
 
         //RECUADRO PARA CABECERA DE LA ORDEN
-        doc.rect(20, 30, 260, HRectCabePie); //(x, y, ancho, alto)
+        doc.rect(20, 27, 260, HRectCabePie); //(x, y, ancho, alto)
         let JumpLineBody = JumLine
         let item = 0
+
 
         if (!detalle_orden) {
             doc.text("NO HAY DETALLES EN LA ORDEN", 257, JumpLineBody);
@@ -836,7 +847,7 @@ export class OrdenesService {
             // let keyJumps: any = []
             for (detalle of detalle_orden) {
                 const { requisicion, codigo_producto, nombre_producto, porcentaje, descuento, ficha, precio_compra, critico, cantidad, unidad } = detalle
-
+                
                 item += 1
                 if (item > 1) {
                     // INSERTAR LA LINEA DIVISORA ENTRE CADA FILA
@@ -856,11 +867,11 @@ export class OrdenesService {
                 doc.setFont("helvetica", "normal", "normal");
                 doc.text(`${requisicion}`, 22, JumpLineBody + 5); //NUMERO DE REQUISICIÓN
 
-                doc.text(`${codigo_producto}`, 52, JumpLineBody + 5); //ID DEL PRODUCTO
+                doc.text(`${codigo_producto}`, 50, JumpLineBody + 5); //ID DEL PRODUCTO
 
-                doc.text(critico == true ? 'X' : '', 140, JumpLineBody + 5); //PRECIO UNITARIO
+                doc.text(critico ? 'X' : '', 140, JumpLineBody + 5); //PRECIO UNITARIO
 
-                doc.text(ficha == true ? 'X' : '', 152, JumpLineBody + 5); //PRECIO UNITARIO
+                doc.text(ficha ? 'X' : '', 152, JumpLineBody + 5); //PRECIO UNITARIO
 
                 doc.text(`${cantidad}`, 184.5, JumpLineBody + 5, { align: 'right' }); // CANTIDAD
 
@@ -891,9 +902,7 @@ export class OrdenesService {
                 const txtNombreProducto = doc.splitTextToSize(`${nombre_producto ?? ""}`, 70);
                 for (let line of txtNombreProducto) {
                     doc.text(`${line}`, 65, JumpLineBody + 5); //NOMBRE DEL PRODUCTO
-                    // if (txtNombreProducto.length > 1) {
-                    // }
-                    JumpLineBody += 5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
+                    JumpLineBody += 3.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
                 }
 
                 // SALTO DE LINEA PARA EL SIGUIENTE DETALLE
@@ -914,37 +923,34 @@ export class OrdenesService {
                 doc.line(20, JumpLineBody, 280, JumpLineBody);
 
                 // let lastJumLineBody = JumpLineBody 
-                let limitePag = 120
+                let limitePag = 130
 
-                if (limitePag < JumpLineBody) {
+
+                if (limitePag < JumpLineBody && item < detalle_orden.length) {
                     doc.addPage()
                     limitePag += limitePag
-
-
                     doc.setFont("helvetica", "normal", "bold");
-                    // CABECERA - IZQUIERDA
 
                     // CABECERA - IZQUIERDA
-                    const imageData = fs.readFileSync("resources/logo_empresa_short.png");
-                    HRectCabePie = 16
-                    JumLine = 44
-                    JumLineCabe = 40
+                    HRectCabePie = 15
+                    JumLine = 39
+                    JumLineCabe = 36
                     proveedor = `${nombre_proveedor} - NIT. ${nit_proveedor}`;
 
                     //TITULO DE LA ORDEN
                     doc.setFontSize(12); // (size)
                     doc.setFont("helvetica", "normal", "bold");
 
-                    doc.addImage(imageData, "PNG", 14, 10, 30, 13.5);
-                    doc.text(`${razon_social}`.toLocaleUpperCase(), 115, 17);
+                    doc.addImage(imageData, "PNG", 14, 5, 30, 13.5);
+                    doc.text(`${razon_social}`.toLocaleUpperCase(), 125, 10);
 
                     doc.setFontSize(9); // (size)
                     doc.setFont("helvetica", "normal", "normal");
-                    doc.text(`NIT. ${nit_empresa}`, 130, 20);
+                    doc.text(`NIT. ${nit_empresa}`, 140, 13);
 
-                    doc.text(`${direccion_empresa}`, 100, 23);
+                    doc.text(`${direccion_empresa}`, 105, 16);
 
-                    doc.text(`Teléfono: ${telefono_empresa}  Correo: ${correo_empresa}`, 110, 26);
+                    doc.text(`Teléfono: ${telefono_empresa}  Correo: ${correo_empresa}`, 115, 19);
 
                     doc.setFontSize(11); // (size)
 
@@ -953,23 +959,25 @@ export class OrdenesService {
 
                     // ------PRIMER RECUADRO DE CABECERA ------
                     //NO. ORDEN
-                    doc.text("No. Orden", 21, 36.5); // (texto, x, y)
-                    doc.text(`${orden}`, 44, 36.5);
-                    doc.line(60, 30, 60, 40);//(x1, y1, x2, y2)
+                    doc.text("No. Orden", 21, 32.5); // (texto, x, y)
+                    doc.text(`${orden}`, 44, 32.5);
+                    doc.line(60, 27, 60, 35);//(x1, y1, x2, y2)
 
                     // TIPO DE ORDEN
-                    doc.text(`${tipo_orden.toLocaleUpperCase()}`, 122, 36.5); //(text, x, y, options)
-                    doc.line(20, 40, 280, 40); //(x1, y1, x2, y2)
+                    doc.text(`${tipo_orden.toLocaleUpperCase()}`, 122, 32.5); //(text, x, y, options)
+                    doc.line(20, 35, 280, 35); //(x1, y1, x2, y2)
 
                     //NO. COTIZACION
-                    doc.line(240, 30, 240, 40);//(x1, y1, x2, y2)
-                    doc.text("COT.#", 242, 36.5)
-                    doc.text(`${cotizacion ?? ""}`, 255, 36.5);
+                    doc.line(240, 27, 240, 35);//(x1, y1, x2, y2)
+                    doc.text("COT.#", 242, 32.5)
+                    doc.text(`${cotizacion ?? ""}`, 255, 32.5);
 
 
                     // SEGUNDA FILA DE LA CABECERA
+                    doc.setFont("helvetica", "normal", "bold");
                     doc.text("Proveedor:", 21, JumLine); // (texto, x, y)
                     doc.text("Forma de pago:", 177, JumLine); // (texto, x, y)
+                    doc.setFont("helvetica", "normal", "normal");
 
                     const textProveeedor = doc.splitTextToSize(proveedor ?? "", 100);
                     const textFormaPago = doc.splitTextToSize(forma_pago ?? "", 30);
@@ -1016,11 +1024,14 @@ export class OrdenesService {
                     // LINEA DIVISORA DE SEGUNDA LINEA CON TERCERA
                     doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
 
-                    JumLine += 1
+                    JumLine += 1.5
 
                     // TERCER FILA DE LA CABECERA
+                    doc.setFont("helvetica", "normal", "bold");
                     doc.text("Dirección:", 21, JumLine);
-                    doc.text("Fecha de compra:", 177, JumLine);
+                    doc.text("Fecha de orden:", 177, JumLine);
+
+                    doc.setFont("helvetica", "normal", "normal");
 
                     // FECHA DE ORDEN
                     doc.text(`${fecha_orden}`, 260, JumLine, { align: 'center' });
@@ -1039,14 +1050,17 @@ export class OrdenesService {
                         JumLine += 3.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
                     }
 
-                    JumLine += 1
+                    JumLine += 1.5
 
                     // LINEA DIVISORA DE TERCERA LINEA CON CUARTA
                     doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
 
                     // CUARTA FILA DE LA CABECERA
+                    doc.setFont("helvetica", "normal", "bold");
                     doc.text("Teléfono:", 21, JumLine);
                     doc.text("Fecha de entrega", 177, JumLine);
+
+                    doc.setFont("helvetica", "normal", "normal");
 
                     // TELÉFONO
                     doc.text(`${telefono_empresa}`, 44, JumLine);
@@ -1062,78 +1076,68 @@ export class OrdenesService {
                     doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
 
 
-                    // QUINTA FILA DE LA CABECERA
-                    // Con base en la cotizacion presentada por su empresa DEVITECH, sírvase remitir los bienes o servicios que a continuación se detallan
-                    doc.text("", 23, JumLine);
+                    // QUINTA FILA DE LA CABECERA        
+                    doc.text("Con base en la cotizacion presentada por su empresa DEVITECH, sírvase remitir los bienes o servicios que a continuación se detallan", 30, JumLine);
+                    doc.setFont("helvetica", "normal", "bold");
 
                     lastJumpLine = JumLine + 1
                     JumLine += 4.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
                     HRectCabePie += 4.5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
-                    // JumLineCabe += 5
 
-                    //LÍNEA VERTICAL QUE DIVIDE LA CABECERA EN DOS
-                    // doc.line(150, 40, 150, JumLine);//(x1, y1, x2, y2)
-
-                    // JumLine += 5.5
-                    // HRectCabePie += 11
                     JumLineCabe += 4.5 //AUMENTAR LA ALTURA DE LAS LINEAS DIVISORAS DE CADA FILA 
-
 
                     // LINEA DIVISORA DE QUINTA LINEA CON CUERPO DEL DOCUMENTO
                     doc.line(20, JumLineCabe, 280, JumLineCabe);//(x1, y1, x2, y2)
 
                     //  ----- CABECERA DEL CUERPO DEL DOCUMENTO -----
                     doc.text("Requisición", 21, JumLine);
-                    doc.line(45, lastJumpLine, 45, JumLine + 1);
+                    doc.line(45, lastJumpLine, 45, JumLine);
 
                     doc.text("Item", 50, JumLine);
-                    doc.line(63, lastJumpLine, 63, JumLine + 1);
+                    doc.line(63, lastJumpLine, 63, JumLine);
 
                     doc.text("Descripcion", 90, JumLine);
-                    doc.line(135, lastJumpLine, 135, JumLine + 1);
+                    doc.line(135, lastJumpLine, 135, JumLine);
 
                     doc.text("Criti.", 137, JumLine);
-                    doc.line(147, lastJumpLine, 147, JumLine + 1);
+                    doc.line(147, lastJumpLine, 147, JumLine);
 
                     doc.text("Ficha", 148, JumLine);
-                    doc.line(159, lastJumpLine, 159, JumLine + 1);
+                    doc.line(159, lastJumpLine, 159, JumLine);
 
                     doc.text("Unidad", 160, JumLine);
-                    doc.line(174, lastJumpLine, 174, JumLine + 1);
+                    doc.line(174, lastJumpLine, 174, JumLine);
 
                     doc.text("Cant.", 175, JumLine);
-                    doc.line(186, lastJumpLine, 186, JumLine + 1);
+                    doc.line(186, lastJumpLine, 186, JumLine);
 
                     doc.text("Precio Unit.", 187, JumLine);
-                    doc.line(210, lastJumpLine, 210, JumLine + 1);
+                    doc.line(210, lastJumpLine, 210, JumLine);
 
                     doc.text("Descuento", 211, JumLine);
-                    // doc.line(200, lastJumpLine, 200, JumLine + 1);
-
-                    // // doc.text("Subtotal", 218, JumLine);
-                    doc.line(232, lastJumpLine, 232, JumLine + 1);
+                    doc.line(232, lastJumpLine, 232, JumLine);
 
                     doc.text("IVA", 240, JumLine);
-                    doc.line(255, lastJumpLine, 255, JumLine + 1);
+                    doc.line(255, lastJumpLine, 255, JumLine);
 
                     doc.text("Precio Total", 257, JumLine);
 
                     HRectCabePie += 5; // AUMENTAR LA ALTURA DEL CUADRADO DE LA CABEZERA
 
-                    JumpLineBody = JumLine + 5
-                    // lastJumBody = JumpLineBody
+                    //RECUADRO PARA CABECERA DE LA ORDEN
+                    doc.rect(20, 27, 260, HRectCabePie); //(x, y, ancho, alto)
+                    JumpLineBody = JumLine
                     item = 0
-                    doc.rect(20, 30, 260, HRectCabePie); //(x, y, ancho, alto)
                 }
             }
 
-
-            doc.rect(20, JumpLineBody, 260, 35); //(x, y, ancho, alto)
+            doc.rect(20, JumpLineBody, 260, 31); //(x, y, ancho, alto)
 
             // LINEAS DIVISORA PARA TOTALES DE ORDEN
-            doc.line(232, JumpLineBody, 232, JumpLineBody + 35);
-            doc.line(255, JumpLineBody, 255, JumpLineBody + 35);
+            doc.line(232, JumpLineBody, 232, JumpLineBody + 31);
+            doc.line(255, JumpLineBody, 255, JumpLineBody + 31);
 
+            doc.setFont("helvetica", "normal", "normal");
 
             let JumpObservaciones = JumpLineBody + 5
             const txtObservaciones = doc.splitTextToSize(`${observaciones ?? ""}`, 200);
@@ -1141,47 +1145,44 @@ export class OrdenesService {
                 doc.text(line, 21, JumpObservaciones);
                 JumpObservaciones += 3.5; // AUMENTO DE LA POSICION DEL SALTO DE LINEA
             }
-            // doc.text(`${observaciones}`, 21, JumpLineBody);//(text, x, y, options)
 
-            JumpLineBody += 5
+            JumpLineBody += 4
             doc.setFontSize(9)
             doc.text("TOTAL BRUTO", 232.5, JumpLineBody);//(text, x, y, options)
-            doc.line(232, JumpLineBody + 3, 280, JumpLineBody + 3);
+            doc.line(232, JumpLineBody + 2, 280, JumpLineBody + 2);
             doc.text(`$${formatear_cantidad(total_bruto)}`, 280.5, JumpLineBody, { align: 'right' });//(text, x, y, options)
 
 
-            JumpLineBody += 5
+            JumpLineBody += 4
             doc.text("DESCUENTOS", 232.5, JumpLineBody + 2);//(text, x, y, options)
-            doc.line(232, JumpLineBody + 5, 280, JumpLineBody + 5);
+            doc.line(232, JumpLineBody + 4, 280, JumpLineBody + 4);
             doc.text(`$${formatear_cantidad(descuento_orden)}`, 280.5, JumpLineBody + 2, { align: 'right' });//(text, x, y, options)
 
 
-            JumpLineBody += 5
-            doc.text("SUBTOTAL", 232.5, JumpLineBody + 4.5);//(text, x, y, options)
-            doc.line(232, JumpLineBody + 7, 280, JumpLineBody + 7);
-            doc.text(`$${formatear_cantidad(subtotal_orden)}`, 280.5, JumpLineBody + 4.5, { align: 'right' });//(text, x, y, options)
+            JumpLineBody += 4
+            doc.text("SUBTOTAL", 232.5, JumpLineBody + 4);//(text, x, y, options)
+            doc.line(232, JumpLineBody + 6, 280, JumpLineBody + 6);
+            doc.text(`$${formatear_cantidad(subtotal_orden)}`, 280.5, JumpLineBody + 4, { align: 'right' });//(text, x, y, options)
 
-            JumpLineBody += 5
+            JumpLineBody += 4
             doc.text("IVA", 232.5, JumpLineBody + 6);//(text, x, y, options)
-            doc.line(232, JumpLineBody + 9, 280, JumpLineBody + 9);
+            doc.line(232, JumpLineBody + 8, 280, JumpLineBody + 8);
             doc.text(`$${formatear_cantidad(iva_orden)}`, 280.5, JumpLineBody + 6, { align: 'right' });//(text, x, y, options)
 
             JumpLineBody += 5
             doc.text("TOTAL", 232.5, JumpLineBody + 8);//(text, x, y, options)
             doc.text(`$${formatear_cantidad(subtotal_orden + iva_orden - descuento_orden)}`, 280.5, JumpLineBody + 8, { align: 'right' });//(text, x, y, options)
 
-
-            doc.setFontSize(11)
+            doc.setFontSize(10)
 
             // CUADRO DE PIE DE PAGINA
             doc.rect(20, JumpLineBody + 10, 260, 35); //(x, y, ancho, alto)
             JumpLineBody += 10
 
-            doc.text("FIRMA Y SELLO:", 21, JumpLineBody + 5);//(text, x, y, options)
+            doc.text("FIRMA Y SELLO:", 21, JumpLineBody + 4);//(text, x, y, options)
 
             doc.line(20, JumpLineBody + 7, 280, JumpLineBody + 7);//(x1, y1, x2, y2)
             doc.text("AUTORIZADO POR:", 21, JumpLineBody + 11);//(text, x, y, options)
-            doc.setFontSize(12)
             doc.text(`${usuario_aprobador ? usuario_aprobador.toLocaleUpperCase() : ''}`, 58, JumpLineBody + 11); // (texto, x, y)
 
             doc.line(20, JumpLineBody + 14, 280, JumpLineBody + 14);//(x1, y1, x2, y2)
@@ -1189,6 +1190,13 @@ export class OrdenesService {
 
             doc.line(150, JumpLineBody + 14, 150, JumpLineBody + 35);//(x1, y1, x2, y2)
             doc.text("GERENTE GENERAL:", 151, JumpLineBody + 18);//(text, x, y, options)
+
+            doc.text("Elaborado por:", 21, JumpLineBody + 39);//(text, x, y, options)
+            doc.text(`${usuario_creador}`, 47, JumpLineBody + 39);//(text, x, y, options)
+
+
+            doc.text("Fecha de impresión:", 120, JumpLineBody + 39);//(text, x, y, options)
+            doc.text(`${formatear_fecha(new Date())}`, 154, JumpLineBody + 39);//(text, x, y, options)
         }
 
         return doc.output("datauristring");

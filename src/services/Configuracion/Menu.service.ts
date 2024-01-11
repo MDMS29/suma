@@ -1,7 +1,7 @@
 import QueryMenu from "../../querys/Configuracion/QueryMenu";
 import Querys from "../../querys/Querys";
-import {MenusModulos} from "../../Interfaces/Configuracion/IConfig";
-import {Logs_Info} from "../../Interfaces/IConstants";
+import { MenusModulos } from "../../Interfaces/Configuracion/IConfig";
+import { Logs_Info } from "../../Interfaces/IConstants";
 
 export class MenuService {
     private _Query_Menu: QueryMenu;
@@ -31,23 +31,29 @@ export class MenuService {
         }
     }
 
-    public async Insertar_Menu(menu_request: MenusModulos, id_modulo:string, usuario_creacion: string) {
-        const {nombre_menu, link_menu} = menu_request
+    public async Insertar_Menu(menu_request: MenusModulos, id_modulo: string, usuario_creacion: string) {
+        const { nombre_menu, link_menu, n_orden } = menu_request
         try {
             //VALIDAR SI EL MENU EXISTE
             const BMenu: any = await this._Query_Menu.Buscar_Menu_Nombre(nombre_menu)
             if (BMenu?.length > 0) {
                 return { error: true, message: 'Ya existe este menu' } //!ERROR
             }
+            
+            // VALIDAR SI EL ORDEN DEL MENU EXISTE DENTRO DEL MODULO
+            const esOrdenMenu = await this._Query_Menu.Buscar_Orden_Menu(id_modulo, n_orden)
+            if(esOrdenMenu.length > 0) {
+                return { error: true, message: 'Este numero de orden esta ocupado' } //!ERROR
+            }
 
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
             const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, menu_request.ip, menu_request?.ubicacion)
-            if(log !== 1){
+            if (log !== 1) {
                 console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${menu_request.ip}, UBICACIÓN: \n ${menu_request?.ubicacion}`)
             }
 
             //INVOCAR FUNCION PARA INSERTAR MENU
-            const respuesta = await this._Query_Menu.Insertar_Menu(nombre_menu, link_menu.toLowerCase(), id_modulo, usuario_creacion)
+            const respuesta = await this._Query_Menu.Insertar_Menu(nombre_menu, link_menu.toLowerCase(), id_modulo, usuario_creacion, n_orden)
 
             if (!respuesta) {
                 return { error: true, message: 'No se ha podido crear el menu' } //!ERROR
@@ -81,7 +87,7 @@ export class MenuService {
 
     public async Editar_menu(id_menu: number, menu_request: MenusModulos, usuario_modificacion: string) {
 
-        const {nombre_menu, link_menu} = menu_request
+        const { nombre_menu, link_menu, n_orden } = menu_request
 
         let nombre_editado: string
         let link_menu_editado: string
@@ -90,6 +96,13 @@ export class MenuService {
             if (BMenu?.length > 0 && BMenu[0].nombre_menu !== nombre_menu) {
                 return { error: true, message: 'Ya existe este menu' } //!ERROR
             }
+
+            // VALIDAR SI EL ORDEN DEL MENU EXISTE DENTRO DEL MODULO
+            const esOrdenMenu = await this._Query_Menu.Buscar_Orden_Menu("", n_orden)
+            if(esOrdenMenu.length > 0 && BMenu[0].n_orden !== n_orden) {
+                return { error: true, message: 'Este numero de orden esta ocupado' } //!ERROR
+            }
+
             const respuesta: any = await this._Query_Menu.Buscar_Menu_ID(id_menu)
             if (respuesta[0]?.nombre_menu === nombre_menu) {
                 nombre_editado = respuesta[0]?.nombre_menu
@@ -105,7 +118,7 @@ export class MenuService {
 
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
             const log = await this._Querys.Insertar_Log_Auditoria(usuario_modificacion, menu_request.ip, menu_request?.ubicacion)
-            if(log !== 1){
+            if (log !== 1) {
                 console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modificacion}, IP: \n ${menu_request.ip}, UBICACIÓN: \n ${menu_request?.ubicacion}`)
             }
 
@@ -121,11 +134,11 @@ export class MenuService {
         }
     }
 
-    public async Cambiar_Estado_Menu(id_menu: number, estado: number, info_user: Logs_Info, usuario:string) {
+    public async Cambiar_Estado_Menu(id_menu: number, estado: number, info_user: Logs_Info, usuario: string) {
         try {
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
             const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
-            if(log !== 1){
+            if (log !== 1) {
                 console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
             }
 
