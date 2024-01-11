@@ -48,7 +48,7 @@ export const _BuscarMenuNombre = `
 
 export const _BuscarMenuOrdenModulo = `
     SELECT 
-        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden
+        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden, tm.id_modulo
     FROM 
         seguridad.tbl_menus tm
     WHERE
@@ -60,7 +60,7 @@ export const _BuscarMenuOrdenModulo = `
 
 export const _BuscarMenuOrden = `
     SELECT 
-        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden
+        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden, tm.id_modulo
     FROM 
         seguridad.tbl_menus tm
     WHERE

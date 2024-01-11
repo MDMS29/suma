@@ -18,6 +18,7 @@ export type PermisosModulos = {
 
 export interface MenusModulos extends Logs_Info {
     id_menu: number
+    id_modulo: number
     link_menu: string
     nombre_menu: string
     n_orden:string

@@ -87,7 +87,7 @@ export class MenuService {
 
     public async Editar_menu(id_menu: number, menu_request: MenusModulos, usuario_modificacion: string) {
 
-        const { nombre_menu, link_menu, n_orden } = menu_request
+        const { nombre_menu, link_menu, n_orden, id_modulo } = menu_request
 
         let nombre_editado: string
         let link_menu_editado: string
@@ -99,7 +99,7 @@ export class MenuService {
 
             // VALIDAR SI EL ORDEN DEL MENU EXISTE DENTRO DEL MODULO
             const esOrdenMenu = await this._Query_Menu.Buscar_Orden_Menu("", n_orden)
-            if(esOrdenMenu.length > 0 && BMenu[0].n_orden !== n_orden) {
+            if(esOrdenMenu.length > 0 && BMenu[0].id_modulo === id_modulo) {
                 return { error: true, message: 'Este numero de orden esta ocupado' } //!ERROR
             }
 
