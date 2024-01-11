@@ -55,10 +55,10 @@ export default class QueryMenu extends Database {
 
     public async Buscar_Orden_Menu(modulo_id: string, orden_menu: string) {
         const client = await this.pool.connect()
-
+        
         try {
             let result 
-
+            
             if(modulo_id !== ""){
                 result = await client.query(_BuscarMenuOrdenModulo, [modulo_id, orden_menu]);
             }else{

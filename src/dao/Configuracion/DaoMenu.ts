@@ -27,7 +27,7 @@ export const _InsertarMenu = `
 
 export const _BuscarMenuID = `
     SELECT 
-        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden
+        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden, tm.id_modulo
     FROM 
         seguridad.tbl_menus tm
     WHERE
@@ -37,7 +37,7 @@ export const _BuscarMenuID = `
 
 export const _BuscarMenuNombre = `
     SELECT 
-        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden
+        tm.id_menu, tm.nombre_menu, tm.link_menu, tm.n_orden, tm.id_modulo
     FROM 
         seguridad.tbl_menus tm
     WHERE
@@ -52,8 +52,8 @@ export const _BuscarMenuOrdenModulo = `
     FROM 
         seguridad.tbl_menus tm
     WHERE
-        tm.nombre_menu = $2 AND
         tm.id_modulo = $1 AND
+        tm.n_orden = $2 AND
         tm.id_estado = 1
     ORDER BY tm.id_menu DESC;  
 ` 

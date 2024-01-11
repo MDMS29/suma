@@ -97,9 +97,10 @@ export class MenuService {
                 return { error: true, message: 'Ya existe este menu' } //!ERROR
             }
 
+
             // VALIDAR SI EL ORDEN DEL MENU EXISTE DENTRO DEL MODULO
             const esOrdenMenu = await this._Query_Menu.Buscar_Orden_Menu("", n_orden)
-            if(esOrdenMenu.length > 0 && BMenu[0].id_modulo === id_modulo) {
+            if(esOrdenMenu.length > 0 && esOrdenMenu[0].id_modulo === `${id_modulo}` && esOrdenMenu[0].id_menu !== id_menu) {
                 return { error: true, message: 'Este numero de orden esta ocupado' } //!ERROR
             }
 
