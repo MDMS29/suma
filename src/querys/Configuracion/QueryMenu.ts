@@ -87,11 +87,11 @@ export default class QueryMenu extends Database {
         }
     }
 
-    public async Editar_Menu(id_menu: number, nombre_editado: string, link_menu: string, usuario_modificacion: string) {
+    public async Editar_Menu(id_menu: number, nombre_editado: string, link_menu: string, usuario_modificacion: string, n_orden:string) {
         const client = await this.pool.connect()
 
         try {
-            let result = await client.query(_EditarMenu, [id_menu, nombre_editado, link_menu, usuario_modificacion]);
+            let result = await client.query(_EditarMenu, [id_menu, nombre_editado, link_menu, usuario_modificacion, n_orden]);
             return result
         } catch (error) {
             console.log(error)

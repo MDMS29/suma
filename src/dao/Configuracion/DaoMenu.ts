@@ -73,7 +73,7 @@ export const _EditarMenu = `
     UPDATE 
         seguridad.tbl_menus
     SET
-        nombre_menu = $2, link_menu = $3, fecha_modificacion = now(), usuario_modificacion = $4
+        nombre_menu = $2, link_menu = $3, fecha_modificacion = now(), usuario_modificacion = $4, n_orden = $5
     WHERE
         id_menu = $1
 `

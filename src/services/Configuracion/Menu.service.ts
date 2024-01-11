@@ -122,7 +122,7 @@ export class MenuService {
                 console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modificacion}, IP: \n ${menu_request.ip}, UBICACIÓN: \n ${menu_request?.ubicacion}`)
             }
 
-            const res = await this._Query_Menu.Editar_Menu(id_menu, nombre_editado, link_menu_editado.toLowerCase(), usuario_modificacion)
+            const res = await this._Query_Menu.Editar_Menu(id_menu, nombre_editado, link_menu_editado.toLowerCase(), usuario_modificacion, n_orden)
             if (res?.rowCount != 1) {
                 return { error: true, message: 'Error al actualizar el menu' } //!ERROR
             }
