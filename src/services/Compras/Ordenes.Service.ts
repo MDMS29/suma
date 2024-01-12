@@ -387,18 +387,14 @@ export class OrdenesService {
             }
             const respuesta: any = await this._Query_Ordenes.Eliminar_Restaurar_Orden(id_orden, id_estado);
             if (respuesta != 1) {
-                return {
-                    error: true,
-                    message: "Error al cambiar el estado de la orden",
-                }; //!ERROR
+                return { error: true, message: "Error al cambiar el estado de la orden", }; //!ERROR
             }
 
+            await this._Query_Ordenes.Eliminar_Restaurar_Detalle_Orden(id_orden, id_estado);
+            
+
             return {
-                error: true,
-                message:
-                    id_estado == EstadosTablas.ESTADO_ANULADO
-                        ? "Se ha anulado la orden"
-                        : "Se ha aprobado la orden",
+                error: true, message: id_estado == EstadosTablas.ESTADO_ANULADO ? "Se ha anulado la orden" : "Se ha aprobado la orden"
             }; //!ERROR
         } catch (error) {
             console.log(error);
@@ -847,7 +843,7 @@ export class OrdenesService {
             // let keyJumps: any = []
             for (detalle of detalle_orden) {
                 const { requisicion, codigo_producto, nombre_producto, porcentaje, descuento, ficha, precio_compra, critico, cantidad, unidad } = detalle
-                
+
                 item += 1
                 if (item > 1) {
                     // INSERTAR LA LINEA DIVISORA ENTRE CADA FILA
@@ -858,7 +854,7 @@ export class OrdenesService {
                 let iva_local = subtotal_local * (porcentaje / 100);
                 let total_local = subtotal_local + iva_local;
 
-                total_bruto += precio_compra
+                total_bruto += subtotal_local
                 subtotal_orden += subtotal_local
                 descuento_orden += descuento
                 iva_orden += iva_local

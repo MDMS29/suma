@@ -184,6 +184,15 @@ export const _aprobar_encabezado_orden = `
         id_orden=$1;
 `
 
+export const _eliminar_restaurar_detalle_orden = `
+    UPDATE 
+        public.tbl_orden_detalle
+    SET 
+        id_estado=$2
+    WHERE 
+        id_orden=$1;
+`
+
 export const _aprobar_detalle_orden = `
     UPDATE 
         public.tbl_orden_detalle
