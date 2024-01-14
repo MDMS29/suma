@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
 import { OrdenesService } from "../../services/Compras/Ordenes.Service";
 import { FiltroOrdenesSchema, OrdenesSchema } from "../../validations/Compras.Zod";
+import {BaseController} from "../base.controller";
 
-export default class OrdenesController {
+export default class OrdenesController extends BaseController<OrdenesService>{
 
+    constructor() {
+        super(OrdenesService);
+    }
 
     public async Obtener_Ordenes_Filtro(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -25,8 +29,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Obtener_Ordenes_Filtro(estado, +empresa, usuario.id_usuario, req.body)
+            const respuesta = await this.service.Obtener_Ordenes_Filtro(estado, +empresa, usuario.id_usuario, req.body)
 
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
@@ -58,8 +61,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Obtener_Ordenes(empresa, estado, inputs)
+            const respuesta = await this.service.Obtener_Ordenes(empresa, estado, inputs)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -85,8 +87,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Insertar_Orden(req.body, usuario)
+            const respuesta = await this.service.Insertar_Orden(req.body, usuario)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -110,8 +111,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Buscar_Orden(+id_orden, usuario.id_empresa)
+            const respuesta = await this.service.Buscar_Orden(+id_orden, usuario.id_empresa)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -138,8 +138,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Editar_Orden(req.body, +id_orden, usuario.usuario)
+            const respuesta = await this.service.Editar_Orden(req.body, +id_orden, usuario.usuario)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -161,8 +160,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Aprobar_Orden(+id_orden_aprobar, usuario, JSON.parse(info))
+            const respuesta = await this.service.Aprobar_Orden(+id_orden_aprobar, usuario, JSON.parse(info))
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -191,8 +189,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Eliminar_Restaurar_Orden(+id_orden, +estado, JSON.parse(info), usuario.usuario)
+            const respuesta = await this.service.Eliminar_Restaurar_Orden(+id_orden, +estado, JSON.parse(info), usuario.usuario)
             if (!respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -216,8 +213,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Generar_Documento_Orden(+id_orden, usuario.id_empresa)
+            const respuesta = await this.service.Generar_Documento_Orden(+id_orden, usuario.id_empresa)
             if (respuesta && 'error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -247,8 +243,7 @@ export default class OrdenesController {
         }
 
         try {
-            const ordenes_service = new OrdenesService()
-            const respuesta = await ordenes_service.Enviar_Correo_Aprobacion_Proveedor(+id_orden, +empresa)
+            const respuesta = await this.service.Enviar_Correo_Aprobacion_Proveedor(+id_orden, +empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }

@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import { FamiliaProductoService } from "../../services/Opciones_Basicas/FamiliaProducto.Service";
 import { EstadosTablas } from "../../helpers/constants";
 import { FamiliaProductoSchema } from "../../validations/OpcionesBasicas.Zod";
+import {BaseController} from "../base.controller";
 
-export default class FamiliaProductoController {
+export default class FamiliaProductoController extends BaseController<FamiliaProductoService> {
+
+    constructor() {
+        super(FamiliaProductoService);
+    }
 
     public async Obtener_Familias_Producto(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -19,8 +24,7 @@ export default class FamiliaProductoController {
         }
 
         try {
-            const familias_producto_service = new FamiliaProductoService()
-            const respuesta = await familias_producto_service.Obtener_Familias_Producto(+estado, +empresa)
+            const respuesta = await this.service.Obtener_Familias_Producto(+estado, +empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -56,8 +60,7 @@ export default class FamiliaProductoController {
         }
 
         try {
-            const familias_producto_service = new FamiliaProductoService()
-            const respuesta = await familias_producto_service.Insertar_Familia_Producto(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Familia_Producto(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -79,8 +82,7 @@ export default class FamiliaProductoController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la familia' }) //!ERROR
         }
         try {
-            const familias_producto_service = new FamiliaProductoService()
-            const respuesta = await familias_producto_service.Buscar_Familia_Producto(+id_familia_producto)
+            const respuesta = await this.service.Buscar_Familia_Producto(+id_familia_producto)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }

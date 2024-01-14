@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
 import EmpresaService from "../../services/Configuracion/Empresa.service";
+import {BaseController} from "../base.controller";
 
-export default class _EmpresaController {
+export default class EmpresaController extends BaseController<EmpresaService>{
+
+    constructor() {
+        super(EmpresaService);
+    }
 
     public async Obtener_Empresas(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -16,8 +21,7 @@ export default class _EmpresaController {
         }
 
         try {
-            const empresa_service = new EmpresaService()
-            const respuesta = await empresa_service.Obtener_Empresas(+estado)
+            const respuesta = await  this.service.Obtener_Empresas(+estado)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -55,8 +59,7 @@ export default class _EmpresaController {
         }
 
         try {
-            const empresa_service = new EmpresaService()
-            const respuesta = await empresa_service.Insertar_Empresa(req.body, usuario?.usuario)
+            const respuesta = await  this.service.Insertar_Empresa(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -78,9 +81,8 @@ export default class _EmpresaController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
         }
         try {
-            const empresa_service = new EmpresaService()
 
-            const respuesta = await empresa_service.Buscar_Empresa(+id_empresa)
+            const respuesta = await  this.service.Buscar_Empresa(+id_empresa)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -153,8 +155,7 @@ export default class _EmpresaController {
         }
 
         try {
-            const empresa_service = new EmpresaService()
-            const respuesta = await empresa_service.Cambiar_Estado_Empresa(+id_empresa, +estado)
+            const respuesta = await  this.service.Cambiar_Estado_Empresa(+id_empresa, +estado)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }

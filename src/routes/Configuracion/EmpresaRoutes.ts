@@ -1,20 +1,20 @@
-import { Router } from "express";
 import { _Autorizacion } from "../../middleware/Autorizacion";
-import _EmpresaController from "../../controller/Configuracion/EmpresaController";
+import EmpresaController from "../../controller/Configuracion/EmpresaController";
+import { BaseRouter } from "../base.router";
 
-//INICIALIZAR RUTAS PARA LAS EMPRESAS
-export const _EmpresasRouter = Router()
+export class EmpresasRouter extends BaseRouter<EmpresaController> {
+    constructor() {
+        super(EmpresaController, "empresas")
+    }
 
-//INICIALIZAR CONTROLADOR DE EMPRESA
-const EmpresaController = new _EmpresaController()
+    routes(): void {
+        this.router.route(`/${this.subcarpeta}`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Empresas(req, res)) //OBTENER TODOS LAS EMPRESAS
+            .post(_Autorizacion, (req, res) => this.controller.Insertar_Empresa(req, res)) //CREAR EMPRESA
 
-_EmpresasRouter.route('/')
-    .get(_Autorizacion, EmpresaController.Obtener_Empresas) //OBTENER TODOS LAS EMPRESAS
-    .post(_Autorizacion, EmpresaController.Insertar_Empresa) //CREAR EMPRESA
-
-    _EmpresasRouter.route('/:id_empresa')
-    .get(_Autorizacion, EmpresaController.Buscar_Empresa) //BUSCAR UNA EMPRESA SEGUN SU ID
-    .patch(_Autorizacion, EmpresaController.Editar_Empresa) //EDITAR SEGUN SU ID
-    .delete(_Autorizacion, EmpresaController.Cambiar_Estado_Empresa) //CAMBIAR ESTADO DE LA EMPRESA POR ID
-
-export default _EmpresasRouter
+        this.router.route(`/${this.subcarpeta}/:id_empresa`)
+            .get(_Autorizacion, (req, res) => this.controller.Buscar_Empresa(req, res)) //BUSCAR UNA EMPRESA SEGUN SU ID
+            .patch(_Autorizacion, (req, res) => this.controller.Editar_Empresa(req, res)) //EDITAR SEGUN SU ID
+            .delete(_Autorizacion, (req, res) => this.controller.Cambiar_Estado_Empresa(req, res)) //CAMBIAR ESTADO DE LA EMPRESA POR ID
+    }
+}

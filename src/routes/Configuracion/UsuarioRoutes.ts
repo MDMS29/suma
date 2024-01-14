@@ -1,35 +1,31 @@
-import { Router } from "express";
 import { _Autorizacion } from "../../middleware/Autorizacion";
 import UsuarioController from "../../controller/Configuracion/UsuarioController";
+import { BaseRouter } from "../base.router";
 
-//DEFINICIÓN DEL ROUTER
-const _UsuarioRouter = Router();
+export class UsuariosRouter extends BaseRouter<UsuarioController> {
+    constructor() {
+        super(UsuarioController, "usuarios")
+    }
 
-//DEFINICIÓN DEL CONTROLADOR DEL USUARIO
-const _UsuarioController = new UsuarioController();
+    routes(): void {
+        this.router.route(`/${this.subcarpeta}`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Usuarios(req, res)) //OBTENER USUARIOS DEL SISTEMA SEGUN SU ESTADO
+            .post(_Autorizacion, (req, res) => this.controller.Crear_Usuario(req, res));//CREACIÓN DEL USUARIO
 
-//DEFINICIÓN DE LAS RUTAS DEL USUARIO
-//--AUTENTICACIÓN DE USUARIO
-_UsuarioRouter.post('/autenticar_usuario', _UsuarioController.Autenticar_Usuario);
+        this.router.post(`/${this.subcarpeta}/autenticar_usuario`, (req, res) => this.controller.Autenticar_Usuario(req, res))
 
-_UsuarioRouter.route('/')
-    .get(_Autorizacion, _UsuarioController.Obtener_Usuarios) //OBTENER USUARIOS DEL SISTEMA SEGUN SU ESTADO
-    .post(_Autorizacion, _UsuarioController.Crear_Usuario);//CREACIÓN DEL USUARIO
+        this.router.route(`/${this.subcarpeta}/perfil`)
+            .get(_Autorizacion, (req, res) => this.controller.Perfil_Usuario(req, res))
 
-// OBTENER EL PERFIL DEL USUARIO 
-_UsuarioRouter.route('/perfil')
-    .get(_Autorizacion, _UsuarioController.Perfil_Usuario)
+        this.router.route(`/${this.subcarpeta}/perfil/:id_usuario`).patch(_Autorizacion, (req, res) => this.controller.Actualizar_Perfil(req, res))
 
-_UsuarioRouter.route('/perfil/:id_usuario')
-    .patch(_Autorizacion, _UsuarioController.Actualizar_Perfil)
+        this.router.route(`/${this.subcarpeta}/:id_usuario`)
+            .get(_Autorizacion, (req, res) => this.controller.Buscar_Usuario(req, res))//BUSCAR USUARIO CON POR MEDIO DE SU ID
+            .patch(_Autorizacion, (req, res) => this.controller.Editar_Usuario(req, res))//EDITAR EL USUARIO POR ID
+            .delete(_Autorizacion, (req, res) => this.controller.Cambiar_Estado_Usuario(req, res))//CAMBIAR EL ESTADO DEL USUARIO POR ID
 
-_UsuarioRouter.route('/:id_usuario')
-    .get(_Autorizacion, _UsuarioController.Buscar_Usuario)//BUSCAR USUARIO CON POR MEDIO DE SU ID
-    .patch(_Autorizacion, _UsuarioController.Editar_Usuario)//EDITAR EL USUARIO POR ID
-    .delete(_Autorizacion, _UsuarioController.Cambiar_Estado_Usuario)//CAMBIAR EL ESTADO DEL USUARIO POR ID
+        this.router.patch(`/${this.subcarpeta}/cambiar_clave/:id_usuario`, _Autorizacion, (req, res) => this.controller.Cambiar_Clave_Usuario(req, res)) //CAMBIAR CONTRASEÑA DEL USUARIO POR ID
 
-_UsuarioRouter.patch('/cambiar_clave/:id_usuario', _Autorizacion, _UsuarioController.Cambiar_Clave_Usuario) //CAMBIAR CONTRASEÑA DEL USUARIO POR ID
-
-_UsuarioRouter.patch('/restablecer_clave/:id_usuario', _Autorizacion, _UsuarioController.Resetear_Clave_Usuario) //RSETEAR LA CLAVE DEL USUARIO CUANDO SE LE HAYA ENVIADO EL CORREO
-
-export default _UsuarioRouter
+        this.router.patch(`/${this.subcarpeta}/restablecer_clave/:id_usuario`, _Autorizacion, (req, res) => this.controller.Resetear_Clave_Usuario(req, res)) //RSETEAR LA CLAVE DEL USUARIO CUANDO SE LE HAYA ENVIADO EL CORREO
+    }
+}

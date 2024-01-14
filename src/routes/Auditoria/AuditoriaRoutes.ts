@@ -1,18 +1,18 @@
-import { Router } from "express";
-import { _Autorizacion } from "../../middleware/Autorizacion";
-import _HistorialController from "../../controller/Auditoria/AuditoriaController";
+import {_Autorizacion} from "../../middleware/Autorizacion";
+import {BaseRouter} from "../base.router";
+import AuditoriaController from "../../controller/Auditoria/AuditoriaController";
 
-//INICIALIZAR RUTAS PARA EL HISTORIAL
-export const _HistorialRouter = Router()
+export class AuditoriaRouter extends BaseRouter<AuditoriaController> {
+    constructor() {
+        super(AuditoriaController, "auditorias")
+    }
 
+    routes(): void {
+        this.router.route(`/${this.router}/historial/logs`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Logs_Auditoria(req, res)) //OBTENER TODOS EL HISTORIAL DEL APLICATIVO
 
-//INICIALIZAR CONTROLADOR DE HISTORIAL
-const HistorialController = new _HistorialController()
+        this.router.route(`/${this.router}/historial/filtro/logs`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Logs_Auditoria_Filtro(req, res)) //OBTENER EL HISTORIAL DEL APLICATIVO SEGUN EL FILTRO
 
-_HistorialRouter.route('/historial/logs')
-    .get(_Autorizacion, HistorialController.Obtener_Logs_Auditoria) //OBTENER TODOS EL HISTORIAL DEL APLICATIVO
-
-_HistorialRouter.route('/historial/filtro/logs')
-    .get(_Autorizacion, HistorialController.Obtener_Logs_Auditoria_Filtro) //OBTENER EL HISTORIAL DEL APLICATIVO SEGUN EL FILTRO
-
-export default _HistorialRouter
+    }
+}

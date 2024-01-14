@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import { PerfilService } from "../../services/Configuracion/Perfil.service";
 import { PerfilesSchema } from "../../validations/Configuracion.Zod";
 import { EstadosTablas } from "../../helpers/constants";
+import {BaseController} from "../base.controller";
 
-export class _PerfilController {
+export default class PerfilController extends BaseController<PerfilService>{
+
+    constructor() {
+        super(PerfilService);
+    }
 
     public async Obtener_Perfiles(req: Request, res: Response) {
 
@@ -17,8 +22,7 @@ export class _PerfilController {
         }
 
         try {
-            const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.Obtener_Perfiles(+estado)
+            const respuesta = await this.service.Obtener_Perfiles(+estado)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -77,8 +81,7 @@ export class _PerfilController {
         }
 
         try {
-            const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.Insertar_Perfil(req.body, usuario.usuario)
+            const respuesta = await this.service.Insertar_Perfil(req.body, usuario.usuario)
 
             if (respuesta?.error) {
                 return res.status(404).json(respuesta)
@@ -114,19 +117,18 @@ export class _PerfilController {
         }
 
         try {
-            const _PerfilService = new PerfilService()
 
-            const respuesta = await _PerfilService.Editar_Perfil(+id_perfil, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Perfil(+id_perfil, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(404).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const modulosEditado = await _PerfilService.Editar_Modulos_Perfil(+id_perfil, req.body, usuario.usuario)
+            const modulosEditado = await this.service.Editar_Modulos_Perfil(+id_perfil, req.body, usuario.usuario)
             if (modulosEditado.error) {
                 return res.status(404).json({ error: modulosEditado.error, message: modulosEditado.message })
             }
 
-            const perfil = await _PerfilService.Buscar_Perfil(+id_perfil)
+            const perfil = await this.service.Buscar_Perfil(+id_perfil)
             return res.status(200).json(perfil) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
@@ -149,8 +151,7 @@ export class _PerfilController {
         }
 
         try {
-            const _PerfilService = new PerfilService()
-            const respuesta = await _PerfilService.Cambiar_Estado_Perfil(+id_perfil, +estado, JSON.parse(info), usuario.usuario)
+            const respuesta = await this.service.Cambiar_Estado_Perfil(+id_perfil, +estado, JSON.parse(info), usuario.usuario)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -173,9 +174,8 @@ export class _PerfilController {
             return res.json({ error: true, message: 'No se ha encontrado el perfil' }) //!ERROR
         }
         try {
-            const _PerfilService = new PerfilService()
 
-            const respuesta = await _PerfilService.Buscar_Perfil(+id_perfil)
+            const respuesta = await this.service.Buscar_Perfil(+id_perfil)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }

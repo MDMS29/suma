@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
 import { RequisicionesService } from "../../services/Compras/Requisiciones.Service";
 import { FiltroRequisicionesSchema, RequisicionesSchema } from "../../validations/Compras.Zod";
+import {BaseController} from "../base.controller";
 
-export default class RequisicionesController {
+export default class RequisicionesController extends BaseController<RequisicionesService>{
+
+    constructor() {
+        super(RequisicionesService);
+    }
 
     public async Obtener_Requisiciones_Filtro(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -25,8 +30,7 @@ export default class RequisicionesController {
         }
 
         try {
-            const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, req.body, tipo_orden)
+            const respuesta = await this.service.Obtener_Requisiciones_Filtro(estado, +empresa, usuario.id_usuario, req.body, tipo_orden)
 
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
@@ -54,9 +58,8 @@ export default class RequisicionesController {
         }
 
         try {
-            const requisiciones_service = new RequisicionesService()
             if (requisicion !== undefined) {
-                const respuesta = await requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, 'requisicion', requisicion)
+                const respuesta = await this.service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, 'requisicion', requisicion)
                 if (respuesta?.error) {
                     return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
                 }
@@ -64,7 +67,7 @@ export default class RequisicionesController {
                 return res.status(200).json(respuesta)
             } else {
 
-                const respuesta = await requisiciones_service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, '', '')
+                const respuesta = await this.service.Obtener_Requisiciones(estado, +empresa, usuario.id_usuario, '', '')
                 if (respuesta?.error) {
                     return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
                 }
@@ -91,8 +94,7 @@ export default class RequisicionesController {
         }
 
         try {
-            const familias_producto_service = new RequisicionesService()
-            const respuesta = await familias_producto_service.Insertar_Requisicion(req.body, usuario)
+            const respuesta = await this.service.Insertar_Requisicion(req.body, usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -115,8 +117,7 @@ export default class RequisicionesController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
         }
         try {
-            const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Buscar_Requisicion(+id_requisicion, req.url.includes('detalles/pendientes'))
+            const respuesta = await this.service.Buscar_Requisicion(+id_requisicion, req.url.includes('detalles/pendientes'))
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -147,13 +148,12 @@ export default class RequisicionesController {
         }
 
         try {
-            const requisiciones_service = new RequisicionesService()
-            const respuesta = await requisiciones_service.Editar_Requisicion(+id_requisicion, req.body, usuario)
+            const respuesta = await this.service.Editar_Requisicion(+id_requisicion, req.body, usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await requisiciones_service.Buscar_Requisicion(+id_requisicion, false)
+            const response = await this.service.Buscar_Requisicion(+id_requisicion, false)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar la familia' }) //!ERROR
             }
@@ -180,10 +180,9 @@ export default class RequisicionesController {
         }
 
         try {
-            const requisiciones_service = new RequisicionesService()
-            const familia_estado = await requisiciones_service.Cambiar_Estado_Requisicion(+id_requisicion, +estado, JSON.parse(info), usuario.usuario)
-            if (familia_estado.error) {
-                return res.status(400).json({ error: true, message: familia_estado.message }) //!ERROR
+            const rquisicion_estado = await this.service.Cambiar_Estado_Requisicion(+id_requisicion, +estado, JSON.parse(info), usuario.usuario)
+            if (rquisicion_estado.error) {
+                return res.status(400).json({ error: true, message: rquisicion_estado.message }) //!ERROR
             }
 
             return res.status(200).json({ error: false, message: +estado == EstadosTablas.ESTADO_PENDIENTE ? 'Se ha restaurado la requisicion' : 'Se inactivo la requisicion' })
@@ -203,8 +202,7 @@ export default class RequisicionesController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la requisicion' }) //!ERROR
         }
         try {
-            const requisiciones_service = new RequisicionesService()
-            const pdf: any = await requisiciones_service.Generar_PDF_Requisicion(+id_requisicion)
+            const pdf: any = await this.service.Generar_PDF_Requisicion(+id_requisicion)
             if (pdf.error) {
                 return res.json({ error: true, message: pdf.message }) //!ERROR
             }
@@ -236,8 +234,7 @@ export default class RequisicionesController {
         }
 
         try {
-            const requisiciones_service = new RequisicionesService()
-            const respuesta: any = await requisiciones_service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario)
+            const respuesta: any = await this.service.Aprobar_Desaprobar_Detalle(+id_requisicion, detalles, usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }

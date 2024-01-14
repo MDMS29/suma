@@ -1,44 +1,43 @@
-import app from './config/server';
-import { Response } from 'express';
+import express from 'express';
+import cors from 'cors'
+import morgan from 'morgan';
+import { AppRoutes } from './routes/App.Routes';
+import { ConfigServer } from './config/config';
 
-import * as _routes from './routes/App.Routes'
+declare global {
+    namespace Express {
+        interface Request {
+            usuario?: any;
+        }
+    }
+}
 
-app.use('/suma/api/usuarios', _routes._UsuarioRouter)
+class ServerControl extends ConfigServer {
+    public app: express.Application = express();
+    private port: number = this.getNumberEnv('PORT') ?? 3000
 
-//DEFINIR RUTA DE LOS PERFILES
-app.use('/suma/api/perfiles', _routes._PerfilesRouter)
+    constructor() {
+        super()
+        this.app.disable('x-powered-by');
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: true }));
+        this.app.use(cors());
+        this.app.use(morgan('dev'));
 
-//DEFINIR RUTA DE LOS MÓDULOS
-app.use('/suma/api/modulos', _routes._ModulosRouter)
+        this.app.use('/suma/api', this.routers())
+        this.listen()
 
-//DEFINIR RUTA DE LOS ROLES
-app.use('/suma/api/roles', _routes._RolesRouter)
+    }
 
-//DEFINIR RUTA DE LOS MENUS
-app.use('/suma/api/menus', _routes._MenusRouter)
+    routers(): Array<express.Router> {
+        return AppRoutes
+    }
 
-//DEFINIR RUTA DE LAS EMPRESAS
-app.use('/suma/api/empresas', _routes._EmpresasRouter)
+    public listen() {
+        this.app.listen(this.port, () => {
+            console.log(`Servidor en ejecución en el puerto ${this.port}`);
+        });
+    }
+}
 
-//DEFINIR RUTAS PARA LAS OPCIONES BASICAS
-app.use('/suma/api/opciones-basicas', _routes._OpcionesBasicasRouter)
-
-//DEFINIR RUTAS PARA LOS PRODUCTOS
-app.use('/suma/api/opciones-basicas/productos-empresa', _routes._ProductosRouter)
-
-//DEFINIR RUTAS PARA LAS REQUISICIONES
-app.use('/suma/api/compras/requisiciones', _routes._RequisicionesRouter)
-
-//DEFINIR RUTAS PARA LOS PROVEEDORES
-app.use('/suma/api/compras/proveedores', _routes._ProveedoresRouter)
-
-//DEFINIR RUTAS PARA LAS AUDITORIAS
-app.use('/suma/api/auditorias', _routes._HistorialRouter)
-
-// DEFINIR RUTAS PARA LAS ORDENES
-app.use('/suma/api/compras/ordenes', _routes._OrdenesRouter)
-
-//MIDDLEWARE PARA LAS RUTAS NO ENCONTRADAS CUANDO EL CLIENTE REALICE ALGUNA CONSULTA
-app.use((_, res: Response) => {
-    res.status(405).send({ error: true, message: "No se ha encontrado la request" });
-})
+new ServerControl()

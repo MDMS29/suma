@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import ModuloService from "../../services/Configuracion/Modulo.service";
 import { EstadosTablas, _rol_consultar } from "../../helpers/constants";
 import { ModulosSchema } from "../../validations/Configuracion.Zod";
+import {BaseController} from "../base.controller";
 
-export default class _ModuloController {
+export default class ModuloController extends BaseController<ModuloService>{
+
+    constructor() {
+        super(ModuloService);
+    }
     public async Obtener_Modulos(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado } = req.query as { estado: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
@@ -15,8 +20,7 @@ export default class _ModuloController {
         }
 
         try {
-            const _ModuloService = new ModuloService()
-            const respuesta = await _ModuloService.Obtener_Modulos(+estado)
+            const respuesta = await this.service.Obtener_Modulos(+estado)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -58,8 +62,7 @@ export default class _ModuloController {
         }
 
         try {
-            const _ModuloService = new ModuloService()
-            const respuesta = await _ModuloService.Insertar_Modulo(req.body, usuario?.usuario, roles)
+            const respuesta = await this.service.Insertar_Modulo(req.body, usuario?.usuario, roles)
 
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
@@ -83,8 +86,7 @@ export default class _ModuloController {
         }
 
         try {
-            const _ModuloService = new ModuloService()
-            const modulo = await _ModuloService.Buscar_Modulo(+id_modulo)
+            const modulo = await this.service.Buscar_Modulo(+id_modulo)
             if (modulo?.error) {
                 return res.status(400).json({ error: true, message: modulo.message }) //!ERROR
             }
@@ -131,14 +133,13 @@ export default class _ModuloController {
         }
 
         try {
-            const _ModuloService = new ModuloService()
-            const modulo = await _ModuloService.Editar_Modulo(+id_modulo, req.body, usuario.usuario, roles)
+            const modulo = await this.service.Editar_Modulo(+id_modulo, req.body, usuario.usuario, roles)
 
             if (modulo?.error) {
                 return res.status(400).json({ error: true, message: modulo.message }) //!ERROR
             }
 
-            const moduloEditado = await _ModuloService.Buscar_Modulo(+id_modulo)
+            const moduloEditado = await this.service.Buscar_Modulo(+id_modulo)
             if (moduloEditado.error) {
                 return res.status(400).json({ error: true, message: 'No se ha podido encontrar el modulo' }) //!ERROR             
             }
@@ -167,9 +168,7 @@ export default class _ModuloController {
         }
 
         try {
-            const _ModuloService = new ModuloService()
-
-            const respuesta = await _ModuloService.Cambiar_Estado_Modulo(+id_modulo, JSON.parse(info), +estado, usuario?.usuario)
+            const respuesta = await this.service.Cambiar_Estado_Modulo(+id_modulo, JSON.parse(info), +estado, usuario?.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }

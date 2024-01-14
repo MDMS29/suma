@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import { ProductosEmpresaService } from "../../services/Opciones_Basicas/ProductosEmpresa.Service";
 import { ProductosSchema } from "../../validations/OpcionesBasicas.Zod";
 import { EstadosTablas, _Foto_Default } from "../../helpers/constants";
+import {BaseController} from "../base.controller";
 
-export default class ProductosEmpresaController {
+export default class ProductosEmpresaController extends BaseController<ProductosEmpresaService>{
+
+    constructor() {
+        super(ProductosEmpresaService);
+    }
 
     public async Obtener_Productos_Empresa(req: Request, res: Response) {
-        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { usuario } = req
         const { estado, empresa } = req.query as { estado: string, empresa: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -19,8 +24,7 @@ export default class ProductosEmpresaController {
         }
 
         try {
-            const producto_empresa_service = new ProductosEmpresaService()
-            const respuesta = await producto_empresa_service.Obtener_Productos_Empresa(+estado, +empresa)
+            const respuesta = await this.service.Obtener_Productos_Empresa(+estado, +empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -33,7 +37,7 @@ export default class ProductosEmpresaController {
     }
 
     public async Insertar_Producto_Empresa(req: Request, res: Response) {
-        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { usuario } = req
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
@@ -49,8 +53,7 @@ export default class ProductosEmpresaController {
         }
 
         try {
-            const producto_empresa_service = new ProductosEmpresaService()
-            const respuesta = await producto_empresa_service.Insertar_Producto_Empresa(req.body, usuario)
+            const respuesta = await this.service.Insertar_Producto_Empresa(req.body, usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -74,9 +77,8 @@ export default class ProductosEmpresaController {
         }
 
         try {
-            const producto_empresa_service = new ProductosEmpresaService()
             if (tipo) {
-                const respuesta = await producto_empresa_service.Buscar_Producto_Filtro('tipo_producto', +tipo, usuario.id_empresa)
+                const respuesta = await this.service.Buscar_Producto_Filtro('tipo_producto', +tipo, usuario.id_empresa)
                 if (respuesta.error) {
                     return res.json({ error: true, message: respuesta.message }) //!ERROR
                 }
@@ -84,7 +86,7 @@ export default class ProductosEmpresaController {
 
             } else {
 
-                const respuesta = await producto_empresa_service.Buscar_Producto_Empresa(+id_producto)
+                const respuesta = await this.service.Buscar_Producto_Empresa(+id_producto)
                 if (respuesta.error) {
                     return res.json({ error: true, message: respuesta.message }) //!ERROR
                 }
@@ -97,7 +99,7 @@ export default class ProductosEmpresaController {
     }
 
     public async Editar_Producto_Empresa(req: Request, res: Response) {
-        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { usuario } = req
         const { id_producto } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
@@ -114,14 +116,13 @@ export default class ProductosEmpresaController {
         }
 
         try {
-            const producto_empresa_service = new ProductosEmpresaService()
 
-            const respuesta = await producto_empresa_service.Editar_Producto_Empresa(+id_producto, req.body, usuario)
+            const respuesta = await this.service.Editar_Producto_Empresa(+id_producto, req.body, usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await producto_empresa_service.Buscar_Producto_Empresa(+id_producto)
+            const response = await this.service.Buscar_Producto_Empresa(+id_producto)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar el producto' }) //!ERROR
             }
@@ -133,7 +134,7 @@ export default class ProductosEmpresaController {
     }
 
     public async Cambiar_Estado_Producto(req: Request, res: Response) {
-        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { usuario } = req
         const { id_producto } = req.params
         const { estado, info } = req.query as {estado: string, info:string}
 
@@ -148,8 +149,7 @@ export default class ProductosEmpresaController {
         }
 
         try {
-            const producto_empresa_service = new ProductosEmpresaService()
-            const producto = await producto_empresa_service.Cambiar_Estado_Producto(+id_producto, +estado, JSON.parse(info), usuario.usuario)
+            const producto = await this.service.Cambiar_Estado_Producto(+id_producto, +estado, JSON.parse(info), usuario.usuario)
             if (producto.error) {
                 return res.status(400).json({ error: true, message: producto.message }) //!ERROR
             }

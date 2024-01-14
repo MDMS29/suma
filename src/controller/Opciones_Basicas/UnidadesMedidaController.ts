@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { UnidadesMedidaService } from "../../services/Opciones_Basicas/UnidadesMedida.Service"
 import { UnidadMedidaSchema } from "../../validations/OpcionesBasicas.Zod";
+import {BaseController} from "../base.controller";
 
-export default class UnidadesMedidaController {
+export default class UnidadesMedidaController extends BaseController<UnidadesMedidaService>{
+
+    constructor() {
+        super(UnidadesMedidaService);
+    }
 
     public async Obtener_Unidades_Medida(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -18,8 +23,7 @@ export default class UnidadesMedidaController {
         }
 
         try {
-            const unidades_medidas_service = new UnidadesMedidaService()
-            const respuesta = await unidades_medidas_service.Obtener_Unidades_Medida(+estado, +empresa)
+            const respuesta = await this.service.Obtener_Unidades_Medida(+estado, +empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -52,8 +56,7 @@ export default class UnidadesMedidaController {
         }
 
         try {
-            const menu_service = new UnidadesMedidaService()
-            const respuesta = await menu_service.Insertar_Unidad_Medida(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Unidad_Medida(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -75,9 +78,7 @@ export default class UnidadesMedidaController {
             return res.json({ error: true, message: 'No se ha encontrado la unidad de medida' }) //!ERROR
         }
         try {
-            const menu_service = new UnidadesMedidaService()
-
-            const respuesta = await menu_service.Buscar_Unidad_Medida(+id_unidad)
+            const respuesta = await this.service.Buscar_Unidad_Medida(+id_unidad)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -109,14 +110,12 @@ export default class UnidadesMedidaController {
         }
 
         try {
-            const menu_service = new UnidadesMedidaService()
-
-            const respuesta = await menu_service.Editar_Unidad_Medida(+id_unidad, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Unidad_Medida(+id_unidad, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await menu_service.Buscar_Unidad_Medida(+id_unidad)
+            const response = await this.service.Buscar_Unidad_Medida(+id_unidad)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar la unidad de medida' }) //!ERROR
             }

@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import { RolService } from "../../services/Configuracion/Rol.service";
 import { EstadosTablas } from "../../helpers/constants";
 import { RolesSchema } from "../../validations/Configuracion.Zod";
+import {BaseController} from "../base.controller";
 
-export class _RolController {
+export default class RolController extends BaseController<RolService>{
+
+    constructor() {
+        super(RolService);
+    }
 
     public async Obtener_Roles(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -16,8 +21,7 @@ export class _RolController {
         }
 
         try {
-            const _RolService = new RolService()
-            const respuesta = await _RolService.Obtener_Roles(+estado)
+            const respuesta = await this.service.Obtener_Roles(+estado)
             if (respuesta?.error) {
                 return res.status(404).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -48,8 +52,7 @@ export class _RolController {
         }
 
         try {
-            const _RolService = new RolService()
-            const respuesta = await _RolService.Insertar_Rol(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Rol(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -71,9 +74,8 @@ export class _RolController {
             return res.json({ error: true, message: 'No se ha encontrado el rol' }) //!ERROR
         }
         try {
-            const _RolService = new RolService()
 
-            const respuesta = await _RolService.Buscar_Rol(+id_rol)
+            const respuesta = await this.service.Buscar_Rol(+id_rol)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -108,14 +110,13 @@ export class _RolController {
 
 
         try {
-            const _RolService = new RolService()
 
-            const respuesta = await _RolService.Editar_Rol(+id_rol, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Rol(+id_rol, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await _RolService.Buscar_Rol(+id_rol)
+            const response = await this.service.Buscar_Rol(+id_rol)
             if (!response) {
                 return res.status(400).json({ error: true, message: response.message }) //!ERROR
             }
@@ -141,8 +142,7 @@ export class _RolController {
         }
 
         try {
-            const _RolService = new RolService()
-            const respuesta = await _RolService.Cambiar_Estado_Rol(+id_rol, +estado, JSON.parse(info), usuario.usuario)
+            const respuesta = await this.service.Cambiar_Estado_Rol(+id_rol, +estado, JSON.parse(info), usuario.usuario)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }

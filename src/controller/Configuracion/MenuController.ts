@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
 import { MenuService } from "../../services/Configuracion/Menu.service";
 import { MenuSchema } from "../../validations/Configuracion.Zod";
+import {BaseController} from "../base.controller";
 
-export default class _MenuController {
+export default class MenuController extends BaseController<MenuService>{
+
+    constructor() {
+        super(MenuService);
+    }
 
     public async Obtener_Menus(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
@@ -20,8 +25,7 @@ export default class _MenuController {
         }
 
         try {
-            const menu_service = new MenuService()
-            const respuesta = await menu_service.Obtener_Menus(+estado, +id_modulo)
+            const respuesta = await this.service.Obtener_Menus(+estado, +id_modulo)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -60,8 +64,7 @@ export default class _MenuController {
         }
 
         try {
-            const menu_service = new MenuService()
-            const respuesta = await menu_service.Insertar_Menu(req.body, id_modulo, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Menu(req.body, id_modulo, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -83,9 +86,8 @@ export default class _MenuController {
             return res.json({ error: true, message: 'No se ha encontrado el menu' }) //!ERROR
         }
         try {
-            const menu_service = new MenuService()
 
-            const respuesta = await menu_service.Buscar_Menu(+id_menu)
+            const respuesta = await this.service.Buscar_Menu(+id_menu)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -119,14 +121,12 @@ export default class _MenuController {
         }
 
         try {
-            const menu_service = new MenuService()
-
-            const respuesta = await menu_service.Editar_menu(+id_menu, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_menu(+id_menu, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await menu_service.Buscar_Menu(+id_menu)
+            const response = await this.service.Buscar_Menu(+id_menu)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar el rol' }) //!ERROR
             }
@@ -153,8 +153,7 @@ export default class _MenuController {
         }
 
         try {
-            const menu_service = new MenuService()
-            const respuesta = await menu_service.Cambiar_Estado_Menu(+id_menu, +estado, JSON.parse(info), usuario.usuario)
+            const respuesta = await this.service.Cambiar_Estado_Menu(+id_menu, +estado, JSON.parse(info), usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }

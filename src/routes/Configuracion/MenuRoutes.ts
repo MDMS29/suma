@@ -1,20 +1,20 @@
-import { Router } from "express";
+import {BaseRouter} from "../base.router"
+import MenuController from "../../controller/Configuracion/MenuController"
 import { _Autorizacion } from "../../middleware/Autorizacion";
-import _MenuController from "../../controller/Configuracion/MenuController";
 
-//INICIALIZAR RUTAS PARA PERFILES
-export const _MenusRouter = Router()
+export class MenusRouter extends BaseRouter<MenuController> {
+    constructor() {
+        super(MenuController, "menus")
+    }
 
-//INICIALIZAR CONTROLADOR DE PERFIL
-const MenuController = new _MenuController()
+    routes(): void {
+        this.router.route(`/${this.subcarpeta}/modulo/:id_modulo`)
+            .get(_Autorizacion, (req,res) => this.controller.Obtener_Menus(req,res)) //OBTENER TODOS LOS MENUS DEL MODULO
+            .post(_Autorizacion, (req,res) => this.controller.Insertar_Menu(req,res)) //CREAR MENU
 
-_MenusRouter.route('/modulo/:id_modulo')
-    .get(_Autorizacion, MenuController.Obtener_Menus) //OBTENER TODOS LOS MENUS DEL MODULO
-    .post(_Autorizacion, MenuController.Insertar_Menu) //CREAR MENU
-
-_MenusRouter.route('/:id_menu')
-    .get(_Autorizacion, MenuController.Buscar_Menu)
-    .patch(_Autorizacion, MenuController.Editar_Menu) //EDITAR SEGUN SU ID
-    .delete(_Autorizacion, MenuController.Cambiar_Estado_Menu) //CAMBIAR ESTADO DEL PERFIL POR ID
-
-export default _MenusRouter
+        this.router.route(`/${this.subcarpeta}/:id_menu`)
+            .get(_Autorizacion, (req,res)=> this.controller.Buscar_Menu(req,res))
+            .patch(_Autorizacion, (req,res)=> this.controller.Editar_Menu(req,res)) //EDITAR SEGUN SU ID
+            .delete(_Autorizacion, (req,res)=> this.controller.Cambiar_Estado_Menu(req,res)) //CAMBIAR ESTADO DEL PERFIL POR ID
+    }
+}

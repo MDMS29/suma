@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
 import { HistorialService } from "../../services/Auditoria/Auditoria.service";
 import { FiltroLogsAuditoriaSchema } from "../../validations/Auditoria.Zod";
+import {BaseController} from "../base.controller";
 
-export default class _HistorialController {
+export default class AuditoriaController extends BaseController<HistorialService>{
+    constructor() {
+        super(HistorialService);
+    }
 
     public async Obtener_Logs_Auditoria(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACIÓN DEL USUARIO LOGUEADO
@@ -12,8 +16,7 @@ export default class _HistorialController {
         }
 
         try {
-            const historial_service = new HistorialService()
-            const respuesta = await historial_service.Obtener_Logs_Auditoria()
+            const respuesta = await this.service.Obtener_Logs_Auditoria()
             if (respuesta.error) {
                 return res.status(500).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }
@@ -39,8 +42,7 @@ export default class _HistorialController {
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
         try {
-            const historial_service = new HistorialService()
-            const respuesta: any = await historial_service.Obtener_Logs_Auditoria_Filtro({ inputs })
+            const respuesta: any = await this.service.Obtener_Logs_Auditoria_Filtro({ inputs })
             if (respuesta?.error) {
                 return res.status(500).json({ error: respuesta.error, message: respuesta.message }) //!ERROR
             }

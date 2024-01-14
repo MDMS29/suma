@@ -1,21 +1,20 @@
-import { Router } from "express";
 import { _Autorizacion } from "../../middleware/Autorizacion";
-import { _RolController } from "../../controller/Configuracion/RolController";
+import RolController from "../../controller/Configuracion/RolController";
+import { BaseRouter } from "../base.router";
 
-//INICIALIZAR RUTAS PARA ROLES
-export const _RolesRouter = Router()
+export class RolesRouter extends BaseRouter<RolController> {
+    constructor() {
+        super(RolController, "roles")
+    }
 
-//INICIALIZAR CONTROLADOR DE ROLES
-const RolController = new _RolController()
+    routes(): void {
+        this.router.route(`/${this.subcarpeta}`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Roles(req, res)) //OBTENER TODOS LOS ROLES
+            .post(_Autorizacion, (req, res) => this.controller.Insertar_Rol(req, res)) //INSERTAR ROL
 
-
-_RolesRouter.route('/')
-    .get(_Autorizacion, RolController.Obtener_Roles) //OBTENER TODOS LOS ROLES
-    .post(_Autorizacion, RolController.Insertar_Rol) //INSERTAR ROL
-
-_RolesRouter.route('/:id_rol')
-    .get(_Autorizacion, RolController.Buscar_Rol) //BUSCAR EL ROL SEGUN SU ID
-    .patch(_Autorizacion, RolController.Editar_Rol) //EDITAR ROL SEGUN SU ID
-    .delete(_Autorizacion, RolController.Cambiar_Estado_Rol) //CAMBIAR ESTADO DEL ROL POR ID
-
-export default _RolesRouter
+        this.router.route(`/${this.subcarpeta}/:id_rol`)
+            .get(_Autorizacion, (req, res) => this.controller.Buscar_Rol(req, res)) //BUSCAR EL ROL SEGUN SU ID
+            .patch(_Autorizacion, (req, res) => this.controller.Editar_Rol(req, res)) //EDITAR ROL SEGUN SU ID
+            .delete(_Autorizacion, (req, res) => this.controller.Cambiar_Estado_Rol(req, res)) //CAMBIAR ESTADO DEL ROL POR ID
+    }
+}

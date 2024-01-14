@@ -2,7 +2,7 @@ import { Tipo_Orden } from "../../../Interfaces/Opciones_Basicas/IOpcioBasic";
 import _QueryTipoOrdenes from "../../../querys/Opciones_Basicas/Compras/QueryTipoOrdenes";
 import Querys from "../../../querys/Querys";
 
-export default class _TipoOrdenesService {
+export default class TipoOrdenesService {
     _Query_Tipo_Ordenes: _QueryTipoOrdenes;
     _Querys: Querys;
 

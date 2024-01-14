@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import { CentroCostoEmpresaService } from "../../services/Opciones_Basicas/CentroCostoEmpresa.Service";
 import { EstadosTablas } from "../../helpers/constants";
 import { CentroEmpresaSchema } from "../../validations/OpcionesBasicas.Zod";
+import {BaseController} from "../base.controller";
 
-export default class CentroCostoEmpresa {
+export default class CentroCostoEmpresa extends BaseController<CentroCostoEmpresaService>{
+
+    constructor() {
+        super(CentroCostoEmpresaService);
+    }
 
     public async Obtener_Centros_Costo_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -19,16 +24,15 @@ export default class CentroCostoEmpresa {
         }
 
         try {
-            const centro_costo_service = new CentroCostoEmpresaService()
             if (proceso != undefined) {
-                const respuesta = await centro_costo_service.Obtener_Centros_Costo_Empresa(+estado, +empresa, 'proceso', proceso)
+                const respuesta = await this.service.Obtener_Centros_Costo_Empresa(+estado, +empresa, 'proceso', proceso)
                 if (respuesta?.error) {
                     return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
                 }
 
                 return res.status(200).json(respuesta)
             } else {
-                const respuesta = await centro_costo_service.Obtener_Centros_Costo_Empresa(+estado, +empresa, '', 0)
+                const respuesta = await this.service.Obtener_Centros_Costo_Empresa(+estado, +empresa, '', 0)
                 if (respuesta?.error) {
                     return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
                 }
@@ -71,8 +75,7 @@ export default class CentroCostoEmpresa {
         }
 
         try {
-            const centro_costo_service = new CentroCostoEmpresaService()
-            const respuesta = await centro_costo_service.Insertar_Centro_Costo_Empresa(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Centro_Costo_Empresa(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -94,8 +97,7 @@ export default class CentroCostoEmpresa {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el centro de costo' }) //!ERROR
         }
         try {
-            const centro_costo_service = new CentroCostoEmpresaService()
-            const respuesta = await centro_costo_service.Buscar_Centro_Costo(+id_centro_costo)
+            const respuesta = await this.service.Buscar_Centro_Costo(+id_centro_costo)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -139,14 +141,13 @@ export default class CentroCostoEmpresa {
         }
 
         try {
-            const centro_costo_service = new CentroCostoEmpresaService()
 
-            const respuesta = await centro_costo_service.Editar_Centro_Costo(+id_centro_costo, req.body, usuario?.usuario)
+            const respuesta = await this.service.Editar_Centro_Costo(+id_centro_costo, req.body, usuario?.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await centro_costo_service.Buscar_Centro_Costo(+id_centro_costo)
+            const response = await this.service.Buscar_Centro_Costo(+id_centro_costo)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar el centro' }) //!ERROR
             }
@@ -173,8 +174,7 @@ export default class CentroCostoEmpresa {
         }
 
         try {
-            const centro_costo_service = new CentroCostoEmpresaService()
-            const centro_cambio_estado = await centro_costo_service.Cambiar_Estado_Centro(+id_centro_costo, +estado, JSON.parse(info), usuario.usuario)
+            const centro_cambio_estado = await this.service.Cambiar_Estado_Centro(+id_centro_costo, +estado, JSON.parse(info), usuario.usuario)
             if (centro_cambio_estado.error) {
                 return res.status(400).json({ error: true, message: centro_cambio_estado.message }) //!ERROR
             }

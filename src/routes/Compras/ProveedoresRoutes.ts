@@ -1,20 +1,20 @@
-import { Router } from "express";
-import { _Autorizacion } from "../../middleware/Autorizacion";
+import {_Autorizacion} from "../../middleware/Autorizacion";
 import ProveedoresController from "../../controller/Compras/ProveedoresController";
+import {BaseRouter} from "../base.router";
 
-//INICIALIZAR RUTAS PARA LAS EMPRESAS
-export const _ProveedoresRouter = Router()
+export class ProveedoresRouter extends BaseRouter<ProveedoresController> {
+    constructor() {
+        super(ProveedoresController, "compras/proveedores")
+    }
 
-//INICIALIZAR CONTROLADOR DE EMPRESA
-const _ProveedoresController = new ProveedoresController()
+    routes(): void {
+        this.router.route(`/${this.subcarpeta}`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Proveedores(req, res)) //OBTENER TODOS LAS REQUISICIONES
+            .post(_Autorizacion, (req, res) => this.controller.Insertar_Proveedor(req, res)) //CREAR REQUISICION
 
-_ProveedoresRouter.route('/')
-    .get(_Autorizacion, _ProveedoresController.Obtener_Proveedores) //OBTENER TODOS LAS REQUISICIONES
-    .post(_Autorizacion, _ProveedoresController.Insertar_Proveedor) //CREAR REQUISICION
-
-_ProveedoresRouter.route('/:id_proveedor')
-    .get(_Autorizacion, _ProveedoresController.Buscar_Proveedor) //BUSCAR UNA REQUISICION SEGUN SU ID
-    .patch(_Autorizacion, _ProveedoresController.Editar_Proveedor) //EDITAR SEGUN SU ID
-    .delete(_Autorizacion, _ProveedoresController.Cambiar_Estado_Proveedor) //CAMBIAR ESTADO DE LA REQUISICION POR ID
-
-export default _ProveedoresRouter
+        this.router.route(`/${this.subcarpeta}/:id_proveedor`)
+            .get(_Autorizacion, (req, res) => this.controller.Buscar_Proveedor(req, res)) //BUSCAR UNA REQUISICION SEGUN SU ID
+            .patch(_Autorizacion, (req, res) => this.controller.Editar_Proveedor(req, res)) //EDITAR SEGUN SU ID
+            .delete(_Autorizacion, (req, res) => this.controller.Cambiar_Estado_Proveedor(req, res)) //CAMBIAR ESTADO DE LA REQUISICION POR ID
+    }
+}

@@ -1,36 +1,33 @@
-import { Router } from "express";
-import { _Autorizacion } from "../../middleware/Autorizacion";
-import _OrdenesController from "../../controller/Compras/OrdenesController";
+import {_Autorizacion} from "../../middleware/Autorizacion";
+import OrdenesController from "../../controller/Compras/OrdenesController";
+import {BaseRouter} from "../base.router";
 
-//INICIALIZAR RUTAS PARA LAS ORDENES
-export const _OrdenesRouter = Router()
+export class OrdenesRouter extends BaseRouter<OrdenesController> {
+    constructor() {
+        super(OrdenesController, "compras/ordenes")
+    }
 
+    routes(): void {
+         this.router.route(`/${this.subcarpeta}/:id_orden/enviar-correo-proveedor`)
+             .post(_Autorizacion, (req,res) => this.controller.Enviar_Correo_Aprobacion_Proveedor(req,res)) //ENVIAR EL CORREO DE PEDIDO AL PROVEEDOR
 
-//INICIALIZAR CONTROLADOR PARA LAS ORDENES
-const OrdenesController = new _OrdenesController()
+         this.router.route(`/${this.subcarpeta}/filtrar`)
+             .post(_Autorizacion, (req,res) => this.controller.Obtener_Ordenes_Filtro(req,res)) //OBTENER TODOS LAS REQUISICIONES
 
-_OrdenesRouter.route('/:id_orden/enviar-correo-proveedor')
-    .post(_Autorizacion, OrdenesController.Enviar_Correo_Aprobacion_Proveedor) //ENVIAR EL CORREO DE PEDIDO AL PROVEEDOR
+         this.router.route(`/${this.subcarpeta}/doc/:id_orden`)
+             .get(_Autorizacion, (req,res) => this.controller.Generar_Documento_Orden(req,res)) //GENERAR DOCUMENTOS PDF
 
-_OrdenesRouter.route('/filtrar')
-    .post(_Autorizacion, OrdenesController.Obtener_Ordenes_Filtro) //OBTENER TODOS LAS REQUISICIONES
+         this.router.route(`/${this.subcarpeta}/aprobar/:id_orden_aprobar`)
+             .patch(_Autorizacion, (req,res) => this.controller.Aprobar_Orden(req,res)) //APROBAR UNA ORDEN POR EL ID DE UNA ORDEN
 
-_OrdenesRouter.route('/doc/:id_orden')
-    .get(_Autorizacion, OrdenesController.Generar_Documento_Orden) //GENERAR DOCUMENTOS PDF
-
-_OrdenesRouter.route('/aprobar/:id_orden_aprobar')
-    .patch(_Autorizacion, OrdenesController.Aprobar_Orden) //APROBAR UNA ORDEN POR EL ID DE UNA ORDEN
-
-_OrdenesRouter.route('/')
-    .get(_Autorizacion, OrdenesController.Obtener_Ordenes) //OBTENER TODAS LAS ORDENES
-    .post(_Autorizacion, OrdenesController.Insertar_Orden) //INSERTAR UNA ORDEN
-
-
-_OrdenesRouter.route('/:id_orden')
-    .get(_Autorizacion, OrdenesController.Buscar_Orden) //BUSCAR UNA ORDEN POR SU ID
-    .patch(_Autorizacion, OrdenesController.Editar_Orden) //EDITAR UNA ORDEN POR SU ID
-    .delete(_Autorizacion, OrdenesController.Eliminar_Restaurar_Orden) //ELIMINAR O RESTAURAR UNA ORDEN POR SU ID
+         this.router.route(`/${this.subcarpeta}`)
+             .get(_Autorizacion, (req,res) => this.controller.Obtener_Ordenes(req,res)) //OBTENER TODAS LAS ORDENES
+             .post(_Autorizacion, (req,res) => this.controller.Insertar_Orden(req,res)) //INSERTAR UNA ORDEN
 
 
-
-export default _OrdenesRouter
+         this.router.route(`/${this.subcarpeta}/:id_orden`)
+             .get(_Autorizacion, (req,res) => this.controller.Buscar_Orden(req,res)) //BUSCAR UNA ORDEN POR SU ID
+             .patch(_Autorizacion, (req,res) => this.controller.Editar_Orden(req,res)) //EDITAR UNA ORDEN POR SU ID
+             .delete(_Autorizacion, (req,res) => this.controller.Eliminar_Restaurar_Orden(req,res)) //ELIMINAR O RESTAURAR UNA ORDEN POR SU ID
+    }
+}

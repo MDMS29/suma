@@ -1,21 +1,20 @@
-import { Router } from "express";
 import { _Autorizacion } from "../../middleware/Autorizacion";
-import _ModuloController from "../../controller/Configuracion/ModuloController";
+import ModuloController from "../../controller/Configuracion/ModuloController";
+import { BaseRouter } from "../base.router";
 
-//INICIALIZAR RUTAS PARA PERFILES
-export const _ModulosRouter = Router()
+export class ModulosRouter extends BaseRouter<ModuloController> {
+    constructor() {
+        super(ModuloController, "modulos")
+    }
 
-//INICIALIZAR CONTROLADOR DE PERFIL
-const ModuloController = new _ModuloController()
+    routes(): void {
+        this.router.route(`/${this.subcarpeta}`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Modulos(req, res)) //OBTENER TODOS LOS PERFILES
+            .post(_Autorizacion, (req, res) => this.controller.Insertar_Modulo(req, res)) //INSERTAR PERFIL
 
-
-_ModulosRouter.route('/')
-    .get(_Autorizacion, ModuloController.Obtener_Modulos) //OBTENER TODOS LOS PERFILES
-    .post(_Autorizacion, ModuloController.Insertar_Modulo) //INSERTAR PERFIL
-
-_ModulosRouter.route('/:id_modulo')
-    .get(_Autorizacion, ModuloController.Buscar_Modulo)
-    .patch(_Autorizacion, ModuloController.Editar_Modulo) //EDITAR PERFIL SEGUN SU ID
-    .delete(_Autorizacion, ModuloController.Cambiar_Estado_Modulo) //CAMBIAR ESTADO DEL PERFIL POR ID
-
-export default _ModulosRouter
+        this.router.route(`/${this.subcarpeta}/:id_modulo`)
+            .get(_Autorizacion, (req, res) => this.controller.Buscar_Modulo(req, res))
+            .patch(_Autorizacion, (req, res) => this.controller.Editar_Modulo(req, res)) //EDITAR PERFIL SEGUN SU ID
+            .delete(_Autorizacion, (req, res) => this.controller.Cambiar_Estado_Modulo(req, res)) //CAMBIAR ESTADO DEL PERFIL POR ID
+    }
+}

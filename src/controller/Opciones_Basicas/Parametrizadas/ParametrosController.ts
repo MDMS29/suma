@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { ParametrosService } from "../../../services/Opciones_Basicas/Parametrizadas/Parametros.Service";
 import { IvaSchema } from "../../../validations/OpcionesBasicas.Zod";
+import {BaseController} from "../../base.controller";
 
-export default class ParametrosController {
+export default class ParametrosController extends BaseController<ParametrosService>{
+
+    constructor() {
+        super(ParametrosService);
+    }
 
     public async Obtener_Tipos_Documento(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -11,8 +16,7 @@ export default class ParametrosController {
         }
 
         try {
-            const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Obtener_Tipos_Documento()
+            const respuesta = await this.service.Obtener_Tipos_Documento()
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -31,8 +35,7 @@ export default class ParametrosController {
         }
 
         try {
-            const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Obtener_Formas_Pago()
+            const respuesta = await this.service.Obtener_Formas_Pago()
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -58,8 +61,7 @@ export default class ParametrosController {
         }
 
         try {
-            const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Obtener_Ivas(empresa)
+            const respuesta = await this.service.Obtener_Ivas(empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -84,8 +86,7 @@ export default class ParametrosController {
         }
 
         try {
-            const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Insertar_Iva(req.body, usuario.usuario)
+            const respuesta = await this.service.Insertar_Iva(req.body, usuario.usuario)
             if ('error' in respuesta) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -111,8 +112,7 @@ export default class ParametrosController {
         }
 
         try {
-            const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Buscar_Iva(iva_id)
+            const respuesta = await this.service.Buscar_Iva(iva_id)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -138,8 +138,7 @@ export default class ParametrosController {
         }
 
         try {
-            const unidades_medidas_service = new ParametrosService()
-            const respuesta = await unidades_medidas_service.Editar_Iva(+iva_id, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Iva(+iva_id, req.body, usuario.usuario)
             if ('error' in respuesta) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }

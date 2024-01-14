@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { TiposProductoService } from "../../services/Opciones_Basicas/TipoProducto.Service";
 import { TipoProductoSchema } from "../../validations/OpcionesBasicas.Zod";
+import {BaseController} from "../base.controller";
 
-export default class TipoProductoController {
+export default class TipoProductoController extends BaseController<TiposProductoService>{
+
+    constructor() {
+        super(TiposProductoService);
+    }
 
     public async Obtener_Tipos_Producto(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -15,8 +20,7 @@ export default class TipoProductoController {
         }
 
         try {
-            const tipos_producto_service = new TiposProductoService()
-            const respuesta = await tipos_producto_service.Obtener_Tipos_Producto(+empresa)
+            const respuesta = await this.service.Obtener_Tipos_Producto(+empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -49,8 +53,7 @@ export default class TipoProductoController {
         }
 
         try {
-            const tipos_producto_service = new TiposProductoService()
-            const respuesta = await tipos_producto_service.Insertar_Tipo_Producto(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Tipo_Producto(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -72,8 +75,7 @@ export default class TipoProductoController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el tipo de producto' }) //!ERROR
         }
         try {
-            const tipos_producto_service = new TiposProductoService()
-            const respuesta = await tipos_producto_service.Buscar_Tipo_Producto(+id_tipo_producto)
+            const respuesta = await this.service.Buscar_Tipo_Producto(+id_tipo_producto)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -105,14 +107,13 @@ export default class TipoProductoController {
         }
 
         try {
-            const tipos_producto_service = new TiposProductoService()
 
-            const respuesta = await tipos_producto_service.Editar_Tipo_Producto(+id_tipo_producto, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Tipo_Producto(+id_tipo_producto, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await tipos_producto_service.Buscar_Tipo_Producto(+id_tipo_producto)
+            const response = await this.service.Buscar_Tipo_Producto(+id_tipo_producto)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar el tipo de producto' }) //!ERROR
             }

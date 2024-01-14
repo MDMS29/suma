@@ -2,8 +2,13 @@ import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
 import { TercerosSchema } from "../../validations/Compras.Zod";
 import { ProveedoresService } from "../../services/Compras/Proveedores.Service";
+import {BaseController} from "../base.controller";
 
-export default class ProveedoresController {
+export default class ProveedoresController extends BaseController<ProveedoresService>{
+
+    constructor() {
+        super(ProveedoresService);
+    }
     public async Obtener_Proveedores(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { estado, empresa,  } = req.query as { estado: string, empresa: string, requisicion: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
@@ -18,8 +23,7 @@ export default class ProveedoresController {
         }
 
         try {
-            const requisiciones_service = new ProveedoresService()
-            const respuesta = await requisiciones_service.Obtener_Proveedores(estado, empresa)
+            const respuesta = await this.service.Obtener_Proveedores(estado, empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -46,8 +50,7 @@ export default class ProveedoresController {
         }
 
         try {
-            const proveedores_service = new ProveedoresService()
-            const respuesta = await proveedores_service.Insertar_Proveedor(req.body, usuario)
+            const respuesta = await this.service.Insertar_Proveedor(req.body, usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -69,8 +72,7 @@ export default class ProveedoresController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el proveedor' }) //!ERROR
         }
         try {
-            const proveedores_service = new ProveedoresService()
-            const respuesta = await proveedores_service.Buscar_Proveedor(+id_proveedor)
+            const respuesta = await this.service.Buscar_Proveedor(+id_proveedor)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -100,8 +102,7 @@ export default class ProveedoresController {
         }
 
         try {
-            const proveedores_service = new ProveedoresService()
-            const respuesta = await proveedores_service.Editar_Proveedor(+id_proveedor, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Proveedor(+id_proveedor, req.body, usuario.usuario)
             if (respuesta?.error) {
                 return res.status(400).json(respuesta) //!ERROR
             }
@@ -129,8 +130,7 @@ export default class ProveedoresController {
         }
 
         try {
-            const proveedor_request = new ProveedoresService()
-            const proveedor_estado = await proveedor_request.Cambiar_Estado_Proveedor(+id_proveedor, +estado, JSON.parse(info), usuario.usuario)
+            const proveedor_estado = await this.service.Cambiar_Estado_Proveedor(+id_proveedor, +estado, JSON.parse(info), usuario.usuario)
             if (proveedor_estado.error) {
                 return res.status(400).json({ error: true, message: proveedor_estado.message }) //!ERROR
             }

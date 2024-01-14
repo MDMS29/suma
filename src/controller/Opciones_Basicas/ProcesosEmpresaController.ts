@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { ProcesosEmpresaService } from "../../services/Opciones_Basicas/ProcesosEmpresa.Service";
 import { ProcesoEmpresaSchema } from "../../validations/OpcionesBasicas.Zod";
+import {BaseController} from "../base.controller";
 
-export default class ProcesosEmpresaController {
+export default class ProcesosEmpresaController extends BaseController<ProcesosEmpresaService>{
+
+    constructor() {
+        super(ProcesosEmpresaService);
+    }
 
     public async Obtener_Procesos_Empresa(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -15,8 +20,7 @@ export default class ProcesosEmpresaController {
         }
 
         try {
-            const proceso_empresa_service = new ProcesosEmpresaService()
-            const respuesta = await proceso_empresa_service.Obtener_Procesos_Empresa(+empresa)
+            const respuesta = await this.service.Obtener_Procesos_Empresa(+empresa)
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -52,8 +56,7 @@ export default class ProcesosEmpresaController {
         }
 
         try {
-            const proceso_empresa_service = new ProcesosEmpresaService()
-            const respuesta = await proceso_empresa_service.Insertar_Procesos_Empresa(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Procesos_Empresa(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -75,8 +78,7 @@ export default class ProcesosEmpresaController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado el proceso' }) //!ERROR
         }
         try {
-            const proceso_empresa_service = new ProcesosEmpresaService()
-            const respuesta = await proceso_empresa_service.Buscar_Proceso_Empresa(+id_proceso)
+            const respuesta = await this.service.Buscar_Proceso_Empresa(+id_proceso)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -114,14 +116,13 @@ export default class ProcesosEmpresaController {
         }
 
         try {
-            const proceso_empresa_service = new ProcesosEmpresaService()
 
-            const respuesta = await proceso_empresa_service.Editar_Proceso_Empresa(+id_proceso, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Proceso_Empresa(+id_proceso, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await proceso_empresa_service.Buscar_Proceso_Empresa(+id_proceso)
+            const response = await this.service.Buscar_Proceso_Empresa(+id_proceso)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar el proceso' }) //!ERROR
             }

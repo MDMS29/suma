@@ -1,8 +1,13 @@
 import { Request, Response } from "express";
 import { MarcaProductoService } from "../../services/Opciones_Basicas/MarcaProducto.Service";
 import { MarcaSchema } from "../../validations/OpcionesBasicas.Zod";
+import {BaseController} from "../base.controller";
 
-export default class MarcasProductoController {
+export default class MarcasProductoController extends BaseController<MarcaProductoService>{
+
+    constructor() {
+        super(MarcaProductoService);
+    }
 
     public async Obtener_Marcas_Producto(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
@@ -11,10 +16,8 @@ export default class MarcasProductoController {
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
-
         try {
-            const marcas_producto_service = new MarcaProductoService()
-            const respuesta = await marcas_producto_service.Obtener_Marcas_Producto()
+            const respuesta = await this.service.Obtener_Marcas_Producto()
             if (respuesta?.error) {
                 return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
             }
@@ -44,8 +47,7 @@ export default class MarcasProductoController {
         }
 
         try {
-            const tipos_producto_service = new MarcaProductoService()
-            const respuesta = await tipos_producto_service.Insertar_Marca_Producto(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Marca_Producto(req.body, usuario?.usuario)
             if (respuesta?.error) {
                 return res.json(respuesta) //!ERROR
             }
@@ -67,8 +69,7 @@ export default class MarcasProductoController {
             return res.status(400).json({ error: true, message: 'No se ha encontrado la marca' }) //!ERROR
         }
         try {
-            const marcas_producto_service = new MarcaProductoService()
-            const respuesta = await marcas_producto_service.Buscar_Marca_Producto(+id_marca_producto)
+            const respuesta = await this.service.Buscar_Marca_Producto(+id_marca_producto)
             if (respuesta.error) {
                 return res.json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -98,14 +99,12 @@ export default class MarcasProductoController {
         }
 
         try {
-            const marcas_producto_service = new MarcaProductoService()
-
-            const respuesta = await marcas_producto_service.Editar_Marca_Producto(+id_marca_producto, req.body, usuario.usuario)
+            const respuesta = await this.service.Editar_Marca_Producto(+id_marca_producto, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await marcas_producto_service.Buscar_Marca_Producto(+id_marca_producto)
+            const response = await this.service.Buscar_Marca_Producto(+id_marca_producto)
             if (!response) {
                 return res.status(400).json({ error: true, message: 'Error al editar la marca' }) //!ERROR
             }
