@@ -214,7 +214,7 @@ export const TipoOrdenSchema = z.object({
         invalid_type_error: 'El tipo de dato de la empresa es invalido',
         required_error: 'La empresa es requerida'
     }),
-    tipos_productos : z.object({
+    tipos_productos: z.object({
         id_tipo_producto_orden: z.number().optional(),
         id_tipo_orden: z.number({
             invalid_type_error: 'El tipo de dato para el tipo de orden es invalido',
@@ -228,7 +228,66 @@ export const TipoOrdenSchema = z.object({
             invalid_type_error: 'El tipo de dato del estado tipo producto es invalido',
             required_error: 'El estado del tipo de producto es requerido'
         }),
-    }).array().min(1,{
+    }).array().min(1, {
         message: "Debe agregar al menos un tipo de producto"
     })
 })
+
+// VALIDACION PARA LOS TIPOS DE DATOS DE LOS TIPOS DE MOVIMIENTOS
+export const TiposMoviemientosSchema = z.object({
+    id_tipo_mov: z.number().optional(),
+    id_empresa: z.number({
+        invalid_type_error: "Tipo de dato de la empresa es invalido",
+        required_error: "Debe ingresar una empresa"
+    }),
+    descripcion: z.string({
+        invalid_type_error: "El tipo de datos de la descripcion es invalida",
+        required_error: "La descripcion del tipo de movimiento es requerido"
+    }),
+    tipo_mov: z.number().min(1, {
+        message: "Tipo de movimiento invalido"
+    }).max(2, {
+        message: "Tipo de movimiento invalido"
+    }),
+});
+
+export const MovBodegaSchema = z.object({
+    id_mov_bodega: z.number().optional(),
+    id_bodega: z.number({
+        invalid_type_error: "El tipo de dato de la bodega es invalido",
+        required_error: "La bodega es requerida"
+    }).optional(),
+    id_tipo_mov: z.number({
+        invalid_type_error: "El tipo de dato para tipo de movimiento es invalido",
+        required_error: "El tipo de movimiento es requerido"
+    }),
+    id_estado: z.number({
+        invalid_type_error: "El tipo de dato para el estado es invalido",
+        required_error: "El estado es requerido"
+    }),
+});
+
+export const BodegaSchema = z.object({
+    id_bodega: z.number().optional(),
+    id_empresa: z.number({
+        invalid_type_error: "Tipo de dato de la empresa es invalido",
+        required_error: "Debe ingresar una empresa"
+    }),
+    nombre: z.string({
+        invalid_type_error: "El tipo de dato del nombre es invalido",
+        required_error: "El nombre de la bodega es requerido"
+    }),
+    con_entradas: z.number({
+        invalid_type_error: "El tipo de dato del numero de entradas es invalido",
+        required_error: "El numero de entradas es requerido"
+    }),
+    con_salidas: z.number({
+        invalid_type_error: "El tipo de dato del numero de salidas es invalido",
+        required_error: "El numero de salidas es requerido"
+    }),
+    id_estado: z.number({
+        invalid_type_error: "El tipo de dato para el estado es invalido",
+        required_error: "El estado es requerido"
+    }),
+    mov_bodega: z.array(MovBodegaSchema),
+});

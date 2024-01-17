@@ -12,6 +12,7 @@
     "start": "node build/index.js",
     "dev": "ts-node-dev --inspect -- src/index.ts",
     "dev:nodemon": "nodemon -- src/index.ts",
+    "dev:prod": "SET NODE_ENV=develop && nodemon -- src/index.ts",
     "test": "node build/src/tests/app.test.js",
     "pkg:web": "yarn clean && yarn build && yarn ts-compile && yarn pkg:linux && yarn pkg:clean",
     "build": "tsc",

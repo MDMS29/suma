@@ -90,3 +90,27 @@ export interface Tipo_Orden extends Logs_Info {
     consecutivo: number | string;
     tipos_productos: Tipo_Producto_Orden[]
 }
+
+export interface Tipos_Movimientos extends Logs_Info{
+    id_tipo_mov?: number;
+    id_empresa:  number;
+    descripcion: string;
+    tipo_mov:    number;
+}
+
+export interface Bodega extends Logs_Info {
+    id_bodega:    number;
+    id_empresa:   number;
+    nombre:       string;
+    con_entradas: number;
+    con_salidas:  number;
+    id_estado:    number;
+    mov_bodega:   MOVBodega[];
+}
+
+export interface MOVBodega {
+    id_mov_bodega: number;
+    id_bodega:     number;
+    id_tipo_mov:   number;
+    id_estado:     number;
+}

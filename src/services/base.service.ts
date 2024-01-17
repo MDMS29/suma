@@ -1,11 +1,11 @@
 export class BaseService<T> {
-    public service : T
-    constructor(TService : { new(): T }) {
-        this.service = new TService()
+    public query : T
+    constructor(TService : new() => T) {
+        this.query = new TService()
 
-        this.services()
+        this.querys()
     }
 
-    services(){}
+    querys(){}
 
 }
