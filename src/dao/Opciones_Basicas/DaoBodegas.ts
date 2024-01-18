@@ -82,3 +82,12 @@ export const _editar_movimiento_bodega = `
     WHERE 
         id_mov_bodega=$1;
 `
+
+export const _eliminar_restaurar_bodega = `
+    UPDATE 
+        public.tbl_bodegas
+    SET 
+        id_estado=$2
+    WHERE 
+        id_bodega=$1;      
+`

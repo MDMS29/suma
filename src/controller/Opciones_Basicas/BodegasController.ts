@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { BodegaSchema } from "../../validations/OpcionesBasicas.Zod";
 import { BaseController } from "../base.controller";
 import { BodegasService } from "../../services/Opciones_Basicas/Bodegas.Service";
+import { EstadosTablas } from "../../helpers/constants";
 
 export default class BodegasController extends BaseController<BodegasService>{
 
@@ -100,7 +101,7 @@ export default class BodegasController extends BaseController<BodegasService>{
 
         try {
             const respuesta = await this.service.Editar_Bodega(+id_bodega, req.body, usuario.usuario)
-            if ('error' in  respuesta) {
+            if ('error' in respuesta) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
@@ -113,5 +114,28 @@ export default class BodegasController extends BaseController<BodegasService>{
             console.log(error)
             return res.status(500).json({ error: true, message: 'Error al editar la bodega' }) //!ERROR
         }
+    }
+
+    public async Eliminar_Restaurar_Bodega(req: Request, res: Response) {
+        const { usuario } = req
+        const { id_bodega } = req.params
+        const { estado, info } = req.query as { estado: string, info: string }
+
+        if (!id_bodega) {
+            return res.status(400).json({ error: true, message: 'No hay una bodega definida' })
+        }
+
+        try {
+            const respuesta = await this.service.Eliminar_Restaurar_Bodega(+id_bodega, +estado, usuario.usuario, JSON.parse(info))
+            if (respuesta.error) {
+                return res.status(400).json({ error: true, message: respuesta.message })
+            }
+            return res.status(200).json(respuesta)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: `Error al ${+estado == EstadosTablas.ESTADO_ACTIVO ? 'activar' : 'desactivar'} la bodega` })
+        }
+
+
     }
 }

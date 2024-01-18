@@ -288,6 +288,6 @@ export const BodegaSchema = z.object({
     id_estado: z.number({
         invalid_type_error: "El tipo de dato para el estado es invalido",
         required_error: "El estado es requerido"
-    }),
+    }).optional(),
     mov_bodega: z.array(MovBodegaSchema),
 });

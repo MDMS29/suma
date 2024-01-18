@@ -1,6 +1,8 @@
 import { Bodega, MOVBodega } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 import Querys from "../../querys/Querys";
 import QueryBodegas from '../../querys/Opciones_Basicas/QueryBodegas';
+import { EstadosTablas } from '../../helpers/constants';
+import { Logs_Info } from '../../Interfaces/IConstants';
 
 export class BodegasService {
     private _query_bodegas: QueryBodegas;
@@ -117,7 +119,6 @@ export class BodegasService {
             }
 
             const movimientos = await this._query_bodegas.Buscar_Movimientos_Bodega(bodega_id)
-            console.log("🚀 ~ BodegasService ~ Editar_Bodega ~ movimientos:", movimientos)
 
             // EDITAR LOS MOVIMIENTOS DE LA BODEGA
             for (let mov_bodega of bodega_request.mov_bodega) {
@@ -129,7 +130,6 @@ export class BodegasService {
 
                 // BUSCAR EL MOVIMIENTO
                 const esMovimiento = movimientos.some((mov: MOVBodega) => mov.id_tipo_mov === mov_bodega.id_tipo_mov)
-                console.log("🚀 ~ BodegasService ~ Editar_Bodega ~ esMovimiento:", esMovimiento)
                 if (esMovimiento) {
                     // EDITAR MOVIMIENTO EN CASO DE EXISTIR
                     const respuesta_movi = await this._query_bodegas.Editar_Movimiento_Bodega(mov_bodega)
@@ -144,13 +144,36 @@ export class BodegasService {
                         return { error: true, message: 'Error al insertar el movimiento de la bodega' } //!ERROR
                     }
                 }
-
             }
 
             return bodega_request
         } catch (error) {
             console.log(error)
             return { error: true, message: 'Error al editar el tipo de movimiento' } //!ERROR
+        }
+    }
+
+    public async Eliminar_Restaurar_Bodega(bodega_id: number, estado: number, usuario_acc: string, info_user: Logs_Info) {
+        try {
+            const bodega = await this._query_bodegas.Buscar_Bodega_ID(bodega_id)
+            if (bodega.length <= 0) {
+                return { error: true, message: 'No se ha encontrado esta bodega' }
+            }
+            // INSERTAR LOG DE ACCIONES REALIZADAS
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario_acc, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_acc}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
+
+            const bodega_estado = await this._query_bodegas.Eliminar_Restaurar_Bodega(bodega_id, estado)
+            if (bodega_estado === 0) {
+                return { error: true, message: 'Error al cambiar el estado de la bodega' }
+            }
+
+            return { error: false, message: `Se ha ${+estado == EstadosTablas.ESTADO_ACTIVO ? 'activado' : 'eliminado'} la bodega` }
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: `Error al ${+estado == EstadosTablas.ESTADO_ACTIVO ? 'activar' : 'desactivar'} la bodega` }
         }
     }
 }

@@ -15,6 +15,7 @@ export class BodegasRouter extends BaseRouter<BodegasController> {
         this.router.route(`/${this.subcarpeta}/:id_bodega`)
             .get(_Autorizacion, (req, res) => this.controller.Buscar_Bodega(req, res)) //BUSCAR UNA TIPO DE MOVIMIENTO
             .patch(_Autorizacion, (req, res) => this.controller.Editar_Bodega(req, res)) //EDITAR UN TIPO DE MOVIMIENTO
+            .delete(_Autorizacion, (req, res) => this.controller.Eliminar_Restaurar_Bodega(req, res)) //EDITAR UN TIPO DE MOVIMIENTO
 
     }
 }

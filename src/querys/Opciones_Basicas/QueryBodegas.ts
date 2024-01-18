@@ -1,5 +1,5 @@
 import { Database } from "../../config/db";
-import { _buscar_bodega_id, _buscar_bodega_nombre, _buscar_movimientos_bodega, _editar_bodega, _editar_movimiento_bodega, _insertar_bodega, _insertar_mov_bodega, _obtener_bodegas } from "../../dao/Opciones_Basicas/DaoBodegas";
+import { _buscar_bodega_id, _buscar_bodega_nombre, _buscar_movimientos_bodega, _editar_bodega, _editar_movimiento_bodega, _eliminar_restaurar_bodega, _insertar_bodega, _insertar_mov_bodega, _obtener_bodegas } from "../../dao/Opciones_Basicas/DaoBodegas";
 import { Bodega, MOVBodega } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryBodegas extends Database {
@@ -51,7 +51,7 @@ export default class QueryBodegas extends Database {
         }
     }
 
-    public async Insertar_Movimiento_Bodega(bodega_id:number, movimiento_request: MOVBodega) {
+    public async Insertar_Movimiento_Bodega(bodega_id: number, movimiento_request: MOVBodega) {
         const client = await this.pool.connect()
 
         const { id_tipo_mov } = movimiento_request
@@ -124,6 +124,17 @@ export default class QueryBodegas extends Database {
             return 0
         } finally {
             client.release();
+        }
+    }
+
+    public async Eliminar_Restaurar_Bodega(bodega_id: number, estado: number) {
+        const client = await this.pool.connect()
+        try {
+            const result = await client.query(_eliminar_restaurar_bodega, [bodega_id, estado])
+            return result.rowCount ?? 0
+        } catch (error) {
+            console.log(error)
+            return 0
         }
     }
 
