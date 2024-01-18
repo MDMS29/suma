@@ -25,6 +25,7 @@ class ServerControl extends ConfigServer {
         this.app.use(morgan('dev'));
 
         this.app.use('/suma/api', this.routers())
+        this.app.use((_, res) => res.status(404).json({ error: true, code: 404, message: "No se ha encontrado la request" }))
         this.listen()
 
     }

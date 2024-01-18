@@ -19,6 +19,7 @@ import { TiposOrdenesRouter } from "./Opciones_Basicas/TiposOrdenesRoutes";
 import { ParametrizadosRouter } from "./Opciones_Basicas/ParametrizadosRoutes";
 import { TiposMovimientosRouter } from './Opciones_Basicas/TipoMovimientosRoutes';
 import { BodegasRouter } from './Opciones_Basicas/BodegasRoutes';
+import { MovimientosAlmacenRouter } from './Inventario/MovimientosRoutes';
 
 
 export const AppRoutes = [
@@ -42,5 +43,6 @@ export const AppRoutes = [
     new RequisicionesRouter().router,
     new AuditoriaRouter().router,
     new TiposMovimientosRouter().router,
-    new BodegasRouter().router
+    new BodegasRouter().router,
+    new MovimientosAlmacenRouter().router
 ]
