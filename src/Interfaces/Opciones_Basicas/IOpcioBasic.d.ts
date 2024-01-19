@@ -6,7 +6,7 @@ export interface Unidad_Medida extends Logs_Info {
     unidad: string
 }
 
-export interface Tipo_Producto extends Logs_Info  {
+export interface Tipo_Producto extends Logs_Info {
     id_tipo_producto?: number
     id_empresa: number
     descripcion: string
@@ -91,26 +91,30 @@ export interface Tipo_Orden extends Logs_Info {
     tipos_productos: Tipo_Producto_Orden[]
 }
 
-export interface Tipos_Movimientos extends Logs_Info{
+export interface Tipos_Movimientos extends Logs_Info {
     id_tipo_mov?: number;
-    id_empresa:  number;
+    id_empresa: number;
     descripcion: string;
-    tipo_mov:    number;
+    tipo_mov: number;
 }
 
 export interface Bodega extends Logs_Info {
-    id_bodega:    number;
-    id_empresa:   number;
-    nombre:       string;
+    id_bodega: number;
+    id_empresa: number;
+    nombre: string;
     con_entradas: number;
-    con_salidas:  number;
-    id_estado:    number;
-    mov_bodega:   MOVBodega[];
+    con_salidas: number;
+    id_estado: number;
+    mov_bodega: MOVBodega[];
 }
 
 export interface MOVBodega {
     id_mov_bodega: number;
-    id_bodega:     number;
-    id_tipo_mov:   number;
-    id_estado:     number;
+    id_bodega: number;
+    id_tipo_mov: number;
+    id_estado: number;
+}
+
+export interface FiltrosBodegas {
+    tipo_mov: string
 }

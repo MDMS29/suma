@@ -1,4 +1,4 @@
-import { Bodega, MOVBodega } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
+import { Bodega, FiltrosBodegas, MOVBodega } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 import Querys from "../../querys/Querys";
 import QueryBodegas from '../../querys/Opciones_Basicas/QueryBodegas';
 import { EstadosTablas } from '../../helpers/constants';
@@ -12,6 +12,21 @@ export class BodegasService {
         // INICIARLIZAR EL QUERY A USAR
         this._query_bodegas = new QueryBodegas();
         this._Querys = new Querys();
+    }
+
+    public async Obtener_Bodegas_Filtro(id_empresa: number, filtros: FiltrosBodegas): Promise<any> {
+        try {
+            const respuesta = await this._query_bodegas.Obtener_Bodegas_Filtro(id_empresa, filtros)
+
+            if (respuesta?.length <= 0) {
+                return { error: false, message: 'No se han encontrado bodegas' } //!ERROR
+            }
+
+            return respuesta
+        } catch (error) {
+            console.log(error)
+            return { error: true, message: 'Error al cargar las bodegas' } //!ERROR
+        }
     }
 
     public async Obtener_Bodegas(id_empresa: number, estado_id: number): Promise<any> {

@@ -1,5 +1,5 @@
-import {_Autorizacion} from "../../middleware/Autorizacion";
-import {BaseRouter} from "../base.router";
+import { _Autorizacion } from "../../middleware/Autorizacion";
+import { BaseRouter } from "../base.router";
 import BodegasController from "../../controller/Opciones_Basicas/BodegasController";
 
 export class BodegasRouter extends BaseRouter<BodegasController> {
@@ -8,6 +8,9 @@ export class BodegasRouter extends BaseRouter<BodegasController> {
     }
 
     routes(): void {
+        this.router.route(`/${this.subcarpeta}/filtrar`)
+            .get(_Autorizacion, (req, res) => this.controller.Obtener_Bodegas_Filtro(req, res)) //OBTENER LAS BODEGAS POR FILTROS
+
         this.router.route(`/${this.subcarpeta}`)
             .get(_Autorizacion, (req, res) => this.controller.Obtener_Bodegas(req, res)) //OBTENER TODOS LOS TIPOS DE MOVIMIENTO
             .post(_Autorizacion, (req, res) => this.controller.Insertar_Bodega(req, res)) //INSERTAR UN TIPO DE MOVIMIENTO

@@ -1,6 +1,6 @@
 import { Database } from "../../config/db";
-import { _buscar_bodega_id, _buscar_bodega_nombre, _buscar_movimientos_bodega, _editar_bodega, _editar_movimiento_bodega, _eliminar_restaurar_bodega, _insertar_bodega, _insertar_mov_bodega, _obtener_bodegas } from "../../dao/Opciones_Basicas/DaoBodegas";
-import { Bodega, MOVBodega } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
+import { _buscar_bodega_id, _buscar_bodega_nombre, _buscar_movimientos_bodega, _editar_bodega, _editar_movimiento_bodega, _eliminar_restaurar_bodega, _insertar_bodega, _insertar_mov_bodega, _obtener_bodegas, _obtener_bodegas_filtro } from "../../dao/Opciones_Basicas/DaoBodegas";
+import { Bodega, FiltrosBodegas, MOVBodega } from '../../Interfaces/Opciones_Basicas/IOpcioBasic'
 
 export default class QueryBodegas extends Database {
     private pool;
@@ -8,6 +8,22 @@ export default class QueryBodegas extends Database {
         super()
         this.pool = this.connect_query()
     }
+    public async Obtener_Bodegas_Filtro(id_empresa: number, filtros: FiltrosBodegas): Promise<any> {
+        const client = await this.pool.connect()
+
+        const { tipo_mov } = filtros
+
+        try {
+            let result = await client.query(_obtener_bodegas_filtro, [id_empresa, tipo_mov]);
+            return result.rows ?? []
+        } catch (error) {
+            console.log(error)
+            return []
+        } finally {
+            client.release();
+        }
+    }
+
     public async Obtener_Bodegas(id_empresa: number, estado_id: number): Promise<any> {
         const client = await this.pool.connect()
         try {

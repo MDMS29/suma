@@ -1,14 +1,14 @@
-import { Empresa } from '../../Interfaces/Configuracion/IConfig'
 import Querys from "../../querys/Querys";
 import QueryMovimientosAlmacen from "../../querys/Inventario/QueryMovimientos";
+import { Movimientos } from '../../Interfaces/Inventario/IInventario';
 
 export default class MovimientosAlmacenService {
-    private _Query_Empresa: QueryMovimientosAlmacen;
+    private _Query_Mov: QueryMovimientosAlmacen;
     private _Querys: Querys;
 
     constructor() {
         // INICIARLIZAR EL QUERY A USAR
-        this._Query_Empresa = new QueryMovimientosAlmacen();
+        this._Query_Mov = new QueryMovimientosAlmacen();
         this._Querys = new Querys();
     }
 
@@ -17,7 +17,7 @@ export default class MovimientosAlmacenService {
             return { error: true, message: 'Estado no definido' } //!ERROR
         }
         try {
-            const respuesta = await this._Query_Empresa.Obtener_Movimiento_Almacen(empresa, estado)
+            const respuesta = await this._Query_Mov.Obtener_Movimiento_Almacen(empresa, estado)
 
             if (respuesta?.length <= 0) {
                 return { error: true, message: 'No se han encontrado movimientos en el almacen' } //!ERROR
@@ -30,106 +30,130 @@ export default class MovimientosAlmacenService {
         }
     }
 
-    public async Insertar_Empresa(empresa_request: Empresa, usuario_creacion: string) {
+    public async Insertar_Movimiento(movimiento_request: Movimientos, usuario_creacion: any) {
+        const { id_usuario, usuario } = usuario_creacion
+
         try {
-            //VALIDAR SI LA EMPRESA EXISTE
-            const empresa_filtrada_nit: any = await this._Query_Empresa.Buscar_Nit(empresa_request.nit)
-            if (empresa_filtrada_nit?.length > 0) {
-                return { error: true, message: 'Ya existe este nit' } //!ERROR
-            }
-            const empresa_filtrada: any = await this._Query_Empresa.Buscar_Razon_Social(empresa_request.razon_social)
-            if (empresa_filtrada?.length > 0) {
-                return { error: true, message: 'Ya existe este nombre de empresa' } //!ERROR
-            }
+            // LOS MOVIMIENTOS NO TENDRAN VALIDACIONES DE SI EXISTEN O NO, PORQUE PUEDEN SER IGUALES
 
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
-            const log = await this._Querys.Insertar_Log_Auditoria(usuario_creacion, empresa_request.ip, empresa_request?.ubicacion)
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, movimiento_request.ip, movimiento_request?.ubicacion)
             if (log !== 1) {
-                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_creacion}, IP: \n ${empresa_request.ip}, UBICACIÓN: \n ${empresa_request?.ubicacion}`)
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${movimiento_request.ip}, UBICACIÓN: \n ${movimiento_request?.ubicacion}`)
             }
 
-            //INVOCAR FUNCION PARA INSERTAR ROL
-            const respuesta = await this._Query_Empresa.Insertar_Empresa(empresa_request, usuario_creacion)
-            if (!respuesta) {
-                return { error: true, message: 'No se ha podido crear la empresa' } //!ERROR
+            const respuesta_insert = await this._Query_Mov.Insertar_Movimiento(movimiento_request, id_usuario)
+            if (respuesta_insert.length <= 0) {
+                return { error: true, message: 'No se ha podido crear el movimiento de almacen' } //!ERROR
             }
 
-            //INVOCAR FUNCION PARA BUSCAR EL ROL POR ID
-            const empresa = await this._Query_Empresa.Buscar_Empresa_ID(respuesta[0].id_empresa)
-            if (!empresa) {
-                return { error: true, message: 'No se ha encontrado la empresa' } //!ERROR
+            for (let detalle of movimiento_request.detalle_movi) {
+                const log = await this._Querys.Insertar_Log_Auditoria(usuario, movimiento_request.ip, movimiento_request?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${movimiento_request.ip}, UBICACIÓN: \n ${movimiento_request?.ubicacion}`)
+                }
+                // INSERTAR DETALLES DEL MOVIMIENTO
+                const respuesta = await this._Query_Mov.Insertar_Detalle_Movimiento(detalle, respuesta_insert[0].id_movimiento)
+                if (respuesta.length <= 0) {
+                    return { error: true, message: 'Error al insertar el detalle del movimiento' } //!ERROR
+                }
             }
 
-            return empresa[0]
+            const movimiento = await this._Query_Mov.Buscar_Movimiento_ID(respuesta_insert[0].id_movimiento)
+            if (!movimiento) {
+                return { error: true, message: 'No se ha encontrado el movimiento' } //!ERROR
+            }
+
+            return movimiento[0]
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al crear la empresa' } //!ERROR
+            return { error: true, message: 'Error al crear el movimiento' } //!ERROR
         }
     }
 
-    public async Buscar_Empresa(id_empresa: number): Promise<any> {
+    public async Buscar_Movimiento(movimiento_id: number): Promise<any> {
         try {
-            const rol = await this._Query_Empresa.Buscar_Empresa_ID(id_empresa)
-            if (!rol) {
-                return { error: true, message: 'No se ha encontrado esta empresa' } //!ERROR
+            const movimiento: Movimientos[] = await this._Query_Mov.Buscar_Movimiento_ID(movimiento_id)
+            if (!movimiento) {
+                return { error: true, message: 'No se ha encontrado el movimiento' } //!ERROR
             }
-            return rol[0]
+
+            const detalles_movimientos = await this._Query_Mov.Buscar_Detalle_Movimiento(movimiento_id)
+            if (detalles_movimientos.length <= 0) {
+                return { error: true, message: 'Este movimiento no tiene detalles' } //!ERROR
+            }
+
+            movimiento[0].detalle_movi = detalles_movimientos
+
+            return movimiento[0]
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error buscar la empresa' }
+            return { error: true, message: 'Error al encontrar el movimiento' }
         }
     }
 
-    public async Editar_Empresa(id_empresa: any, empresa_request: Empresa, usuario_modificacion: string) {
-
+    public async Editar_Movimiento(movimiento_id: number, movimiento_request: Movimientos, usuario: string) {
         try {
-            // COMPROBAR SI ESTE ROL EXISTE
-            const empresa: any = await this._Query_Empresa.Buscar_Empresa_ID(id_empresa)
+            const empresa: any = await this._Query_Mov.Buscar_Movimiento_ID(movimiento_id)
             if (empresa.length === 0) {
-                return { error: true, message: 'No existe esta empresa' } //!ERROR
+                return { error: true, message: 'No existe este movimiento' } //!ERROR
             }
-
-            //VERIFICACION DE EMPRESAS CON INFORMACION DUPLICADA
-            const empresa_filtrada_razon: any = await this._Query_Empresa.Buscar_Razon_Social(empresa_request.razon_social)
-            if (empresa_filtrada_razon?.length > 0 && empresa_filtrada_razon[0].razon_social !== empresa[0].razon_social) {
-                return { error: true, message: 'Ya existe este nombre de empresa' } //!ERROR
-            }
-
-            const empresa_filtrada_nit: any = await this._Query_Empresa.Buscar_Nit(empresa_request.nit)
-            if (empresa_filtrada_nit?.length > 0 && empresa_filtrada_nit[0].nit !== empresa[0].nit) {
-                return { error: true, message: 'Ya existe este nit de empresa' } //!ERROR
-            }
-
-
-            // ACTUALIZAR
-            empresa_request.nit = empresa[0]?.nit === empresa_request.nit ? empresa[0].nit : empresa_request.nit
-            empresa_request.razon_social = empresa[0]?.razon_social === empresa_request.razon_social ? empresa[0].razon_social : empresa_request.razon_social
-            empresa_request.telefono = empresa[0]?.telefono === empresa_request.telefono ? empresa[0].telefono : empresa_request.telefono
-            empresa_request.correo = empresa[0]?.correo === empresa_request.telefono ? empresa[0].telefono : empresa_request.telefono
-            empresa_request.direccion = empresa[0]?.direccion === empresa_request.telefono ? empresa[0].telefono : empresa_request.telefono
 
             // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
-            const log = await this._Querys.Insertar_Log_Auditoria(usuario_modificacion, empresa_request.ip, empresa_request?.ubicacion)
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, movimiento_request.ip, movimiento_request?.ubicacion)
             if (log !== 1) {
-                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario_modificacion}, IP: \n ${empresa_request.ip}, UBICACIÓN: \n ${empresa_request?.ubicacion}`)
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${movimiento_request.ip}, UBICACIÓN: \n ${movimiento_request?.ubicacion}`)
             }
 
-            const res = await this._Query_Empresa.Editar_Empresa(id_empresa, empresa_request, usuario_modificacion)
-            if (res?.rowCount != 1) {
-                return { error: true, message: 'Error al actualizar el rol' } //!ERROR
+            const res = await this._Query_Mov.Editar_Enc_Movimiento(movimiento_id, movimiento_request)
+            if (res == 0) {
+                return { error: true, message: 'Error al actualizar el movimiento' } //!ERROR
+            }
+
+            const detalles_movimiento = await this._Query_Mov.Buscar_Detalle_Movimiento(movimiento_id)
+
+            for (let detalle of movimiento_request.detalle_movi) {
+                // AGREGAR INFORMACION DEL USUARIO PARA INSERTAR LOG DE AUDITORIA
+                const log = await this._Querys.Insertar_Log_Auditoria(usuario, movimiento_request.ip, movimiento_request?.ubicacion)
+                if (log !== 1) {
+                    console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${movimiento_request.ip}, UBICACIÓN: \n ${movimiento_request?.ubicacion}`)
+                }
+
+                // BUSCAR EL DETALLE DEL MOVIMIENTO 
+                let esDetalle = detalles_movimiento.some(det_mov => det_mov.id_detalle == detalle.id_detalle)
+                if (esDetalle) {
+                    // SI EL DETALLE EXISTE LO EDITARA
+                    const res = await this._Query_Mov.Editar_Detalle_Movimiento(detalle.id_detalle, movimiento_id, detalle)
+                    if (res == 0) {
+                        return { error: true, message: 'Error al actualizar el detalle del movimiento' } //!ERROR
+                    }
+                } else {
+                    // SI NO EXISTE LO INSERTA
+                    const respuesta = await this._Query_Mov.Insertar_Detalle_Movimiento(detalle, movimiento_id)
+                    if (respuesta.length <= 0) {
+                        return { error: true, message: 'Error al insertar el detalle del movimiento' } //!ERROR
+                    }
+                }
+
             }
 
             return { error: false, message: '' }
         } catch (error) {
             console.log(error)
-            return { error: true, message: 'Error al editar rol' } //!ERROR
+            return { error: true, message: 'Error al editar el movimiento' } //!ERROR
         }
     }
 
-    public async Cambiar_Estado_Empresa(id_empresa: number, estado: number) {
+    public async Cambiar_Estado_Empresa(id_empresa: number, estado: number, info_user: any, usuario: string) {
         try {
 
-            const empresa_editada = await this._Query_Empresa.Cambiar_Estado_Empresa(id_empresa, estado);
+            const log = await this._Querys.Insertar_Log_Auditoria(usuario, info_user.ip, info_user?.ubicacion)
+            if (log !== 1) {
+                console.log(`ERROR AL INSERTAR LOGS DE AUDITORIA: USUARIO: \n ${usuario}, IP: \n ${info_user.ip}, UBICACIÓN: \n ${info_user?.ubicacion}`)
+            }
+
+
+            const empresa_editada = await this._Query_Mov.Cambiar_Estado_Empresa(id_empresa, estado);
             if (!empresa_editada?.rowCount) {
                 return { error: true, message: 'Error al cambiar el estado de la empresa' } //!ERROR
             }

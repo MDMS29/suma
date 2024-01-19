@@ -10,6 +10,31 @@ export default class BodegasController extends BaseController<BodegasService>{
         super(BodegasService);
     }
 
+    public async Obtener_Bodegas_Filtro(req: Request, res: Response) {
+        const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
+        const { empresa, tipo_mov } = req.query as { empresa: string, tipo_mov: string } //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO
+        if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
+            return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
+        }
+        if (!empresa || empresa == 'undefined') {
+            return res.status(400).json({ error: true, message: 'No se ha definido la empresa a consultar' }) //!ERROR
+        }
+
+        const filtros = { tipo_mov }
+
+        try {
+            const respuesta = await this.service.Obtener_Bodegas_Filtro(+empresa, filtros)
+            if (respuesta?.error) {
+                return res.status(400).json({ error: true, message: respuesta?.message }) //!ERROR
+            }
+
+            return res.status(200).json(respuesta)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ error: true, message: 'Error al obtener las bodegas' }) //!ERROR
+        }
+    }
+
     public async Obtener_Bodegas(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
         const { empresa, estado } = req.query //EXTRAER EL ESTADO DESDE LA INFO QUE MANDA EL USUARIO

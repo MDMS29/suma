@@ -1,11 +1,10 @@
 import { Database } from "../../config/db";
 import {
-    _buscar_empresa_id, _buscar_empresa_nit, _buscar_razon_social, _cambiar_estado_empresa,
-    _editar_empresa, _insertar_empresa, _obtener_empresas
+    _buscar_empresa_nit, _buscar_razon_social, _cambiar_estado_empresa,
 } from "../../dao/Configuracion/DaoEmpresa";
 
-import { _obtener_movimientos } from "../../dao/Inventario/DaoMovimientos";
-import { Empresa } from '../../Interfaces/Configuracion/IConfig';
+import { _buscar_detalle_movimiento, _buscar_movimiento_id, _editar_detalle_movimiento, _editar_enc_movimiento, _insertar_detalle_movimiento, _insertar_movimiento, _obtener_movimientos } from "../../dao/Inventario/DaoMovimientos";
+import { DetalleMovi, Movimientos } from "../../Interfaces/Inventario/IInventario";
 
 export default class QueryMovimientosAlmacen extends Database {
     private pool;
@@ -41,12 +40,13 @@ export default class QueryMovimientosAlmacen extends Database {
         }
     }
 
-    public async Insertar_Empresa(empresa_request: Empresa, usuario_creacion: string) {
+    public async Insertar_Movimiento(movimiento_request: Movimientos, usuario_creacion: string) {
         const client = await this.pool.connect()
-        const { nit, razon_social, direccion, telefono, correo } = empresa_request
+
+        const { id_empresa, id_bodega, id_tipo_mov, id_orden, observaciones } = movimiento_request
 
         try {
-            let result = await client.query(_insertar_empresa, [nit, razon_social, telefono, direccion, correo, usuario_creacion]);
+            let result = await client.query(_insertar_movimiento, [id_empresa, id_bodega, id_tipo_mov, id_orden, observaciones, usuario_creacion]);
             return result.rows ?? []
         } catch (error) {
             console.log(error)
@@ -56,11 +56,38 @@ export default class QueryMovimientosAlmacen extends Database {
         }
     }
 
-    public async Buscar_Empresa_ID(id_empresa: number) {
+    public async Insertar_Detalle_Movimiento(detalle: DetalleMovi, movimiento_id: number) {
+        const client = await this.pool.connect()
+        const { id_producto, cantidad, precio } = detalle
+        try {
+            const result = await client.query(_insertar_detalle_movimiento, [movimiento_id, id_producto, cantidad, precio])
+            return result.rows ?? []
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    }
+
+    public async Buscar_Movimiento_ID(movimiento_id: number) {
         const client = await this.pool.connect()
 
         try {
-            let result = await client.query(_buscar_empresa_id, [id_empresa]);
+            let result = await client.query(_buscar_movimiento_id, [movimiento_id]);
+            return result.rows ?? []
+        } catch (error) {
+            console.log(error)
+            return []
+        } finally {
+            client.release();
+        }
+    }
+
+
+    public async Buscar_Detalle_Movimiento(movimiento_id: number) {
+        const client = await this.pool.connect()
+
+        try {
+            let result = await client.query(_buscar_detalle_movimiento, [movimiento_id]);
             return result.rows ?? []
         } catch (error) {
             console.log(error)
@@ -84,18 +111,32 @@ export default class QueryMovimientosAlmacen extends Database {
         }
     }
 
-    public async Editar_Empresa(id_empresa: number, empresa_request: Empresa, usuario_modificacion: string) {
+    public async Editar_Enc_Movimiento(movimiento_id: number, movimientos_request: Movimientos) {
         const client = await this.pool.connect()
-        const { nit, razon_social, direccion, telefono, correo } = empresa_request
 
+        const { id_bodega, id_tipo_mov, id_orden, observaciones, id_empresa } = movimientos_request
         try {
-            let result = await client.query(_editar_empresa, [id_empresa, nit, razon_social, telefono, direccion, correo, usuario_modificacion]);
-            return result
+            let result = await client.query(_editar_enc_movimiento, [movimiento_id, id_bodega, id_tipo_mov, id_orden, observaciones, id_empresa]);
+            return result.rowCount ?? 0
         } catch (error) {
             console.log(error)
-            return
+            return 0
         } finally {
             client.release();
+        }
+    }
+
+    public async Editar_Detalle_Movimiento(detalle_id: number, movimiento_id:number, detalle: DetalleMovi) {
+        const client = await this.pool.connect()
+
+        const { id_producto, cantidad, precio } = detalle
+
+        try {
+            const result = await client.query(_editar_detalle_movimiento, [detalle_id, movimiento_id, id_producto, cantidad, precio])
+            return result.rowCount ?? 0
+        } catch (error) {
+            console.log(error)
+            return 0
         }
     }
 

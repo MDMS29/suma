@@ -19,18 +19,31 @@ export default class UsuarioController extends BaseController<UsuarioService>{
 
         //VERIFICACIÓN DEL CAPTCHA
         if (captcha === '') {
-            return res.status(404).json({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Debe realizar el CAPTCHA' }) //!ERROR
         }
         if (!ip || !ubicacion) {
             console.log('*** USUARIO SIN IP *** \n' + ip + '\n' + ubicacion + '\n *********************')
-            return res.status(404).json({ error: true, message: 'Error al iniciar sesion' }) //!ERROR
+            return res.status(400).json({ error: true, message: 'Error al iniciar sesion' }) //!ERROR
         }
+        
+        // VERIFICACION RECAPTCHA
+        //TODO: DESCOMENTAR LA VALIDACION DEL CAPTCHA AL CREAR EL COMPILADO
+        // try {
+        //     const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_KEY}&response=${captcha}&remoteip=${ip}`)
+        //     const validation = await response.json()
+        //     if(!validation.success){
+        //         return res.status(400).json({ error: true, message: 'Captcha invalido' }) //!ERROR
+        //     }
+        // } catch (error) {
+        //     console.log(error)
+        //     return 
+        // }
 
         const result: any = UsuarioSchema.partial().safeParse(req.body)
         if (!result.success) {
             return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
-
+        
         try {
 
             //SERVICIO PARA LA AUTENTICACIÓN

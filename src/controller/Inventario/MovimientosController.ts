@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { EstadosTablas } from "../../helpers/constants";
 import { BaseController } from "../base.controller";
 import MovimientosAlmacenService from "../../services/Inventario/Movimientos.service";
+import { MovimientosSchema } from "../../validations/Inventario.Zod";
 
 export default class MovimientosAlmacenController extends BaseController<MovimientosAlmacenService>{
 
@@ -36,33 +37,20 @@ export default class MovimientosAlmacenController extends BaseController<Movimie
         }
     }
 
-    public async Insertar_Empresa(req: Request, res: Response) {
+    public async Insertar_Movimiento(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        // const { id_modulo } = req.params
-        const { nit, razon_social, telefono, direccion, correo } = req.body
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
-        if (!nit || nit === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese el nit de la empresa' }) //!ERROR
-        }
-        if (!razon_social || razon_social === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese la razón social de la empresa' }) //!ERROR
-        }
-        if (!telefono || telefono === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese el teléfono de la empresa' }) //!ERROR
-        }
-        if (!direccion || direccion === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese la dirección de la empresa' }) //!ERROR
-        }
-        if (!correo || correo === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese el correo de la empresa' }) //!ERROR
+        const result = MovimientosSchema.safeParse(req.body)
+        if (!result.success) { //VALIDAR SI LA INFORMACION ESTA INCORRECTA
+            return res.status(400).json({ error: true, message: result.error.issues[0].message }) //!ERROR
         }
 
         try {
-            const respuesta = await this.service.Insertar_Empresa(req.body, usuario?.usuario)
+            const respuesta = await this.service.Insertar_Movimiento(req.body, usuario)
             if (respuesta?.error) {
                 return res.json(respuesta)
             }
@@ -74,18 +62,18 @@ export default class MovimientosAlmacenController extends BaseController<Movimie
         }
     }
 
-    public async Buscar_Empresa(req: Request, res: Response) {
-        const { id_empresa } = req.params
+    public async Buscar_Movimiento(req: Request, res: Response) {
+        const { id_movimiento } = req.params
         const { usuario } = req
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(400).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
-        if (!id_empresa) {
-            return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
+        if (!id_movimiento) {
+            return res.status(400).json({ error: true, message: 'No se ha encontrado el movimiento' }) //!ERROR
         }
         try {
 
-            const respuesta = await this.service.Buscar_Empresa(+id_empresa)
+            const respuesta = await this.service.Buscar_Movimiento(+id_movimiento)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }
@@ -96,68 +84,50 @@ export default class MovimientosAlmacenController extends BaseController<Movimie
         }
     }
 
-    public async Editar_Empresa(req: Request, res: Response) {
+    public async Editar_Movimiento(req: Request, res: Response) {
         const { usuario } = req //OBTENER LA INFORMACION DEL USUARIO LOGUEADO
-        const { id_empresa } = req.params
-        const { nit, razon_social, telefono, direccion, correo } = req.body
+        const { id_movimiento } = req.params
 
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
 
-        if (!id_empresa) {
-            return res.status(400).json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
-        }
-        if (!nit || nit === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese el nit de la empresa' }) //!ERROR
-        }
-        if (!razon_social || razon_social === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese la razon social de la empresa' }) //!ERROR
-        }
-        if (!telefono || telefono === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese el telefono de la empresa' }) //!ERROR
-        }
-        if (!direccion || direccion === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese la direccion de la empresa' }) //!ERROR
-        }
-        if (!correo || correo === "") {
-            return res.status(400).json({ error: true, message: 'Ingrese el correo de la empresa' }) //!ERROR
-        }
-
         try {
-
-            const respuesta: any = await this.service.Editar_Empresa(id_empresa, req.body, usuario.usuario)
+            const respuesta: any = await this.service.Editar_Movimiento(+id_movimiento, req.body, usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: respuesta.error, message: respuesta.message })
             }
 
-            const response = await this.service.Buscar_Empresa(+id_empresa)
+            const response = await this.service.Buscar_Movimiento(+id_movimiento)
             if (!response) {
-                return res.status(400).json({ error: true, message: 'Error al editar la empresa' }) //!ERROR
+                return res.status(400).json({ error: true, message: response.message }) //!ERROR
             }
             return res.status(200).json(response) //*SUCCESSFUL
         } catch (error) {
             console.log(error)
-            return res.status(500).json({ error: true, message: 'Error al editar la empresa' }) //!ERROR
+            return res.status(500).json({ error: true, message: 'Error al editar el movimiento' }) //!ERROR
         }
     }
 
-    public async Cambiar_Estado_Empresa(req: Request, res: Response) {
+    public async Cambiar_Estado_Movimiento(req: Request, res: Response) {
         const { usuario } = req
-        const { id_empresa } = req.params
-        const { estado } = req.query as { estado: string }
+        const { id_movimiento } = req.params
+        const { estado, info } = req.query as { estado: string, info: string }
         if (!usuario?.id_usuario) {//VALIDACIONES DE QUE ESTE LOGUEADO
             return res.status(401).json({ error: true, message: 'Inicie sesión para continuar' }) //!ERROR
         }
-        if (!id_empresa) {
-            return res.json({ error: true, message: 'No se ha encontrado la empresa' }) //!ERROR
+        if (!id_movimiento) {
+            return res.json({ error: true, message: 'No se ha encontrado el movimiento' }) //!ERROR
         }
         if (!estado) {
             return res.json({ error: true, message: 'No se ha definido el estado' }) //!ERROR
         }
+        if (!info) {
+            return res.json({ error: true, message: 'Error de informacion' });
+        }
 
         try {
-            const respuesta = await this.service.Cambiar_Estado_Empresa(+id_empresa, +estado)
+            const respuesta = await this.service.Cambiar_Estado_Empresa(+id_movimiento, +estado, JSON.parse(info), usuario.usuario)
             if (respuesta.error) {
                 return res.status(400).json({ error: true, message: respuesta.message }) //!ERROR
             }

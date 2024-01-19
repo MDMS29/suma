@@ -1,3 +1,21 @@
+//$2 = TIPO_MOVIMIENTO
+export const _obtener_bodegas_filtro = `
+    SELECT DISTINCT
+        tb.id_bodega, tb.nombre
+    FROM 
+        public.tbl_bodegas tb 
+    INNER JOIN public.tbl_mov_bodegas tmb ON tmb.id_bodega = tb.id_bodega
+    WHERE 
+        tb.id_empresa = $1 AND 
+        tb.id_estado = 1 AND
+        tmb.id_estado = 1
+        AND
+        (
+            $2 = 0 OR tmb.id_tipo_mov = $2
+        )
+    ORDER BY tb.id_bodega DESC;
+`
+
 export const _obtener_bodegas = `
     SELECT 
         tb.id_bodega, tb.nombre, tb.con_entradas, tb.con_salidas
@@ -5,7 +23,8 @@ export const _obtener_bodegas = `
         public.tbl_bodegas tb 
     WHERE 
         tb.id_empresa = $1 AND 
-        tb.id_estado = $2;
+        tb.id_estado = $2 
+    ORDER BY tb.id_bodega DESC;
 `
 
 export const _buscar_bodega_nombre = `
